@@ -1,0 +1,87 @@
+<languageVersion : 1.0;>
+vertex kernel defaultshader
+<
+    namespace : "AIF Test";
+    vendor : "Adobe";
+    version : 1;
+>
+{
+    parameter float4x4 objectToClipSpaceTransform;
+    parameter float4 currentTime;
+    parameter float4 gravity;
+    
+    input vertex float4 vertexPosition
+    <
+        id : "PB3D_POSITION";
+    >;
+
+	input vertex float4 velocity
+    <
+        id : "PB3D_TARGET_POSITION";
+    >;
+
+	input vertex float4 miscParams
+    <
+        id : "PB3D_NORMAL";
+    >;
+    
+	input vertex float4 endColor
+    <
+        id : "PB3D_TARGET_NORMAL";
+    >;
+    
+    input vertex float4 startColor
+    <
+        id : "PB3D_COLOR";
+    >;
+
+    output vertex float4 color
+    <
+        id : "PB3D_COLOR";
+    >;
+    
+    output float4 vertexClipPosition;
+
+    void evaluateVertex()
+    {
+        // we've hidden the birth and life in the normal
+        float birth = miscParams.x;
+        float life = miscParams.y;
+        float startSize = miscParams.z;
+        float endSize = miscParams.w;
+        
+        float progress = clamp(fract((currentTime.x - birth) / life), 0.0, 1.0);
+        
+        float4 p = float4(progress, progress, progress, 1.0);
+        
+        float4 tmpVelocity = velocity;
+        tmpVelocity += gravity * p;
+        tmpVelocity *= p;
+        
+        // bug??? vertexClipPosition = vertexPosition * objectToClipSpaceTransform; + tmpVelocity doesnt work
+        
+        float size = startSize * (1.0 - progress) + endSize * progress;
+        
+        float4 tmpVertexPos = vertexPosition;
+        tmpVertexPos.x *= size;
+        tmpVertexPos.y *= size;
+        tmpVertexPos.x += tmpVelocity.x;
+        tmpVertexPos.y += tmpVelocity.y;
+        
+        tmpVertexPos *= objectToClipSpaceTransform;
+        
+        vertexClipPosition = tmpVertexPos;
+
+        // mix is broken at the moment
+        //float4 tmpColor = mix(startColor, endColor, p);
+		
+		float4 tmpColor = float4(0.0, 0.0, 0.0, 0.0);
+		
+        tmpColor.r = startColor.r * (1.0 - progress) + endColor.r * progress;
+        tmpColor.g = startColor.g * (1.0 - progress) + endColor.g * progress;
+        tmpColor.b = startColor.b * (1.0 - progress) + endColor.b * progress;
+        tmpColor.a = startColor.a * (1.0 - progress) + endColor.a * progress;
+        
+        color = tmpColor;
+    }
+}

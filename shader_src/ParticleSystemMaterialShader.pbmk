@@ -1,0 +1,37 @@
+<languageVersion : 1.0;>
+material kernel particlesystem
+<
+    namespace : "AIF Test";
+    vendor : "Adobe";
+    version : 1;
+>
+{
+    input vertex float4 uvCoord
+    <
+        id : "PB3D_UV";
+    >;
+        
+    input vertex float4 color
+    <
+        id : "PB3D_COLOR";
+    >;
+
+    input image4 textureImage;
+
+    interpolated float4 interpolatedUV;
+    interpolated float4 interpolatedColor;
+    
+    output float4 result;
+
+    void evaluateVertex()
+    {
+        interpolatedUV = uvCoord;
+        interpolatedColor = color;
+    }
+
+    void evaluateFragment()
+    {
+        float4 texel = sample(textureImage, float2(interpolatedUV.x, interpolatedUV.y));
+        result = float4(texel.r * interpolatedColor.r, texel.g * interpolatedColor.g, texel.b * interpolatedColor.b, texel.a * interpolatedColor.a);
+    }
+}

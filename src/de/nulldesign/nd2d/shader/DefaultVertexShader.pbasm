@@ -1,0 +1,41 @@
+module_vertex_program defaultshader
+
+    metadata
+        namespace const(string, "AIF Test")
+        vendor const(string, "Adobe")
+        version const(int, 1)
+    end_metadata
+    
+    transformations
+        SCF INTOSSA OPT(DCE* {APR DCE*}*)
+    end_transformations
+    
+    globals
+        global parameter float-4-4 objectToClipSpaceTransform
+        input vertex float-4 vertexPosition
+            metadata
+                id const(string, "PB3D_POSITION")
+            end_metadata
+        output clipcoord float-4 vertexClipPosition
+    end_globals
+    
+    functions
+        external_function void evaluateVertex()
+            body
+                basic_block entry%A !! outlets(basic%A)
+                    jump block(basic%A) : void
+                end_basic_block
+                basic_block basic%A !! inlets(entry%A) outlets(exit%A)
+                    _LD_vertexClipPosition-1 = mul vertexPosition, objectToClipSpaceTransform : float-4
+                    jump block(exit%A) : void
+                end_basic_block
+                basic_block exit%A !! inlets(basic%A)
+                    moveToNonSSA _LD_vertexClipPosition-1, vertexClipPosition : void
+                    ret : void
+                end_basic_block
+            end_body
+        end_external_function
+    end_functions
+    
+end_module_vertex_program
+

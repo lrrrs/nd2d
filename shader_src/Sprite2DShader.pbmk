@@ -1,0 +1,34 @@
+<languageVersion : 1.0;>
+material kernel texture
+<
+    namespace : "AIF Test";
+    vendor : "Adobe";
+    version : 1;
+>
+{
+    input vertex float4 uvCoord
+    <
+        id : "PB3D_UV";
+    >;
+
+    input image4 textureImage;
+
+    parameter float4 color;
+
+    parameter float4 uvOffset;
+
+    interpolated float4 interpolatedUV;
+
+    output float4 result;
+
+    void evaluateVertex()
+    {
+        interpolatedUV = uvCoord + uvOffset;
+    }
+
+    void evaluateFragment()
+    {
+        float4 texel = sample(textureImage, float2(interpolatedUV.x, interpolatedUV.y)/*, PB3D_2D | PB3D_LINEAR | PB3D_REPEAT*/);
+        result = float4(texel.r * color.r, texel.g * color.g, texel.b * color.b, texel.a * color.a);
+    }
+}

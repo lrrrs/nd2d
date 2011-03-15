@@ -1,0 +1,22 @@
+<languageVersion : 1.0;>
+vertex kernel defaultshader
+<
+    namespace : "AIF Test";
+    vendor : "Adobe";
+    version : 1;
+>
+{
+    parameter float4x4 objectToClipSpaceTransform;
+
+    input vertex float4 vertexPosition
+    <
+        id : "PB3D_POSITION";
+    >;
+
+    output float4 vertexClipPosition;
+
+    void evaluateVertex()
+    {
+        vertexClipPosition = vertexPosition * objectToClipSpaceTransform;
+    }
+}
