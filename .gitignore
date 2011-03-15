@@ -1,5 +1,6 @@
 libs
 bin
+build_swc.sh
 generate_doc.sh
 pb3d_compile.sh
 nd2d.iml
