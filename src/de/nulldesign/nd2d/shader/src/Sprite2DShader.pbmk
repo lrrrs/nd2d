@@ -1,8 +1,8 @@
 <languageVersion : 1.0;>
 material kernel texture
 <
-    namespace : "AIF Test";
-    vendor : "Adobe";
+    namespace : "ND2D_Shader";
+    vendor : "nulldesign";
     version : 1;
 >
 {

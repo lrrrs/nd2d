@@ -1,8 +1,8 @@
 <languageVersion : 1.0;>
-vertex kernel defaultshader
+vertex kernel default_sprite2d_shader
 <
-    namespace : "AIF Test";
-    vendor : "Adobe";
+    namespace : "ND2D_Shader";
+    vendor : "nulldesign";
     version : 1;
 >
 {
