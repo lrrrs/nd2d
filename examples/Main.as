@@ -28,10 +28,10 @@ package {
             //main3DView = new MassiveSpriteCloudTest(Context3DRenderMode.AUTO);
             //main3DView = new SpriteHierarchyTest(Context3DRenderMode.AUTO);
             //main3DView = new SpriteTest(Context3DRenderMode.AUTO);
-            main3DView = new SpriteAnimTest(Context3DRenderMode.AUTO);
+            //main3DView = new SpriteAnimTest(Context3DRenderMode.AUTO);
             //main3DView = new StarFieldTest(Context3DRenderMode.AUTO);
             //main3DView = new ParticleSystemTest(Context3DRenderMode.AUTO, 60);
-            //main3DView = new ParticleExplorerWorld();
+            main3DView = new ParticleExplorerWorld();
 
             addChild(main3DView);
         }

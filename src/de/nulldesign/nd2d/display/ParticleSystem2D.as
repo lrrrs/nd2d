@@ -62,7 +62,7 @@ package de.nulldesign.nd2d.display {
         protected var currentTime:Number;
         protected var startTime:Number;
 
-        override public function get numTris():int {
+        override public function get numTris():uint {
             return activeParticles * 2;
         }
 
@@ -112,18 +112,16 @@ package de.nulldesign.nd2d.display {
 
                 var speed:Number = NumberUtil.rndMinMax(preset.minSpeed, preset.maxSpeed);
 
+                var particleStartColor:Number = ColorUtil.mixColors(preset.startColor, preset.startColorVariance, NumberUtil.rnd0_1());
+                var particleEndColor:Number = ColorUtil.mixColors(preset.endColor, preset.endColorVariance, NumberUtil.rnd0_1());
+
                 initParticle(NumberUtil.rndMinMax(preset.minStartPosition.x, preset.maxStartPosition.x),
                              NumberUtil.rndMinMax(preset.minStartPosition.y, preset.maxStartPosition.y),
-                             Math.sin(angle) * speed,
-                             Math.cos(angle) * speed,
-                             preset.startColor,
-                             preset.endColor,
-                             preset.startAlpha,
-                             preset.endAlpha,
+                             Math.sin(angle) * speed, Math.cos(angle) * speed, particleStartColor, particleEndColor,
+                             preset.startAlpha, preset.endAlpha,
                              NumberUtil.rndMinMax(preset.minStartSize, preset.maxStartSize),
                              NumberUtil.rndMinMax(preset.minEndSize, preset.maxEndSize),
-                             NumberUtil.rndMinMax(preset.minLife, preset.maxLife),
-                             preset.spawnDelay * i);
+                             NumberUtil.rndMinMax(preset.minLife, preset.maxLife), preset.spawnDelay * i);
             }
 
             activeParticles = 1;

@@ -89,95 +89,123 @@ package tests {
 
             var s:HUISlider;
             var c:ColorChooser;
+            var nextY:Number = 5;
 
-            s = new HUISlider(this, 0, 5, "minStartX", changeHandler);
+            s = new HUISlider(this, 0, nextY, "minStartX", changeHandler);
             s.minimum = -stage.stageWidth / 2;
             s.maximum = stage.stageWidth / 2;
+            nextY += 20;
 
-            s = new HUISlider(this, 0, 20, "maxStartX", changeHandler);
+            s = new HUISlider(this, 0, nextY, "maxStartX", changeHandler);
             s.minimum = -stage.stageWidth / 2;
             s.maximum = stage.stageWidth / 2;
+            nextY += 20;
 
-            s = new HUISlider(this, 0, 35, "minStartY", changeHandler);
+            s = new HUISlider(this, 0, nextY, "minStartY", changeHandler);
             s.minimum = -stage.stageHeight / 2;
             s.maximum = stage.stageHeight / 2;
+            nextY += 20;
 
-            s = new HUISlider(this, 0, 50, "maxStartY", changeHandler);
+            s = new HUISlider(this, 0, nextY, "maxStartY", changeHandler);
             s.minimum = -stage.stageHeight / 2;
             s.maximum = stage.stageHeight / 2;
+            nextY += 20;
 
-            s = new HUISlider(this, 0, 65, "minSpeed", changeHandler);
+            s = new HUISlider(this, 0, nextY, "minSpeed", changeHandler);
             s.minimum = 0;
             s.maximum = 1000;
             s.value = preset.minSpeed;
+            nextY += 20;
 
-            s = new HUISlider(this, 0, 80, "maxSpeed", changeHandler);
+            s = new HUISlider(this, 0, nextY, "maxSpeed", changeHandler);
             s.minimum = 0;
             s.maximum = 1000;
             s.value = preset.maxSpeed;
+            nextY += 20;
 
-            s = new HUISlider(this, 0, 95, "minEmitAngle", changeHandler);
+            s = new HUISlider(this, 0, nextY, "minEmitAngle", changeHandler);
             s.minimum = 0;
             s.maximum = 360;
             s.value = preset.minEmitAngle;
+            nextY += 20;
 
-            s = new HUISlider(this, 0, 110, "maxEmitAngle", changeHandler);
+            s = new HUISlider(this, 0, nextY, "maxEmitAngle", changeHandler);
             s.minimum = 0;
             s.maximum = 360;
             s.value = preset.maxEmitAngle;
+            nextY += 20;
 
-            c = new ColorChooser(this, 0, 125, preset.startColor, changeHandler);
+            c = new ColorChooser(this, 0, nextY, preset.startColor, changeHandler);
             c.tag = 0;
+            nextY += 20;
 
-            s = new HUISlider(this, 0, 145, "startAlpha", changeHandler);
+            c = new ColorChooser(this, 0, nextY, preset.startColorVariance, changeHandler);
+            c.tag = 1;
+            nextY += 20;
+
+            s = new HUISlider(this, 0, nextY, "startAlpha", changeHandler);
             s.minimum = 0;
             s.maximum = 1;
             s.value = preset.startAlpha;
+            nextY += 20;
 
-            c = new ColorChooser(this, 0, 160, preset.endColor, changeHandler);
-            c.tag = 1;
+            c = new ColorChooser(this, 0, nextY, preset.endColor, changeHandler);
+            c.tag = 2;
+            nextY += 20;
 
-            s = new HUISlider(this, 0, 180, "endAlpha", changeHandler);
+            c = new ColorChooser(this, 0, nextY, preset.endColorVariance, changeHandler);
+            c.tag = 3;
+            nextY += 20;
+
+            s = new HUISlider(this, 0, nextY, "endAlpha", changeHandler);
             s.minimum = 0;
             s.maximum = 1;
             s.value = preset.endAlpha;
+            nextY += 20;
 
-            s = new HUISlider(this, 0, 195, "spawnDelay", changeHandler);
+            s = new HUISlider(this, 0, nextY, "spawnDelay", changeHandler);
             s.minimum = 0;
             s.maximum = 100;
             s.value = preset.spawnDelay;
+            nextY += 20;
 
-            s = new HUISlider(this, 0, 210, "minLife", changeHandler);
+            s = new HUISlider(this, 0, nextY, "minLife", changeHandler);
             s.minimum = 0;
             s.maximum = 10000;
             s.value = preset.minLife;
+            nextY += 20;
 
-            s = new HUISlider(this, 0, 225, "maxLife", changeHandler);
+            s = new HUISlider(this, 0, nextY, "maxLife", changeHandler);
             s.minimum = 0;
             s.maximum = 10000;
             s.value = preset.maxLife;
+            nextY += 20;
 
-            s = new HUISlider(this, 0, 240, "minStartSize", changeHandler);
+            s = new HUISlider(this, 0, nextY, "minStartSize", changeHandler);
             s.minimum = 0;
             s.maximum = 10;
             s.value = preset.minStartSize;
+            nextY += 20;
 
-            s = new HUISlider(this, 0, 255, "maxStartSize", changeHandler);
+            s = new HUISlider(this, 0, nextY, "maxStartSize", changeHandler);
             s.minimum = 0;
             s.maximum = 10;
             s.value = preset.maxStartSize;
+            nextY += 20;
 
-            s = new HUISlider(this, 0, 270, "minEndSize", changeHandler);
+            s = new HUISlider(this, 0, nextY, "minEndSize", changeHandler);
             s.minimum = 0;
             s.maximum = 10;
             s.value = preset.minEndSize;
+            nextY += 20;
 
-            s = new HUISlider(this, 0, 285, "maxEndSize", changeHandler);
+            s = new HUISlider(this, 0, nextY, "maxEndSize", changeHandler);
             s.minimum = 0;
             s.maximum = 10;
             s.value = preset.maxEndSize;
+            nextY += 20;
 
-            s = new HUISlider(this, 0, 300, "maxParticles", changeHandler);
+            s = new HUISlider(this, 0, nextY, "maxParticles", changeHandler);
             s.minimum = 0;
             s.maximum = 10000;
             s.value = maxParticles;
@@ -255,7 +283,13 @@ package tests {
                         preset.startColor = c.value;
                         break;
                     case 1:
+                        preset.startColorVariance = c.value;
+                        break;
+                    case 2:
                         preset.endColor = c.value;
+                        break;
+                    case 3:
+                        preset.endColorVariance = c.value;
                         break;
                 }
             }
