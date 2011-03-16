@@ -1,8 +1,10 @@
-package {
+package tests{
     import de.nulldesign.nd2d.display.ParticleSystem2D;
     import de.nulldesign.nd2d.display.Scene2D;
     import de.nulldesign.nd2d.display.World2D;
     import de.nulldesign.nd2d.materials.BlendModePresets;
+
+    import de.nulldesign.nd2d.utils.ParticleSystemPreset;
 
     import flash.display.Sprite;
     import flash.events.MouseEvent;
@@ -21,7 +23,7 @@ package {
             scene = new Scene2D();
             setActiveScene(scene);
 
-            particles = new ParticleSystem2D(new particleClass().bitmapData, 6000);
+            particles = new ParticleSystem2D(new particleClass().bitmapData, 6000, new ParticleSystemPreset());
             //particles.scaleX = particles.scaleY = 4.0;
             particles.blendMode = BlendModePresets.ADD2;
 

@@ -35,84 +35,20 @@ package de.nulldesign.nd2d.display {
 
     public class Camera2D {
 
-        public var renderMatrix:Matrix3D = new Matrix3D();
-        public var projectionMatrix:Matrix3D = new Matrix3D();
-        public var viewMatrix:Matrix3D = new Matrix3D();
+        protected var renderMatrix:Matrix3D = new Matrix3D();
+        protected var projectionMatrix:Matrix3D = new Matrix3D();
+        protected var viewMatrix:Matrix3D = new Matrix3D();
 
-        public var sceneWidth:Number;
-        public var sceneHeight:Number;
+        protected var _sceneWidth:Number;
+        protected var _sceneHeight:Number;
+        protected var position:Vector3D;
+
         protected var invalidated:Boolean = true;
-        public var position:Vector3D;
-        public var lookAt:Vector3D;
-        public var roll:Number = 0.0;
 
         public function Camera2D(w:Number, h:Number) {
-            sceneWidth = w;
-            sceneHeight = h;
-
+            _sceneWidth = w;
+            _sceneHeight = h;
             projectionMatrix = makeOrtographicMatrix(0, w, 0, h);
-            //projectionMatrix = makeProjectionMatrix(0.1, 1000.0, 90, sceneWidth / sceneHeight);
-            //lookAt = new Vector3D(0.0, 0.0, 0.0);
-            //position = new Vector3D(0, 0, -h / 2.0);
-        }
-
-        public function makeProjectionMatrix(zNear:Number, zFar:Number, fovDegrees:Number, aspect:Number):Matrix3D {
-            var yval:Number = zNear * Math.tan(fovDegrees * (Math.PI / 360.0));
-            var xval:Number = yval * aspect;
-
-            return makeFrustumMatrix(-xval, xval, -yval, yval, zNear, zFar);
-        }
-
-        public function update():void {
-
-            var up:Vector3D = new Vector3D();
-            up.x = Math.sin(roll);
-            up.y = -Math.cos(roll);
-            up.z = 0;
-
-            var forward:Vector3D = new Vector3D();
-            forward.x = lookAt.x - position.x;
-            forward.y = lookAt.y - position.y;
-            forward.z = lookAt.z - position.z;
-            forward.normalize();
-
-            var right:Vector3D = up.crossProduct(forward);
-            right.normalize();
-
-            up = right.crossProduct(forward);
-            up.normalize();
-
-            var rawData:Vector.<Number> = new Vector.<Number>();
-            rawData.push(-right.x, -right.y, -right.z, 0, up.x, up.y, up.z, 0, -forward.x, -forward.y, -forward.z, 0, 0, 0, 0, 1);
-
-            viewMatrix = new Matrix3D(rawData);
-            viewMatrix.transpose();
-            viewMatrix.prependTranslation(-position.x, -position.y, -position.z);
-            viewMatrix.invert();
-        }
-
-        protected function makeFrustumMatrix(left:Number, right:Number, top:Number, bottom:Number, zNear:Number, zFar:Number):Matrix3D {
-            return new Matrix3D(Vector.<Number>([
-                (2 * zNear) / (right - left),
-                0,
-                (right + left) / (right - left),
-                0,
-
-                0,
-                (2 * zNear) / (top - bottom),
-                (top + bottom) / (top - bottom),
-                0,
-
-                0,
-                0,
-                zFar / (zNear - zFar),
-                -1,
-
-                0,
-                0,
-                (zNear * zFar) / (zNear - zFar),
-                0
-            ]));
         }
 
         public function makeOrtographicMatrix(left:Number, right:Number, top:Number, bottom:Number, zNear:Number = -1, zFar:Number = 1):Matrix3D {
@@ -131,8 +67,6 @@ package de.nulldesign.nd2d.display {
                 invalidated = false;
 
                 viewMatrix.identity();
-                //update();
-
                 viewMatrix.appendTranslation(-sceneWidth / 2 + x, -sceneHeight / 2 + y, 0.0);
                 viewMatrix.appendScale(zoom, zoom, 1.0);
                 viewMatrix.appendRotation(_rotation, Vector3D.Z_AXIS);
@@ -186,6 +120,14 @@ package de.nulldesign.nd2d.display {
 
         public function set rotation(value:Number):void {
             _rotation = value;
+        }
+
+        public function get sceneWidth():Number {
+            return _sceneWidth;
+        }
+
+        public function get sceneHeight():Number {
+            return _sceneHeight;
         }
     }
 }

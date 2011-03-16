@@ -1,4 +1,4 @@
-package {
+package tests{
     import de.nulldesign.nd2d.display.Scene2D;
     import de.nulldesign.nd2d.display.Sprite2D;
     import de.nulldesign.nd2d.display.World2D;
@@ -9,7 +9,7 @@ package {
 
     public class SpriteTest extends World2D {
 
-        [Embed(source="../examples/assets/crate.jpg")]
+        [Embed(source="../assets/crate.jpg")]
         private var spriteTexture:Class;
 
         private var s:Sprite2D;

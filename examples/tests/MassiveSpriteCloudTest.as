@@ -5,7 +5,7 @@
  * Time: 09:35
  * To change this template use File | Settings | File Templates.
  */
-package {
+package tests{
     import de.nulldesign.nd2d.display.Scene2D;
     import de.nulldesign.nd2d.display.Sprite2D;
     import de.nulldesign.nd2d.display.Sprite2DCloud;

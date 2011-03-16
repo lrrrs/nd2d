@@ -55,7 +55,7 @@ package de.nulldesign.nd2d.display {
         protected var texW:Number;
         protected var texH:Number;
         protected var maxCapacity:uint;
-        protected var config:ParticleSystemPreset = new ParticleSystemPreset();
+        protected var preset:ParticleSystemPreset;
 
         public var gravity:Point = new Point(0.0, 0.0);
 
@@ -66,8 +66,9 @@ package de.nulldesign.nd2d.display {
             return activeParticles * 2;
         }
 
-        public function ParticleSystem2D(particleBitmap:BitmapData, maxCapacity:uint) {
+        public function ParticleSystem2D(particleBitmap:BitmapData, maxCapacity:uint, preset:ParticleSystemPreset) {
             super();
+            this.preset = preset;
             init(particleBitmap, maxCapacity);
         }
 
@@ -97,20 +98,40 @@ package de.nulldesign.nd2d.display {
             currentTime = 0;
 
             for(var i:int = 0; i < maxCapacity; i++) {
+
                 particles[i] = new Particle();
-                faceList[f++] = new Face(particles[i].v1, particles[i].v2, particles[i].v3, particles[i].uv1, particles[i].uv2, particles[i].uv3);
-                faceList[f++] = new Face(particles[i].v1, particles[i].v3, particles[i].v4, particles[i].uv1, particles[i].uv3, particles[i].uv4);
 
-                var angle:Number = NumberUtil.rndMinMax(VectorUtil.deg2rad(config.minEmitAngle), VectorUtil.deg2rad(config.maxEmitAngle));
-                var speed:Number = NumberUtil.rndMinMax(config.minSpeed, config.maxSpeed);
+                faceList[f++] = new Face(particles[i].v1, particles[i].v2, particles[i].v3, particles[i].uv1,
+                                         particles[i].uv2, particles[i].uv3);
 
-                initParticle(NumberUtil.rndMinMax(config.minStartPosition.x, config.maxStartPosition.x), NumberUtil.rndMinMax(config.minStartPosition.y, config.maxStartPosition.y), Math.sin(angle) * speed, Math.cos(angle) * speed, config.startColor, config.endColor, config.startAlpha, config.endAlpha, NumberUtil.rndMinMax(config.minStartSize, config.maxStartSize), NumberUtil.rndMinMax(config.minEndSize, config.maxEndSize), NumberUtil.rndMinMax(config.minLife, config.maxLife), config.spawnDelay * i);
+                faceList[f++] = new Face(particles[i].v1, particles[i].v3, particles[i].v4, particles[i].uv1,
+                                         particles[i].uv3, particles[i].uv4);
+
+                var angle:Number = NumberUtil.rndMinMax(VectorUtil.deg2rad(preset.minEmitAngle),
+                                                        VectorUtil.deg2rad(preset.maxEmitAngle));
+
+                var speed:Number = NumberUtil.rndMinMax(preset.minSpeed, preset.maxSpeed);
+
+                initParticle(NumberUtil.rndMinMax(preset.minStartPosition.x, preset.maxStartPosition.x),
+                             NumberUtil.rndMinMax(preset.minStartPosition.y, preset.maxStartPosition.y),
+                             Math.sin(angle) * speed,
+                             Math.cos(angle) * speed,
+                             preset.startColor,
+                             preset.endColor,
+                             preset.startAlpha,
+                             preset.endAlpha,
+                             NumberUtil.rndMinMax(preset.minStartSize, preset.maxStartSize),
+                             NumberUtil.rndMinMax(preset.minEndSize, preset.maxEndSize),
+                             NumberUtil.rndMinMax(preset.minLife, preset.maxLife),
+                             preset.spawnDelay * i);
             }
 
             activeParticles = 1;
         }
 
-        protected function initParticle(x:Number, y:Number, vx:Number, vy:Number, startColor:Number, endColor:Number, startAlpha:Number, endAlpha:Number, startSize:Number, endSize:Number, life:Number, startTime:Number):void {
+        protected function initParticle(x:Number, y:Number, vx:Number, vy:Number, startColor:Number, endColor:Number,
+                                        startAlpha:Number, endAlpha:Number, startSize:Number, endSize:Number,
+                                        life:Number, startTime:Number):void {
 
             // position
             var p:Particle = particles[activeParticles];
@@ -163,7 +184,7 @@ package de.nulldesign.nd2d.display {
             currentTime = getTimer() - startTime;
 
             if(activeParticles < maxCapacity) {
-                activeParticles = Math.min(Math.ceil(currentTime / config.spawnDelay), maxCapacity);
+                activeParticles = Math.min(Math.ceil(currentTime / preset.spawnDelay), maxCapacity);
             }
         }
 
