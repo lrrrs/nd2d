@@ -64,7 +64,7 @@ package de.nulldesign.nd2d.materials {
             super.prepareForRender(context);
 
             if(!texture) {
-                texture = TextureHelper.generateTextureFromBitmap(context, particleTexture);
+                texture = TextureHelper.generateTextureFromBitmap(context, particleTexture, true);
             }
 
             context.setTextureAt(0, texture);

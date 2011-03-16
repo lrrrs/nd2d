@@ -34,6 +34,7 @@ package de.nulldesign.nd2d.utils {
     import flash.display3D.Context3D;
     import flash.display3D.Context3DTextureFormat;
     import flash.display3D.textures.Texture;
+    import flash.geom.Matrix;
     import flash.geom.Point;
     import flash.geom.Rectangle;
 
@@ -70,7 +71,9 @@ package de.nulldesign.nd2d.utils {
          * @param bmp
          * @return The generated texture
          */
-        public static function generateTextureFromBitmap(context:Context3D, bmp:BitmapData):Texture {
+        public static function generateTextureFromBitmap(context:Context3D,
+                                                         bmp:BitmapData,
+                                                         useMipMaps:Boolean):Texture {
 
             var textureDimensions:Point = getTextureDimensionsFromBitmap(bmp);
 
@@ -84,10 +87,34 @@ package de.nulldesign.nd2d.utils {
 
             newBmp.copyPixels(bmp, sourceRect, destPoint);
 
-            var texture:Texture = context.createTexture(textureDimensions.x, textureDimensions.y, Context3DTextureFormat.BGRA, false);
-            texture.uploadFromBitmapData(newBmp);
+            var texture:Texture = context.createTexture(textureDimensions.x, textureDimensions.y,
+                                                        Context3DTextureFormat.BGRA, false);
+
+            if(useMipMaps) {
+                uploadTextureWithMipmaps(texture, newBmp);
+            } else {
+                texture.uploadFromBitmapData(newBmp);
+            }
 
             return texture;
+        }
+
+        public static function uploadTextureWithMipmaps(dest:Texture, src:BitmapData):void {
+            var ws:int = src.width;
+            var hs:int = src.height;
+            var level:int = 0;
+            var tmp:BitmapData = new BitmapData(src.width, src.height);
+            var transform:Matrix = new Matrix();
+
+            while(ws > 1 && hs > 1) {
+                tmp.draw(src, transform, null, null, null, true);
+                dest.uploadFromBitmapData(tmp, level);
+                transform.scale(0.5, 0.5);
+                level++;
+                ws >>= 1;
+                hs >>= 1;
+            }
+            tmp.dispose();
         }
     }
 }

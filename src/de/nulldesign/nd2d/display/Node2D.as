@@ -282,8 +282,6 @@ package de.nulldesign.nd2d.display {
                 localMouse.y /= localMouse.w;
                 localMouse.z /= localMouse.w;
 
-                //trace(localMouse.x + " / " + localMouse.y + " / " + localMouse.z + " / " + localMouse.w);
-
                 var oldMouseInNodeState:Boolean = mouseInNode;
                 mouseInNode = (localMouse.x >= -width / 2.0 && localMouse.x <= width / 2.0 && localMouse.y >= -height / 2.0 && localMouse.y <= height / 2.0);
 
@@ -314,7 +312,8 @@ package de.nulldesign.nd2d.display {
         }
 
         private function dispatchMouseEvent(mouseEventType:String):void {
-            dispatchEvent(new MouseEvent(mouseEventType, true, false, localMouse.x, localMouse.y, null, false, false, false, (mouseEventType == MouseEvent.MOUSE_DOWN), 0));
+            dispatchEvent(new MouseEvent(mouseEventType, true, false, localMouse.x, localMouse.y, null, false, false,
+                                         false, (mouseEventType == MouseEvent.MOUSE_DOWN), 0));
         }
 
         protected function draw(context:Context3D, camera:Camera2D):void {

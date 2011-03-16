@@ -49,12 +49,15 @@ package de.nulldesign.nd2d.materials {
     import de.nulldesign.nd2d.geom.Vertex;
     import de.nulldesign.nd2d.utils.NodeBlendMode;
 
+    import flash.display.BitmapData;
     import flash.display3D.Context3D;
     import flash.display3D.Context3DProgramType;
     import flash.display3D.Context3DVertexBufferFormat;
     import flash.display3D.IndexBuffer3D;
     import flash.display3D.Program3D;
     import flash.display3D.VertexBuffer3D;
+    import flash.display3D.textures.Texture;
+    import flash.geom.Matrix;
     import flash.geom.Matrix3D;
     import flash.utils.ByteArray;
     import flash.utils.Dictionary;

@@ -1,8 +1,8 @@
 module_material_vertex_program texture
 
     metadata
-        namespace const(string, "AIF Test")
-        vendor const(string, "Adobe")
+        namespace const(string, "ND2D_Shader")
+        vendor const(string, "nulldesign")
         version const(int, 1)
     end_metadata
     

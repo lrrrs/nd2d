@@ -105,7 +105,7 @@ package de.nulldesign.nd2d.display {
         override protected function draw(context:Context3D, camera:Camera2D):void {
 
             if(!material.texture) {
-                material.texture = TextureHelper.generateTextureFromBitmap(context, material.bitmapData);
+                material.texture = TextureHelper.generateTextureFromBitmap(context, material.bitmapData, true);
             }
 
             if(!program) {
