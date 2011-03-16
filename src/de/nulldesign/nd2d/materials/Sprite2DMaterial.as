@@ -1,7 +1,32 @@
-/**
- * ND2D Molehill Engine v0.1
- * @author Lars Gerckens www.nulldesign.de
+/*
  *
+ *  ND2D - A Flash Molehill GPU accelerated 2D engine
+ *
+ *  Author: Lars Gerckens
+ *  Copyright (c) nulldesign 2011
+ *  Repository URL: https://github.com/nulldesign/nd2d
+ *
+ *
+ *  Licence Agreement
+ *
+ *  Permission is hereby granted, free of charge, to any person obtaining a copy
+ *  of this software and associated documentation files (the "Software"), to deal
+ *  in the Software without restriction, including without limitation the rights
+ *  to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ *  copies of the Software, and to permit persons to whom the Software is
+ *  furnished to do so, subject to the following conditions:
+ *
+ *  The above copyright notice and this permission notice shall be included in
+ *  all copies or substantial portions of the Software.
+ *
+ *  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ *  IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ *  FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ *  AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ *  LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ *  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+ *  THE SOFTWARE.
+ * /
  */
 
 package de.nulldesign.nd2d.materials {
@@ -9,11 +34,9 @@ package de.nulldesign.nd2d.materials {
 
     import flash.display.BitmapData;
     import flash.display3D.Context3D;
-    import flash.display3D.Context3DBlendFactor;
     import flash.display3D.Context3DProgramType;
     import flash.display3D.textures.Texture;
     import flash.geom.Point;
-    import flash.geom.Rectangle;
     import flash.geom.Vector3D;
 
     public class Sprite2DMaterial extends AMaterial {
@@ -43,20 +66,18 @@ package de.nulldesign.nd2d.materials {
 
             super.prepareForRender(context);
 
-            if (!texture) {
+            if(!texture) {
                 texture = TextureHelper.generateTextureFromBitmap(context, bitmapData);
             }
 
             // TODO SET TEXTURE BY NAME!!!
             context.setTextureAt(0, texture);
 
-            parameterBufferHelper.setNumberParameterByName(Context3DProgramType.FRAGMENT,
-                    "color",
-                    Vector.<Number>([ color.x, color.y, color.z, color.w ]));
+            parameterBufferHelper.setNumberParameterByName(Context3DProgramType.FRAGMENT, "color", Vector.<Number>([ color.x, color.y, color.z, color.w ]));
 
             var offset:Point = new Point();
 
-            if (spriteSheet) {
+            if(spriteSheet) {
                 var rowIdx:uint = spriteSheet.frame % spriteSheet.numSheetsPerRow;
                 var colIdx:uint = Math.floor(spriteSheet.frame / spriteSheet.numSheetsPerRow);
 
@@ -64,9 +85,7 @@ package de.nulldesign.nd2d.materials {
                 offset.y = spriteSheet.uvSize.y * colIdx;
             }
 
-            parameterBufferHelper.setNumberParameterByName(Context3DProgramType.VERTEX,
-                    "uvOffset",
-                    Vector.<Number>([ offset.x, offset.y, 0.0, 1.0 ]));
+            parameterBufferHelper.setNumberParameterByName(Context3DProgramType.VERTEX, "uvOffset", Vector.<Number>([ offset.x, offset.y, 0.0, 1.0 ]));
 
             parameterBufferHelper.update();
 
@@ -79,7 +98,7 @@ package de.nulldesign.nd2d.materials {
         }
 
         override protected function initProgram(context:Context3D):void {
-            if (!program) {
+            if(!program) {
                 vertexProgram = readFile(VertexProgramClass);
                 materialVertexProgram = readFile(MaterialVertexProgramClass);
                 materialFragmentProgram = readFile(MaterialFragmentProgramClass);

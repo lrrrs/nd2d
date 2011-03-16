@@ -3,7 +3,6 @@ package {
     import de.nulldesign.nd2d.display.Sprite2D;
     import de.nulldesign.nd2d.display.Sprite2DCloud;
     import de.nulldesign.nd2d.display.World2D;
-
     import de.nulldesign.nd2d.materials.BlendModePresets;
 
     import flash.display.BitmapData;
@@ -34,7 +33,7 @@ package {
             spriteSheet = new Sprite2DCloud(tex);
             spriteSheet.blendMode = BlendModePresets.ADD2;
 
-            for (var i:int = 0; i < 4000; i++) {
+            for(var i:int = 0; i < 4000; i++) {
                 s = new Sprite2D();
                 s.x = (Math.random() - Math.random()) * 800;
                 s.y = (Math.random() - Math.random()) * 600;
@@ -76,33 +75,33 @@ package {
             var g:uint;
             var b:uint;
 
-            for (var i:int = 0; i < len; i++) {
+            for(var i:int = 0; i < len; i++) {
                 s = sprites[i];
                 s.x += s.vx;
                 s.y += s.vy;
 
-                if (s.x < 0) {
+                if(s.x < 0) {
                     //s.x = 0;
                     //s.vx *= -1;
                     s.x = Math.random() * stage.stageWidth;
                     s.y = Math.random() * stage.stageHeight;
                 }
 
-                if (s.x > stage.stageWidth) {
+                if(s.x > stage.stageWidth) {
                     //s.x = stage.stageWidth;
                     //s.vx *= -1;
                     s.x = Math.random() * stage.stageWidth;
                     s.y = Math.random() * stage.stageHeight;
                 }
 
-                if (s.y < 0) {
+                if(s.y < 0) {
                     //s.y = 0;
                     //s.vy *= -1;
                     s.x = Math.random() * stage.stageWidth;
                     s.y = Math.random() * stage.stageHeight;
                 }
 
-                if (s.y > stage.stageHeight) {
+                if(s.y > stage.stageHeight) {
                     //s.y = stage.stageHeight;
                     //s.vy *= -1;
                     s.x = Math.random() * stage.stageWidth;

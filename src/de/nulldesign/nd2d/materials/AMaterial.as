@@ -1,3 +1,34 @@
+/*
+ *
+ *  ND2D - A Flash Molehill GPU accelerated 2D engine
+ *
+ *  Author: Lars Gerckens
+ *  Copyright (c) nulldesign 2011
+ *  Repository URL: https://github.com/nulldesign/nd2d
+ *
+ *
+ *  Licence Agreement
+ *
+ *  Permission is hereby granted, free of charge, to any person obtaining a copy
+ *  of this software and associated documentation files (the "Software"), to deal
+ *  in the Software without restriction, including without limitation the rights
+ *  to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ *  copies of the Software, and to permit persons to whom the Software is
+ *  furnished to do so, subject to the following conditions:
+ *
+ *  The above copyright notice and this permission notice shall be included in
+ *  all copies or substantial portions of the Software.
+ *
+ *  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ *  IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ *  FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ *  AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ *  LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ *  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+ *  THE SOFTWARE.
+ * /
+ */
+
 /**
  * ND2D Molehill Engine v0.1
  * @author Lars Gerckens www.nulldesign.de
@@ -16,14 +47,10 @@ package de.nulldesign.nd2d.materials {
     import de.nulldesign.nd2d.geom.Face;
     import de.nulldesign.nd2d.geom.UV;
     import de.nulldesign.nd2d.geom.Vertex;
-    import de.nulldesign.nd2d.materials.BlendModePresets;
     import de.nulldesign.nd2d.utils.NodeBlendMode;
 
     import flash.display3D.Context3D;
-    import flash.display3D.Context3DBlendFactor;
-    import flash.display3D.Context3DCompareMode;
     import flash.display3D.Context3DProgramType;
-    import flash.display3D.Context3DTriangleFace;
     import flash.display3D.Context3DVertexBufferFormat;
     import flash.display3D.IndexBuffer3D;
     import flash.display3D.Program3D;
@@ -70,7 +97,7 @@ package de.nulldesign.nd2d.materials {
 
             initProgram(context);
 
-            if (vertexBuffer) {
+            if(vertexBuffer) {
                 return;
             }
 
@@ -86,12 +113,12 @@ package de.nulldesign.nd2d.materials {
             var indexBufferIdx:Number = 0;
             var face:Face;
 
-            for (i = 0; i < numFaces; i++) {
+            for(i = 0; i < numFaces; i++) {
 
                 face = faceList[i];
 
                 tmpUID = face.v1.uid + "." + face.uv1.uid;
-                if (duplicateCheck[tmpUID] == undefined) {
+                if(duplicateCheck[tmpUID] == undefined) {
                     addVertex(mVertexBuffer, face.v1, face.uv1, face);
                     duplicateCheck[tmpUID] = indexBufferIdx;
                     mIndexBuffer.push(indexBufferIdx);
@@ -101,7 +128,7 @@ package de.nulldesign.nd2d.materials {
                 }
 
                 tmpUID = face.v2.uid + "." + face.uv2.uid;
-                if (duplicateCheck[tmpUID] == undefined) {
+                if(duplicateCheck[tmpUID] == undefined) {
                     addVertex(mVertexBuffer, face.v2, face.uv2, face);
                     duplicateCheck[tmpUID] = indexBufferIdx;
                     mIndexBuffer.push(indexBufferIdx);
@@ -111,7 +138,7 @@ package de.nulldesign.nd2d.materials {
                 }
 
                 tmpUID = face.v3.uid + "." + face.uv3.uid;
-                if (duplicateCheck[tmpUID] == undefined) {
+                if(duplicateCheck[tmpUID] == undefined) {
                     addVertex(mVertexBuffer, face.v3, face.uv3, face);
                     duplicateCheck[tmpUID] = indexBufferIdx;
                     mIndexBuffer.push(indexBufferIdx);
@@ -127,7 +154,7 @@ package de.nulldesign.nd2d.materials {
             vertexBuffer = context.createVertexBuffer(numIndices, numFloatsPerVertex); // xx vertices, xx floats per vertex
             vertexBuffer.uploadFromVector(mVertexBuffer, 0, numIndices);
 
-            if (!indexBuffer) {
+            if(!indexBuffer) {
 
                 indexBuffer = context.createIndexBuffer(mIndexBuffer.length);
                 indexBuffer.uploadFromVector(mIndexBuffer, 0, mIndexBuffer.length);
@@ -139,11 +166,9 @@ package de.nulldesign.nd2d.materials {
         public function prepareForRender(context:Context3D):void {
 
             context.setProgram(program);
-            context.setCulling(Context3DTriangleFace.NONE);
-            context.setDepthTest(false, Context3DCompareMode.LESS_EQUAL);
             context.setBlendFactors(blendMode.src, blendMode.dst);
 
-            if (vertexRegisterMap) {
+            if(vertexRegisterMap) {
                 vertexBufferHelper = new VertexBufferHelper(context, vertexRegisterMap.vertexRegisters, vertexBuffer);
             }
 
@@ -151,13 +176,9 @@ package de.nulldesign.nd2d.materials {
             clipSpaceMatrix.append(modelViewMatrix);
             clipSpaceMatrix.append(projectionMatrix);
 
-            parameterBufferHelper.setMatrixParameterByName(
-                    Context3DProgramType.VERTEX,
-                    "objectToClipSpaceTransform",
-                    clipSpaceMatrix,
-                    true);
+            parameterBufferHelper.setMatrixParameterByName(Context3DProgramType.VERTEX, "objectToClipSpaceTransform", clipSpaceMatrix, true);
 
-            if (needUploadVertexBuffer) {
+            if(needUploadVertexBuffer) {
                 needUploadVertexBuffer = false;
                 vertexBuffer.uploadFromVector(mVertexBuffer, 0, mVertexBuffer.length / numFloatsPerVertex);
             }
@@ -167,13 +188,13 @@ package de.nulldesign.nd2d.materials {
 
         public function clearAfterRender(context:Context3D):void {
             // overwrite
-            for (var j:int = 0; j < vertexRegisterMap.vertexRegisters.length; j += 1) {
+            for(var j:int = 0; j < vertexRegisterMap.vertexRegisters.length; j += 1) {
                 context.setVertexBufferAt(j, null);
             }
         }
 
         protected function initProgram(context:Context3D):void {
-            if (!program) {
+            if(!program) {
 
                 var inputVertexProgram:PBASMProgram = new PBASMProgram(vertexProgram);
 
@@ -207,44 +228,44 @@ package de.nulldesign.nd2d.materials {
 
             var vertexRegisters:Vector.<VertexRegisterInfo> = vertexRegisterMap.vertexRegisters;
 
-            for (var j:int = 0; j < vertexRegisterMap.vertexRegisters.length; j += 1) {
+            for(var j:int = 0; j < vertexRegisterMap.vertexRegisters.length; j += 1) {
                 var n:int = getFloatFormat(vertexRegisterMap.vertexRegisters[j].format);
 
-                if (vertexRegisters[ j ].semantics.id == "PB3D_POSITION") {
+                if(vertexRegisters[ j ].semantics.id == "PB3D_POSITION") {
                     buffer.push(v.x, v.y, v.z);
-                    if (n == 4)
+                    if(n == 4)
                         buffer.push(1.0);
                 }
 
-                if (vertexRegisters[ j ].semantics.id == "PB3D_TARGET_POSITION") {
+                if(vertexRegisters[ j ].semantics.id == "PB3D_TARGET_POSITION") {
                     buffer.push(v.targetVertex.x, v.targetVertex.y, v.targetVertex.z);
-                    if (n == 4)
+                    if(n == 4)
                         buffer.push(1.0);
                 }
 
-                if (vertexRegisters[ j ].semantics.id == "PB3D_COLOR") {
+                if(vertexRegisters[ j ].semantics.id == "PB3D_COLOR") {
                     buffer.push(v.r, v.g, v.b);
-                    if (n == 4)
+                    if(n == 4)
                         buffer.push(v.a);
                 }
 
-                if (vertexRegisters[ j ].semantics.id == "PB3D_NORMAL") {
+                if(vertexRegisters[ j ].semantics.id == "PB3D_NORMAL") {
                     buffer.push(v.normal.x, v.normal.y, v.normal.z);
-                    if (n == 4)
+                    if(n == 4)
                         buffer.push(v.normal.w);
                 }
 
-                if (vertexRegisters[ j ].semantics.id == "PB3D_TARGET_NORMAL") {
+                if(vertexRegisters[ j ].semantics.id == "PB3D_TARGET_NORMAL") {
                     buffer.push(v.targetVertex.normal.x, v.targetVertex.normal.y, v.targetVertex.normal.z);
-                    if (n == 4)
+                    if(n == 4)
                         buffer.push(v.targetVertex.normal.w);
                 }
 
-                if (vertexRegisters[ j ].semantics.id == "PB3D_UV") {
+                if(vertexRegisters[ j ].semantics.id == "PB3D_UV") {
                     buffer.push(uv.u, uv.v);
-                    if (n == 3)
+                    if(n == 3)
                         buffer.push(0.0);
-                    if (n == 4)
+                    if(n == 4)
                         buffer.push(0.0, 0.0);
                 }
             }
@@ -255,7 +276,7 @@ package de.nulldesign.nd2d.materials {
 
             toIdx *= numFloatsPerVertex;
 
-            for (var i:int = toIdx; i < toIdx + numFloatsPerVertex; i++) {
+            for(var i:int = toIdx; i < toIdx + numFloatsPerVertex; i++) {
                 mVertexBuffer[i] = mVertexBuffer[fromIdx++];
             }
         }
@@ -267,62 +288,62 @@ package de.nulldesign.nd2d.materials {
             var curIdx:uint = idx * numFloatsPerVertex;
             var vertexRegisters:Vector.<VertexRegisterInfo> = vertexRegisterMap.vertexRegisters;
 
-            for (var j:int = 0; j < vertexRegisterMap.vertexRegisters.length; j += 1) {
+            for(var j:int = 0; j < vertexRegisterMap.vertexRegisters.length; j += 1) {
                 var n:int = getFloatFormat(vertexRegisterMap.vertexRegisters[j].format);
 
-                if (vertexRegisters[ j ].semantics.id == "PB3D_POSITION") {
+                if(vertexRegisters[ j ].semantics.id == "PB3D_POSITION") {
                     mVertexBuffer[curIdx++] = v.x;
                     mVertexBuffer[curIdx++] = v.y;
                     mVertexBuffer[curIdx++] = v.z;
 
-                    if (n == 4)
+                    if(n == 4)
                         curIdx++;
                 }
 
-                if (vertexRegisters[ j ].semantics.id == "PB3D_TARGET_POSITION") {
+                if(vertexRegisters[ j ].semantics.id == "PB3D_TARGET_POSITION") {
                     mVertexBuffer[curIdx++] = v.targetVertex.x;
                     mVertexBuffer[curIdx++] = v.targetVertex.y;
                     mVertexBuffer[curIdx++] = v.targetVertex.z;
 
-                    if (n == 4)
+                    if(n == 4)
                         curIdx++;
                 }
 
-                if (vertexRegisters[ j ].semantics.id == "PB3D_COLOR") {
+                if(vertexRegisters[ j ].semantics.id == "PB3D_COLOR") {
                     mVertexBuffer[curIdx++] = v.r;
                     mVertexBuffer[curIdx++] = v.g;
                     mVertexBuffer[curIdx++] = v.b;
 
-                    if (n == 4)
+                    if(n == 4)
                         v.a;
                 }
 
-                if (vertexRegisters[ j ].semantics.id == "PB3D_NORMAL") {
+                if(vertexRegisters[ j ].semantics.id == "PB3D_NORMAL") {
                     mVertexBuffer[curIdx++] = v.normal.x;
                     mVertexBuffer[curIdx++] = v.normal.y;
                     mVertexBuffer[curIdx++] = v.normal.z;
 
-                    if (n == 4)
+                    if(n == 4)
                         mVertexBuffer[curIdx++] = v.normal.w;
                 }
 
-                if (vertexRegisters[ j ].semantics.id == "PB3D_TARGET_NORMAL") {
+                if(vertexRegisters[ j ].semantics.id == "PB3D_TARGET_NORMAL") {
                     mVertexBuffer[curIdx++] = v.targetVertex.normal.x;
                     mVertexBuffer[curIdx++] = v.targetVertex.normal.y;
                     mVertexBuffer[curIdx++] = v.targetVertex.normal.z;
 
-                    if (n == 4)
+                    if(n == 4)
                         mVertexBuffer[curIdx++] = v.targetVertex.normal.w;
                 }
 
-                if (vertexRegisters[ j ].semantics.id == "PB3D_UV") {
+                if(vertexRegisters[ j ].semantics.id == "PB3D_UV") {
                     mVertexBuffer[curIdx++] = uv.u;
                     mVertexBuffer[curIdx++] = uv.v;
 
-                    if (n == 3)
+                    if(n == 3)
                         curIdx++;
 
-                    if (n == 4)
+                    if(n == 4)
                         curIdx += 2;
                 }
 
@@ -330,13 +351,13 @@ package de.nulldesign.nd2d.materials {
         }
 
         protected function getFloatFormat(format:String):int {
-            if (format == Context3DVertexBufferFormat.FLOAT_1)
+            if(format == Context3DVertexBufferFormat.FLOAT_1)
                 return 1;
-            if (format == Context3DVertexBufferFormat.FLOAT_2)
+            if(format == Context3DVertexBufferFormat.FLOAT_2)
                 return 2;
-            if (format == Context3DVertexBufferFormat.FLOAT_3)
+            if(format == Context3DVertexBufferFormat.FLOAT_3)
                 return 3;
-            if (format == Context3DVertexBufferFormat.FLOAT_4)
+            if(format == Context3DVertexBufferFormat.FLOAT_4)
                 return 4;
 
             throw new Error("bad format");

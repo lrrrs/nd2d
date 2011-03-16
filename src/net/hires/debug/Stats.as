@@ -134,7 +134,7 @@ package net.hires.debug {
         private function destroy(e:Event):void {
             graphics.clear();
 
-            while (numChildren > 0)
+            while(numChildren > 0)
                 removeChildAt(0);
 
             graph.bitmapData.dispose();
@@ -146,7 +146,7 @@ package net.hires.debug {
         public function update(drawCalls:int, numTris:int):void {
             timer = getTimer();
 
-            if (timer - 1000 > ms_prev) {
+            if(timer - 1000 > ms_prev) {
                 ms_prev = timer;
                 mem = Number((System.totalMemory * 0.000000954).toFixed(3));
                 mem_max = mem_max > mem ? mem_max : mem;
@@ -177,7 +177,7 @@ package net.hires.debug {
             xml.ms = "MS: " + (timer - ms);
             ms = timer;
 
-            if (driverInfoToggle) {
+            if(driverInfoToggle) {
                 text.htmlText = "<xml><fps>" + driverInfo + "</fps></xml>";
             } else {
                 text.htmlText = xml;

@@ -40,10 +40,7 @@ package {
 
             s.rotation += 5;
             //s.scaleX = s.scaleY = 2.0 + Math.sin(getTimer() * 0.001);
-            s.tint = ColorUtil.rgb2hex(
-                    255 * (0.5 + Math.sin(getTimer() * 0.002) * 0.5),
-                    255 * (0.5 + Math.cos(getTimer() * 0.001) * 0.5),
-                    255 * (0.5 + Math.sin(getTimer() * 0.003) * 0.5));
+            s.tint = ColorUtil.rgb2hex(255 * (0.5 + Math.sin(getTimer() * 0.002) * 0.5), 255 * (0.5 + Math.cos(getTimer() * 0.001) * 0.5), 255 * (0.5 + Math.sin(getTimer() * 0.003) * 0.5));
 
             s2.x = stage.stageWidth / 2 - s2.width / 1.5;
             s2.y = stage.stageHeight / 2;

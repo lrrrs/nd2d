@@ -1,7 +1,32 @@
-/**
- * ND2D Molehill Engine v0.1
- * @author Lars Gerckens www.nulldesign.de
+/*
  *
+ *  ND2D - A Flash Molehill GPU accelerated 2D engine
+ *
+ *  Author: Lars Gerckens
+ *  Copyright (c) nulldesign 2011
+ *  Repository URL: https://github.com/nulldesign/nd2d
+ *
+ *
+ *  Licence Agreement
+ *
+ *  Permission is hereby granted, free of charge, to any person obtaining a copy
+ *  of this software and associated documentation files (the "Software"), to deal
+ *  in the Software without restriction, including without limitation the rights
+ *  to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ *  copies of the Software, and to permit persons to whom the Software is
+ *  furnished to do so, subject to the following conditions:
+ *
+ *  The above copyright notice and this permission notice shall be included in
+ *  all copies or substantial portions of the Software.
+ *
+ *  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ *  IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ *  FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ *  AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ *  LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ *  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+ *  THE SOFTWARE.
+ * /
  */
 
 package de.nulldesign.nd2d.display {
@@ -9,14 +34,12 @@ package de.nulldesign.nd2d.display {
     import de.nulldesign.nd2d.geom.UV;
     import de.nulldesign.nd2d.geom.Vertex;
     import de.nulldesign.nd2d.materials.Sprite2DMaterial;
+    import de.nulldesign.nd2d.materials.SpriteSheet;
     import de.nulldesign.nd2d.utils.TextureHelper;
 
     import flash.display.BitmapData;
     import flash.display3D.Context3D;
     import flash.geom.Point;
-    import flash.geom.Rectangle;
-
-    import de.nulldesign.nd2d.materials.SpriteSheet;
 
     public class Sprite2D extends Node2D {
 
@@ -40,11 +63,11 @@ package de.nulldesign.nd2d.display {
         public function Sprite2D(bitmapTexture:BitmapData = null, spriteSheet:SpriteSheet = null) {
             this.spriteSheet = spriteSheet;
 
-            if (spriteSheet) {
+            if(spriteSheet) {
                 bitmapTexture = spriteSheet.bitmapData;
             }
 
-            if (bitmapTexture) {
+            if(bitmapTexture) {
                 initWithBitmapData(bitmapTexture);
             }
         }
@@ -62,7 +85,7 @@ package de.nulldesign.nd2d.display {
 
             textureDimensions = TextureHelper.getTextureDimensionsFromBitmap(bitmapTexture);
 
-            if (!spriteSheet) {
+            if(!spriteSheet) {
                 texW = textureDimensions.x / 2.0;
                 texH = textureDimensions.y / 2.0;
 
@@ -95,7 +118,7 @@ package de.nulldesign.nd2d.display {
         }
 
         override protected function step(t:Number):void {
-            if (spriteSheet)
+            if(spriteSheet)
                 spriteSheet.update(t);
         }
 
@@ -108,7 +131,7 @@ package de.nulldesign.nd2d.display {
             material.projectionMatrix = camera.getProjectionMatrix();
 
             // TODO optimize there is always a parent!
-            if (refreshColors || parent) {
+            if(refreshColors || parent) {
 
                 updateColors();
 

@@ -21,14 +21,14 @@ package {
         private var p:Number = 0.0;
         private var p2:Number = 0.0;
 
-		private var scene:Scene2D;
-		
+        private var scene:Scene2D;
+
         public function StarFieldTest(renderMode:String) {
             super(renderMode, 60);
 
-			scene = new Scene2D();
-			setActiveScene(scene);
-			
+            scene = new Scene2D();
+            setActiveScene(scene);
+
             starfield1 = new Sprite2D(new starFieldTexture().bitmapData);
             scene.addChild(starfield1);
             starfield2 = new Sprite2D(new starFieldTexture().bitmapData);
@@ -38,7 +38,7 @@ package {
             starfield3.blendMode = BlendModePresets.ADD;
             scene.addChild(starfield3);
             starfield4 = new Sprite2D(new starFieldTexture2().bitmapData);
-			starfield4.blendMode = BlendModePresets.ADD;
+            starfield4.blendMode = BlendModePresets.ADD;
             scene.addChild(starfield4);
         }
 
@@ -62,7 +62,7 @@ package {
             p += 0.005;
 
             if(starfield1.y - scaledHeight / 2 > stage.stageHeight) {
-               p = 0.0; 
+                p = 0.0;
             }
 
             // layer 2
@@ -82,7 +82,7 @@ package {
             p2 += 0.008;
 
             if(starfield3.y - scaledHeight / 2 > stage.stageHeight) {
-               p2 = 0.0;
+                p2 = 0.0;
             }
         }
     }

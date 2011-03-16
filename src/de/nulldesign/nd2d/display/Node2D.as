@@ -1,7 +1,32 @@
-/**
- * ND2D Molehill Engine v0.1
- * @author Lars Gerckens www.nulldesign.de
+/*
  *
+ *  ND2D - A Flash Molehill GPU accelerated 2D engine
+ *
+ *  Author: Lars Gerckens
+ *  Copyright (c) nulldesign 2011
+ *  Repository URL: https://github.com/nulldesign/nd2d
+ *
+ *
+ *  Licence Agreement
+ *
+ *  Permission is hereby granted, free of charge, to any person obtaining a copy
+ *  of this software and associated documentation files (the "Software"), to deal
+ *  in the Software without restriction, including without limitation the rights
+ *  to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ *  copies of the Software, and to permit persons to whom the Software is
+ *  furnished to do so, subject to the following conditions:
+ *
+ *  The above copyright notice and this permission notice shall be included in
+ *  all copies or substantial portions of the Software.
+ *
+ *  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ *  IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ *  FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ *  AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ *  LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ *  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+ *  THE SOFTWARE.
+ * /
  */
 
 package de.nulldesign.nd2d.display {
@@ -14,8 +39,6 @@ package de.nulldesign.nd2d.display {
     import flash.geom.Matrix3D;
     import flash.geom.Point;
     import flash.geom.Vector3D;
-    import flash.media.Camera;
-    import flash.utils.getTimer;
 
     public class Node2D extends EventDispatcher {
 
@@ -210,7 +233,7 @@ package de.nulldesign.nd2d.display {
             _b = (tint & 255) / 255.0;
             _a = alpha;
 
-            if (parent) {
+            if(parent) {
                 _r *= parent.r;
                 _g *= parent.g;
                 _b *= parent.b;
@@ -220,18 +243,18 @@ package de.nulldesign.nd2d.display {
 
         internal function drawNode(context:Context3D, camera:Camera2D):void {
 
-            if (!visible) {
+            if(!visible) {
                 return;
             }
 
-            if (refreshPosition) {
+            if(refreshPosition) {
                 refreshMatrix();
             }
 
             modelViewMatrix.identity();
             modelViewMatrix.append(modelMatrix);
 
-            if (parent) {
+            if(parent) {
                 modelViewMatrix.append(parent.modelViewMatrix);
             }
 
@@ -244,7 +267,7 @@ package de.nulldesign.nd2d.display {
 
         internal function processMouseEvents(mousePosition:Vector3D, mouseEventType:String, camera:Camera2D):void {
 
-            if (mouseEnabled && mouseEventType) {
+            if(mouseEnabled && mouseEventType) {
                 // transform mousepos to local coordinate system
                 // TODO; CACHE MATRIX AND MODE UNPEOJECT IN CAMERA
                 var clipSpaceMatrix:Matrix3D = new Matrix3D();
@@ -264,12 +287,12 @@ package de.nulldesign.nd2d.display {
                 var oldMouseInNodeState:Boolean = mouseInNode;
                 mouseInNode = (localMouse.x >= -width / 2.0 && localMouse.x <= width / 2.0 && localMouse.y >= -height / 2.0 && localMouse.y <= height / 2.0);
 
-                if (mouseInNode) {
-                    if (!oldMouseInNodeState) {
+                if(mouseInNode) {
+                    if(!oldMouseInNodeState) {
                         dispatchMouseEvent(MouseEvent.MOUSE_OVER);
                     }
                     dispatchMouseEvent(mouseEventType);
-                } else if (oldMouseInNodeState && !mouseInNode) {
+                } else if(oldMouseInNodeState && !mouseInNode) {
                     dispatchMouseEvent(MouseEvent.MOUSE_OUT);
                 }
             }
@@ -315,7 +338,7 @@ package de.nulldesign.nd2d.display {
 
             var idx:int = children.indexOf(child);
 
-            if (idx >= 0) {
+            if(idx >= 0) {
                 children.splice(idx, 1);
             }
         }

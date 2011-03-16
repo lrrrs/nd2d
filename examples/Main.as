@@ -5,8 +5,8 @@ package {
     import flash.display3D.Context3DRenderMode;
 
     //[SWF(width="1000", height="550", frameRate="60", backgroundColor="#000000")]
-    
-	public class Main extends Sprite {
+
+    public class Main extends Sprite {
 
         private var main3DView:Sprite;
 
@@ -22,7 +22,7 @@ package {
          - textureatlas?? for quads??
          + spriteimages with custom sizes, automatic 2^n texture set and bounding box
          + position, alpha, rotation, tint
-         + pivot point for sprites                   
+         + pivot point for sprites
          + picking / click!! bounding box und pixelgenau (bmpdata check)
          + blendmodes
          - glow
@@ -60,12 +60,12 @@ package {
             stage.align = StageAlign.TOP_LEFT;
 
             //main3DView = new MassiveSpritesTest(Context3DRenderMode.AUTO);
-            main3DView = new MassiveSpriteCloudTest(Context3DRenderMode.AUTO);
+            //main3DView = new MassiveSpriteCloudTest(Context3DRenderMode.AUTO);
             //main3DView = new SpriteHierarchyTest(Context3DRenderMode.AUTO);
             //main3DView = new SpriteTest(Context3DRenderMode.AUTO);
             //main3DView = new SpriteAnimTest(Context3DRenderMode.AUTO);
-            //main3DView = new StarFieldTest(Context3DRenderMode.AUTO);
-			//main3DView = new ParticleSystemTest(Context3DRenderMode.AUTO, 60);
+            main3DView = new StarFieldTest(Context3DRenderMode.AUTO);
+            //main3DView = new ParticleSystemTest(Context3DRenderMode.AUTO, 60);
 
             addChild(main3DView);
         }

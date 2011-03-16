@@ -2,9 +2,6 @@ package {
     import de.nulldesign.nd2d.display.Sprite2D;
     import de.nulldesign.nd2d.display.World2D;
 
-    import flash.geom.Rectangle;
-    import flash.utils.getTimer;
-
     public class SpriteAnimTest extends World2D {
 
         [Embed(source="/assets/spritechar1.png")]

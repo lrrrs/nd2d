@@ -1,17 +1,42 @@
-/**
- * ND2D Molehill Engine v0.1
- * @author Lars Gerckens www.nulldesign.de
+/*
  *
+ *  ND2D - A Flash Molehill GPU accelerated 2D engine
+ *
+ *  Author: Lars Gerckens
+ *  Copyright (c) nulldesign 2011
+ *  Repository URL: https://github.com/nulldesign/nd2d
+ *
+ *
+ *  Licence Agreement
+ *
+ *  Permission is hereby granted, free of charge, to any person obtaining a copy
+ *  of this software and associated documentation files (the "Software"), to deal
+ *  in the Software without restriction, including without limitation the rights
+ *  to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ *  copies of the Software, and to permit persons to whom the Software is
+ *  furnished to do so, subject to the following conditions:
+ *
+ *  The above copyright notice and this permission notice shall be included in
+ *  all copies or substantial portions of the Software.
+ *
+ *  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ *  IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ *  FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ *  AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ *  LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ *  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+ *  THE SOFTWARE.
+ * /
  */
 
 package de.nulldesign.nd2d.display {
     import flash.display.Sprite;
     import flash.display3D.Context3D;
+    import flash.display3D.Context3DCompareMode;
+    import flash.display3D.Context3DTriangleFace;
     import flash.events.Event;
     import flash.events.MouseEvent;
     import flash.events.TimerEvent;
-    import flash.geom.Matrix3D;
-    import flash.geom.Point;
     import flash.geom.Rectangle;
     import flash.geom.Vector3D;
     import flash.utils.Timer;
@@ -86,6 +111,9 @@ package de.nulldesign.nd2d.display {
 
             context3D = stage.stage3Ds[0].context3D;
             context3D.enableErrorChecking = true;
+            context3D.setCulling(Context3DTriangleFace.NONE);
+            context3D.setDepthTest(false, Context3DCompareMode.LESS_EQUAL);
+
             stage.stage3Ds[0].viewPort = new Rectangle(0, 0, stage.stageWidth, stage.stageHeight);
             context3D.configureBackBuffer(stage.stageWidth, stage.stageHeight, 2, false);
 
@@ -108,7 +136,7 @@ package de.nulldesign.nd2d.display {
 
 
         private function mouseEventHandler(event:MouseEvent):void {
-            if (scene && stage && camera) {
+            if(scene && stage && camera) {
                 var mouseEventType:String = event.type;
                 mousePosition.x = stage.mouseX;
                 mousePosition.y = stage.mouseY;
@@ -126,11 +154,11 @@ package de.nulldesign.nd2d.display {
         private function timerEventHandler(event:Event):void {
             var t:Number = getTimer() / 1000;
 
-            if (isPaused) return;
+            if(isPaused) return;
 
             step(t);
 
-            if (scene) {
+            if(scene) {
                 scene.stepNode(t);
             }
         }
@@ -142,7 +170,7 @@ package de.nulldesign.nd2d.display {
         protected function draw(event:Event):void {
             context3D.clear(br, bg, bb, 1.0);
 
-            if (scene) {
+            if(scene) {
                 scene.drawNode(context3D, camera);
             }
 

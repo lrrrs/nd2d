@@ -1,14 +1,38 @@
-/**
- * ND2D Molehill Engine v0.1
- * @author Lars Gerckens www.nulldesign.de
+/*
  *
+ *  ND2D - A Flash Molehill GPU accelerated 2D engine
+ *
+ *  Author: Lars Gerckens
+ *  Copyright (c) nulldesign 2011
+ *  Repository URL: https://github.com/nulldesign/nd2d
+ *
+ *
+ *  Licence Agreement
+ *
+ *  Permission is hereby granted, free of charge, to any person obtaining a copy
+ *  of this software and associated documentation files (the "Software"), to deal
+ *  in the Software without restriction, including without limitation the rights
+ *  to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ *  copies of the Software, and to permit persons to whom the Software is
+ *  furnished to do so, subject to the following conditions:
+ *
+ *  The above copyright notice and this permission notice shall be included in
+ *  all copies or substantial portions of the Software.
+ *
+ *  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ *  IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ *  FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ *  AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ *  LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ *  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+ *  THE SOFTWARE.
+ * /
  */
 
 package de.nulldesign.nd2d.display {
     import de.nulldesign.nd2d.geom.Face;
     import de.nulldesign.nd2d.geom.Vertex;
     import de.nulldesign.nd2d.materials.ParticleSystemMaterial;
-    import de.nulldesign.nd2d.materials.Sprite2DMaterial;
     import de.nulldesign.nd2d.utils.ColorUtil;
     import de.nulldesign.nd2d.utils.NumberUtil;
     import de.nulldesign.nd2d.utils.ParticleSystemPreset;
@@ -72,7 +96,7 @@ package de.nulldesign.nd2d.display {
             startTime = getTimer();
             currentTime = 0;
 
-            for (var i:int = 0; i < maxCapacity; i++) {
+            for(var i:int = 0; i < maxCapacity; i++) {
                 particles[i] = new Particle();
                 faceList[f++] = new Face(particles[i].v1, particles[i].v2, particles[i].v3, particles[i].uv1, particles[i].uv2, particles[i].uv3);
                 faceList[f++] = new Face(particles[i].v1, particles[i].v3, particles[i].v4, particles[i].uv1, particles[i].uv3, particles[i].uv4);
@@ -80,16 +104,7 @@ package de.nulldesign.nd2d.display {
                 var angle:Number = NumberUtil.rndMinMax(VectorUtil.deg2rad(config.minEmitAngle), VectorUtil.deg2rad(config.maxEmitAngle));
                 var speed:Number = NumberUtil.rndMinMax(config.minSpeed, config.maxSpeed);
 
-                initParticle(NumberUtil.rndMinMax(config.minStartPosition.x, config.maxStartPosition.x),
-                        NumberUtil.rndMinMax(config.minStartPosition.y, config.maxStartPosition.y),
-                        Math.sin(angle) * speed,
-                        Math.cos(angle) * speed,
-                        config.startColor, config.endColor,
-                        config.startAlpha, config.endAlpha,
-                        NumberUtil.rndMinMax(config.minStartSize, config.maxStartSize),
-                        NumberUtil.rndMinMax(config.minEndSize, config.maxEndSize),
-                        NumberUtil.rndMinMax(config.minLife, config.maxLife),
-                        config.spawnDelay * i);
+                initParticle(NumberUtil.rndMinMax(config.minStartPosition.x, config.maxStartPosition.x), NumberUtil.rndMinMax(config.minStartPosition.y, config.maxStartPosition.y), Math.sin(angle) * speed, Math.cos(angle) * speed, config.startColor, config.endColor, config.startAlpha, config.endAlpha, NumberUtil.rndMinMax(config.minStartSize, config.maxStartSize), NumberUtil.rndMinMax(config.minEndSize, config.maxEndSize), NumberUtil.rndMinMax(config.minLife, config.maxLife), config.spawnDelay * i);
             }
 
             activeParticles = 1;
@@ -147,7 +162,7 @@ package de.nulldesign.nd2d.display {
         override protected function step(t:Number):void {
             currentTime = getTimer() - startTime;
 
-            if (activeParticles < maxCapacity) {
+            if(activeParticles < maxCapacity) {
                 activeParticles = Math.min(Math.ceil(currentTime / config.spawnDelay), maxCapacity);
             }
         }
@@ -172,7 +187,6 @@ package de.nulldesign.nd2d.display {
     }
 }
 
-import de.nulldesign.nd2d.geom.Face;
 import de.nulldesign.nd2d.geom.UV;
 import de.nulldesign.nd2d.geom.Vertex;
 

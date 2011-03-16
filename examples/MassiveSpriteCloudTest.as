@@ -9,12 +9,10 @@ package {
     import de.nulldesign.nd2d.display.Scene2D;
     import de.nulldesign.nd2d.display.Sprite2D;
     import de.nulldesign.nd2d.display.Sprite2DCloud;
-    import de.nulldesign.nd2d.materials.SpriteSheet;
     import de.nulldesign.nd2d.display.World2D;
+    import de.nulldesign.nd2d.materials.SpriteSheet;
 
     import flash.display.BitmapData;
-    import flash.geom.Rectangle;
-    import flash.utils.getTimer;
 
     public class MassiveSpriteCloudTest extends World2D {
 
@@ -45,7 +43,7 @@ package {
 
             spriteCloud = new Sprite2DCloud(null, sheet);
 
-            for (var i:int = 0; i < 1600; i++) {
+            for(var i:int = 0; i < 1600; i++) {
 
                 s = new Sprite2D();
                 s.x = Math.round(Math.random() * 1000);
@@ -70,29 +68,29 @@ package {
             var vxabs:int;
             var vyabs:int;
 
-            while (--i > -1) {
+            while(--i > -1) {
                 s = sprites[i];
                 s.x += s.vx;
                 s.y += s.vy;
 
                 //s.rotation += 10;
 
-                if (s.x < 0) {
+                if(s.x < 0) {
                     s.x = 0;
                     s.vx *= -1;
                 }
 
-                if (s.x > stage.stageWidth) {
+                if(s.x > stage.stageWidth) {
                     s.x = stage.stageWidth;
                     s.vx *= -1;
                 }
 
-                if (s.y < 0) {
+                if(s.y < 0) {
                     s.y = 0;
                     s.vy *= -1;
                 }
 
-                if (s.y > stage.stageHeight) {
+                if(s.y > stage.stageHeight) {
                     s.y = stage.stageHeight;
                     s.vy *= -1;
                 }
@@ -100,13 +98,13 @@ package {
                 vxabs = Math.abs(s.vx);
                 vyabs = Math.abs(s.vy);
 
-                if (s.vx > 0 && vxabs > vyabs) { // right
+                if(s.vx > 0 && vxabs > vyabs) { // right
                     s.spriteSheet.playAnimation("right");
-                } else if (s.vx < 0 && vxabs > vyabs) { // left
+                } else if(s.vx < 0 && vxabs > vyabs) { // left
                     s.spriteSheet.playAnimation("left");
-                } else if (s.vy > 0 && vyabs > vxabs) { // down
+                } else if(s.vy > 0 && vyabs > vxabs) { // down
                     s.spriteSheet.playAnimation("down");
-                } else if (s.vy < 0 && vyabs > vxabs) { // up
+                } else if(s.vy < 0 && vyabs > vxabs) { // up
                     s.spriteSheet.playAnimation("up");
                 }
             }
