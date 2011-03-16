@@ -300,7 +300,7 @@ package de.nulldesign.nd2d.materials {
                     mVertexBuffer[curIdx++] = v.z;
 
                     if(n == 4)
-                        curIdx++;
+                        mVertexBuffer[curIdx++] = v.w;
                 }
 
                 if(vertexRegisters[ j ].semantics.id == "PB3D_TARGET_POSITION") {
@@ -309,7 +309,7 @@ package de.nulldesign.nd2d.materials {
                     mVertexBuffer[curIdx++] = v.targetVertex.z;
 
                     if(n == 4)
-                        curIdx++;
+                        mVertexBuffer[curIdx++] = v.targetVertex.w;
                 }
 
                 if(vertexRegisters[ j ].semantics.id == "PB3D_COLOR") {
@@ -318,7 +318,7 @@ package de.nulldesign.nd2d.materials {
                     mVertexBuffer[curIdx++] = v.b;
 
                     if(n == 4)
-                        v.a;
+                        mVertexBuffer[curIdx++] = v.a;
                 }
 
                 if(vertexRegisters[ j ].semantics.id == "PB3D_NORMAL") {

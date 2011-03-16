@@ -42,16 +42,6 @@ package de.nulldesign.nd2d.geom {
         public var uv2:UV;
         public var uv3:UV;
 
-        /**
-         * Constructor of a Face
-         * @param    reference to the mesh
-         * @param    first vertex
-         * @param    second vertex
-         * @param    third vertex
-         * @param    first uv
-         * @param    second uv
-         * @param    third uv
-         */
         public function Face(v1:Vertex, v2:Vertex, v3:Vertex, uv1:UV = null, uv2:UV = null, uv3:UV = null) {
 
             this.v1 = v1;

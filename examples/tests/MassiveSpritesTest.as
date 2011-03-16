@@ -30,7 +30,7 @@ package tests{
             sprites = new Vector.<Sprite2D>();
             var tex:BitmapData = new cubeTexture().bitmapData;
             var s:Sprite2D;
-            spriteSheet = new Sprite2DCloud(tex);
+            spriteSheet = new Sprite2DCloud(tex, 4000);
             spriteSheet.blendMode = BlendModePresets.ADD2;
 
             for(var i:int = 0; i < 4000; i++) {

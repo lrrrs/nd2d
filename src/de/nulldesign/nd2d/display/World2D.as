@@ -134,7 +134,6 @@ package de.nulldesign.nd2d.display {
             camera = new Camera2D(stage.stageWidth, stage.stageHeight);
         }
 
-
         private function mouseEventHandler(event:MouseEvent):void {
             if(scene && stage && camera) {
                 var mouseEventType:String = event.type;

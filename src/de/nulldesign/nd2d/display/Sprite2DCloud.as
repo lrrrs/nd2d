@@ -59,26 +59,36 @@ package de.nulldesign.nd2d.display {
         protected var program:Program3D;
         protected var indexBuffer:IndexBuffer3D;
         protected var vertexBuffer:VertexBuffer3D;
-        protected var mVertexBuffer:Vector.<Number> = new Vector.<Number>();
-        protected var mIndexBuffer:Vector.<uint> = new Vector.<uint>();
+        protected var mVertexBuffer:Vector.<Number>;
+        protected var mIndexBuffer:Vector.<uint>;
         protected var uvInited:Boolean = false;
+        protected var maxCapacity:uint;
 
-        public function Sprite2DCloud(bitmapTexture:BitmapData, spriteSheet:SpriteSheet = null) {
+        public function Sprite2DCloud(bitmapTexture:BitmapData, maxCapacity:uint, spriteSheet:SpriteSheet = null) {
             super(bitmapTexture, spriteSheet);
+            this.maxCapacity = maxCapacity;
+
+            mVertexBuffer = new Vector.<Number>(maxCapacity * 8 * 4, true);
+            mIndexBuffer = new Vector.<uint>(maxCapacity * 6, true);
         }
 
-        override public function get numTris():int {
+        override public function get numTris():uint {
             return children.length * 2;
         }
 
         override public function addChildAt(child:Node2D, idx:uint):void {
-            super.addChildAt(child, idx);
 
-            var c:Sprite2D = child as Sprite2D;
+            if(children.length < maxCapacity) {
 
-            // distribute spritesheets to sprites
-            if(c && spriteSheet && !c.spriteSheet) {
-                c.spriteSheet = spriteSheet.clone();
+                super.addChildAt(child, idx);
+
+                // TODO check ...
+                var c:Sprite2D = child as Sprite2D;
+
+                // distribute spritesheets to sprites
+                if(c && spriteSheet && !c.spriteSheet) {
+                    c.spriteSheet = spriteSheet.clone();
+                }
             }
         }
 

@@ -59,6 +59,7 @@ package de.nulldesign.nd2d.display {
 
         protected var localMouse:Vector3D;
         protected var mouseInNode:Boolean = false;
+        protected var clipSpaceMatrix:Matrix3D = new Matrix3D();
 
         protected var _width:Number;
 
@@ -208,8 +209,12 @@ package de.nulldesign.nd2d.display {
             return _rotation;
         }
 
-        public function get numTris():int {
+        public function get numTris():uint {
             return 0;
+        }
+
+        public function get numChildren():uint {
+            return children.length;
         }
 
         public function Node2D() {
@@ -269,8 +274,6 @@ package de.nulldesign.nd2d.display {
 
             if(mouseEnabled && mouseEventType) {
                 // transform mousepos to local coordinate system
-                // TODO; CACHE MATRIX AND MODE UNPEOJECT IN CAMERA
-                var clipSpaceMatrix:Matrix3D = new Matrix3D();
                 clipSpaceMatrix.identity();
                 clipSpaceMatrix.append(modelViewMatrix);
                 clipSpaceMatrix.append(camera.getProjectionMatrix());
@@ -338,11 +341,16 @@ package de.nulldesign.nd2d.display {
             var idx:int = children.indexOf(child);
 
             if(idx >= 0) {
-                children.splice(idx, 1);
+                removeChildAt(idx);
             }
         }
 
-        public function getChildIndex(child:Node2D):uint {
+        public function removeChildAt(idx:uint):void {
+            if(idx < children.length)
+                children.splice(idx, 1);
+        }
+
+        public function getChildIndex(child:Node2D):int {
             return children.indexOf(child);
         }
 

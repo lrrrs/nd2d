@@ -113,7 +113,7 @@ package de.nulldesign.nd2d.display {
             faceList[1] = new Face(v1, v3, v4, uv1, uv3, uv4);
         }
 
-        override public function get numTris():int {
+        override public function get numTris():uint {
             return 2;
         }
 

@@ -43,8 +43,9 @@ package de.nulldesign.nd2d.geom {
 
         public var targetVertex:Vertex;
 
-        public function Vertex(x:Number = 0, y:Number = 0, z:Number = 0, color:Number = NaN) {
+        public function Vertex(x:Number = 0, y:Number = 0, z:Number = 0, color:Number = 0xFFFFFF) {
             super(x, y, z, 1.0);
+            this.color = color;
         }
 
         public function get r():Number {
