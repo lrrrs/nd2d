@@ -94,8 +94,16 @@ vertex kernel defaultshader
         float size = startSize * (1.0 - progress) + endSize * progress;
         
         float4 tmpVertexPos = vertexPosition;
+
+        // initial size
         tmpVertexPos.x *= size;
         tmpVertexPos.y *= size;
+
+        // initial position
+        tmpVertexPos.x += velocity.z;
+        tmpVertexPos.y += velocity.w;
+
+        // position delta
         tmpVertexPos.x += tmpVelocity.x;
         tmpVertexPos.y += tmpVelocity.y;
         

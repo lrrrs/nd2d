@@ -237,13 +237,13 @@ package de.nulldesign.nd2d.materials {
                 if(vertexRegisters[ j ].semantics.id == "PB3D_POSITION") {
                     buffer.push(v.x, v.y, v.z);
                     if(n == 4)
-                        buffer.push(1.0);
+                        buffer.push(v.w);
                 }
 
                 if(vertexRegisters[ j ].semantics.id == "PB3D_TARGET_POSITION") {
                     buffer.push(v.targetVertex.x, v.targetVertex.y, v.targetVertex.z);
                     if(n == 4)
-                        buffer.push(1.0);
+                        buffer.push(v.targetVertex.w);
                 }
 
                 if(vertexRegisters[ j ].semantics.id == "PB3D_COLOR") {

@@ -140,14 +140,14 @@ package de.nulldesign.nd2d.display {
             // position
             var p:Particle = particles[activeParticles];
 
-            p.v1.x = -texW + x;
-            p.v1.y = -texH + y;
-            p.v2.x = texW + x;
-            p.v2.y = -texH + y;
-            p.v3.x = texW + x;
-            p.v3.y = texH + y;
-            p.v4.x = -texW + x;
-            p.v4.y = texH + y;
+            p.v1.x = -texW;
+            p.v1.y = -texH;
+            p.v2.x = texW;
+            p.v2.y = -texH;
+            p.v3.x = texW;
+            p.v3.y = texH;
+            p.v4.x = -texW;
+            p.v4.y = texH;
 
             // start color
             p.v1.color = startColor;
@@ -159,11 +159,22 @@ package de.nulldesign.nd2d.display {
             p.v4.color = startColor;
             p.v4.a = startAlpha;
 
-            // velocity
+            // velocity and startposition
             p.v1.targetVertex = new Vertex(vx, vy);
+            p.v1.targetVertex.z = x;
+            p.v1.targetVertex.w = y;
+
             p.v2.targetVertex = new Vertex(vx, vy);
+            p.v2.targetVertex.z = x;
+            p.v2.targetVertex.w = y;
+
             p.v3.targetVertex = new Vertex(vx, vy);
+            p.v3.targetVertex.z = x;
+            p.v3.targetVertex.w = y;
+
             p.v4.targetVertex = new Vertex(vx, vy);
+            p.v4.targetVertex.z = x;
+            p.v4.targetVertex.w = y;
 
             var r:Number = ColorUtil.r(endColor);
             var g:Number = ColorUtil.g(endColor);

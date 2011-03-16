@@ -46,11 +46,11 @@ package de.nulldesign.nd2d.utils {
         public var maxEmitAngle:Number = 360.0;
 
         public var startColor:Number = 0xD60606;
-        //public var startColorVariance:Number = 0.0;
+
         public var startAlpha:Number = 1.0;
 
         public var endColor:Number = 0xF9D101;
-        //public var endColorVariance:Number = 0.0;
+
         public var endAlpha:Number = 0.0;
 
         public var spawnDelay:Number = 10.0;
