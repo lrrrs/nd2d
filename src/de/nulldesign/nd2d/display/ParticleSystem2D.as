@@ -127,6 +127,10 @@ package de.nulldesign.nd2d.display {
             }
 
             activeParticles = 1;
+
+            if(preset.spawnDelay == 0) {
+                activeParticles = maxCapacity;
+            }
         }
 
         protected function initParticle(x:Number, y:Number, vx:Number, vy:Number, startColor:Number, endColor:Number,

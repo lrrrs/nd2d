@@ -103,7 +103,7 @@ package de.nulldesign.nd2d.utils {
             var ws:int = src.width;
             var hs:int = src.height;
             var level:int = 0;
-            var tmp:BitmapData = new BitmapData(src.width, src.height);
+            var tmp:BitmapData = new BitmapData(src.width, src.height, true, 0x00000000);
             var transform:Matrix = new Matrix();
 
             while(ws > 1 && hs > 1) {

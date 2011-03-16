@@ -59,7 +59,8 @@ package de.nulldesign.nd2d.display {
                 drawCalls += 1;
             }
 
-            statsRef.update(drawCalls, totalTris);
+            if(statsRef)
+                statsRef.update(drawCalls, totalTris);
         }
     }
 }
