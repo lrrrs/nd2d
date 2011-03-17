@@ -40,6 +40,12 @@ package de.nulldesign.nd2d.display {
     import flash.geom.Point;
     import flash.geom.Vector3D;
 
+    /**
+     * Basic 2D object. All drawable objects must extend Node2D
+     * A Node2D has two methods that are called during rendering:
+     * step - Used to update the position of the Node
+     * draw - The rendering takes place here
+     */
     public class Node2D extends EventDispatcher {
 
         public var modelMatrix:Matrix3D = new Matrix3D();
@@ -308,7 +314,6 @@ package de.nulldesign.nd2d.display {
             step(t);
 
             // TODO update local mouse! ??
-
             for each(var child:Node2D in children) {
                 child.stepNode(t);
             }

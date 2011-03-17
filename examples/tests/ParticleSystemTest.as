@@ -1,9 +1,8 @@
-package tests{
+package tests {
     import de.nulldesign.nd2d.display.ParticleSystem2D;
     import de.nulldesign.nd2d.display.Scene2D;
     import de.nulldesign.nd2d.display.World2D;
     import de.nulldesign.nd2d.materials.BlendModePresets;
-
     import de.nulldesign.nd2d.utils.ParticleSystemPreset;
 
     import flash.display.Sprite;

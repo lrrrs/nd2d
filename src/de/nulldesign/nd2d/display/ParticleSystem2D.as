@@ -112,8 +112,10 @@ package de.nulldesign.nd2d.display {
 
                 var speed:Number = NumberUtil.rndMinMax(preset.minSpeed, preset.maxSpeed);
 
-                var particleStartColor:Number = ColorUtil.mixColors(preset.startColor, preset.startColorVariance, NumberUtil.rnd0_1());
-                var particleEndColor:Number = ColorUtil.mixColors(preset.endColor, preset.endColorVariance, NumberUtil.rnd0_1());
+                var particleStartColor:Number = ColorUtil.mixColors(preset.startColor, preset.startColorVariance,
+                                                                    NumberUtil.rnd0_1());
+                var particleEndColor:Number = ColorUtil.mixColors(preset.endColor, preset.endColorVariance,
+                                                                  NumberUtil.rnd0_1());
 
                 initParticle(NumberUtil.rndMinMax(preset.minStartPosition.x, preset.maxStartPosition.x),
                              NumberUtil.rndMinMax(preset.minStartPosition.y, preset.maxStartPosition.y),

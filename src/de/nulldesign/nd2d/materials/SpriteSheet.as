@@ -87,7 +87,8 @@ package de.nulldesign.nd2d.materials {
 
             var textureDimensions:Point = TextureHelper.getTextureDimensionsFromBitmap(bitmapData);
 
-            uvOffset = new Point((textureDimensions.x - bitmapData.width) / 2.0, (textureDimensions.y - bitmapData.height) / 2.0);
+            uvOffset = new Point((textureDimensions.x - bitmapData.width) / 2.0,
+                                 (textureDimensions.y - bitmapData.height) / 2.0);
             uvOffset.x /= textureDimensions.x;
             uvOffset.y /= textureDimensions.y;
 

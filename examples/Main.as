@@ -4,14 +4,7 @@ package {
     import flash.display.StageScaleMode;
     import flash.display3D.Context3DRenderMode;
 
-    import tests.MassiveSpriteCloudTest;
-    import tests.MassiveSpritesTest;
-    import tests.ParticleExplorerWorld;
     import tests.ParticleSystemTest;
-    import tests.SpriteAnimTest;
-    import tests.SpriteHierarchyTest;
-    import tests.SpriteTest;
-    import tests.StarFieldTest;
 
     //[SWF(width="1000", height="550", frameRate="60", backgroundColor="#000000")]
 

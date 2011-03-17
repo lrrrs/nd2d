@@ -34,18 +34,15 @@ package de.nulldesign.nd2d.display {
 
     import net.hires.debug.Stats;
 
+    /**
+     * A scene that can contain 2D nodes
+     */
     public class Scene2D extends Node2D {
 
         public var statsRef:Stats;
 
         public function Scene2D() {
             super();
-        }
-
-        override internal function stepNode(t:Number):void {
-            for each(var child:Node2D in children) {
-                child.stepNode(t);
-            }
         }
 
         override internal function drawNode(context:Context3D, camera:Camera2D):void {

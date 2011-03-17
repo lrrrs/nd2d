@@ -37,8 +37,7 @@ package de.nulldesign.nd2d.geom {
         private static var UI_COUNT:Number = 0;
         public var uid:Number = ++UI_COUNT;
 
-        public var color:Number = 0xFFFFFF;
-        public var faceRefs:Vector.<Face> = new Vector.<Face>();
+        public var color:Number;
         public var normal:Vector3D;
 
         public var targetVertex:Vertex;

@@ -51,14 +51,15 @@ package de.nulldesign.nd2d.display {
             projectionMatrix = makeOrtographicMatrix(0, w, 0, h);
         }
 
-        public function makeOrtographicMatrix(left:Number, right:Number, top:Number, bottom:Number, zNear:Number = -1, zFar:Number = 1):Matrix3D {
+        public function makeOrtographicMatrix(left:Number, right:Number, top:Number, bottom:Number, zNear:Number = -1,
+                                              zFar:Number = 1):Matrix3D {
 
             return new Matrix3D(Vector.<Number>([
-                2 / (right - left), 0, 0,  0,
-                0,  2 / (top - bottom), 0, 0,
-                0,  0, 1 / (zFar - zNear), 0,
-                0, 0, 0, 1
-            ]));
+                                                    2 / (right - left), 0, 0,  0,
+                                                    0,  2 / (top - bottom), 0, 0,
+                                                    0,  0, 1 / (zFar - zNear), 0,
+                                                    0, 0, 0, 1
+                                                ]));
         }
 
         public function getProjectionMatrix():Matrix3D {

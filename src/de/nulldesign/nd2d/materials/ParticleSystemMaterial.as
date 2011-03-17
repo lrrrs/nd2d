@@ -69,9 +69,11 @@ package de.nulldesign.nd2d.materials {
 
             context.setTextureAt(0, texture);
 
-            parameterBufferHelper.setNumberParameterByName(Context3DProgramType.VERTEX, "currentTime", Vector.<Number>([ currentTime, currentTime, currentTime, 1.0 ]));
+            parameterBufferHelper.setNumberParameterByName(Context3DProgramType.VERTEX, "currentTime",
+                                                           Vector.<Number>([ currentTime, currentTime, currentTime, 1.0 ]));
 
-            parameterBufferHelper.setNumberParameterByName(Context3DProgramType.VERTEX, "gravity", Vector.<Number>([ gravity.x, gravity.y, 0.0, 1.0 ]));
+            parameterBufferHelper.setNumberParameterByName(Context3DProgramType.VERTEX, "gravity",
+                                                           Vector.<Number>([ gravity.x, gravity.y, 0.0, 1.0 ]));
 
             parameterBufferHelper.update();
 

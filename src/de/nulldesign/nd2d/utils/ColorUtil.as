@@ -48,7 +48,9 @@ package de.nulldesign.nd2d.utils {
             var col1:Object = hex2rgb(color1);
             var col2:Object = hex2rgb(color2);
 
-            return rgb2hex(col1.r * (1 - ratio) + col2.r * ratio, col1.g * (1 - ratio) + col2.g * ratio, col1.b * (1 - ratio) + col2.b * ratio);
+            return rgb2hex(col1.r * (1 - ratio) + col2.r * ratio,
+                           col1.g * (1 - ratio) + col2.g * ratio,
+                           col1.b * (1 - ratio) + col2.b * ratio);
         }
 
         public static function r(color:Number):Number {

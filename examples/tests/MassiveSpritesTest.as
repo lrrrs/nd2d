@@ -1,4 +1,4 @@
-package tests{
+package tests {
     import de.nulldesign.nd2d.display.Scene2D;
     import de.nulldesign.nd2d.display.Sprite2D;
     import de.nulldesign.nd2d.display.Sprite2DCloud;
@@ -53,7 +53,8 @@ package tests{
         override protected function context3DCreated(e:Event):void {
 
             perlinBmp = new BitmapData(stage.stageWidth, stage.stageHeight, false);
-            perlinBmp.perlinNoise(stage.stageWidth * 0.1, stage.stageHeight * 0.1, 3, Math.random() * 10, false, false, BitmapDataChannel.RED | BitmapDataChannel.GREEN | BitmapDataChannel.BLUE, false);
+            perlinBmp.perlinNoise(stage.stageWidth * 0.1, stage.stageHeight * 0.1, 3, Math.random() * 10, false, false,
+                                  BitmapDataChannel.RED | BitmapDataChannel.GREEN | BitmapDataChannel.BLUE, false);
 
             super.context3DCreated(e);
         }
@@ -63,7 +64,8 @@ package tests{
             super.resizeStage(e);
 
             perlinBmp = new BitmapData(stage.stageWidth, stage.stageHeight, false);
-            perlinBmp.perlinNoise(stage.stageWidth * 0.1, stage.stageHeight * 0.1, 3, Math.random() * 10, false, false, BitmapDataChannel.RED | BitmapDataChannel.GREEN | BitmapDataChannel.BLUE, false);
+            perlinBmp.perlinNoise(stage.stageWidth * 0.1, stage.stageHeight * 0.1, 3, Math.random() * 10, false, false,
+                                  BitmapDataChannel.RED | BitmapDataChannel.GREEN | BitmapDataChannel.BLUE, false);
         }
 
         override protected function step(t:Number):void {

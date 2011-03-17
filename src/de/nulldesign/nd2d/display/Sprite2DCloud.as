@@ -45,6 +45,11 @@ package de.nulldesign.nd2d.display {
     import flash.display3D.VertexBuffer3D;
     import flash.geom.Point;
 
+    /**
+     * Sprite2DCloud
+     * Use a sprite cloud to batch sprites with the same texture / spritesheet.
+     * all sprites will be batched in one single draw call
+     */
     public class Sprite2DCloud extends Sprite2D {
 
         protected const DEFAULT_VERTEX_SHADER:String = "m44 op, va0, vc0   \n" + // vertex * clipspace

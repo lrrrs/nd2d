@@ -4,7 +4,7 @@
  *
  *  Author: Lars Gerckens
  *  Copyright (c) nulldesign 2011
- *  Repository URL: https://github.com/nulldesign/nd2d
+ *  Repository URL: http://github.com/nulldesign/nd2d
  *
  *
  *  Licence Agreement

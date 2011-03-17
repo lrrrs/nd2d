@@ -44,6 +44,26 @@ package de.nulldesign.nd2d.display {
 
     import net.hires.debug.Stats;
 
+    /**
+     * Baseclass for ND2D
+     * Extend this class and add your own scenes and sprites
+     *
+     * Set up your project like this:
+     *
+     * MyGameWorld2D
+     *      MyStartScene2D
+     *          StartButtonSprite2D
+     *
+     *      MyGameScene2D
+     *          GameSprites2D
+     *          ...
+     *
+     * Code your game logic in the step() method of each scene
+     *
+     * You can switch between scenes with the setActiveScene method of World2D.
+     * There can be only one active scene.
+     *
+     */
     public class World2D extends Sprite {
 
         protected var camera:Camera2D;
@@ -134,7 +154,7 @@ package de.nulldesign.nd2d.display {
             camera = new Camera2D(stage.stageWidth, stage.stageHeight);
         }
 
-        private function mouseEventHandler(event:MouseEvent):void {
+        internal function mouseEventHandler(event:MouseEvent):void {
             if(scene && stage && camera) {
                 var mouseEventType:String = event.type;
                 mousePosition.x = stage.mouseX;

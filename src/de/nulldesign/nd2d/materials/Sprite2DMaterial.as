@@ -73,7 +73,8 @@ package de.nulldesign.nd2d.materials {
             // TODO SET TEXTURE BY NAME!!!
             context.setTextureAt(0, texture);
 
-            parameterBufferHelper.setNumberParameterByName(Context3DProgramType.FRAGMENT, "color", Vector.<Number>([ color.x, color.y, color.z, color.w ]));
+            parameterBufferHelper.setNumberParameterByName(Context3DProgramType.FRAGMENT, "color",
+                                                           Vector.<Number>([ color.x, color.y, color.z, color.w ]));
 
             var offset:Point = new Point();
 
@@ -85,7 +86,8 @@ package de.nulldesign.nd2d.materials {
                 offset.y = spriteSheet.uvSize.y * colIdx;
             }
 
-            parameterBufferHelper.setNumberParameterByName(Context3DProgramType.VERTEX, "uvOffset", Vector.<Number>([ offset.x, offset.y, 0.0, 1.0 ]));
+            parameterBufferHelper.setNumberParameterByName(Context3DProgramType.VERTEX, "uvOffset",
+                                                           Vector.<Number>([ offset.x, offset.y, 0.0, 1.0 ]));
 
             parameterBufferHelper.update();
 

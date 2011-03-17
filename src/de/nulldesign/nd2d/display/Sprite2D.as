@@ -41,6 +41,11 @@ package de.nulldesign.nd2d.display {
     import flash.display3D.Context3D;
     import flash.geom.Point;
 
+    /**
+     * 2D sprite class
+     * One draw call is used per sprite.
+     * If you have a lot of sprites with the same texture / spritesheet try to use a Sprite2DCould, it will be a lot faster.
+     */
     public class Sprite2D extends Node2D {
 
         public var spriteSheet:SpriteSheet;
@@ -60,6 +65,11 @@ package de.nulldesign.nd2d.display {
         protected var uv3:UV;
         protected var uv4:UV;
 
+        /**
+         * Constructor of class Sprite2D
+         * @param bitmapTexture the sprite image
+         * @param spriteSheet optional spritesheet. If a spritesheet is provided the bitmapTexture is ignored
+         */
         public function Sprite2D(bitmapTexture:BitmapData = null, spriteSheet:SpriteSheet = null) {
             this.spriteSheet = spriteSheet;
 
@@ -100,7 +110,8 @@ package de.nulldesign.nd2d.display {
 
                 uv1 = new UV(spriteSheet.uvOffset.x, spriteSheet.uvOffset.y);
                 uv2 = new UV(spriteSheet.uvOffset.x + spriteSheet.uvSize.x, spriteSheet.uvOffset.y);
-                uv3 = new UV(spriteSheet.uvOffset.x + spriteSheet.uvSize.x, spriteSheet.uvOffset.y + spriteSheet.uvSize.y);
+                uv3 = new UV(spriteSheet.uvOffset.x + spriteSheet.uvSize.x,
+                             spriteSheet.uvOffset.y + spriteSheet.uvSize.y);
                 uv4 = new UV(spriteSheet.uvOffset.x, spriteSheet.uvOffset.y + spriteSheet.uvSize.y);
             }
 

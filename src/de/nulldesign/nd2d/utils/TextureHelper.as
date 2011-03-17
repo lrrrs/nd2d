@@ -71,8 +71,7 @@ package de.nulldesign.nd2d.utils {
          * @param bmp
          * @return The generated texture
          */
-        public static function generateTextureFromBitmap(context:Context3D,
-                                                         bmp:BitmapData,
+        public static function generateTextureFromBitmap(context:Context3D, bmp:BitmapData,
                                                          useMipMaps:Boolean):Texture {
 
             var textureDimensions:Point = getTextureDimensionsFromBitmap(bmp);

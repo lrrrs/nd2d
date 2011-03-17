@@ -48,10 +48,6 @@ package de.nulldesign.nd2d.geom {
             this.v2 = v2;
             this.v3 = v3;
 
-            v1.faceRefs.push(this);
-            v2.faceRefs.push(this);
-            v3.faceRefs.push(this);
-
             this.uv1 = uv1;
             this.uv2 = uv2;
             this.uv3 = uv3;
