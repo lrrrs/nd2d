@@ -4,7 +4,7 @@
  *
  *  Author: Lars Gerckens
  *  Copyright (c) nulldesign 2011
- *  Repository URL: https://github.com/nulldesign/nd2d
+ *  Repository URL: http://github.com/nulldesign/nd2d
  *
  *
  *  Licence Agreement
@@ -211,12 +211,7 @@ package de.nulldesign.nd2d.display {
 
             material.currentTime = currentTime;
             material.gravity = gravity;
-            material.generateBufferData(context, faceList);
-            material.prepareForRender(context);
-
-            context.drawTriangles(material.indexBuffer, 0, activeParticles * 2);
-
-            material.clearAfterRender(context);
+            material.render(context, faceList, activeParticles * 2);
         }
     }
 }

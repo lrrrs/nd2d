@@ -4,7 +4,7 @@
  *
  *  Author: Lars Gerckens
  *  Copyright (c) nulldesign 2011
- *  Repository URL: https://github.com/nulldesign/nd2d
+ *  Repository URL: http://github.com/nulldesign/nd2d
  *
  *
  *  Licence Agreement
@@ -62,7 +62,7 @@ package de.nulldesign.nd2d.materials {
             this.spriteSheet = spriteSheet;
         }
 
-        override public function prepareForRender(context:Context3D):void {
+        override protected function prepareForRender(context:Context3D):void {
 
             super.prepareForRender(context);
 
@@ -92,7 +92,7 @@ package de.nulldesign.nd2d.materials {
             vertexBufferHelper.setVertexBuffers();
         }
 
-        override public function clearAfterRender(context:Context3D):void {
+        override protected function clearAfterRender(context:Context3D):void {
             super.clearAfterRender(context);
             context.setTextureAt(0, null);
         }

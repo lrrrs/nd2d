@@ -4,7 +4,7 @@
  *
  *  Author: Lars Gerckens
  *  Copyright (c) nulldesign 2011
- *  Repository URL: https://github.com/nulldesign/nd2d
+ *  Repository URL: http://github.com/nulldesign/nd2d
  *
  *
  *  Licence Agreement
@@ -49,15 +49,12 @@ package de.nulldesign.nd2d.materials {
     import de.nulldesign.nd2d.geom.Vertex;
     import de.nulldesign.nd2d.utils.NodeBlendMode;
 
-    import flash.display.BitmapData;
     import flash.display3D.Context3D;
     import flash.display3D.Context3DProgramType;
     import flash.display3D.Context3DVertexBufferFormat;
     import flash.display3D.IndexBuffer3D;
     import flash.display3D.Program3D;
     import flash.display3D.VertexBuffer3D;
-    import flash.display3D.textures.Texture;
-    import flash.geom.Matrix;
     import flash.geom.Matrix3D;
     import flash.utils.ByteArray;
     import flash.utils.Dictionary;
@@ -70,8 +67,8 @@ package de.nulldesign.nd2d.materials {
 
         public var numTris:int = 0;
 
-        public var indexBuffer:IndexBuffer3D;
-        public var vertexBuffer:VertexBuffer3D;
+        protected var indexBuffer:IndexBuffer3D;
+        protected var vertexBuffer:VertexBuffer3D;
 
         public var blendMode:NodeBlendMode = BlendModePresets.NORMAL;
 
@@ -96,7 +93,7 @@ package de.nulldesign.nd2d.materials {
 
         }
 
-        public function generateBufferData(context:Context3D, faceList:Vector.<Face>):void {
+        protected function generateBufferData(context:Context3D, faceList:Vector.<Face>):void {
 
             initProgram(context);
 
@@ -166,7 +163,7 @@ package de.nulldesign.nd2d.materials {
             }
         }
 
-        public function prepareForRender(context:Context3D):void {
+        protected function prepareForRender(context:Context3D):void {
 
             context.setProgram(program);
             context.setBlendFactors(blendMode.src, blendMode.dst);
@@ -179,7 +176,8 @@ package de.nulldesign.nd2d.materials {
             clipSpaceMatrix.append(modelViewMatrix);
             clipSpaceMatrix.append(projectionMatrix);
 
-            parameterBufferHelper.setMatrixParameterByName(Context3DProgramType.VERTEX, "objectToClipSpaceTransform", clipSpaceMatrix, true);
+            parameterBufferHelper.setMatrixParameterByName(Context3DProgramType.VERTEX, "objectToClipSpaceTransform",
+                                                           clipSpaceMatrix, true);
 
             if(needUploadVertexBuffer) {
                 needUploadVertexBuffer = false;
@@ -189,7 +187,14 @@ package de.nulldesign.nd2d.materials {
             // overwrite and set parameter and vertexbuffers for program
         }
 
-        public function clearAfterRender(context:Context3D):void {
+        public function render(context:Context3D, faceList:Vector.<Face>, numTris:uint):void {
+            generateBufferData(context, faceList);
+            prepareForRender(context);
+            context.drawTriangles(indexBuffer, 0, numTris);
+            clearAfterRender(context);
+        }
+
+        protected function clearAfterRender(context:Context3D):void {
             // overwrite
             for(var j:int = 0; j < vertexRegisterMap.vertexRegisters.length; j += 1) {
                 context.setVertexBufferAt(j, null);
@@ -204,7 +209,8 @@ package de.nulldesign.nd2d.materials {
                 var inputMaterialVertexProgram:PBASMProgram = new PBASMProgram(materialVertexProgram);
                 var inputFragmentProgram:PBASMProgram = new PBASMProgram(materialFragmentProgram);
 
-                var programs:AGALProgramPair = PBASMCompiler.compile(inputVertexProgram, inputMaterialVertexProgram, inputFragmentProgram);
+                var programs:AGALProgramPair = PBASMCompiler.compile(inputVertexProgram, inputMaterialVertexProgram,
+                                                                     inputFragmentProgram);
 
                 var agalVertexBinary:ByteArray = programs.vertexProgram.byteCode;
                 var agalFragmentBinary:ByteArray = programs.fragmentProgram.byteCode;

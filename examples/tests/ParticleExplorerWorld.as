@@ -29,11 +29,6 @@
  * /
  */
 
-/**
- * (c) 2010 by nulldesign
- * Created by lars
- * Date: 16.03.11 17:10
- */
 package tests {
     import com.bit101.components.ColorChooser;
     import com.bit101.components.HUISlider;
