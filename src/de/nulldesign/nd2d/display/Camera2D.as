@@ -46,6 +46,10 @@ package de.nulldesign.nd2d.display {
         protected var invalidated:Boolean = true;
 
         public function Camera2D(w:Number, h:Number) {
+            resizeCameraStage(w, h);
+        }
+
+        public function resizeCameraStage(w:Number, h:Number):void {
             _sceneWidth = w;
             _sceneHeight = h;
             projectionMatrix = makeOrtographicMatrix(0, w, 0, h);

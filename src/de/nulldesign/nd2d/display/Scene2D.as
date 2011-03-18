@@ -30,9 +30,14 @@
  */
 
 package de.nulldesign.nd2d.display {
+    import flash.display.Stage;
     import flash.display3D.Context3D;
+    import flash.events.Event;
 
     import net.hires.debug.Stats;
+
+    [Event(name="addedToStage", type="flash.events.Event")]
+    [Event(name="removedFromStage", type="flash.events.Event")]
 
     /**
      * A scene that can contain 2D nodes
@@ -40,9 +45,25 @@ package de.nulldesign.nd2d.display {
     public class Scene2D extends Node2D {
 
         public var statsRef:Stats;
+        protected var stage:Stage;
+        protected var camera:Camera2D;
 
         public function Scene2D() {
             super();
+            mouseEnabled = true;
+        }
+
+        internal function setCameraRef(value:Camera2D):void {
+            camera = value;
+        }
+
+        internal function setStageRef(value:Stage):void {
+            stage = value;
+            if(stage) {
+                dispatchEvent(new Event(Event.ADDED_TO_STAGE));
+            } else {
+                dispatchEvent(new Event(Event.REMOVED_FROM_STAGE));
+            }
         }
 
         override internal function drawNode(context:Context3D, camera:Camera2D):void {

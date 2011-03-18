@@ -14,7 +14,7 @@ package tests {
 
     import flash.display.BitmapData;
 
-    public class MassiveSpriteCloudTest extends World2D {
+    public class MassiveSpriteCloudTest extends Scene2D {
 
         [Embed(source="/assets/spritechar2.png")]
         private var cubeTexture:Class;
@@ -22,14 +22,7 @@ package tests {
         private var sprites:Vector.<Sprite2D>;
         private var spriteCloud:Sprite2DCloud;
 
-        private var scene:Scene2D;
-
-        public function MassiveSpriteCloudTest(rendermode:String) {
-            super(rendermode, 60);
-
-            backGroundColor = 0x666666;
-            scene = new Scene2D();
-            setActiveScene(scene);
+        public function MassiveSpriteCloudTest() {
 
             sprites = new Vector.<Sprite2D>();
             var tex:BitmapData = new cubeTexture().bitmapData;
@@ -57,7 +50,7 @@ package tests {
                 spriteCloud.addChild(s);
             }
 
-            scene.addChild(spriteCloud);
+            addChild(spriteCloud);
         }
 
         override protected function step(t:Number):void {

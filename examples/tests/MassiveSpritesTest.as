@@ -9,7 +9,7 @@ package tests {
     import flash.display.BitmapDataChannel;
     import flash.events.Event;
 
-    public class MassiveSpritesTest extends World2D {
+    public class MassiveSpritesTest extends Scene2D {
 
         [Embed(source="/assets/particle_small.png")]
         private var cubeTexture:Class;
@@ -19,13 +19,7 @@ package tests {
 
         private var perlinBmp:BitmapData;
 
-        private var scene:Scene2D;
-
-        public function MassiveSpritesTest(rendermode:String) {
-            super(rendermode, 60);
-
-            scene = new Scene2D();
-            setActiveScene(scene);
+        public function MassiveSpritesTest() {
 
             sprites = new Vector.<Sprite2D>();
             var tex:BitmapData = new cubeTexture().bitmapData;
@@ -47,21 +41,21 @@ package tests {
                 //scene.addChild(s);
             }
 
-            scene.addChild(spriteSheet);
+            addChild(spriteSheet);
+
+            addEventListener(Event.ADDED_TO_STAGE, addedToStage);
         }
 
-        override protected function context3DCreated(e:Event):void {
+        protected function addedToStage(e:Event):void {
 
             perlinBmp = new BitmapData(stage.stageWidth, stage.stageHeight, false);
             perlinBmp.perlinNoise(stage.stageWidth * 0.1, stage.stageHeight * 0.1, 3, Math.random() * 10, false, false,
                                   BitmapDataChannel.RED | BitmapDataChannel.GREEN | BitmapDataChannel.BLUE, false);
 
-            super.context3DCreated(e);
+            stage.addEventListener(Event.RESIZE, resizeStage);
         }
 
-        override protected function resizeStage(e:Event):void {
-
-            super.resizeStage(e);
+        protected function resizeStage(e:Event):void {
 
             perlinBmp = new BitmapData(stage.stageWidth, stage.stageHeight, false);
             perlinBmp.perlinNoise(stage.stageWidth * 0.1, stage.stageHeight * 0.1, 3, Math.random() * 10, false, false,

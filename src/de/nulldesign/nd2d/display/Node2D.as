@@ -63,9 +63,9 @@ package de.nulldesign.nd2d.display {
 
         public var mouseEnabled:Boolean = false;
 
-        protected var localMouse:Vector3D;
-        protected var mouseInNode:Boolean = false;
-        protected var clipSpaceMatrix:Matrix3D = new Matrix3D();
+        internal var localMouse:Vector3D;
+        internal var mouseInNode:Boolean = false;
+        internal var clipSpaceMatrix:Matrix3D = new Matrix3D();
 
         protected var _width:Number;
 
@@ -94,6 +94,7 @@ package de.nulldesign.nd2d.display {
         public function set alpha(value:Number):void {
             _alpha = value;
             refreshColors = true;
+            visible = alpha > 0.0;
         }
 
         public function get alpha():Number {
@@ -215,6 +216,18 @@ package de.nulldesign.nd2d.display {
             return _rotation;
         }
 
+        private var _mouseX:Number;
+
+        public function get mouseX():Number {
+            return _mouseX;
+        }
+
+        private var _mouseY:Number;
+
+        public function get mouseY():Number {
+            return _mouseY;
+        }
+
         public function get numTris():uint {
             return 0;
         }
@@ -291,6 +304,11 @@ package de.nulldesign.nd2d.display {
                 localMouse.y /= localMouse.w;
                 localMouse.z /= localMouse.w;
 
+                _mouseX = localMouse.x;
+                _mouseY = localMouse.y;
+
+                if(isNaN(width) || isNaN(height)) return;
+
                 var oldMouseInNodeState:Boolean = mouseInNode;
                 mouseInNode = (localMouse.x >= -width / 2.0 && localMouse.x <= width / 2.0 && localMouse.y >= -height / 2.0 && localMouse.y <= height / 2.0);
 
@@ -319,7 +337,7 @@ package de.nulldesign.nd2d.display {
             }
         }
 
-        private function dispatchMouseEvent(mouseEventType:String):void {
+        internal function dispatchMouseEvent(mouseEventType:String):void {
             dispatchEvent(new MouseEvent(mouseEventType, true, false, localMouse.x, localMouse.y, null, false, false,
                                          false, (mouseEventType == MouseEvent.MOUSE_DOWN), 0));
         }
@@ -351,8 +369,10 @@ package de.nulldesign.nd2d.display {
         }
 
         public function removeChildAt(idx:uint):void {
-            if(idx < children.length)
+            if(idx < children.length) {
+                children[idx].parent = null;
                 children.splice(idx, 1);
+            }
         }
 
         public function getChildIndex(child:Node2D):int {
@@ -367,7 +387,9 @@ package de.nulldesign.nd2d.display {
         }
 
         public function removeAllChildren():void {
-            children = new Vector.<Node2D>();
+            while(children.length > 0) {
+                removeChildAt(0);
+            }
         }
     }
 }

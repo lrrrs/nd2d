@@ -4,7 +4,7 @@ package tests {
     import de.nulldesign.nd2d.display.World2D;
     import de.nulldesign.nd2d.materials.BlendModePresets;
 
-    public class StarFieldTest extends World2D {
+    public class StarFieldTest extends Scene2D {
 
         [Embed(source="/assets/starfield.jpg")]
         private var starFieldTexture:Class;
@@ -21,25 +21,20 @@ package tests {
         private var p:Number = 0.0;
         private var p2:Number = 0.0;
 
-        private var scene:Scene2D;
-
-        public function StarFieldTest(renderMode:String) {
-            super(renderMode, 60);
-
-            scene = new Scene2D();
-            setActiveScene(scene);
+        public function StarFieldTest() {
 
             starfield1 = new Sprite2D(new starFieldTexture().bitmapData);
-            scene.addChild(starfield1);
+            addChild(starfield1);
             starfield2 = new Sprite2D(new starFieldTexture().bitmapData);
-            scene.addChild(starfield2);
+            addChild(starfield2);
 
             starfield3 = new Sprite2D(new starFieldTexture2().bitmapData);
             starfield3.blendMode = BlendModePresets.ADD;
-            scene.addChild(starfield3);
+            addChild(starfield3);
+
             starfield4 = new Sprite2D(new starFieldTexture2().bitmapData);
             starfield4.blendMode = BlendModePresets.ADD;
-            scene.addChild(starfield4);
+            addChild(starfield4);
         }
 
         override protected function step(t:Number):void {

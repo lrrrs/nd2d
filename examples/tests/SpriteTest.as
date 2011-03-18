@@ -7,7 +7,7 @@ package tests {
 
     import flash.utils.getTimer;
 
-    public class SpriteTest extends World2D {
+    public class SpriteTest extends Scene2D {
 
         [Embed(source="../assets/crate.jpg")]
         private var spriteTexture:Class;
@@ -16,21 +16,16 @@ package tests {
         private var s2:Sprite2D;
         private var s3:Sprite2D;
 
-        private var scene:Scene2D = new Scene2D();
-
-        public function SpriteTest(rendermode:String) {
-            super(rendermode, 60);
-
-            setActiveScene(scene);
+        public function SpriteTest() {
 
             s = new Sprite2D(new spriteTexture().bitmapData);
-            scene.addChild(s);
+            addChild(s);
 
             s2 = new Sprite2D(new spriteTexture().bitmapData);
-            scene.addChild(s2);
+            addChild(s2);
 
             s3 = new Sprite2D(new spriteTexture().bitmapData);
-            scene.addChild(s3);
+            addChild(s3);
         }
 
         override protected function step(t:Number):void {

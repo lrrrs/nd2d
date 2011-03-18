@@ -10,7 +10,7 @@ package tests {
     import flash.events.MouseEvent;
     import flash.geom.Point;
 
-    public class SpriteHierarchyTest extends World2D {
+    public class SpriteHierarchyTest extends Scene2D {
 
         [Embed(source="/assets/crate.jpg")]
         private var spriteTexture:Class;
@@ -22,21 +22,13 @@ package tests {
         private var s2:Sprite2D;
         private var s3:Sprite2D;
 
-        private var scene:Scene2D;
-
-        private var flashCrate:Bitmap;
-
-        public function SpriteHierarchyTest(rendermode:String) {
-            super(rendermode, 60);
-
-            scene = new Scene2D();
-            setActiveScene(scene);
+        public function SpriteHierarchyTest() {
 
             s = new Sprite2D(new spriteTexture().bitmapData);
             s.mouseEnabled = true;
             s.addEventListener(MouseEvent.MOUSE_OVER, mouseOver);
             s.addEventListener(MouseEvent.MOUSE_OUT, mouseOut);
-            scene.addChild(s);
+            addChild(s);
 
             s2 = new Sprite2D(new spriteTexture().bitmapData);
             s2.x = 50;
@@ -55,9 +47,6 @@ package tests {
             s2.addChild(s3);
 
             s3.blendMode = BlendModePresets.NORMAL;
-
-            //flashCrate = new spriteTexture();
-            //addChild(flashCrate);
         }
 
         private function mouseOut(event:MouseEvent):void {
@@ -81,9 +70,6 @@ package tests {
             s2.rotation -= 0.5;
 
             s3.rotation -= 0.5;
-
-            //flashCrate.x = stage.stageWidth / 2 - flashCrate.width / 2;
-            //flashCrate.y = stage.stageHeight / 2 - flashCrate.height / 2 + 256;
         }
     }
 }

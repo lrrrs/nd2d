@@ -45,7 +45,7 @@ package de.nulldesign.nd2d.display {
     import net.hires.debug.Stats;
 
     /**
-     * Baseclass for ND2D
+     * <p>Baseclass for ND2D</p>
      * Extend this class and add your own scenes and sprites
      *
      * Set up your project like this:
@@ -66,7 +66,7 @@ package de.nulldesign.nd2d.display {
      */
     public class World2D extends Sprite {
 
-        protected var camera:Camera2D;
+        protected var camera:Camera2D = new Camera2D(1, 1);
 
         private var renderTimer:Timer;
         private var context3D:Context3D;
@@ -137,7 +137,7 @@ package de.nulldesign.nd2d.display {
             stage.stage3Ds[0].viewPort = new Rectangle(0, 0, stage.stageWidth, stage.stageHeight);
             context3D.configureBackBuffer(stage.stageWidth, stage.stageHeight, 2, false);
 
-            camera = new Camera2D(stage.stageWidth, stage.stageHeight);
+            camera.resizeCameraStage(stage.stageWidth, stage.stageHeight);
             stats.driverInfo = context3D.driverInfo;
 
             renderTimer = new Timer(1000 / frameRate);
@@ -151,7 +151,7 @@ package de.nulldesign.nd2d.display {
         protected function resizeStage(e:Event):void {
             stage.stage3Ds[0].viewPort = new Rectangle(0, 0, stage.stageWidth, stage.stageHeight);
             context3D.configureBackBuffer(stage.stageWidth, stage.stageHeight, 2, false);
-            camera = new Camera2D(stage.stageWidth, stage.stageHeight);
+            camera.resizeCameraStage(stage.stageWidth, stage.stageHeight);
         }
 
         internal function mouseEventHandler(event:MouseEvent):void {
@@ -196,8 +196,15 @@ package de.nulldesign.nd2d.display {
             context3D.present();
         }
 
-        protected function setActiveScene(scene:Scene2D):void {
-            this.scene = scene
+        protected function setActiveScene(value:Scene2D):void {
+
+            if(scene) {
+               scene.setStageRef(null);
+            }
+
+            this.scene = value;
+            scene.setStageRef(stage);
+            scene.setCameraRef(camera);
             scene.statsRef = stats;
         }
 
