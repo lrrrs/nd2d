@@ -88,6 +88,7 @@ package de.nulldesign.nd2d.display {
             _height = spriteSheet ? spriteSheet.height : bitmapTexture.height;
 
             material = new Sprite2DMaterial(bitmapTexture, spriteSheet);
+            //material = new Sprite2DBlurMaterial(bitmapTexture, spriteSheet);
             faceList = new Vector.<Face>();
 
             var texW:Number;
@@ -128,7 +129,13 @@ package de.nulldesign.nd2d.display {
             return 2;
         }
 
-        override protected function step(t:Number):void {
+        /**
+         * @private
+         */
+        override internal function stepNode(t:Number):void {
+
+            super.stepNode(t);
+
             if(spriteSheet)
                 spriteSheet.update(t);
         }

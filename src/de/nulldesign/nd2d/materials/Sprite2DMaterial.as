@@ -30,12 +30,15 @@
  */
 
 package de.nulldesign.nd2d.materials {
+    import de.nulldesign.nd2d.geom.Face;
     import de.nulldesign.nd2d.utils.TextureHelper;
 
     import flash.display.BitmapData;
     import flash.display3D.Context3D;
     import flash.display3D.Context3DProgramType;
+    import flash.display3D.Context3DTextureFormat;
     import flash.display3D.textures.Texture;
+    import flash.geom.Matrix3D;
     import flash.geom.Point;
     import flash.geom.Vector3D;
 
@@ -50,8 +53,10 @@ package de.nulldesign.nd2d.materials {
         [Embed (source="../shader/DefaultVertexShader.pbasm", mimeType="application/octet-stream")]
         protected static const VertexProgramClass:Class;
 
-        public var texture:Texture;
-        public var bitmapData:BitmapData;
+        protected var texture:Texture;
+        protected var bitmapData:BitmapData;
+        protected var blurTexture:Texture;
+        protected var textureDimensions:Point;
 
         public var color:Vector3D = new Vector3D(1.0, 1.0, 1.0, 1.0);
 
@@ -92,6 +97,44 @@ package de.nulldesign.nd2d.materials {
             parameterBufferHelper.update();
 
             vertexBufferHelper.setVertexBuffers();
+        }
+
+        override public function render(context:Context3D, faceList:Vector.<Face>, numTris:uint):void {
+            if(true) {
+                super.render(context, faceList, numTris);
+            } else {
+                renderBlur(context, faceList, numTris);
+            }
+        }
+
+        protected function renderBlur(context:Context3D, faceList:Vector.<Face>, numTris:uint):void {
+
+            generateBufferData(context, faceList);
+            prepareForRender(context);
+
+            if(!blurTexture) {
+                textureDimensions = TextureHelper.getTextureDimensionsFromBitmap(bitmapData);
+                blurTexture = context.createTexture(textureDimensions.x, textureDimensions.y,
+                                                    Context3DTextureFormat.BGRA, true);
+            }
+
+            // first pass
+            context.setRenderToTexture(blurTexture, false, 2, 0);
+            context.clear(0.3, 0.3, 0.3);
+
+            var m:Matrix3D = new Matrix3D();
+            m.appendScale(1 / textureDimensions.x * 2, -1 / textureDimensions.y * 2, 1.0);
+
+            context.setProgramConstantsFromMatrix(Context3DProgramType.VERTEX, 0, m, true);
+            context.drawTriangles(indexBuffer, 0, numTris);
+
+            // second pass
+            context.setRenderToBackBuffer();
+            context.setTextureAt(0, blurTexture);
+            context.setProgramConstantsFromMatrix(Context3DProgramType.VERTEX, 0, clipSpaceMatrix, true);
+            context.drawTriangles(indexBuffer, 0, numTris);
+
+            clearAfterRender(context);
         }
 
         override protected function clearAfterRender(context:Context3D):void {

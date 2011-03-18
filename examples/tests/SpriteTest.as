@@ -49,10 +49,10 @@ package tests {
             s3.rotation -= 2.5;
             s3.blendMode = BlendModePresets.ADD;
 
-            camera.x = Math.sin(getTimer() / 1000) * 200.0;
-            camera.y = Math.cos(getTimer() / 1000) * 200.0;
+            camera.x = Math.sin(getTimer() / 5000) * 20.0;
+            camera.y = Math.cos(getTimer() / 5000) * 20.0;
             camera.rotation += 5.0;
-            camera.zoom = 1.0 + Math.sin(getTimer() / 1000) * 0.5;
+            camera.zoom = 1.0 + Math.sin(getTimer() / 5000) * 0.2;
         }
     }
 }

@@ -6,25 +6,25 @@ package tests {
 
     public class SpriteAnimTest extends Scene2D {
 
-        [Embed(source="/assets/spritechar1.png")]
+        [Embed(source="/assets/crate.jpg")]
         private var spriteTexture:Class;
 
         private var s:Sprite2D;
 
         public function SpriteAnimTest() {
 
-            var sheet:SpriteSheet = new SpriteSheet(new spriteTexture().bitmapData, 24, 32, 10);
+            var sheet:SpriteSheet = new SpriteSheet(new spriteTexture().bitmapData, 24, 32, 5);
             sheet.addAnimation("up", [0, 1, 2], true);
             sheet.addAnimation("right", [3, 4, 5], true);
             sheet.addAnimation("down", [6, 7, 8], true);
             sheet.addAnimation("left", [9, 10, 11], true);
 
-            s = new Sprite2D(null, sheet);
+            s = new Sprite2D(new spriteTexture().bitmapData, null);
             addChild(s);
         }
 
         override protected function step(t:Number):void {
-
+            statsRef.visible = false;
             s.x = stage.stageWidth / 2;
             s.y = stage.stageHeight / 2;
 
