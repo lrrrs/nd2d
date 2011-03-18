@@ -77,10 +77,12 @@ package de.nulldesign.nd2d.display {
     [Event(name="mouseOut", type="flash.events.MouseEvent")]
 
     /**
-     * Basic 2D object. All drawable objects must extend Node2D
+     * <p>Basic 2D object. All drawable objects must extend Node2D</p>
      * A Node2D has two methods that are called during rendering:
-     * step - Used to update the position of the Node
-     * draw - The rendering takes place here
+     * <ul>
+     * <li>step - Update the node's position here</li>
+     * <li>draw - Your rendering code goes here</li>
+     * </ul>
      */
 
     public class Node2D extends EventDispatcher {

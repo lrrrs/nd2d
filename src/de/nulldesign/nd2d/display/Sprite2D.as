@@ -42,7 +42,7 @@ package de.nulldesign.nd2d.display {
     import flash.geom.Point;
 
     /**
-     * 2D sprite class
+     * <p>2D sprite class</p>
      * One draw call is used per sprite.
      * If you have a lot of sprites with the same texture / spritesheet try to use a Sprite2DCould, it will be a lot faster.
      */

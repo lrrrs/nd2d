@@ -30,9 +30,9 @@ package {
             super(Context3DRenderMode.AUTO, 60);
 
             //mainScene = new MassiveSpritesTest();
-            mainScene = new MassiveSpriteCloudTest();
+            //mainScene = new MassiveSpriteCloudTest();
             //mainScene = new SpriteHierarchyTest();
-            //mainScene = new SpriteTest();
+            mainScene = new SpriteTest();
             //mainScene = new SpriteAnimTest();
             //mainScene = new StarFieldTest();
             //mainScene = new ParticleSystemTest();

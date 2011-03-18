@@ -49,16 +49,16 @@ package de.nulldesign.nd2d.display {
      * Extend this class and add your own scenes and sprites
      *
      * Set up your project like this:
-     *
-     * MyGameWorld2D
-     *      MyStartScene2D
-     *          StartButtonSprite2D
-     *
-     *      MyGameScene2D
-     *          GameSprites2D
-     *          ...
-     *
-     * Code your game logic in the step() method of each scene
+     * <ul>
+     * <li>MyGameWorld2D</li>
+     * <li>- MyStartScene2D</li>
+     * <li>-- StartButtonSprite2D</li>
+     * <li>-- ...</li>
+     * <li>- MyGameScene2D</li>
+     * <li>-- GameSprites2D</li>
+     * <li>-- ...</li>
+     * </ul>
+     * <p>Put your game logic in the step() method of each scene / node</p>
      *
      * You can switch between scenes with the setActiveScene method of World2D.
      * There can be only one active scene.
