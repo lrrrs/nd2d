@@ -9,7 +9,7 @@ package {
 
     import tests.MassiveSpriteCloudTest;
     import tests.MassiveSpritesTest;
-    import tests.ParticleExplorerWorld;
+    import tests.ParticleExplorer;
     import tests.ParticleSystemTest;
     import tests.SpriteAnimTest;
     import tests.SpriteHierarchyTest;
@@ -30,8 +30,6 @@ package {
             super(Context3DRenderMode.AUTO, 60);
 
             //mainScene = new MassiveSpritesTest();
-            // TODO move bg color to scene2d
-            backGroundColor = 0x666666;
             mainScene = new MassiveSpriteCloudTest();
             //mainScene = new SpriteHierarchyTest();
             //mainScene = new SpriteTest();
@@ -39,7 +37,7 @@ package {
             //mainScene = new StarFieldTest();
             //mainScene = new ParticleSystemTest();
             //statsVisible = false;
-            //mainScene = new ParticleExplorerWorld();
+            //mainScene = new ParticleExplorer();
 
             setActiveScene(mainScene);
         }

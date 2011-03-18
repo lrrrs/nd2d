@@ -36,17 +36,43 @@ package de.nulldesign.nd2d.display {
 
     import net.hires.debug.Stats;
 
+    /**
+     * Dispatched when the scene is active and added to the stage.
+     * @eventType flash.events.Event.ADDED_TO_STAGE
+     */
     [Event(name="addedToStage", type="flash.events.Event")]
+
+    /**
+     * Dispatched when the scene inactive and removed from stage.
+     * @eventType flash.events.Event.REMOVED_FROM_STAGE
+     */
     [Event(name="removedFromStage", type="flash.events.Event")]
 
     /**
      * A scene that can contain 2D nodes
-     */
-    public class Scene2D extends Node2D {
+     */ public class Scene2D extends Node2D {
 
         public var statsRef:Stats;
+
         protected var stage:Stage;
         protected var camera:Camera2D;
+
+        public var br:Number = 0.0;
+        public var bg:Number = 0.0;
+        public var bb:Number = 0.0;
+
+        private var _backGroundColor:Number = 0x000000;
+
+        public function get backGroundColor():Number {
+            return _backGroundColor;
+        }
+
+        public function set backGroundColor(value:Number):void {
+            _backGroundColor = value;
+            br = (backGroundColor >> 16) / 255.0;
+            bg = (backGroundColor >> 8 & 255) / 255.0;
+            bb = (backGroundColor & 255) / 255.0;
+        }
 
         public function Scene2D() {
             super();

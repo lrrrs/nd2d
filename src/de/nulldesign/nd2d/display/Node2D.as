@@ -41,18 +41,69 @@ package de.nulldesign.nd2d.display {
     import flash.geom.Vector3D;
 
     /**
+     * Dispatched when a user presses and releases the main button of the user's pointing device over the same Node2D.
+     * @eventType flash.events.MouseEvent.CLICK
+     */
+    [Event(name="click", type="flash.events.MouseEvent")]
+
+    /**
+     * Dispatched when a user presses the pointing device button over an Node2D instance.
+     * @eventType flash.events.MouseEvent.MOUSE_DOWN
+     */
+    [Event(name="mouseDown", type="flash.events.MouseEvent")]
+
+    /**
+     * Dispatched when a user moves the pointing device while it is over an Node2D.
+     * @eventType flash.events.MouseEvent.MOUSE_MOVE
+     */
+    [Event(name="mouseMove", type="flash.events.MouseEvent")]
+
+    /**
+     * Dispatched when a user releases the pointing device button over an Node2D instance.
+     * @eventType flash.events.MouseEvent.MOUSE_UP
+     */
+    [Event(name="mouseUp", type="flash.events.MouseEvent")]
+
+    /**
+     * Dispatched when the user moves a pointing device over an Node2D instance.
+     * @eventType flash.events.MouseEvent.MOUSE_OVER
+     */
+    [Event(name="mouseOver", type="flash.events.MouseEvent")]
+
+    /**
+     * Dispatched when the user moves a pointing device away from an Node2D instance.
+     * @eventType flash.events.MouseEvent.MOUSE_OUT
+     */
+    [Event(name="mouseOut", type="flash.events.MouseEvent")]
+
+    /**
      * Basic 2D object. All drawable objects must extend Node2D
      * A Node2D has two methods that are called during rendering:
      * step - Used to update the position of the Node
      * draw - The rendering takes place here
      */
+
     public class Node2D extends EventDispatcher {
 
-        internal var modelMatrix:Matrix3D = new Matrix3D();
-        internal var modelViewMatrix:Matrix3D = new Matrix3D();
+        /**
+         * @private
+         */
+        public var modelMatrix:Matrix3D = new Matrix3D();
 
-        internal var refreshPosition:Boolean = true;
-        internal var refreshColors:Boolean = true;
+        /**
+         * @private
+         */
+        public var modelViewMatrix:Matrix3D = new Matrix3D();
+
+        /**
+         * @private
+         */
+        public var refreshPosition:Boolean = true;
+
+        /**
+         * @private
+         */
+        public var refreshColors:Boolean = true;
 
         public var children:Vector.<Node2D> = new Vector.<Node2D>();
         public var parent:Node2D;
@@ -68,19 +119,25 @@ package de.nulldesign.nd2d.display {
         private var mouseInNode:Boolean = false;
         private var clipSpaceMatrix:Matrix3D = new Matrix3D();
 
+        /**
+         * @private
+         */
         protected var _width:Number;
 
         public function get width():Number {
             return _width;
         }
 
+        /**
+         * @private
+         */
         protected var _height:Number;
 
         public function get height():Number {
             return _height;
         }
 
-        protected var _visible:Boolean = true;
+        private var _visible:Boolean = true;
 
         public function get visible():Boolean {
             return _visible;
@@ -90,7 +147,7 @@ package de.nulldesign.nd2d.display {
             _visible = value;
         }
 
-        protected var _alpha:Number = 1.0;
+        private var _alpha:Number = 1.0;
 
         public function set alpha(value:Number):void {
             _alpha = value;
@@ -102,31 +159,43 @@ package de.nulldesign.nd2d.display {
             return _alpha;
         }
 
+        /**
+         * @private
+         */
         protected var _a:Number = 1.0;
 
         public function get a():Number {
             return _a;
         }
 
+        /**
+         * @private
+         */
         protected var _r:Number = 1.0;
 
         public function get r():Number {
             return _r;
         }
 
+        /**
+         * @private
+         */
         protected var _g:Number = 1.0;
 
         public function get g():Number {
             return _g;
         }
 
+        /**
+         * @private
+         */
         protected var _b:Number = 1.0;
 
         public function get b():Number {
             return _b;
         }
 
-        protected var _tint:Number = 0xFFFFFF;
+        private var _tint:Number = 0xFFFFFF;
 
         public function set tint(value:Number):void {
             _tint = value;
@@ -137,7 +206,7 @@ package de.nulldesign.nd2d.display {
             return _tint;
         }
 
-        protected var _scaleX:Number = 1.0;
+        private var _scaleX:Number = 1.0;
 
         public function set scaleX(value:Number):void {
             _scaleX = value;
@@ -148,7 +217,7 @@ package de.nulldesign.nd2d.display {
             return _scaleX;
         }
 
-        protected var _scaleY:Number = 1.0;
+        private var _scaleY:Number = 1.0;
 
         public function set scaleY(value:Number):void {
             _scaleY = value;
@@ -159,7 +228,7 @@ package de.nulldesign.nd2d.display {
             return _scaleY;
         }
 
-        protected var _x:Number = 0.0;
+        private var _x:Number = 0.0;
 
         public function set x(value:Number):void {
             _x = value;
@@ -171,7 +240,7 @@ package de.nulldesign.nd2d.display {
             return _x;
         }
 
-        protected var _y:Number = 0.0;
+        private var _y:Number = 0.0;
 
         public function set y(value:Number):void {
             _y = value;
@@ -183,7 +252,7 @@ package de.nulldesign.nd2d.display {
             return _y;
         }
 
-        protected var _position:Point = new Point(0.0, 0.0);
+        private var _position:Point = new Point(0.0, 0.0);
 
         public function get position():Point {
             return _position;
@@ -195,7 +264,7 @@ package de.nulldesign.nd2d.display {
             y = _position.y;
         }
 
-        protected var _pivot:Point = new Point(0.0, 0.0);
+        private var _pivot:Point = new Point(0.0, 0.0);
 
         public function get pivot():Point {
             return _pivot;
@@ -206,7 +275,7 @@ package de.nulldesign.nd2d.display {
             refreshPosition = true;
         }
 
-        protected var _rotation:Number = 0.0;
+        private var _rotation:Number = 0.0;
 
         public function set rotation(value:Number):void {
             _rotation = value;
@@ -240,6 +309,9 @@ package de.nulldesign.nd2d.display {
         public function Node2D() {
         }
 
+        /**
+         * @private
+         */
         protected function refreshMatrix():void {
             refreshPosition = false;
             modelMatrix.identity();
@@ -249,6 +321,9 @@ package de.nulldesign.nd2d.display {
             modelMatrix.appendTranslation(x, y, 0.0);
         }
 
+        /**
+         * @private
+         */
         protected function updateColors():void {
 
             refreshColors = false;
@@ -266,6 +341,9 @@ package de.nulldesign.nd2d.display {
             }
         }
 
+        /**
+         * @private
+         */
         internal function drawNode(context:Context3D, camera:Camera2D):void {
 
             if(!visible) {
@@ -290,6 +368,9 @@ package de.nulldesign.nd2d.display {
             }
         }
 
+        /**
+         * @private
+         */
         internal function processMouseEvents(mousePosition:Vector3D, mouseEventType:String, camera:Camera2D):void {
 
             if(mouseEnabled && mouseEventType) {
@@ -328,6 +409,9 @@ package de.nulldesign.nd2d.display {
             }
         }
 
+        /**
+         * @private
+         */
         internal function stepNode(t:Number):void {
 
             step(t);

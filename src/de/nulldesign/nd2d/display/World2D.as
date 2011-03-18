@@ -78,11 +78,6 @@ package de.nulldesign.nd2d.display {
 
         protected var stats:Stats;
 
-        private var _backGroundColor:Number = 0x000000;
-        private var br:Number = 0.0;
-        private var bg:Number = 0.0;
-        private var bb:Number = 0.0;
-
         private var _statsVisible:Boolean = true;
 
         public function get statsVisible():Boolean {
@@ -92,17 +87,6 @@ package de.nulldesign.nd2d.display {
         public function set statsVisible(value:Boolean):void {
             _statsVisible = value;
             stats.visible = statsVisible;
-        }
-
-        public function get backGroundColor():Number {
-            return _backGroundColor;
-        }
-
-        public function set backGroundColor(value:Number):void {
-            _backGroundColor = value;
-            br = (backGroundColor >> 16) / 255.0;
-            bg = (backGroundColor >> 8 & 255) / 255.0;
-            bb = (backGroundColor & 255) / 255.0;
         }
 
         public function World2D(renderMode:String, frameRate:uint) {
@@ -187,27 +171,29 @@ package de.nulldesign.nd2d.display {
         }
 
         protected function draw(event:Event):void {
-            context3D.clear(br, bg, bb, 1.0);
 
             if(scene) {
+                context3D.clear(scene.br, scene.bg, scene.bb, 1.0);
                 scene.drawNode(context3D, camera);
+                context3D.present();
             }
-
-            context3D.present();
         }
 
         protected function setActiveScene(value:Scene2D):void {
 
             if(scene) {
-               scene.setStageRef(null);
-               scene.setCameraRef(null);
+                scene.setStageRef(null);
+                scene.setCameraRef(null);
                 scene.statsRef = null;
             }
 
             this.scene = value;
-            scene.setStageRef(stage);
-            scene.setCameraRef(camera);
-            scene.statsRef = stats;
+
+            if(scene) {
+                scene.setStageRef(stage);
+                scene.setCameraRef(camera);
+                scene.statsRef = stats;
+            }
         }
 
         protected function pause():void {

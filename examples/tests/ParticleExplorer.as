@@ -45,7 +45,7 @@ package tests {
     import flash.events.TimerEvent;
     import flash.utils.Timer;
 
-    public class ParticleExplorerWorld extends Scene2D {
+    public class ParticleExplorer extends Scene2D {
 
         [Embed(source="/assets/particle_small.png")]
         private var particleClass:Class;
@@ -59,11 +59,11 @@ package tests {
         private var particles:ParticleSystem2D;
         private var preset:ParticleSystemPreset = new ParticleSystemPreset();
 
-        public function ParticleExplorerWorld() {
+        public function ParticleExplorer() {
 
             bmp = new particleClass().bitmapData;
             particles = new ParticleSystem2D(bmp, maxParticles, preset);
-            particles.blendMode = BlendModePresets.ADD2;
+            particles.blendMode = BlendModePresets.ADD;
 
             timer.addEventListener(TimerEvent.TIMER, updateSystem);
 
@@ -289,7 +289,7 @@ package tests {
             removeChild(particles);
 
             particles = new ParticleSystem2D(bmp, maxParticles, preset);
-            particles.blendMode = BlendModePresets.ADD2;
+            particles.blendMode = BlendModePresets.ADD;
 
             addChild(particles);
 

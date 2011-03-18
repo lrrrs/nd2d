@@ -9,7 +9,6 @@ package tests {
     import de.nulldesign.nd2d.display.Scene2D;
     import de.nulldesign.nd2d.display.Sprite2D;
     import de.nulldesign.nd2d.display.Sprite2DCloud;
-    import de.nulldesign.nd2d.display.World2D;
     import de.nulldesign.nd2d.materials.SpriteSheet;
 
     import flash.display.BitmapData;
@@ -23,6 +22,8 @@ package tests {
         private var spriteCloud:Sprite2DCloud;
 
         public function MassiveSpriteCloudTest() {
+
+            backGroundColor = 0x666666;
 
             sprites = new Vector.<Sprite2D>();
             var tex:BitmapData = new cubeTexture().bitmapData;
@@ -58,8 +59,8 @@ package tests {
             var s:Sprite2D;
             var len:int = sprites.length;
             var i:int = len;
-            var vxabs:int;
-            var vyabs:int;
+            var vxabs:Number;
+            var vyabs:Number;
 
             while(--i > -1) {
                 s = sprites[i];

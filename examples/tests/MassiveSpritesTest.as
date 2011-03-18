@@ -24,8 +24,8 @@ package tests {
             sprites = new Vector.<Sprite2D>();
             var tex:BitmapData = new cubeTexture().bitmapData;
             var s:Sprite2D;
-            spriteSheet = new Sprite2DCloud(tex, 4000);
-            spriteSheet.blendMode = BlendModePresets.ADD2;
+            spriteSheet = new Sprite2DCloud(4000, tex);
+            spriteSheet.blendMode = BlendModePresets.ADD;
 
             for(var i:int = 0; i < 4000; i++) {
                 s = new Sprite2D();

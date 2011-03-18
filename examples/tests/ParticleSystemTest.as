@@ -20,7 +20,7 @@ package tests {
 
             particles = new ParticleSystem2D(new particleClass().bitmapData, 6000, new ParticleSystemPreset());
             //particles.scaleX = particles.scaleY = 4.0;
-            particles.blendMode = BlendModePresets.ADD2;
+            particles.blendMode = BlendModePresets.ADD;
 
             addChild(particles);
 

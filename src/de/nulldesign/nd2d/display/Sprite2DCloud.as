@@ -49,6 +49,7 @@ package de.nulldesign.nd2d.display {
      * Sprite2DCloud
      * Use a sprite cloud to batch sprites with the same texture / spritesheet.
      * all sprites will be batched in one single draw call
+     * Mouseevents are disabled and won't work for spriteclouds
      */
     public class Sprite2DCloud extends Sprite2D {
 
@@ -83,12 +84,16 @@ package de.nulldesign.nd2d.display {
 
         override public function addChildAt(child:Node2D, idx:uint):void {
 
+            if(!(child is Sprite2D)) {
+               throw new Error("Sprite2DCloud accepts Sprite2D childs only");
+            }
+
             if(children.length < maxCapacity) {
 
                 super.addChildAt(child, idx);
 
-                // TODO check ...
                 var c:Sprite2D = child as Sprite2D;
+                c.mouseEnabled = false;
 
                 // distribute spritesheets to sprites
                 if(c && spriteSheet && !c.spriteSheet) {
