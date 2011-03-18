@@ -48,24 +48,25 @@ package de.nulldesign.nd2d.display {
      */
     public class Node2D extends EventDispatcher {
 
-        public var modelMatrix:Matrix3D = new Matrix3D();
-        public var modelViewMatrix:Matrix3D = new Matrix3D();
+        internal var modelMatrix:Matrix3D = new Matrix3D();
+        internal var modelViewMatrix:Matrix3D = new Matrix3D();
+
+        internal var refreshPosition:Boolean = true;
+        internal var refreshColors:Boolean = true;
+
         public var children:Vector.<Node2D> = new Vector.<Node2D>();
         public var parent:Node2D;
 
         public var vx:Number = 0.0;
         public var vy:Number = 0.0;
 
-        public var refreshPosition:Boolean = true;
-        public var refreshColors:Boolean = true;
-
         public var blendMode:NodeBlendMode = BlendModePresets.NORMAL;
 
         public var mouseEnabled:Boolean = false;
 
-        internal var localMouse:Vector3D;
-        internal var mouseInNode:Boolean = false;
-        internal var clipSpaceMatrix:Matrix3D = new Matrix3D();
+        private var localMouse:Vector3D;
+        private var mouseInNode:Boolean = false;
+        private var clipSpaceMatrix:Matrix3D = new Matrix3D();
 
         protected var _width:Number;
 
@@ -337,7 +338,7 @@ package de.nulldesign.nd2d.display {
             }
         }
 
-        internal function dispatchMouseEvent(mouseEventType:String):void {
+        private function dispatchMouseEvent(mouseEventType:String):void {
             dispatchEvent(new MouseEvent(mouseEventType, true, false, localMouse.x, localMouse.y, null, false, false,
                                          false, (mouseEventType == MouseEvent.MOUSE_DOWN), 0));
         }

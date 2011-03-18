@@ -69,7 +69,7 @@ package de.nulldesign.nd2d.display {
         protected var uvInited:Boolean = false;
         protected var maxCapacity:uint;
 
-        public function Sprite2DCloud(bitmapTexture:BitmapData, maxCapacity:uint, spriteSheet:SpriteSheet = null) {
+        public function Sprite2DCloud(maxCapacity:uint, bitmapTexture:BitmapData = null, spriteSheet:SpriteSheet = null) {
             super(bitmapTexture, spriteSheet);
             this.maxCapacity = maxCapacity;
 

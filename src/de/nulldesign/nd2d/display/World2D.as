@@ -113,7 +113,7 @@ package de.nulldesign.nd2d.display {
             addEventListener(Event.ADDED_TO_STAGE, addedToStage);
         }
 
-        protected function addedToStage(event:Event):void {
+        private function addedToStage(event:Event):void {
 
             removeEventListener(Event.ADDED_TO_STAGE, addedToStage);
             stage.addEventListener(Event.RESIZE, resizeStage);
@@ -127,7 +127,7 @@ package de.nulldesign.nd2d.display {
             stage.addEventListener(MouseEvent.MOUSE_UP, mouseEventHandler);
         }
 
-        protected function context3DCreated(e:Event):void {
+        private function context3DCreated(e:Event):void {
 
             context3D = stage.stage3Ds[0].context3D;
             context3D.enableErrorChecking = true;
@@ -148,13 +148,13 @@ package de.nulldesign.nd2d.display {
             step(0);
         }
 
-        protected function resizeStage(e:Event):void {
+        private function resizeStage(e:Event):void {
             stage.stage3Ds[0].viewPort = new Rectangle(0, 0, stage.stageWidth, stage.stageHeight);
             context3D.configureBackBuffer(stage.stageWidth, stage.stageHeight, 2, false);
             camera.resizeCameraStage(stage.stageWidth, stage.stageHeight);
         }
 
-        internal function mouseEventHandler(event:MouseEvent):void {
+        private function mouseEventHandler(event:MouseEvent):void {
             if(scene && stage && camera) {
                 var mouseEventType:String = event.type;
                 mousePosition.x = stage.mouseX;
@@ -200,6 +200,8 @@ package de.nulldesign.nd2d.display {
 
             if(scene) {
                scene.setStageRef(null);
+               scene.setCameraRef(null);
+                scene.statsRef = null;
             }
 
             this.scene = value;

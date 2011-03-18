@@ -30,15 +30,16 @@ package {
             super(Context3DRenderMode.AUTO, 60);
 
             //mainScene = new MassiveSpritesTest();
-            //backGroundColor = 0x666666;
-            //mainScene = new MassiveSpriteCloudTest();
+            // TODO move bg color to scene2d
+            backGroundColor = 0x666666;
+            mainScene = new MassiveSpriteCloudTest();
             //mainScene = new SpriteHierarchyTest();
             //mainScene = new SpriteTest();
             //mainScene = new SpriteAnimTest();
             //mainScene = new StarFieldTest();
             //mainScene = new ParticleSystemTest();
-            statsVisible = false;
-            mainScene = new ParticleExplorerWorld();
+            //statsVisible = false;
+            //mainScene = new ParticleExplorerWorld();
 
             setActiveScene(mainScene);
         }

@@ -34,7 +34,7 @@ package tests {
             sheet.addAnimation("down", [6, 7, 8], true);
             sheet.addAnimation("left", [9, 10, 11], true);
 
-            spriteCloud = new Sprite2DCloud(null, 1600, sheet);
+            spriteCloud = new Sprite2DCloud(1600, null, sheet);
 
             for(var i:int = 0; i < 1600; i++) {
 
