@@ -44,19 +44,19 @@ package de.nulldesign.nd2d.materials {
 
     public class Sprite2DMaterial extends AMaterial {
 
-        [Embed (source="../shader/Sprite2DVertexShader.pbasm", mimeType="application/octet-stream")]
+        [Embed (source="../shader/Sprite2DMaterialVertexShader.pbasm", mimeType="application/octet-stream")]
         protected static const MaterialVertexProgramClass:Class;
 
-        [Embed (source="../shader/Sprite2DFragmentShader.pbasm", mimeType="application/octet-stream")]
+        [Embed (source="../shader/Sprite2DMaterialFragmentShader.pbasm", mimeType="application/octet-stream")]
         protected static const MaterialFragmentProgramClass:Class;
 
-        [Embed (source="../shader/DefaultVertexShader.pbasm", mimeType="application/octet-stream")]
+        [Embed (source="../shader/Sprite2DVertexShader.pbasm", mimeType="application/octet-stream")]
         protected static const VertexProgramClass:Class;
 
         protected var texture:Texture;
         protected var bitmapData:BitmapData;
-        protected var blurTexture:Texture;
-        protected var textureDimensions:Point;
+        //protected var blurTexture:Texture;
+        //protected var textureDimensions:Point;
 
         public var color:Vector3D = new Vector3D(1.0, 1.0, 1.0, 1.0);
 
@@ -78,7 +78,7 @@ package de.nulldesign.nd2d.materials {
             // TODO SET TEXTURE BY NAME!!!
             context.setTextureAt(0, texture);
 
-            parameterBufferHelper.setNumberParameterByName(Context3DProgramType.FRAGMENT, "color",
+            parameterBufferHelper.setNumberParameterByName(Context3DProgramType.VERTEX, "color",
                                                            Vector.<Number>([ color.x, color.y, color.z, color.w ]));
 
             var offset:Point = new Point();
@@ -98,7 +98,7 @@ package de.nulldesign.nd2d.materials {
 
             vertexBufferHelper.setVertexBuffers();
         }
-
+/*
         override public function render(context:Context3D, faceList:Vector.<Face>, numTris:uint):void {
             if(true) {
                 super.render(context, faceList, numTris);
@@ -136,7 +136,7 @@ package de.nulldesign.nd2d.materials {
 
             clearAfterRender(context);
         }
-
+*/
         override protected function clearAfterRender(context:Context3D):void {
             super.clearAfterRender(context);
             context.setTextureAt(0, null);

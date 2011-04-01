@@ -47,18 +47,17 @@ material kernel particlesystem
         id : "PB3D_COLOR";
     >;
 
-    input image4 textureImage;
-
     interpolated float4 interpolatedUV;
     interpolated float4 interpolatedColor;
-    
-    output float4 result;
 
     void evaluateVertex()
     {
         interpolatedUV = uvCoord;
         interpolatedColor = color;
     }
+
+    input image4 textureImage;
+    output float4 result;
 
     void evaluateFragment()
     {
