@@ -34,17 +34,16 @@ package de.nulldesign.nd2d.geom {
 
     public class Vertex extends Vector3D {
 
-        private static var UI_COUNT:Number = 0;
-        public var uid:Number = ++UI_COUNT;
+        private static var UID_COUNT:uint = 0;
+        public const uid:Number = ++UID_COUNT;
 
-        public var color:Number;
+        public var color:Number = 0xFFFFFF;
         public var normal:Vector3D;
 
         public var targetVertex:Vertex;
 
-        public function Vertex(x:Number = 0, y:Number = 0, z:Number = 0, color:Number = 0xFFFFFF) {
+        public function Vertex(x:Number = 0.0, y:Number = 0.0, z:Number = 0.0) {
             super(x, y, z, 1.0);
-            this.color = color;
         }
 
         public function get r():Number {
@@ -62,7 +61,9 @@ package de.nulldesign.nd2d.geom {
         public var a:Number = 1.0;
 
         override public function clone():Vector3D {
-            return new Vertex(x, y, z, color);
+            var v:Vertex = new Vertex(x, y, z);
+            v.color = color;
+            return v;
         }
     }
 }

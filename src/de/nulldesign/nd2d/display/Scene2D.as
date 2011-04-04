@@ -100,7 +100,7 @@ package de.nulldesign.nd2d.display {
             for each(var child:Node2D in children) {
                 child.drawNode(context, camera);
                 totalTris += child.numTris;
-                drawCalls += 1;
+                drawCalls += child.drawCalls;
             }
 
             if(statsRef)

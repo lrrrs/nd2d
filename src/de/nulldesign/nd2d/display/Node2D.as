@@ -304,6 +304,10 @@ package de.nulldesign.nd2d.display {
             return 0;
         }
 
+        public function get drawCalls():uint {
+            return 0;
+        }
+
         public function get numChildren():uint {
             return children.length;
         }
@@ -391,18 +395,19 @@ package de.nulldesign.nd2d.display {
                 _mouseX = localMouse.x;
                 _mouseY = localMouse.y;
 
-                if(isNaN(width) || isNaN(height)) return;
+                if(!isNaN(width) && !isNaN(height)) {
 
-                var oldMouseInNodeState:Boolean = mouseInNode;
-                mouseInNode = (localMouse.x >= -width / 2.0 && localMouse.x <= width / 2.0 && localMouse.y >= -height / 2.0 && localMouse.y <= height / 2.0);
+                    var oldMouseInNodeState:Boolean = mouseInNode;
+                    mouseInNode = (localMouse.x >= -width / 2.0 && localMouse.x <= width / 2.0 && localMouse.y >= -height / 2.0 && localMouse.y <= height / 2.0);
 
-                if(mouseInNode) {
-                    if(!oldMouseInNodeState) {
-                        dispatchMouseEvent(MouseEvent.MOUSE_OVER);
+                    if(mouseInNode) {
+                        if(!oldMouseInNodeState) {
+                            dispatchMouseEvent(MouseEvent.MOUSE_OVER);
+                        }
+                        dispatchMouseEvent(mouseEventType);
+                    } else if(oldMouseInNodeState && !mouseInNode) {
+                        dispatchMouseEvent(MouseEvent.MOUSE_OUT);
                     }
-                    dispatchMouseEvent(mouseEventType);
-                } else if(oldMouseInNodeState && !mouseInNode) {
-                    dispatchMouseEvent(MouseEvent.MOUSE_OUT);
                 }
             }
 

@@ -29,51 +29,54 @@
  * /
  */
 
-package de.nulldesign.nd2d.geom {
-    import flash.geom.Vector3D;
+<languageVersion : 1.0;>
+material kernel sprite2dcloud_material_shader
+<
+    namespace : "ND2D_Shader";
+    vendor : "nulldesign";
+    version : 1;
+>
+{
+    input vertex float4 uvCoord
+    <
+        id : "PB3D_UV";
+    >;
 
-    public class Face {
+    input vertex int vertexIdx
+    <
+        id : "PB3D_IDX";
+    >;
 
-        public var idx:uint = 0;
+    parameter float4 color1;
+    parameter float4 color2;
+    parameter float4 color3;
+    parameter float4 color4;
+    parameter float4 color5;
+    parameter float4 color6;
 
-        public var v1:Vertex;
-        public var v2:Vertex;
-        public var v3:Vertex;
+    parameter float4 uvOffset1;
+    parameter float4 uvOffset2;
+    parameter float4 uvOffset3;
+    parameter float4 uvOffset4;
+    parameter float4 uvOffset5;
+    parameter float4 uvOffset6;
 
-        public var uv1:UV;
-        public var uv2:UV;
-        public var uv3:UV;
+    interpolated float4 interpolatedUV;
+    interpolated float4 interpolatedColor;
 
-        public function Face(v1:Vertex, v2:Vertex, v3:Vertex, uv1:UV = null, uv2:UV = null, uv3:UV = null) {
+    void evaluateVertex()
+    {
+        interpolatedUV = uvCoord + uvOffset1;
+        interpolatedColor = color1;
+    }
 
-            this.v1 = v1;
-            this.v2 = v2;
-            this.v3 = v3;
+    input image4 textureImage;
 
-            this.uv1 = uv1;
-            this.uv2 = uv2;
-            this.uv3 = uv3;
-        }
+    output float4 result;
 
-        public function getNormal():Vector3D {
-            return getNormalFromVertices(v1, v2, v3);
-        }
-
-        public static function getNormalFromVertices(vert1:Vertex, vert2:Vertex, vert3:Vertex):Vector3D {
-            var ab:Vertex;
-            var ac:Vertex;
-            var n:Vector3D;
-
-            ab = new Vertex(vert2.x - vert1.x, vert2.y - vert1.y, vert2.z - vert1.z);
-            ac = new Vertex(vert2.x - vert3.x, vert2.y - vert3.y, vert2.z - vert3.z);
-
-            n = ac.crossProduct(ab);
-            n.normalize();
-            return n;
-        }
-
-        public function toString():String {
-            return "Face: " + v1 + "/" + v2 + "/" + v3 + " / " + uv1 + " / " + uv2 + " / " + uv3;
-        }
+    void evaluateFragment()
+    {
+        float4 texel = sample(textureImage, float2(interpolatedUV.x, interpolatedUV.y)/*, PB3D_2D | PB3D_LINEAR | PB3D_REPEAT*/);
+        result = float4(texel.r * interpolatedColor.r, texel.g * interpolatedColor.g, texel.b * interpolatedColor.b, texel.a * interpolatedColor.a);
     }
 }

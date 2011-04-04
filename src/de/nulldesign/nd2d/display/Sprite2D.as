@@ -129,6 +129,10 @@ package de.nulldesign.nd2d.display {
             return 2;
         }
 
+        override public function get drawCalls():uint {
+            return material.drawCalls;
+        }
+
         /**
          * @private
          */

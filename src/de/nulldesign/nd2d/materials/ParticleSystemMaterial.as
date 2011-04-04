@@ -57,6 +57,7 @@ package de.nulldesign.nd2d.materials {
 
         public function ParticleSystemMaterial(particleTexture:BitmapData) {
             this.particleTexture = particleTexture;
+            this.drawCalls = 1;
         }
 
         override protected function prepareForRender(context:Context3D):void {

@@ -82,6 +82,10 @@ package de.nulldesign.nd2d.display {
             return children.length * 2;
         }
 
+        override public function get drawCalls():uint {
+            return material.drawCalls;
+        }
+
         override public function addChildAt(child:Node2D, idx:uint):void {
 
             if(!(child is Sprite2D)) {

@@ -66,6 +66,10 @@ package de.nulldesign.nd2d.display {
             return activeParticles * 2;
         }
 
+        override public function get drawCalls():uint {
+            return material.drawCalls;
+        }
+
         public function ParticleSystem2D(particleBitmap:BitmapData, maxCapacity:uint, preset:ParticleSystemPreset) {
             super();
             this.preset = preset;

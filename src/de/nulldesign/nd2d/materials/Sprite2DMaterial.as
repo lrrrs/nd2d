@@ -53,8 +53,8 @@ package de.nulldesign.nd2d.materials {
         [Embed (source="../shader/Sprite2DVertexShader.pbasm", mimeType="application/octet-stream")]
         protected static const VertexProgramClass:Class;
 
-        protected var texture:Texture;
-        protected var bitmapData:BitmapData;
+        public var texture:Texture;
+        public var bitmapData:BitmapData;
         //protected var blurTexture:Texture;
         //protected var textureDimensions:Point;
 
@@ -65,6 +65,7 @@ package de.nulldesign.nd2d.materials {
         public function Sprite2DMaterial(bitmapData:BitmapData, spriteSheet:SpriteSheet = null) {
             this.bitmapData = bitmapData;
             this.spriteSheet = spriteSheet;
+            this.drawCalls = 1;
         }
 
         override protected function prepareForRender(context:Context3D):void {

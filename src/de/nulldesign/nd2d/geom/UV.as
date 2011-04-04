@@ -33,8 +33,8 @@ package de.nulldesign.nd2d.geom {
 
     public class UV {
 
-        private static var UI_COUNT:Number = 0;
-        public var uid:Number = ++UI_COUNT;
+        private static var UID_COUNT:uint = 0;
+        public const uid:Number = ++UID_COUNT;
 
         public var u:Number;
         public var v:Number;
