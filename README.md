@@ -2,8 +2,7 @@
 
 ND2D is a 2D sprite engine using the new GPU hardware features of flash currently available in a beta build. To run this engine you must download and install the following binaries:
 
-Flash Player Incubator Release: http://labs.adobe.com/technologies/flashplatformruntimes/incubator/
-PixelBender3D library: http://labs.adobe.com/technologies/pixelbender3d/
+[Flash Player Incubator Release]: (http://labs.adobe.com/technologies/flashplatformruntimes/incubator/) | [PixelBender3D library]: (http://labs.adobe.com/technologies/pixelbender3d/)
 
 You have to compile ND2D with the incubator playerglobal.swc and pb3dlib.swc to get it to work.
 
