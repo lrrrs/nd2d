@@ -15,6 +15,7 @@ If you want to contribute, make bugfixes or extend the engine, feel free to fork
 
 Useful links:
 [ND2D API Documentation](http://www.nulldesign.de/nd2d/docs/)
+
 [Setting up Incubator for IntelliJ](http://www.lidev.com.ar/?p=422)
 
 # Change Log
