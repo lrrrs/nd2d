@@ -264,12 +264,8 @@ package de.nulldesign.nd2d.materials {
                     if(floatFormat == 4)
                         idx++;
 
-                } else if(semanticsID == "PB3D_COLOR") {
-
-                    idx += 3;
-
-                    if(floatFormat == 4)
-                        idx++;
+                } else {
+                    idx += floatFormat;
                 }
             }
 

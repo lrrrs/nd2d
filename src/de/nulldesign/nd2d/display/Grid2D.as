@@ -45,11 +45,10 @@ package de.nulldesign.nd2d.display {
         protected var vertexList:Vector.<Vertex>;
         //protected var uvList:Vector.<UV>;
 
-        public function Grid2D(stepsX:uint, stepsY:uint, bitmapTexture:BitmapData = null,
-                               spriteSheet:SpriteSheet = null) {
+        public function Grid2D(stepsX:uint, stepsY:uint, bitmapTexture:BitmapData) {
             this.stepsX = stepsX;
             this.stepsY = stepsY;
-            super(bitmapTexture, spriteSheet);
+            super(bitmapTexture, null);
         }
 
         override protected function initWithBitmapData(bitmapTexture:BitmapData):void {

@@ -1,4 +1,3 @@
-
 /*
  *
  *  ND2D - A Flash Molehill GPU accelerated 2D engine
