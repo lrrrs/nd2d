@@ -18,4 +18,5 @@ Hint: [Setting up Incubator for IntelliJ](http://www.lidev.com.ar/?p=422)
 # Change Log
 
 2011-04-12 - r01
+
 * initial add
