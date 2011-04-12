@@ -1,4 +1,4 @@
-ND2D - A Flash Molehill GPU accelerated 2D engine.
+### ND2D - A Flash Molehill GPU accelerated 2D engine. ###
 
 ND2D is a 2D sprite engine using the new GPU hardware features of flash currently available in a beta build. To run this engine you must download and install the following binaries:
 
