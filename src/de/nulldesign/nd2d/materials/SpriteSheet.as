@@ -118,6 +118,19 @@ package de.nulldesign.nd2d.materials {
             otime = ctime;
         }
 
+        public function getOffsetForFrame():Point {
+
+            var rowIdx:uint = frame % numSheetsPerRow;
+            var colIdx:uint = Math.floor(frame / numSheetsPerRow);
+
+            var offset:Point = new Point();
+
+            offset.x = uvSize.x * rowIdx;
+            offset.y = uvSize.y * colIdx;
+
+            return offset;
+        }
+
         public function addAnimation(name:String, keyFrames:Array, loop:Boolean):void {
             activeAnimation = new SpriteSheetAnimation(keyFrames, loop);
             animationMap[name] = activeAnimation;

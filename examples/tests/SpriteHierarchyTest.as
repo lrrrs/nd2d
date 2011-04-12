@@ -31,6 +31,9 @@ package tests {
             addChild(s);
 
             s2 = new Sprite2D(new spriteTexture().bitmapData);
+            s2.mouseEnabled = true;
+            s2.addEventListener(MouseEvent.MOUSE_OVER, mouseOver);
+            s2.addEventListener(MouseEvent.MOUSE_OUT, mouseOut);
             s2.x = 50;
             s2.y = 50;
             s2.scaleX = 0.5;
@@ -43,18 +46,21 @@ package tests {
             sheet.addAnimation("up", [6, 7, 8], true);
 
             s3 = new Sprite2D(null, sheet);
-            s3.scaleX = s3.scaleY = 2.0;
+            s3.mouseEnabled = true;
+            s3.addEventListener(MouseEvent.MOUSE_OVER, mouseOver);
+            s3.addEventListener(MouseEvent.MOUSE_OUT, mouseOut);
+            s3.scaleX = s3.scaleY = 4.0;
             s2.addChild(s3);
 
             s3.blendMode = BlendModePresets.NORMAL;
         }
 
         private function mouseOut(event:MouseEvent):void {
-            s.alpha = 1.0;
+            event.target.tint = 0xffffff;
         }
 
         private function mouseOver(event:MouseEvent):void {
-            s.alpha = 0.7;
+            event.target.tint = Math.random() * 0xffffff;
         }
 
         override protected function step(t:Number):void {

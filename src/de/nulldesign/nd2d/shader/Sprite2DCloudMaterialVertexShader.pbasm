@@ -1,4 +1,4 @@
-module_material_vertex_program texture
+module_material_vertex_program sprite2dcloud_material_shader
 
     metadata
         namespace const(string, "ND2D_Shader")
@@ -11,12 +11,20 @@ module_material_vertex_program texture
     end_transformations
     
     globals
-        global parameter float-4 color
+        global parameter [21 x float-4] color
         input image image-4 textureImage
-        global parameter float-2 uvOffset
-        input vertex float-2 uvCoord
+        global parameter [21 x float-4] uvOffset
+        input vertex float-4 uvCoord
             metadata
                 id const(string, "PB3D_UV")
+            end_metadata
+        input vertex int vertexIdx
+            metadata
+                id const(string, "PB3D_IDX")
+            end_metadata
+        interpolated float-4 interpolatedColor
+            metadata
+                id const(string, "_1_interpolatedColor")
             end_metadata
         interpolated float-4 interpolatedUV
             metadata
@@ -31,17 +39,15 @@ module_material_vertex_program texture
                     jump block(basic%A) : void
                 end_basic_block
                 basic_block basic%A !! inlets(entry%A) outlets(exit%A)
-                    uvCoordElem%A-0 = extractVE uvCoord, const(int, 0) : float
-                    uvOffsetElem%A-0 = extractVE uvOffset, const(int, 0) : float
-                    _addResult%A-0 = add uvCoordElem%A-0, uvOffsetElem%A-0 : float
-                    uvCoordElem%B-0 = extractVE uvCoord, const(int, 1) : float
-                    uvOffsetElem%B-0 = extractVE uvOffset, const(int, 1) : float
-                    _addResult%B-0 = add uvCoordElem%B-0, uvOffsetElem%B-0 : float
-                    _LD_interpolatedUV-1 = makeFloatVector _addResult%A-0, _addResult%B-0, const(float, 0), const(float, 0) : float-4
+                    uvOffsetElem%A-0 = moveArrayElementToSSA uvOffset, vertexIdx : float-4
+                    _LD_interpolatedUV-1 = add uvCoord, uvOffsetElem%A-0 : float-4
+                    colorElem%A-0 = moveArrayElementToSSA color, vertexIdx : float-4
+                    _LD_interpolatedColor-1 = assign colorElem%A-0 : float-4
                     jump block(exit%A) : void
                 end_basic_block
                 basic_block exit%A !! inlets(basic%A)
                     moveToNonSSA _LD_interpolatedUV-1, interpolatedUV : void
+                    moveToNonSSA _LD_interpolatedColor-1, interpolatedColor : void
                     ret : void
                 end_basic_block
             end_body

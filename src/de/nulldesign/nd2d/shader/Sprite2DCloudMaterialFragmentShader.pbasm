@@ -1,4 +1,4 @@
-module_fragment_program texture
+module_fragment_program sprite2dcloud_material_shader
 
     metadata
         namespace const(string, "ND2D_Shader")
@@ -11,12 +11,20 @@ module_fragment_program texture
     end_transformations
     
     globals
-        global parameter float-4 color
+        global parameter [21 x float-4] color
         input image image-4 textureImage
-        global parameter float-2 uvOffset
-        input vertex float-2 uvCoord
+        global parameter [21 x float-4] uvOffset
+        input vertex float-4 uvCoord
             metadata
                 id const(string, "PB3D_UV")
+            end_metadata
+        input vertex int vertexIdx
+            metadata
+                id const(string, "PB3D_IDX")
+            end_metadata
+        interpolated float-4 interpolatedColor
+            metadata
+                id const(string, "_1_interpolatedColor")
             end_metadata
         interpolated float-4 interpolatedUV
             metadata
@@ -38,17 +46,17 @@ module_fragment_program texture
                     _anonVec%A-0 = makeFloatVector interpolatedUVElem%A-0, interpolatedUVElem%B-0 : float-2
                     _LD_texel-1 = sample textureImage, _anonVec%A-0, const(_sample_option, nearest mipnearest clamp 2D ) : float-4
                     _LD_texelElem%A-0 = extractVE _LD_texel-1, const(int, 0) : float
-                    colorElem%A-0 = extractVE color, const(int, 0) : float
-                    _mulResult%A-0 = mul _LD_texelElem%A-0, colorElem%A-0 : float
+                    interpolatedColorElem%A-0 = extractVE interpolatedColor, const(int, 0) : float
+                    _mulResult%A-0 = mul _LD_texelElem%A-0, interpolatedColorElem%A-0 : float
                     _LD_texelElem%B-0 = extractVE _LD_texel-1, const(int, 1) : float
-                    colorElem%B-0 = extractVE color, const(int, 1) : float
-                    _mulResult%B-0 = mul _LD_texelElem%B-0, colorElem%B-0 : float
+                    interpolatedColorElem%B-0 = extractVE interpolatedColor, const(int, 1) : float
+                    _mulResult%B-0 = mul _LD_texelElem%B-0, interpolatedColorElem%B-0 : float
                     _LD_texelElem%C-0 = extractVE _LD_texel-1, const(int, 2) : float
-                    colorElem%C-0 = extractVE color, const(int, 2) : float
-                    _mulResult%C-0 = mul _LD_texelElem%C-0, colorElem%C-0 : float
+                    interpolatedColorElem%C-0 = extractVE interpolatedColor, const(int, 2) : float
+                    _mulResult%C-0 = mul _LD_texelElem%C-0, interpolatedColorElem%C-0 : float
                     _LD_texelElem%D-0 = extractVE _LD_texel-1, const(int, 3) : float
-                    colorElem%D-0 = extractVE color, const(int, 3) : float
-                    _mulResult%D-0 = mul _LD_texelElem%D-0, colorElem%D-0 : float
+                    interpolatedColorElem%D-0 = extractVE interpolatedColor, const(int, 3) : float
+                    _mulResult%D-0 = mul _LD_texelElem%D-0, interpolatedColorElem%D-0 : float
                     _LD_result-1 = makeFloatVector _mulResult%A-0, _mulResult%B-0, _mulResult%C-0, _mulResult%D-0 : float-4
                     jump block(exit%A) : void
                 end_basic_block

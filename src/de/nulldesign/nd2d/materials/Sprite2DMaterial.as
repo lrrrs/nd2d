@@ -30,28 +30,25 @@
  */
 
 package de.nulldesign.nd2d.materials {
-    import de.nulldesign.nd2d.geom.Face;
     import de.nulldesign.nd2d.utils.TextureHelper;
 
     import flash.display.BitmapData;
     import flash.display3D.Context3D;
     import flash.display3D.Context3DProgramType;
-    import flash.display3D.Context3DTextureFormat;
     import flash.display3D.textures.Texture;
-    import flash.geom.Matrix3D;
     import flash.geom.Point;
     import flash.geom.Vector3D;
 
     public class Sprite2DMaterial extends AMaterial {
 
         [Embed (source="../shader/Sprite2DMaterialVertexShader.pbasm", mimeType="application/octet-stream")]
-        protected static const MaterialVertexProgramClass:Class;
+        private static const MaterialVertexProgramClass:Class;
 
         [Embed (source="../shader/Sprite2DMaterialFragmentShader.pbasm", mimeType="application/octet-stream")]
-        protected static const MaterialFragmentProgramClass:Class;
+        private static const MaterialFragmentProgramClass:Class;
 
         [Embed (source="../shader/Sprite2DVertexShader.pbasm", mimeType="application/octet-stream")]
-        protected static const VertexProgramClass:Class;
+        private static const VertexProgramClass:Class;
 
         public var texture:Texture;
         public var bitmapData:BitmapData;
@@ -79,21 +76,20 @@ package de.nulldesign.nd2d.materials {
             // TODO SET TEXTURE BY NAME!!!
             context.setTextureAt(0, texture);
 
-            parameterBufferHelper.setNumberParameterByName(Context3DProgramType.VERTEX, "color",
+            parameterBufferHelper.setNumberParameterByName(Context3DProgramType.FRAGMENT, "color",
                                                            Vector.<Number>([ color.x, color.y, color.z, color.w ]));
 
             var offset:Point = new Point();
 
             if(spriteSheet) {
-                var rowIdx:uint = spriteSheet.frame % spriteSheet.numSheetsPerRow;
-                var colIdx:uint = Math.floor(spriteSheet.frame / spriteSheet.numSheetsPerRow);
-
-                offset.x = spriteSheet.uvSize.x * rowIdx;
-                offset.y = spriteSheet.uvSize.y * colIdx;
+                offset = spriteSheet.getOffsetForFrame();
             }
 
+            parameterBufferHelper.setMatrixParameterByName(Context3DProgramType.VERTEX, "objectToClipSpaceTransform",
+                                                           clipSpaceMatrix, true);
+
             parameterBufferHelper.setNumberParameterByName(Context3DProgramType.VERTEX, "uvOffset",
-                                                           Vector.<Number>([ offset.x, offset.y, 0.0, 1.0 ]));
+                                                           Vector.<Number>([ offset.x, offset.y ]));
 
             parameterBufferHelper.update();
 
@@ -144,7 +140,7 @@ package de.nulldesign.nd2d.materials {
         }
 
         override protected function initProgram(context:Context3D):void {
-            if(!program) {
+            if(!vertexProgram) {
                 vertexProgram = readFile(VertexProgramClass);
                 materialVertexProgram = readFile(MaterialVertexProgramClass);
                 materialFragmentProgram = readFile(MaterialFragmentProgramClass);

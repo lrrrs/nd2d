@@ -1,0 +1,14 @@
+- HANDLE DEVICE LOST -> Event.CONTEXT3D_CREATE
+- Batching for Spriteclouds -> wait for PB3D fix :(
+- configurable debugging flag: context3D.enableErrorChecking
+- REPLACE ortographic camera with perspective one! for rotationX/Y/Z
+- textureatlas??
+- picking pixelexact
+- more blendmodes
+- glow
+- blur
+- scene management / culling
+- motor2 / box2d physics?
+- PVTR support
+- scene transitions???
+- render to texture

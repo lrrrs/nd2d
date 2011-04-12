@@ -37,30 +37,28 @@ material kernel texture
     version : 1;
 >
 {
-    input vertex float4 uvCoord
+    input vertex float2 uvCoord
     <
         id : "PB3D_UV";
     >;
 
-    parameter float4 color;
-    parameter float4 uvOffset;
+    parameter float2 uvOffset;
 
     interpolated float4 interpolatedUV;
-    interpolated float4 interpolatedColor;
 
     void evaluateVertex()
     {
-        interpolatedUV = uvCoord + uvOffset;
-        interpolatedColor = color;
+        interpolatedUV = float4(uvCoord.x + uvOffset.x, uvCoord.y + uvOffset.y, 0.0, 0.0);
     }
 
     input image4 textureImage;
+    parameter float4 color;
 
     output float4 result;
 
     void evaluateFragment()
     {
-        float4 texel = sample(textureImage, float2(interpolatedUV.x, interpolatedUV.y)/*, PB3D_2D | PB3D_LINEAR | PB3D_REPEAT*/);
-        result = float4(texel.r * interpolatedColor.r, texel.g * interpolatedColor.g, texel.b * interpolatedColor.b, texel.a * interpolatedColor.a);
+        float4 texel = sample(textureImage, float2(interpolatedUV.x, interpolatedUV.y), PB3D_MIPNEAREST | PB3D_CLAMP /*PB3D_2D | PB3D_LINEAR | PB3D_REPEAT*/);
+        result = float4(texel.r * color.r, texel.g * color.g, texel.b * color.b, texel.a * color.a);
     }
 }

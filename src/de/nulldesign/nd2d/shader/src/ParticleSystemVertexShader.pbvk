@@ -38,7 +38,7 @@ vertex kernel defaultshader
 >
 {
     parameter float4x4 objectToClipSpaceTransform;
-    parameter float4 currentTime;
+    parameter float currentTime;
     parameter float4 gravity;
     
     input vertex float4 vertexPosition
@@ -46,24 +46,47 @@ vertex kernel defaultshader
         id : "PB3D_POSITION";
     >;
 
+	// values hidden in these float4's, because due to a bug we can't set inputs smaller than float4
+	// xy = velocity, zw = initial position
 	input vertex float4 velocity
     <
-        id : "PB3D_TARGET_POSITION";
+        id : "PB3D_VELOCITY";
     >;
 
+	// x = birth, y = life, z = startSize, w = endSize
 	input vertex float4 miscParams
     <
-        id : "PB3D_NORMAL";
+        id : "PB3D_MISC";
     >;
-    
+/*
+    input vertex float birth
+    <
+        id : "PB3D_BIRTH";
+    >;
+
+    input vertex float life
+    <
+        id : "PB3D_LIFE";
+    >;
+
+    input vertex float startSize
+    <
+        id : "PB3D_STARTSIZE";
+    >;
+
+    input vertex float endSize
+    <
+        id : "PB3D_ENDSIZE";
+    >;
+*/
 	input vertex float4 endColor
     <
-        id : "PB3D_TARGET_NORMAL";
+        id : "PB3D_ENDCOLOR";
     >;
     
     input vertex float4 startColor
     <
-        id : "PB3D_COLOR";
+        id : "PB3D_STARTCOLOR";
     >;
 
     output vertex float4 color
@@ -80,8 +103,8 @@ vertex kernel defaultshader
         float life = miscParams.y;
         float startSize = miscParams.z;
         float endSize = miscParams.w;
-        
-        float progress = clamp(fract((currentTime.x - birth) / life), 0.0, 1.0);
+
+        float progress = clamp(fract((currentTime - birth) / life), 0.0, 1.0);
         
         float4 p = float4(progress, progress, progress, 1.0);
         

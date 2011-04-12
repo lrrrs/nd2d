@@ -33,7 +33,7 @@ package tests {
             s.x = stage.stageWidth / 2;
             s.y = stage.stageHeight / 2;
 
-            s.rotation += 5;
+            s.rotation += 2;
             //s.scaleX = s.scaleY = 2.0 + Math.sin(getTimer() * 0.001);
             s.tint = ColorUtil.rgb2hex(255 * (0.5 + Math.sin(getTimer() * 0.002) * 0.5),
                                        255 * (0.5 + Math.cos(getTimer() * 0.001) * 0.5),
@@ -41,18 +41,18 @@ package tests {
 
             s2.x = stage.stageWidth / 2 - s2.width / 1.5;
             s2.y = stage.stageHeight / 2;
-            s2.rotation += 5;
+            s2.rotation += 2;
             s2.alpha = 0.5 + Math.sin(getTimer() * 0.001) * 0.5;
 
             s3.x = stage.stageWidth / 2 + s3.width / 1.5;
             s3.y = stage.stageHeight / 2;
-            s3.rotation -= 2.5;
+            s3.rotation -= 1;
             s3.blendMode = BlendModePresets.ADD;
 
             camera.x = Math.sin(getTimer() / 5000) * 20.0;
             camera.y = Math.cos(getTimer() / 5000) * 20.0;
-            camera.rotation += 5.0;
-            camera.zoom = 1.0 + Math.sin(getTimer() / 5000) * 0.2;
+            camera.rotation += 4.0;
+            camera.zoom = 1.0 + Math.sin(getTimer() / 3000) * 0.3;
         }
     }
 }

@@ -30,23 +30,9 @@
  */
 
 package de.nulldesign.nd2d.display {
-    import flash.display.Stage;
     import flash.display3D.Context3D;
-    import flash.events.Event;
 
     import net.hires.debug.Stats;
-
-    /**
-     * Dispatched when the scene is active and added to the stage.
-     * @eventType flash.events.Event.ADDED_TO_STAGE
-     */
-    [Event(name="addedToStage", type="flash.events.Event")]
-
-    /**
-     * Dispatched when the scene inactive and removed from stage.
-     * @eventType flash.events.Event.REMOVED_FROM_STAGE
-     */
-    [Event(name="removedFromStage", type="flash.events.Event")]
 
     /**
      * A scene that can contain 2D nodes
@@ -54,7 +40,6 @@ package de.nulldesign.nd2d.display {
 
         public var statsRef:Stats;
 
-        protected var stage:Stage;
         protected var camera:Camera2D;
 
         public var br:Number = 0.0;
@@ -81,15 +66,6 @@ package de.nulldesign.nd2d.display {
 
         internal function setCameraRef(value:Camera2D):void {
             camera = value;
-        }
-
-        internal function setStageRef(value:Stage):void {
-            stage = value;
-            if(stage) {
-                dispatchEvent(new Event(Event.ADDED_TO_STAGE));
-            } else {
-                dispatchEvent(new Event(Event.REMOVED_FROM_STAGE));
-            }
         }
 
         override internal function drawNode(context:Context3D, camera:Camera2D):void {

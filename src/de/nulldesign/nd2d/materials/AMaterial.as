@@ -44,7 +44,6 @@ package de.nulldesign.nd2d.materials {
     import de.nulldesign.nd2d.utils.NodeBlendMode;
 
     import flash.display3D.Context3D;
-    import flash.display3D.Context3DProgramType;
     import flash.display3D.Context3DVertexBufferFormat;
     import flash.display3D.IndexBuffer3D;
     import flash.display3D.Program3D;
@@ -105,7 +104,7 @@ package de.nulldesign.nd2d.materials {
 
             var duplicateCheck:Dictionary = new Dictionary();
             var tmpUID:String;
-            var indexBufferIdx:Number = 0;
+            var indexBufferIdx:uint = 0;
             var face:Face;
 
             // generate index + vertexbuffer
@@ -120,6 +119,7 @@ package de.nulldesign.nd2d.materials {
                     addVertex(mVertexBuffer, face.v1, face.uv1, face);
                     duplicateCheck[tmpUID] = indexBufferIdx;
                     mIndexBuffer.push(indexBufferIdx);
+                    face.v1.bufferIdx = indexBufferIdx;
                     ++indexBufferIdx;
                 } else {
                     mIndexBuffer.push(duplicateCheck[tmpUID]);
@@ -131,6 +131,7 @@ package de.nulldesign.nd2d.materials {
                     addVertex(mVertexBuffer, face.v2, face.uv2, face);
                     duplicateCheck[tmpUID] = indexBufferIdx;
                     mIndexBuffer.push(indexBufferIdx);
+                    face.v2.bufferIdx = indexBufferIdx;
                     ++indexBufferIdx;
                 } else {
                     mIndexBuffer.push(duplicateCheck[tmpUID]);
@@ -142,6 +143,7 @@ package de.nulldesign.nd2d.materials {
                     addVertex(mVertexBuffer, face.v3, face.uv3, face);
                     duplicateCheck[tmpUID] = indexBufferIdx;
                     mIndexBuffer.push(indexBufferIdx);
+                    face.v3.bufferIdx = indexBufferIdx;
                     ++indexBufferIdx;
                 } else {
                     mIndexBuffer.push(duplicateCheck[tmpUID]);
@@ -177,12 +179,9 @@ package de.nulldesign.nd2d.materials {
             clipSpaceMatrix.append(modelViewMatrix);
             clipSpaceMatrix.append(projectionMatrix);
 
-            parameterBufferHelper.setMatrixParameterByName(Context3DProgramType.VERTEX, "objectToClipSpaceTransform",
-                                                           clipSpaceMatrix, true);
-
             if(needUploadVertexBuffer) {
                 needUploadVertexBuffer = false;
-                vertexBuffer.uploadFromVector(mVertexBuffer, 0, numTris * 3);
+                vertexBuffer.uploadFromVector(mVertexBuffer, 0, mVertexBuffer.length / numFloatsPerVertex);
             }
 
             // overwrite and set parameter and vertexbuffers for program
@@ -243,27 +242,65 @@ package de.nulldesign.nd2d.materials {
             }
         }
 
+        public function modifyVertexInBuffer(bufferIdx:uint, x:Number, y:Number):void {
+
+            if(mVertexBuffer.length == 0) return;
+
+            var vertexRegisters:Vector.<VertexRegisterInfo> = vertexRegisterMap.vertexRegisters;
+            var idx:uint = bufferIdx * numFloatsPerVertex;
+
+            for(var i:int = 0; i < vertexRegisterMap.vertexRegisters.length; i += 1) {
+                var semanticsID:String = vertexRegisters[i].semantics.id;
+                var floatFormat:int = getFloatFormat(vertexRegisterMap.vertexRegisters[i].format);
+
+                if(semanticsID == "PB3D_POSITION") {
+
+                    mVertexBuffer[idx++] = x;
+                    mVertexBuffer[idx++] = y;
+
+                    if(floatFormat >= 3)
+                        idx++;
+
+                    if(floatFormat == 4)
+                        idx++;
+
+                } else if(semanticsID == "PB3D_COLOR") {
+
+                    idx += 3;
+
+                    if(floatFormat == 4)
+                        idx++;
+                }
+            }
+
+            needUploadVertexBuffer = true;
+        }
+
         protected function fillBuffer(buffer:Vector.<Number>, v:Vertex, uv:UV, face:Face, semanticsID:String,
                                       floatFormat:int):void {
 
             if(semanticsID == "PB3D_IDX") {
                 buffer.push(face.idx);
+
+                if(floatFormat == 2)
+                    buffer.push(0.0);
+
+                if(floatFormat == 3)
+                    buffer.push(0.0, 0.0);
+
+                if(floatFormat == 4)
+                    buffer.push(0.0, 0.0, 0.0);
             }
 
             if(semanticsID == "PB3D_POSITION") {
 
-                buffer.push(v.x, v.y, v.z);
+                buffer.push(v.x, v.y);
+
+                if(floatFormat >= 3)
+                    buffer.push(v.z);
 
                 if(floatFormat == 4)
                     buffer.push(v.w);
-            }
-
-            if(semanticsID == "PB3D_TARGET_POSITION") {
-
-                buffer.push(v.targetVertex.x, v.targetVertex.y, v.targetVertex.z);
-
-                if(floatFormat == 4)
-                    buffer.push(v.targetVertex.w);
             }
 
             if(semanticsID == "PB3D_COLOR") {
@@ -272,22 +309,6 @@ package de.nulldesign.nd2d.materials {
 
                 if(floatFormat == 4)
                     buffer.push(v.a);
-            }
-
-            if(semanticsID == "PB3D_NORMAL") {
-
-                buffer.push(v.normal.x, v.normal.y, v.normal.z);
-
-                if(floatFormat == 4)
-                    buffer.push(v.normal.w);
-            }
-
-            if(semanticsID == "PB3D_TARGET_NORMAL") {
-
-                buffer.push(v.targetVertex.normal.x, v.targetVertex.normal.y, v.targetVertex.normal.z);
-
-                if(floatFormat == 4)
-                    buffer.push(v.targetVertex.normal.w);
             }
 
             if(semanticsID == "PB3D_UV") {

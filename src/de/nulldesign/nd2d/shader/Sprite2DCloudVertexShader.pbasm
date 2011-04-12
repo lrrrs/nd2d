@@ -1,4 +1,4 @@
-module_vertex_program default_sprite2d_shader
+module_vertex_program sprite2dcloud_shader
 
     metadata
         namespace const(string, "ND2D_Shader")
@@ -11,8 +11,12 @@ module_vertex_program default_sprite2d_shader
     end_transformations
     
     globals
-        global parameter float-4-4 objectToClipSpaceTransform
-        input vertex float-2 vertexPosition
+        global parameter [21 x float-4-4] objectToClipSpaceTransform
+        input vertex int vertexIdx
+            metadata
+                id const(string, "PB3D_IDX")
+            end_metadata
+        input vertex float-4 vertexPosition
             metadata
                 id const(string, "PB3D_POSITION")
             end_metadata
@@ -26,10 +30,8 @@ module_vertex_program default_sprite2d_shader
                     jump block(basic%A) : void
                 end_basic_block
                 basic_block basic%A !! inlets(entry%A) outlets(exit%A)
-                    vertexPositionElem%A-0 = extractVE vertexPosition, const(int, 0) : float
-                    vertexPositionElem%B-0 = extractVE vertexPosition, const(int, 1) : float
-                    _anonVec%A-0 = makeFloatVector vertexPositionElem%A-0, vertexPositionElem%B-0, const(float, 0), const(float, 1) : float-4
-                    _LD_vertexClipPosition-1 = mul _anonVec%A-0, objectToClipSpaceTransform : float-4
+                    objectToClipSpaceTransformElem%A-0 = moveArrayElementToSSA objectToClipSpaceTransform, vertexIdx : float-4-4
+                    _LD_vertexClipPosition-1 = mul vertexPosition, objectToClipSpaceTransformElem%A-0 : float-4
                     jump block(exit%A) : void
                 end_basic_block
                 basic_block exit%A !! inlets(basic%A)

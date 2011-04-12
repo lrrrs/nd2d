@@ -29,44 +29,35 @@
  * /
  */
 
-<languageVersion : 1.0;>
-material kernel sprite2dcloud_material_shader
-<
-    namespace : "ND2D_Shader";
-    vendor : "nulldesign";
-    version : 1;
->
-{
-    input vertex float4 uvCoord
-    <
-        id : "PB3D_UV";
-    >;
+package de.nulldesign.nd2d.geom {
 
-    input vertex int vertexIdx
-    <
-        id : "PB3D_IDX";
-    >;
+    public class ParticleVertex extends Vertex {
 
-    parameter float4 color[21];
+        public var startColorR:Number;
+        public var startColorG:Number;
+        public var startColorB:Number;
 
-    parameter float4 uvOffset[21];
+        public var startAlpha:Number;
 
-    interpolated float4 interpolatedUV;
-    interpolated float4 interpolatedColor;
+        public var startX:Number;
+        public var startY:Number;
 
-    void evaluateVertex()
-    {
-        interpolatedUV = uvCoord + uvOffset[vertexIdx];
-        interpolatedColor = color[vertexIdx];
-    }
+        public var endColorR:Number;
+        public var endColorG:Number;
+        public var endColorB:Number;
 
-    input image4 textureImage;
+        public var endAlpha:Number;
 
-    output float4 result;
+        public var vx:Number;
+        public var vy:Number;
 
-    void evaluateFragment()
-    {
-        float4 texel = sample(textureImage, float2(interpolatedUV.x, interpolatedUV.y), PB3D_MIPNEAREST /*PB3D_2D | PB3D_LINEAR | PB3D_REPEAT*/);
-        result = float4(texel.r * interpolatedColor.r, texel.g * interpolatedColor.g, texel.b * interpolatedColor.b, texel.a * interpolatedColor.a);
+        public var startTime:Number;
+        public var life:Number;
+        public var startSize:Number;
+        public var endSize:Number;
+
+        public function ParticleVertex(x:Number = 0.0, y:Number = 0.0, z:Number = 0.0) {
+            super(x, y, z);
+        }
     }
 }

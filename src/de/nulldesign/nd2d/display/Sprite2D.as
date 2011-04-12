@@ -31,15 +31,12 @@
 
 package de.nulldesign.nd2d.display {
     import de.nulldesign.nd2d.geom.Face;
-    import de.nulldesign.nd2d.geom.UV;
-    import de.nulldesign.nd2d.geom.Vertex;
     import de.nulldesign.nd2d.materials.Sprite2DMaterial;
     import de.nulldesign.nd2d.materials.SpriteSheet;
     import de.nulldesign.nd2d.utils.TextureHelper;
 
     import flash.display.BitmapData;
     import flash.display3D.Context3D;
-    import flash.geom.Point;
 
     /**
      * <p>2D sprite class</p>
@@ -50,20 +47,8 @@ package de.nulldesign.nd2d.display {
 
         public var spriteSheet:SpriteSheet;
 
-        protected var textureDimensions:Point;
-
         protected var material:Sprite2DMaterial;
         protected var faceList:Vector.<Face>;
-
-        protected var v1:Vertex;
-        protected var v2:Vertex;
-        protected var v3:Vertex;
-        protected var v4:Vertex;
-
-        protected var uv1:UV;
-        protected var uv2:UV;
-        protected var uv3:UV;
-        protected var uv4:UV;
 
         /**
          * Constructor of class Sprite2D
@@ -88,41 +73,7 @@ package de.nulldesign.nd2d.display {
             _height = spriteSheet ? spriteSheet.height : bitmapTexture.height;
 
             material = new Sprite2DMaterial(bitmapTexture, spriteSheet);
-            //material = new Sprite2DBlurMaterial(bitmapTexture, spriteSheet);
-            faceList = new Vector.<Face>();
-
-            var texW:Number;
-            var texH:Number;
-
-            textureDimensions = TextureHelper.getTextureDimensionsFromBitmap(bitmapTexture);
-
-            if(!spriteSheet) {
-                texW = textureDimensions.x / 2.0;
-                texH = textureDimensions.y / 2.0;
-
-                uv1 = new UV(0, 0);
-                uv2 = new UV(1, 0);
-                uv3 = new UV(1, 1);
-                uv4 = new UV(0, 1);
-
-            } else {
-                texW = spriteSheet.width / 2.0;
-                texH = spriteSheet.height / 2.0;
-
-                uv1 = new UV(spriteSheet.uvOffset.x, spriteSheet.uvOffset.y);
-                uv2 = new UV(spriteSheet.uvOffset.x + spriteSheet.uvSize.x, spriteSheet.uvOffset.y);
-                uv3 = new UV(spriteSheet.uvOffset.x + spriteSheet.uvSize.x,
-                             spriteSheet.uvOffset.y + spriteSheet.uvSize.y);
-                uv4 = new UV(spriteSheet.uvOffset.x, spriteSheet.uvOffset.y + spriteSheet.uvSize.y);
-            }
-
-            v1 = new Vertex(-texW, -texH, 0.0);
-            v2 = new Vertex(texW, -texH, 0.0);
-            v3 = new Vertex(texW, texH, 0.0);
-            v4 = new Vertex(-texW, texH, 0.0);
-
-            faceList[0] = new Face(v1, v2, v3, uv1, uv2, uv3);
-            faceList[1] = new Face(v1, v3, v4, uv1, uv3, uv4);
+            faceList = TextureHelper.generateQuadFromTexture(bitmapTexture, spriteSheet);
         }
 
         override public function get numTris():uint {
@@ -149,8 +100,8 @@ package de.nulldesign.nd2d.display {
             super.draw(context, camera);
 
             material.blendMode = blendMode;
-            material.modelViewMatrix = modelViewMatrix;
-            material.projectionMatrix = camera.getProjectionMatrix();
+            material.modelViewMatrix = worldModelMatrix;
+            material.projectionMatrix = camera.getViewProjectionMatrix();
 
             // TODO optimize there is always a parent!
             if(refreshColors || parent) {
@@ -163,7 +114,7 @@ package de.nulldesign.nd2d.display {
                 material.color.w = a;
             }
 
-            material.render(context, faceList, 2);
+            material.render(context, faceList, numTris);
         }
 
         /*

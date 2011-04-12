@@ -32,6 +32,8 @@
 package de.nulldesign.nd2d.display {
     import com.adobe.utils.AGALMiniAssembler;
 
+    import de.nulldesign.nd2d.geom.UV;
+    import de.nulldesign.nd2d.geom.Vertex;
     import de.nulldesign.nd2d.materials.SpriteSheet;
     import de.nulldesign.nd2d.utils.TextureHelper;
     import de.nulldesign.nd2d.utils.VectorUtil;
@@ -52,6 +54,16 @@ package de.nulldesign.nd2d.display {
      * Mouseevents are disabled and won't work for spriteclouds
      */
     public class Sprite2DCloud extends Sprite2D {
+
+        protected var v1:Vertex;
+        protected var v2:Vertex;
+        protected var v3:Vertex;
+        protected var v4:Vertex;
+
+        protected var uv1:UV;
+        protected var uv2:UV;
+        protected var uv3:UV;
+        protected var uv4:UV;
 
         protected const DEFAULT_VERTEX_SHADER:String = "m44 op, va0, vc0   \n" + // vertex * clipspace
                 "mov v0, va1		\n" + // copy uv
@@ -86,6 +98,21 @@ package de.nulldesign.nd2d.display {
             return material.drawCalls;
         }
 
+        override protected function initWithBitmapData(bitmapTexture:BitmapData):void {
+            super.initWithBitmapData(bitmapTexture);
+
+            // kinda hackish ...
+            v1 = faceList[0].v1;
+            v2 = faceList[0].v2;
+            v3 = faceList[0].v3;
+            v4 = faceList[1].v3;
+
+            uv1 = faceList[0].uv1;
+            uv2 = faceList[0].uv2;
+            uv3 = faceList[0].uv3;
+            uv4 = faceList[1].uv3;
+        }
+
         override public function addChildAt(child:Node2D, idx:uint):void {
 
             if(!(child is Sprite2D)) {
@@ -116,11 +143,11 @@ package de.nulldesign.nd2d.display {
                 refreshMatrix();
             }
 
-            modelViewMatrix.identity();
-            modelViewMatrix.append(modelMatrix);
+            worldModelMatrix.identity();
+            worldModelMatrix.append(localModelMatrix);
 
             if(parent) {
-                modelViewMatrix.append(parent.modelViewMatrix);
+                worldModelMatrix.append(parent.worldModelMatrix);
             }
 
             draw(context, camera);
@@ -312,7 +339,7 @@ package de.nulldesign.nd2d.display {
 
             context.setBlendFactors(blendMode.src, blendMode.dst);
 
-            context.setProgramConstantsFromMatrix(Context3DProgramType.VERTEX, 0, camera.getProjectionMatrix(), true);
+            context.setProgramConstantsFromMatrix(Context3DProgramType.VERTEX, 0, camera.getViewProjectionMatrix(), true);
 
             context.drawTriangles(indexBuffer, 0, 2 * children.length);
 

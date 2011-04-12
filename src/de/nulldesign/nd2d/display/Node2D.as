@@ -26,19 +26,33 @@
  *  LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  *  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  *  THE SOFTWARE.
- * /
+ *
  */
 
 package de.nulldesign.nd2d.display {
     import de.nulldesign.nd2d.materials.BlendModePresets;
     import de.nulldesign.nd2d.utils.NodeBlendMode;
 
+    import flash.display.Stage;
     import flash.display3D.Context3D;
+    import flash.events.Event;
     import flash.events.EventDispatcher;
     import flash.events.MouseEvent;
     import flash.geom.Matrix3D;
     import flash.geom.Point;
     import flash.geom.Vector3D;
+
+    /**
+     * Dispatched when the scene is active and added to the stage.
+     * @eventType flash.events.Event.ADDED_TO_STAGE
+     */
+    [Event(name="addedToStage", type="flash.events.Event")]
+
+    /**
+     * Dispatched when the scene inactive and removed from stage.
+     * @eventType flash.events.Event.REMOVED_FROM_STAGE
+     */
+    [Event(name="removedFromStage", type="flash.events.Event")]
 
     /**
      * Dispatched when a user presses and releases the main button of the user's pointing device over the same Node2D.
@@ -90,12 +104,12 @@ package de.nulldesign.nd2d.display {
         /**
          * @private
          */
-        public var modelMatrix:Matrix3D = new Matrix3D();
+        public var localModelMatrix:Matrix3D = new Matrix3D();
 
         /**
          * @private
          */
-        public var modelViewMatrix:Matrix3D = new Matrix3D();
+        public var worldModelMatrix:Matrix3D = new Matrix3D();
 
         /**
          * @private
@@ -117,9 +131,11 @@ package de.nulldesign.nd2d.display {
 
         public var mouseEnabled:Boolean = false;
 
+        protected var stage:Stage;
+
         private var localMouse:Vector3D;
         private var mouseInNode:Boolean = false;
-        private var clipSpaceMatrix:Matrix3D = new Matrix3D();
+        private var localMouseMatrix:Matrix3D = new Matrix3D();
 
         /**
          * @private
@@ -318,19 +334,19 @@ package de.nulldesign.nd2d.display {
         /**
          * @private
          */
-        protected function refreshMatrix():void {
+        public function refreshMatrix():void {
             refreshPosition = false;
-            modelMatrix.identity();
-            modelMatrix.appendTranslation(-pivot.x, -pivot.y, 0);
-            modelMatrix.appendScale(scaleX, scaleY, 1.0);
-            modelMatrix.appendRotation(rotation, Vector3D.Z_AXIS);
-            modelMatrix.appendTranslation(x, y, 0.0);
+            localModelMatrix.identity();
+            localModelMatrix.appendTranslation(-pivot.x, -pivot.y, 0);
+            localModelMatrix.appendScale(scaleX, scaleY, 1.0);
+            localModelMatrix.appendRotation(rotation, Vector3D.Z_AXIS);
+            localModelMatrix.appendTranslation(x, y, 0.0);
         }
 
         /**
          * @private
          */
-        protected function updateColors():void {
+        public function updateColors():void {
 
             refreshColors = false;
 
@@ -360,11 +376,11 @@ package de.nulldesign.nd2d.display {
                 refreshMatrix();
             }
 
-            modelViewMatrix.identity();
-            modelViewMatrix.append(modelMatrix);
+            worldModelMatrix.identity();
+            worldModelMatrix.append(localModelMatrix);
 
             if(parent) {
-                modelViewMatrix.append(parent.modelViewMatrix);
+                worldModelMatrix.append(parent.worldModelMatrix);
             }
 
             draw(context, camera);
@@ -377,16 +393,17 @@ package de.nulldesign.nd2d.display {
         /**
          * @private
          */
-        internal function processMouseEvents(mousePosition:Vector3D, mouseEventType:String, camera:Camera2D):void {
+        internal function processMouseEvents(mousePosition:Vector3D, mouseEventType:String,
+                                             projectionMatrix:Matrix3D):void {
 
             if(mouseEnabled && mouseEventType) {
                 // transform mousepos to local coordinate system
-                clipSpaceMatrix.identity();
-                clipSpaceMatrix.append(modelViewMatrix);
-                clipSpaceMatrix.append(camera.getProjectionMatrix());
-                clipSpaceMatrix.invert();
+                localMouseMatrix.identity();
+                localMouseMatrix.append(worldModelMatrix);
+                localMouseMatrix.append(projectionMatrix);
+                localMouseMatrix.invert();
 
-                localMouse = clipSpaceMatrix.transformVector(mousePosition);
+                localMouse = localMouseMatrix.transformVector(mousePosition);
                 localMouse.w = 1.0 / localMouse.w;
                 localMouse.x /= localMouse.w;
                 localMouse.y /= localMouse.w;
@@ -398,7 +415,7 @@ package de.nulldesign.nd2d.display {
                 if(!isNaN(width) && !isNaN(height)) {
 
                     var oldMouseInNodeState:Boolean = mouseInNode;
-                    mouseInNode = (localMouse.x >= -width / 2.0 && localMouse.x <= width / 2.0 && localMouse.y >= -height / 2.0 && localMouse.y <= height / 2.0);
+                    mouseInNode = (mouseX >= -width * 0.5 && mouseX <= width * 0.5 && mouseY >= -height * 0.5 && mouseY <= height * 0.5);
 
                     if(mouseInNode) {
                         if(!oldMouseInNodeState) {
@@ -412,7 +429,25 @@ package de.nulldesign.nd2d.display {
             }
 
             for each(var child:Node2D in children) {
-                child.processMouseEvents(mousePosition, mouseEventType, camera);
+                child.processMouseEvents(mousePosition, mouseEventType, projectionMatrix);
+            }
+        }
+
+
+        internal function setStageRef(value:Stage):void {
+
+            if(stage != value) {
+
+                stage = value;
+                if(stage) {
+                    dispatchEvent(new Event(Event.ADDED_TO_STAGE));
+                } else {
+                    dispatchEvent(new Event(Event.REMOVED_FROM_STAGE));
+                }
+
+                for each(var child:Node2D in children) {
+                    child.setStageRef(value);
+                }
             }
         }
 
@@ -448,6 +483,7 @@ package de.nulldesign.nd2d.display {
 
         public function addChildAt(child:Node2D, idx:uint):void {
             child.parent = this;
+            child.setStageRef(stage);
             children.splice(idx, 0, child);
         }
 
@@ -463,8 +499,17 @@ package de.nulldesign.nd2d.display {
         public function removeChildAt(idx:uint):void {
             if(idx < children.length) {
                 children[idx].parent = null;
+                children[idx].setStageRef(null);
                 children.splice(idx, 1);
             }
+        }
+
+        public function getChildAt(idx:uint):Node2D {
+            if(idx < children.length) {
+                return children[idx];
+            }
+
+            return null;
         }
 
         public function getChildIndex(child:Node2D):int {

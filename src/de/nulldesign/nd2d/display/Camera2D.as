@@ -41,7 +41,6 @@ package de.nulldesign.nd2d.display {
 
         protected var _sceneWidth:Number;
         protected var _sceneHeight:Number;
-        protected var position:Vector3D;
 
         protected var invalidated:Boolean = true;
 
@@ -67,7 +66,7 @@ package de.nulldesign.nd2d.display {
                                                 ]));
         }
 
-        public function getProjectionMatrix():Matrix3D {
+        public function getViewProjectionMatrix():Matrix3D {
 
             if(invalidated) {
                 invalidated = false;

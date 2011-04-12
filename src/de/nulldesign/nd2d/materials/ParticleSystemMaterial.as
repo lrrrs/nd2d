@@ -30,6 +30,10 @@
  */
 
 package de.nulldesign.nd2d.materials {
+    import de.nulldesign.nd2d.geom.Face;
+    import de.nulldesign.nd2d.geom.ParticleVertex;
+    import de.nulldesign.nd2d.geom.UV;
+    import de.nulldesign.nd2d.geom.Vertex;
     import de.nulldesign.nd2d.utils.TextureHelper;
 
     import flash.display.BitmapData;
@@ -70,8 +74,11 @@ package de.nulldesign.nd2d.materials {
 
             context.setTextureAt(0, texture);
 
+            parameterBufferHelper.setMatrixParameterByName(Context3DProgramType.VERTEX, "objectToClipSpaceTransform",
+                                                           clipSpaceMatrix, true);
+
             parameterBufferHelper.setNumberParameterByName(Context3DProgramType.VERTEX, "currentTime",
-                                                           Vector.<Number>([ currentTime, currentTime, currentTime, 1.0 ]));
+                                                           Vector.<Number>([ currentTime ]));
 
             parameterBufferHelper.setNumberParameterByName(Context3DProgramType.VERTEX, "gravity",
                                                            Vector.<Number>([ gravity.x, gravity.y, 0.0, 1.0 ]));
@@ -94,6 +101,48 @@ package de.nulldesign.nd2d.materials {
             }
 
             super.initProgram(context);
+        }
+
+        override protected function fillBuffer(buffer:Vector.<Number>, v:Vertex, uv:UV, face:Face, semanticsID:String,
+                                      floatFormat:int):void {
+
+            super.fillBuffer(buffer, v, uv, face, semanticsID, floatFormat);
+
+            var pv:ParticleVertex = ParticleVertex(v);
+
+            if(semanticsID == "PB3D_VELOCITY") {
+                buffer.push(pv.vx, pv.vy, pv.startX, pv.startY);
+            }
+
+            if(semanticsID == "PB3D_MISC") {
+                buffer.push(pv.startTime, pv.life, pv.startSize, pv.endSize);
+            }
+
+            if(semanticsID == "PB3D_ENDCOLOR") {
+                buffer.push(pv.endColorR, pv.endColorG, pv.endColorB, pv.endAlpha);
+            }
+
+            if(semanticsID == "PB3D_STARTCOLOR") {
+                buffer.push(pv.startColorR, pv.startColorG, pv.startColorB, pv.startAlpha);
+            }
+
+            /*
+            if(semanticsID == "PB3D_BIRTH") {
+                buffer.push(pv.startTime);
+            }
+
+            if(semanticsID == "PB3D_LIFE") {
+                buffer.push(pv.life);
+            }
+
+            if(semanticsID == "PB3D_STARTSIZE") {
+                buffer.push(pv.startSize);
+            }
+
+            if(semanticsID == "PB3D_ENDSIZE") {
+                buffer.push(pv.endSize);
+            }
+            */
         }
     }
 }

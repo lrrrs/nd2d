@@ -39,7 +39,7 @@ vertex kernel default_sprite2d_shader
 {
     parameter float4x4 objectToClipSpaceTransform;
 
-    input vertex float4 vertexPosition
+    input vertex float2 vertexPosition
     <
         id : "PB3D_POSITION";
     >;
@@ -48,6 +48,6 @@ vertex kernel default_sprite2d_shader
 
     void evaluateVertex()
     {
-        vertexClipPosition = vertexPosition * objectToClipSpaceTransform;
+        vertexClipPosition = float4(vertexPosition.x, vertexPosition.y, 0.0, 1.0) * objectToClipSpaceTransform;
     }
 }

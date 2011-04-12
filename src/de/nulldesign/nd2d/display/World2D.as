@@ -75,6 +75,8 @@ package de.nulldesign.nd2d.display {
         private var frameRate:uint;
         private var isPaused:Boolean = false;
         private var mousePosition:Vector3D = new Vector3D(0.0, 0.0, 0.0);
+        private var antialiasing:uint = 2;
+        private var enableErrorChecking:Boolean = true;
 
         protected var stats:Stats;
 
@@ -114,12 +116,12 @@ package de.nulldesign.nd2d.display {
         private function context3DCreated(e:Event):void {
 
             context3D = stage.stage3Ds[0].context3D;
-            context3D.enableErrorChecking = true;
+            context3D.enableErrorChecking = enableErrorChecking;
             context3D.setCulling(Context3DTriangleFace.NONE);
-            context3D.setDepthTest(false, Context3DCompareMode.LESS_EQUAL);
+            context3D.setDepthTest(false, Context3DCompareMode.ALWAYS);
 
             stage.stage3Ds[0].viewPort = new Rectangle(0, 0, stage.stageWidth, stage.stageHeight);
-            context3D.configureBackBuffer(stage.stageWidth, stage.stageHeight, 2, false);
+            context3D.configureBackBuffer(stage.stageWidth, stage.stageHeight, antialiasing, false);
 
             camera.resizeCameraStage(stage.stageWidth, stage.stageHeight);
             stats.driverInfo = context3D.driverInfo;
@@ -134,7 +136,7 @@ package de.nulldesign.nd2d.display {
 
         private function resizeStage(e:Event):void {
             stage.stage3Ds[0].viewPort = new Rectangle(0, 0, stage.stageWidth, stage.stageHeight);
-            context3D.configureBackBuffer(stage.stageWidth, stage.stageHeight, 2, false);
+            context3D.configureBackBuffer(stage.stageWidth, stage.stageHeight, antialiasing, false);
             camera.resizeCameraStage(stage.stageWidth, stage.stageHeight);
         }
 
@@ -150,7 +152,7 @@ package de.nulldesign.nd2d.display {
                 mousePosition.z = 0.0;
                 mousePosition.w = 1.0;
 
-                scene.processMouseEvents(mousePosition, mouseEventType, camera);
+                scene.processMouseEvents(mousePosition, mouseEventType, camera.getViewProjectionMatrix());
             }
         }
 

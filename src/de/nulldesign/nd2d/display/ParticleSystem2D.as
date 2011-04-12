@@ -31,7 +31,6 @@
 
 package de.nulldesign.nd2d.display {
     import de.nulldesign.nd2d.geom.Face;
-    import de.nulldesign.nd2d.geom.Vertex;
     import de.nulldesign.nd2d.materials.ParticleSystemMaterial;
     import de.nulldesign.nd2d.utils.ColorUtil;
     import de.nulldesign.nd2d.utils.NumberUtil;
@@ -42,7 +41,6 @@ package de.nulldesign.nd2d.display {
     import flash.display.BitmapData;
     import flash.display3D.Context3D;
     import flash.geom.Point;
-    import flash.geom.Vector3D;
     import flash.utils.getTimer;
 
     public class ParticleSystem2D extends Node2D {
@@ -141,7 +139,6 @@ package de.nulldesign.nd2d.display {
                                         startAlpha:Number, endAlpha:Number, startSize:Number, endSize:Number,
                                         life:Number, startTime:Number):void {
 
-            // position
             var p:Particle = particles[activeParticles];
 
             p.v1.x = -texW;
@@ -153,48 +150,22 @@ package de.nulldesign.nd2d.display {
             p.v4.x = -texW;
             p.v4.y = texH;
 
-            // start color
-            p.v1.color = startColor;
-            p.v1.a = startAlpha;
-            p.v2.color = startColor;
-            p.v2.a = startAlpha;
-            p.v3.color = startColor;
-            p.v3.a = startAlpha;
-            p.v4.color = startColor;
-            p.v4.a = startAlpha;
-
-            // velocity and startposition
-            p.v1.targetVertex = new Vertex(vx, vy);
-            p.v1.targetVertex.z = x;
-            p.v1.targetVertex.w = y;
-
-            p.v2.targetVertex = new Vertex(vx, vy);
-            p.v2.targetVertex.z = x;
-            p.v2.targetVertex.w = y;
-
-            p.v3.targetVertex = new Vertex(vx, vy);
-            p.v3.targetVertex.z = x;
-            p.v3.targetVertex.w = y;
-
-            p.v4.targetVertex = new Vertex(vx, vy);
-            p.v4.targetVertex.z = x;
-            p.v4.targetVertex.w = y;
-
-            var r:Number = ColorUtil.r(endColor);
-            var g:Number = ColorUtil.g(endColor);
-            var b:Number = ColorUtil.b(endColor);
-
-            // end color in target normal
-            p.v1.targetVertex.normal = new Vector3D(r, g, b, endAlpha);
-            p.v2.targetVertex.normal = new Vector3D(r, g, b, endAlpha);
-            p.v3.targetVertex.normal = new Vector3D(r, g, b, endAlpha);
-            p.v4.targetVertex.normal = new Vector3D(r, g, b, endAlpha);
-
-            // store birth and life properties in the normal!
-            p.v1.normal = new Vector3D(startTime, life, startSize, endSize);
-            p.v2.normal = new Vector3D(startTime, life, startSize, endSize);
-            p.v3.normal = new Vector3D(startTime, life, startSize, endSize);
-            p.v4.normal = new Vector3D(startTime, life, startSize, endSize);
+            p.v1.startColorR = p.v2.startColorR = p.v3.startColorR = p.v4.startColorR = ColorUtil.r(startColor);
+            p.v1.startColorG = p.v2.startColorG = p.v3.startColorG = p.v4.startColorG = ColorUtil.g(startColor);
+            p.v1.startColorB = p.v2.startColorB = p.v3.startColorB = p.v4.startColorB = ColorUtil.b(startColor);
+            p.v1.startAlpha = p.v2.startAlpha = p.v3.startAlpha = p.v4.startAlpha = startAlpha;
+            p.v1.startX = p.v2.startX = p.v3.startX = p.v4.startX = x;
+            p.v1.startY = p.v2.startY = p.v3.startY = p.v4.startY = y;
+            p.v1.startSize = p.v2.startSize = p.v3.startSize = p.v4.startSize = startSize;
+            p.v1.startTime = p.v2.startTime = p.v3.startTime = p.v4.startTime = startTime;
+            p.v1.endColorR = p.v2.endColorR = p.v3.endColorR = p.v4.endColorR = ColorUtil.r(endColor);
+            p.v1.endColorG = p.v2.endColorG = p.v3.endColorG = p.v4.endColorG = ColorUtil.g(endColor);
+            p.v1.endColorB = p.v2.endColorB = p.v3.endColorB = p.v4.endColorB = ColorUtil.b(endColor);
+            p.v1.endAlpha = p.v2.endAlpha = p.v3.endAlpha = p.v4.endAlpha = endAlpha;
+            p.v1.vx = p.v2.vx = p.v3.vx = p.v4.vx = vx;
+            p.v1.vy = p.v2.vy = p.v3.vy = p.v4.vy = vy;
+            p.v1.life = p.v2.life = p.v3.life = p.v4.life = life;
+            p.v1.endSize = p.v2.endSize = p.v3.endSize = p.v4.endSize = endSize;
 
             ++activeParticles;
         }
@@ -212,8 +183,8 @@ package de.nulldesign.nd2d.display {
             super.draw(context, camera);
 
             material.blendMode = blendMode;
-            material.modelViewMatrix = modelViewMatrix;
-            material.projectionMatrix = camera.getProjectionMatrix();
+            material.modelViewMatrix = worldModelMatrix;
+            material.projectionMatrix = camera.getViewProjectionMatrix();
 
             material.currentTime = currentTime;
             material.gravity = gravity;
@@ -222,14 +193,14 @@ package de.nulldesign.nd2d.display {
     }
 }
 
+import de.nulldesign.nd2d.geom.ParticleVertex;
 import de.nulldesign.nd2d.geom.UV;
-import de.nulldesign.nd2d.geom.Vertex;
 
 class Particle {
-    public var v1:Vertex = new Vertex(-1, -1, 0.0);
-    public var v2:Vertex = new Vertex(1, -1, 0.0);
-    public var v3:Vertex = new Vertex(1, 1, 0.0);
-    public var v4:Vertex = new Vertex(-1, 1, 0.0);
+    public var v1:ParticleVertex = new ParticleVertex(-1, -1, 0.0);
+    public var v2:ParticleVertex = new ParticleVertex(1, -1, 0.0);
+    public var v3:ParticleVertex = new ParticleVertex(1, 1, 0.0);
+    public var v4:ParticleVertex = new ParticleVertex(-1, 1, 0.0);
     public var uv1:UV = new UV(0, 0);
     public var uv2:UV = new UV(1, 0);
     public var uv3:UV = new UV(1, 1);

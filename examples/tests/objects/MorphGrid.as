@@ -29,44 +29,27 @@
  * /
  */
 
-<languageVersion : 1.0;>
-material kernel sprite2dcloud_material_shader
-<
-    namespace : "ND2D_Shader";
-    vendor : "nulldesign";
-    version : 1;
->
-{
-    input vertex float4 uvCoord
-    <
-        id : "PB3D_UV";
-    >;
+package tests.objects {
+    import de.nulldesign.nd2d.display.Grid2D;
+    import de.nulldesign.nd2d.materials.SpriteSheet;
 
-    input vertex int vertexIdx
-    <
-        id : "PB3D_IDX";
-    >;
+    import flash.display.BitmapData;
 
-    parameter float4 color[21];
+    public class MorphGrid extends Grid2D {
+        public function MorphGrid(stepsX:uint, stepsY:uint, bitmapTexture:BitmapData = null, spriteSheet:SpriteSheet = null) {
+            super(stepsX, stepsY, bitmapTexture, spriteSheet);
+        }
 
-    parameter float4 uvOffset[21];
+        override protected function step(t:Number):void {
+            super.step(t);
 
-    interpolated float4 interpolatedUV;
-    interpolated float4 interpolatedColor;
+            for(var i:int = 0; i < vertexList.length; i++) {
 
-    void evaluateVertex()
-    {
-        interpolatedUV = uvCoord + uvOffset[vertexIdx];
-        interpolatedColor = color[vertexIdx];
-    }
+                var newX:Number = vertexList[i].x + Math.sin(vertexList[i].x + t * 2.0) * 30.0;
+                var newY:Number = vertexList[i].y + Math.cos(vertexList[i].y + t * 2.0) * 30.0;
 
-    input image4 textureImage;
-
-    output float4 result;
-
-    void evaluateFragment()
-    {
-        float4 texel = sample(textureImage, float2(interpolatedUV.x, interpolatedUV.y), PB3D_MIPNEAREST /*PB3D_2D | PB3D_LINEAR | PB3D_REPEAT*/);
-        result = float4(texel.r * interpolatedColor.r, texel.g * interpolatedColor.g, texel.b * interpolatedColor.b, texel.a * interpolatedColor.a);
+                material.modifyVertexInBuffer(vertexList[i].bufferIdx, newX, newY);
+            }
+        }
     }
 }

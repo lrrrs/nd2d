@@ -30,6 +30,11 @@
  */
 
 package de.nulldesign.nd2d.utils {
+    import de.nulldesign.nd2d.geom.Face;
+    import de.nulldesign.nd2d.geom.UV;
+    import de.nulldesign.nd2d.geom.Vertex;
+    import de.nulldesign.nd2d.materials.SpriteSheet;
+
     import flash.display.BitmapData;
     import flash.display3D.Context3D;
     import flash.display3D.Context3DTextureFormat;
@@ -82,7 +87,8 @@ package de.nulldesign.nd2d.utils {
             var destPoint:Point;
 
             sourceRect = new Rectangle(0, 0, bmp.width, bmp.height);
-            destPoint = new Point(textureDimensions.x / 2 - bmp.width / 2, textureDimensions.y / 2 - bmp.height / 2);
+            destPoint = new Point(textureDimensions.x * 0.5 - bmp.width * 0.5,
+                                  textureDimensions.y * 0.5 - bmp.height / 2);
 
             newBmp.copyPixels(bmp, sourceRect, destPoint);
 
@@ -105,7 +111,7 @@ package de.nulldesign.nd2d.utils {
             var tmp:BitmapData = new BitmapData(src.width, src.height, true, 0x00000000);
             var transform:Matrix = new Matrix();
 
-            while(ws > 1 && hs > 1) {
+            while(ws >= 1 && hs >= 1) {
                 tmp.draw(src, transform, null, null, null, true);
                 dest.uploadFromBitmapData(tmp, level);
                 transform.scale(0.5, 0.5);
@@ -114,6 +120,56 @@ package de.nulldesign.nd2d.utils {
                 hs >>= 1;
             }
             tmp.dispose();
+        }
+
+        public static function generateQuadFromTexture(bitmapTexture:BitmapData,
+                                                       spriteSheet:SpriteSheet):Vector.<Face> {
+
+            var faceList:Vector.<Face> = new Vector.<Face>(2, true);
+
+            var texW:Number;
+            var texH:Number;
+            var uv1:UV;
+            var uv2:UV;
+            var uv3:UV;
+            var uv4:UV;
+            var v1:Vertex;
+            var v2:Vertex;
+            var v3:Vertex;
+            var v4:Vertex;
+
+            if(!spriteSheet) {
+
+                var textureDimensions:Point = TextureHelper.getTextureDimensionsFromBitmap(bitmapTexture);
+
+                texW = textureDimensions.x * 0.5;
+                texH = textureDimensions.y * 0.5;
+
+                uv1 = new UV(0, 0);
+                uv2 = new UV(1, 0);
+                uv3 = new UV(1, 1);
+                uv4 = new UV(0, 1);
+
+            } else {
+                texW = spriteSheet.width * 0.5;
+                texH = spriteSheet.height * 0.5;
+
+                uv1 = new UV(spriteSheet.uvOffset.x, spriteSheet.uvOffset.y);
+                uv2 = new UV(spriteSheet.uvOffset.x + spriteSheet.uvSize.x, spriteSheet.uvOffset.y);
+                uv3 = new UV(spriteSheet.uvOffset.x + spriteSheet.uvSize.x,
+                             spriteSheet.uvOffset.y + spriteSheet.uvSize.y);
+                uv4 = new UV(spriteSheet.uvOffset.x, spriteSheet.uvOffset.y + spriteSheet.uvSize.y);
+            }
+
+            v1 = new Vertex(-texW, -texH, 0.0);
+            v2 = new Vertex(texW, -texH, 0.0);
+            v3 = new Vertex(texW, texH, 0.0);
+            v4 = new Vertex(-texW, texH, 0.0);
+
+            faceList[0] = new Face(v1, v2, v3, uv1, uv2, uv3);
+            faceList[1] = new Face(v1, v3, v4, uv1, uv3, uv4);
+
+            return faceList;
         }
     }
 }

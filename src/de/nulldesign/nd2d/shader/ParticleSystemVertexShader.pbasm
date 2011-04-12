@@ -11,24 +11,24 @@ module_vertex_program defaultshader
     end_transformations
     
     globals
-        global parameter float-4 currentTime
+        global parameter float currentTime
         global parameter float-4 gravity
         global parameter float-4-4 objectToClipSpaceTransform
         input vertex float-4 endColor
             metadata
-                id const(string, "PB3D_TARGET_NORMAL")
+                id const(string, "PB3D_ENDCOLOR")
             end_metadata
         input vertex float-4 miscParams
             metadata
-                id const(string, "PB3D_NORMAL")
+                id const(string, "PB3D_MISC")
             end_metadata
         input vertex float-4 startColor
             metadata
-                id const(string, "PB3D_COLOR")
+                id const(string, "PB3D_STARTCOLOR")
             end_metadata
         input vertex float-4 velocity
             metadata
-                id const(string, "PB3D_TARGET_POSITION")
+                id const(string, "PB3D_VELOCITY")
             end_metadata
         input vertex float-4 vertexPosition
             metadata
@@ -62,8 +62,7 @@ module_vertex_program defaultshader
                     _LD_life-1 = extractVE miscParams, const(int, 1) : float
                     _LD_startSize-1 = extractVE miscParams, const(int, 2) : float
                     _LD_endSize-1 = extractVE miscParams, const(int, 3) : float
-                    currentTimeElem%A-0 = extractVE currentTime, const(int, 0) : float
-                    _subResult%A-0 = sub currentTimeElem%A-0, _LD_birth-1 : float
+                    _subResult%A-0 = sub currentTime, _LD_birth-1 : float
                     _divResult%A-0 = div _subResult%A-0, _LD_life-1 : float
                     _fractResult%A-0 = fract _divResult%A-0 : float
                     _LD_progress-1 = clamp _fractResult%A-0, const(float, 0), const(float, 1) : float

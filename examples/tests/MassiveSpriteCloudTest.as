@@ -6,9 +6,11 @@
  * To change this template use File | Settings | File Templates.
  */
 package tests {
+    import de.nulldesign.nd2d.display.Node2D;
     import de.nulldesign.nd2d.display.Scene2D;
     import de.nulldesign.nd2d.display.Sprite2D;
     import de.nulldesign.nd2d.display.Sprite2DCloud;
+    import de.nulldesign.nd2d.display.Sprite2DCloud2;
     import de.nulldesign.nd2d.materials.SpriteSheet;
 
     import flash.display.BitmapData;
@@ -19,7 +21,7 @@ package tests {
         private var cubeTexture:Class;
 
         private var sprites:Vector.<Sprite2D>;
-        private var spriteCloud:Sprite2DCloud;
+        private var spriteCloud:Node2D;
 
         public function MassiveSpriteCloudTest() {
 
@@ -44,7 +46,7 @@ package tests {
                 s.y = Math.round(Math.random() * 1000);
                 s.vx = (Math.random() - Math.random()) * 3;
                 s.vy = (Math.random() - Math.random()) * 3;
-                s.scaleX = s.scaleY = 2.0; // NOT IMPLEMENTED
+                //s.scaleX = s.scaleY = 2.0; // NOT IMPLEMENTED
 
                 sprites[i] = s;
 
