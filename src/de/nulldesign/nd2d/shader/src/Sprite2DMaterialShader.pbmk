@@ -58,7 +58,7 @@ material kernel texture
 
     void evaluateFragment()
     {
-        float4 texel = sample(textureImage, float2(interpolatedUV.x, interpolatedUV.y), PB3D_MIPNEAREST | PB3D_CLAMP /*PB3D_2D | PB3D_LINEAR | PB3D_REPEAT*/);
+        float4 texel = sample(textureImage, float2(interpolatedUV.x, interpolatedUV.y), PB3D_2D | PB3D_MIPNEAREST | PB3D_CLAMP /*PB3D_2D | PB3D_LINEAR | PB3D_REPEAT*/);
         result = float4(texel.r * color.r, texel.g * color.g, texel.b * color.b, texel.a * color.a);
     }
 }

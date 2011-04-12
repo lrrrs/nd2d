@@ -64,8 +64,8 @@ package {
             //mainScene = new MassiveSpritesTest();
             //mainScene = new MassiveSpriteCloudTest();
             //mainScene = new SpriteHierarchyTest();
-            //mainScene = new Grid2DTest();
-            mainScene = new SpriteTest();
+            mainScene = new Grid2DTest();
+            //mainScene = new SpriteTest();
             //mainScene = new SpriteAnimTest();
             //mainScene = new StarFieldTest();
             //mainScene = new ParticleSystemTest();
