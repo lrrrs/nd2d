@@ -1,5 +1,6 @@
 - HANDLE DEVICE LOST -> Event.CONTEXT3D_CREATE
 - Batching for Spriteclouds -> wait for PB3D fix :(
+- enable zbuffering / alpha textures / KIL ???
 - configurable debugging flag: context3D.enableErrorChecking
 - REPLACE ortographic camera with perspective one! for rotationX/Y/Z
 - textureatlas??
