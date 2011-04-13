@@ -64,6 +64,8 @@ package de.nulldesign.nd2d.materials {
 
         protected var frameIdx:uint = 0;
 
+        public var frameUpdated:Boolean = true;
+
         protected var _frame:uint = 0;
 
         public function get frame():uint {
@@ -72,6 +74,7 @@ package de.nulldesign.nd2d.materials {
 
         public function set frame(value:uint):void {
             _frame = value;
+            frameUpdated = true;
         }
 
         public function SpriteSheet(bitmapData:BitmapData, spriteWidth:Number, spriteHeight:Number, fps:uint) {

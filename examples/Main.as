@@ -71,7 +71,7 @@ package {
             //mainScene = new SpriteAnimTest();
             //mainScene = new StarFieldTest();
             //mainScene = new ParticleSystemTest();
-            statsVisible = false;
+            //statsVisible = false;
             //mainScene = new ParticleExplorer();
 
             setActiveScene(mainScene);

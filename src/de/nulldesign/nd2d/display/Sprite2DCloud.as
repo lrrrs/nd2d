@@ -188,6 +188,7 @@ package de.nulldesign.nd2d.display {
             var n:uint = children.length;
             var somethingChanged:Boolean = false;
 
+            // TODO: get rid of this implementation and do batch rendering! :)
             while(++i < n) {
 
                 child = Sprite2D(children[i]);
@@ -204,19 +205,15 @@ package de.nulldesign.nd2d.display {
 
                 offset = new Point();
 
-                var initUV:Boolean = !uvInited || spriteSheet;
+                var initUV:Boolean = !uvInited;
 
-                if(spriteSheet) {
-                    var rowIdx:uint = spriteSheet.frame % spriteSheet.numSheetsPerRow;
-                    var colIdx:uint = Math.floor(spriteSheet.frame / spriteSheet.numSheetsPerRow);
+                if(spriteSheet && spriteSheet.frameUpdated) {
 
-                    offset = spriteSheet.uvSize.clone();
-
-                    offset.x = spriteSheet.uvSize.x * rowIdx;
-                    offset.y = spriteSheet.uvSize.y * colIdx;
+                    spriteSheet.frameUpdated = false;
+                    initUV = true;
+                    offset = spriteSheet.getOffsetForFrame();
                 }
 
-                // TODO: modify vertex position by modelViewMatrix! -> move to shader, batch! ??
                 if(child.refreshPosition) {
                     rot = VectorUtil.deg2rad(child.rotation);
                     cr = Math.cos(rot);

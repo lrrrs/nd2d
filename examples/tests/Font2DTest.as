@@ -64,9 +64,10 @@ package tests {
 
             var fontBmp:BitmapData = new fontTexture().bitmapData;
 
-            font = new Font2D(fontBmp, 16, 16, fontChars, 20, 300);
+            font = new Font2D(fontBmp, 16, 16, fontChars, 20, 100);
             font.text = "HELLO FOLKS!         ND2D JUST GOT NICE BITMAP FONTS.      DON'T YOU JUST ♥ IT? :)";
             font.x = stage.stageWidth;
+            font.scaleX = font.scaleY = 2.0;
             addChild(font);
 
             counter = new Font2D(fontBmp, 16, 16, fontChars, 16, 10);
@@ -83,7 +84,7 @@ package tests {
             font.x -= 3.0;
             font.y = stage.stageHeight * 0.5;
 
-            if(font.x < -font.width) {
+            if(font.x < -font.width * 2.0) {
               font.x = stage.stageWidth;
             }
 
