@@ -38,6 +38,7 @@ package {
     import flash.display.StageScaleMode;
     import flash.display3D.Context3DRenderMode;
 
+    import tests.Font2DTest;
     import tests.Grid2DTest;
     import tests.MassiveSpriteCloudTest;
     import tests.MassiveSpritesTest;
@@ -64,12 +65,13 @@ package {
             //mainScene = new MassiveSpritesTest();
             //mainScene = new MassiveSpriteCloudTest();
             //mainScene = new SpriteHierarchyTest();
-            mainScene = new Grid2DTest();
+            mainScene = new Font2DTest();
+            //mainScene = new Grid2DTest();
             //mainScene = new SpriteTest();
             //mainScene = new SpriteAnimTest();
             //mainScene = new StarFieldTest();
             //mainScene = new ParticleSystemTest();
-            //statsVisible = false;
+            statsVisible = false;
             //mainScene = new ParticleExplorer();
 
             setActiveScene(mainScene);

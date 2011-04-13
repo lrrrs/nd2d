@@ -45,6 +45,7 @@ package de.nulldesign.nd2d.display {
     import flash.display3D.IndexBuffer3D;
     import flash.display3D.Program3D;
     import flash.display3D.VertexBuffer3D;
+    import flash.geom.Matrix3D;
     import flash.geom.Point;
 
     /**
@@ -82,7 +83,10 @@ package de.nulldesign.nd2d.display {
         protected var uvInited:Boolean = false;
         protected var maxCapacity:uint;
 
-        public function Sprite2DCloud(maxCapacity:uint, bitmapTexture:BitmapData = null, spriteSheet:SpriteSheet = null) {
+        protected var clipSpaceMatrix:Matrix3D = new Matrix3D();
+
+        public function Sprite2DCloud(maxCapacity:uint, bitmapTexture:BitmapData = null,
+                                      spriteSheet:SpriteSheet = null) {
             super(bitmapTexture, spriteSheet);
             this.maxCapacity = maxCapacity;
 
@@ -116,7 +120,7 @@ package de.nulldesign.nd2d.display {
         override public function addChildAt(child:Node2D, idx:uint):void {
 
             if(!(child is Sprite2D)) {
-               throw new Error("Sprite2DCloud accepts Sprite2D childs only");
+                throw new Error("Sprite2DCloud accepts Sprite2D childs only");
             }
 
             if(children.length < maxCapacity) {
@@ -171,8 +175,6 @@ package de.nulldesign.nd2d.display {
             }
 
             var vIdx:uint = 0;
-            var refIdx:uint = 0;
-            var iIdx:uint = 0;
             var r:Number;
             var g:Number;
             var b:Number;
@@ -296,18 +298,6 @@ package de.nulldesign.nd2d.display {
                     mVertexBuffer[vIdx + 31] = a; // a
                 }
 
-                if(!indexBuffer) {
-                    mIndexBuffer[iIdx] = refIdx;
-                    mIndexBuffer[iIdx + 1] = refIdx + 1;
-                    mIndexBuffer[iIdx + 2] = refIdx + 2;
-                    mIndexBuffer[iIdx + 3] = refIdx + 2;
-                    mIndexBuffer[iIdx + 4] = refIdx + 3;
-                    mIndexBuffer[iIdx + 5] = refIdx;
-
-                    refIdx += 4;
-                    iIdx += 6;
-                }
-
                 vIdx += 32;
 
                 child.refreshPosition = child.refreshColors = false;
@@ -325,6 +315,23 @@ package de.nulldesign.nd2d.display {
             }
 
             if(!indexBuffer) {
+
+                var refIdx:uint = 0;
+                var iIdx:uint = 0;
+                var idx:int = -1;
+
+                while(++idx < maxCapacity) {
+                    mIndexBuffer[iIdx] = refIdx;
+                    mIndexBuffer[iIdx + 1] = refIdx + 1;
+                    mIndexBuffer[iIdx + 2] = refIdx + 2;
+                    mIndexBuffer[iIdx + 3] = refIdx + 2;
+                    mIndexBuffer[iIdx + 4] = refIdx + 3;
+                    mIndexBuffer[iIdx + 5] = refIdx;
+
+                    refIdx += 4;
+                    iIdx += 6;
+                }
+
                 indexBuffer = context.createIndexBuffer(mIndexBuffer.length);
                 indexBuffer.uploadFromVector(mIndexBuffer, 0, mIndexBuffer.length);
             }
@@ -339,7 +346,11 @@ package de.nulldesign.nd2d.display {
 
             context.setBlendFactors(blendMode.src, blendMode.dst);
 
-            context.setProgramConstantsFromMatrix(Context3DProgramType.VERTEX, 0, camera.getViewProjectionMatrix(), true);
+            clipSpaceMatrix.identity();
+            clipSpaceMatrix.append(worldModelMatrix);
+            clipSpaceMatrix.append(camera.getViewProjectionMatrix());
+
+            context.setProgramConstantsFromMatrix(Context3DProgramType.VERTEX, 0, clipSpaceMatrix, true);
 
             context.drawTriangles(indexBuffer, 0, 2 * children.length);
 

@@ -98,6 +98,9 @@ package de.nulldesign.nd2d.materials {
         }
 
         public function update(t:Number):void {
+
+            if(!activeAnimation) return;
+
             ctime = t;
 
             // Update the timer part, to get time based animation
@@ -142,6 +145,8 @@ package de.nulldesign.nd2d.materials {
 
         public function clone():SpriteSheet {
             var s:SpriteSheet = new SpriteSheet(bitmapData, spriteWidth, spriteHeight, fps);
+            s.frame = frame;
+
             for(var name:String in animationMap) {
                 var anim:SpriteSheetAnimation = animationMap[name];
                 s.addAnimation(name, anim.frames.concat(), anim.loop);

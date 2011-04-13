@@ -57,5 +57,9 @@ package de.nulldesign.nd2d.utils {
         public static function rndMinMax(min:Number, max:Number):Number {
             return min + Math.random() * (max - min);
         }
+
+        public static function sin0_1(t:Number):Number {
+            return 0.5 + Math.sin(t) * 0.5;
+        }
     }
 }
