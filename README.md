@@ -16,6 +16,10 @@ If you want to contribute, make bugfixes or extend the engine, feel free to fork
 Useful links:
 [ND2D API Documentation](http://www.nulldesign.de/nd2d/docs/) | [Setting up Incubator for IntelliJ](http://www.lidev.com.ar/?p=422)
 
+# ND2D Performance:
+
+It's already ok, but it could be better in a few places. You'll notice framerate drops when using the Sprite2DCloud and Font2D and in a few other places  at the moment. Things will change, be patient ;)
+
 # Change Log
 
 2011-04-12 - r01
