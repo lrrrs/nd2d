@@ -1,10 +1,4 @@
-/**
- * Created by IntelliJ IDEA.
- * User: lars
- * Date: 19.01.11
- * Time: 09:35
- * To change this template use File | Settings | File Templates.
- */
+
 package tests {
     import de.nulldesign.nd2d.display.Node2D;
     import de.nulldesign.nd2d.display.Scene2D;

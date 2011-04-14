@@ -30,6 +30,9 @@
  */
 
 package de.nulldesign.nd2d.utils {
+    import de.nulldesign.nd2d.display.Node2D;
+
+    import flash.geom.Point;
 
     public class VectorUtil {
 
@@ -59,6 +62,10 @@ package de.nulldesign.nd2d.utils {
          */
         public static function rotationFromVector(x:Number, y:Number):Number {
             return Math.atan2(y, x) / Math.PI * 180;
+        }
+
+        public static function distance(n1:Node2D, n2:Node2D):Number {
+            return Point.distance(n1.position, n2.position);
         }
     }
 }

@@ -98,16 +98,16 @@ package de.nulldesign.nd2d.display {
                 var curChar:String;
                 var frame:int;
                 var childIdx:uint = 0;
-                var startX:Number = 0.0;
+                var startX:Number = spriteSheet.width * 0.5;
 
                 switch(textAlign) {
 
                     case TextAlign.CENTER:
-                        startX = (text.length * spriteSheet.width) * -0.5;
+                        startX -= (text.length * spriteSheet.width) * 0.5;
                         break;
 
                     case TextAlign.RIGHT:
-                        startX = -(text.length * spriteSheet.width);
+                        startX += -(text.length * spriteSheet.width);
                         break;
                 }
 

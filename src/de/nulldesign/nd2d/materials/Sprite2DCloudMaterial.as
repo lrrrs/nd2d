@@ -41,29 +41,6 @@ package de.nulldesign.nd2d.materials {
             this.drawCalls = 1;
         }
 
-        /*
-         override protected function generateBufferData(context:Context3D, faceList:Vector.<Face>):void {
-
-         var firstInit:Boolean = !vertexBuffer;
-
-         super.generateBufferData(context, faceList);
-
-         if(firstInit) {
-
-         // extend indexbuffer to match maxCapacity
-         var numElementsPerChild:uint = mIndexBuffer.length;
-
-         for(var i:int = 0; i < (maxCapacity - 1) * numElementsPerChild; i++) {
-         mIndexBuffer.push(mIndexBuffer[i % numElementsPerChild]);
-         }
-
-         indexBuffer = context.createIndexBuffer(mIndexBuffer.length);
-         indexBuffer.uploadFromVector(mIndexBuffer, 0, mIndexBuffer.length);
-
-         numTris = int(mIndexBuffer.length / 3);
-         }
-         }
-         */
         override protected function prepareForRender(context:Context3D):void {
 
             super.prepareForRender(context);
@@ -106,10 +83,10 @@ package de.nulldesign.nd2d.materials {
                 context.setProgramConstantsFromMatrix(Context3DProgramType.VERTEX, i * numConstantsPerSprite, clipSpaceMatrix, true);
 
                 context.setProgramConstantsFromVector(Context3DProgramType.VERTEX, i * numConstantsPerSprite + numConstantsUsedForMatrix,
-                                                      Vector.<Number>([ offset.x, offset.y, 0.0, 1.0 ]));
+                                                      Vector.<Number>([ child.r, child.g, child.b, child.a ]));
 
                 context.setProgramConstantsFromVector(Context3DProgramType.VERTEX, i * numConstantsPerSprite + numConstantsUsedForMatrix + 1,
-                                                      Vector.<Number>([ child.r, child.g, child.b, child.a ]));
+                                                      Vector.<Number>([ offset.x, offset.y, 0.0, 1.0 ]));
 
                 /*
                  if(i == 0) {
@@ -135,6 +112,8 @@ package de.nulldesign.nd2d.materials {
             parameterBufferHelper.update();
 
             vertexBufferHelper.setVertexBuffers();
+
+            // not finished....
         }
 
         override protected function clearAfterRender(context:Context3D):void {

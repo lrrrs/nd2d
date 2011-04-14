@@ -143,6 +143,7 @@ package de.nulldesign.nd2d.materials {
         }
 
         public function playAnimation(name:String):void {
+            frameIdx = 0;
             activeAnimation = animationMap[name];
         }
 

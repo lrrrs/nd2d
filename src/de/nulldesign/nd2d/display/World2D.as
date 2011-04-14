@@ -115,6 +115,8 @@ package de.nulldesign.nd2d.display {
 
         private function context3DCreated(e:Event):void {
 
+            stage.stage3Ds[0].removeEventListener(Event.CONTEXT3D_CREATE, context3DCreated);
+
             context3D = stage.stage3Ds[0].context3D;
             context3D.enableErrorChecking = enableErrorChecking;
             context3D.setCulling(Context3DTriangleFace.NONE);
