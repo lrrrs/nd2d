@@ -244,7 +244,7 @@ package de.nulldesign.nd2d.materials {
 
         public function modifyVertexInBuffer(bufferIdx:uint, x:Number, y:Number):void {
 
-            if(mVertexBuffer.length == 0) return;
+            if(!mVertexBuffer || mVertexBuffer.length == 0) return;
 
             var vertexRegisters:Vector.<VertexRegisterInfo> = vertexRegisterMap.vertexRegisters;
             var idx:uint = bufferIdx * numFloatsPerVertex;

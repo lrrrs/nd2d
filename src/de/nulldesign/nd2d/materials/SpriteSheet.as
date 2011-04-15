@@ -73,8 +73,10 @@ package de.nulldesign.nd2d.materials {
         }
 
         public function set frame(value:uint):void {
-            _frame = value;
-            frameUpdated = true;
+            if(frame != value) {
+                _frame = value;
+                frameUpdated = true;
+            }
         }
 
         public function SpriteSheet(bitmapData:BitmapData, spriteWidth:Number, spriteHeight:Number, fps:uint) {
@@ -143,8 +145,10 @@ package de.nulldesign.nd2d.materials {
         }
 
         public function playAnimation(name:String):void {
-            frameIdx = 0;
-            activeAnimation = animationMap[name];
+            if(activeAnimation != animationMap[name]) {
+                frameIdx = 0;
+                activeAnimation = animationMap[name];
+            }
         }
 
         public function clone():SpriteSheet {

@@ -35,12 +35,10 @@ package tests {
 
     import de.nulldesign.nd2d.display.ParticleSystem2D;
     import de.nulldesign.nd2d.display.Scene2D;
-    import de.nulldesign.nd2d.display.World2D;
     import de.nulldesign.nd2d.materials.BlendModePresets;
     import de.nulldesign.nd2d.utils.ParticleSystemPreset;
 
     import flash.display.BitmapData;
-    import flash.display3D.Context3DRenderMode;
     import flash.events.Event;
     import flash.events.TimerEvent;
     import flash.utils.Timer;
@@ -69,9 +67,16 @@ package tests {
 
             addChild(particles);
             addEventListener(Event.ADDED_TO_STAGE, addedToStage);
+            addEventListener(Event.REMOVED_FROM_STAGE, removedFromStage);
+        }
+
+        private function removedFromStage(e:Event):void {
+            // clean up ui
         }
 
         protected function addedToStage(event:Event):void {
+
+            removeEventListener(Event.ADDED_TO_STAGE, addedToStage);
 
             var s:HUISlider;
             var c:ColorChooser;

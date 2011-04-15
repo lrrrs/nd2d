@@ -1,7 +1,6 @@
 package tests {
     import de.nulldesign.nd2d.display.ParticleSystem2D;
     import de.nulldesign.nd2d.display.Scene2D;
-    import de.nulldesign.nd2d.display.World2D;
     import de.nulldesign.nd2d.materials.BlendModePresets;
     import de.nulldesign.nd2d.utils.ParticleSystemPreset;
 
@@ -16,22 +15,31 @@ package tests {
 
         private var particles:ParticleSystem2D;
 
+        private var blah:Sprite;
+
         public function ParticleSystemTest() {
 
-            particles = new ParticleSystem2D(new particleClass().bitmapData, 6000, new ParticleSystemPreset());
+            particles = new ParticleSystem2D(new particleClass().bitmapData, 3000, new ParticleSystemPreset());
             //particles.scaleX = particles.scaleY = 4.0;
             particles.blendMode = BlendModePresets.ADD;
 
             addChild(particles);
 
             addEventListener(Event.ADDED_TO_STAGE, addedToStage);
+            addEventListener(Event.REMOVED_FROM_STAGE, removedFromStage);
+        }
+
+        private function removedFromStage(e:Event):void {
+            if(blah) {
+                blah.removeEventListener(MouseEvent.CLICK, resetClick);
+                stage.removeChild(blah);
+                blah = null;
+            }
         }
 
         private function addedToStage(e:Event):void {
 
-            removeEventListener(Event.ADDED_TO_STAGE, addedToStage);
-
-            var blah:Sprite = new Sprite();
+            blah = new Sprite();
             blah.graphics.beginFill(0xFF9900, 10.0);
             blah.graphics.drawCircle(0, 0, 10.0);
             blah.graphics.endFill();

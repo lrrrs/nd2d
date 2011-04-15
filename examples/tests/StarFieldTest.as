@@ -39,17 +39,19 @@ package tests {
 
         override protected function step(t:Number):void {
 
-            starfield1.scaleX = starfield1.scaleY = stage.stageWidth / starfield1.width;
+            starfield1.width = stage.stageWidth;
+            starfield1.scaleY = starfield1.scaleX;
             starfield1.x = stage.stageWidth / 2;
 
-            var scaledHeight:Number = (starfield1.height * starfield1.scaleY);
+            var scaledHeight:Number = starfield1.height;
             var min:Number = stage.stageHeight - scaledHeight / 2;
             var max:Number = stage.stageHeight + scaledHeight / 2;
 
             //starfield1.y = stage.stageHeight / 2;
             starfield1.y = min + (max - min) * p;
 
-            starfield2.scaleX = starfield2.scaleY = stage.stageWidth / starfield2.width;
+            starfield2.width = stage.stageWidth;
+            starfield2.scaleY = starfield2.scaleX;
             starfield2.x = stage.stageWidth / 2;
             //starfield2.y = stage.stageHeight / 2;
             starfield2.y = starfield1.y - scaledHeight;
@@ -61,16 +63,18 @@ package tests {
             }
 
             // layer 2
-            starfield3.scaleX = starfield3.scaleY = stage.stageWidth / starfield1.width;
+            starfield3.width = stage.stageWidth;
+            starfield3.scaleY = starfield3.scaleX;
             starfield3.x = stage.stageWidth / 2;
 
-            scaledHeight = (starfield3.height * starfield3.scaleY);
+            scaledHeight = starfield3.height;
             min = stage.stageHeight - scaledHeight / 2;
             max = stage.stageHeight + scaledHeight / 2;
 
             starfield3.y = min + (max - min) * p2;
 
-            starfield4.scaleX = starfield4.scaleY = stage.stageWidth / starfield4.width;
+            starfield4.width = stage.stageWidth;
+            starfield4.scaleY = starfield4.scaleX;
             starfield4.x = stage.stageWidth / 2;
             starfield4.y = starfield3.y - scaledHeight;
 

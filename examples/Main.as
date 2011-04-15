@@ -37,6 +37,8 @@ package {
     import flash.display.StageAlign;
     import flash.display.StageScaleMode;
     import flash.display3D.Context3DRenderMode;
+    import flash.events.Event;
+    import flash.events.MouseEvent;
 
     import tests.Font2DTest;
     import tests.Grid2DTest;
@@ -54,6 +56,10 @@ package {
     public class Main extends World2D {
 
         private var mainScene:Scene2D;
+        private var scenes:Vector.<Scene2D> = new Vector.<Scene2D>();
+        private var activeSceneIdx:uint = 0;
+
+        private var nextBtn:Sprite;
 
         public function Main() {
 
@@ -62,19 +68,45 @@ package {
 
             super(Context3DRenderMode.AUTO, 60);
 
-            //mainScene = new MassiveSpritesTest();
-            //mainScene = new MassiveSpriteCloudTest();
-            //mainScene = new SpriteHierarchyTest();
-            mainScene = new Font2DTest();
-            //mainScene = new Grid2DTest();
-            //mainScene = new SpriteTest();
-            //mainScene = new SpriteAnimTest();
-            //mainScene = new StarFieldTest();
-            //mainScene = new ParticleSystemTest();
-            statsVisible = false;
-            //mainScene = new ParticleExplorer();
+            //statsVisible = false;
 
-            setActiveScene(mainScene);
+            scenes.push(new MassiveSpritesTest());
+            scenes.push(new MassiveSpriteCloudTest());
+            scenes.push(new SpriteHierarchyTest());
+            scenes.push(new Font2DTest());
+            scenes.push(new Grid2DTest());
+            scenes.push(new SpriteTest());
+            scenes.push(new SpriteAnimTest());
+            scenes.push(new StarFieldTest());
+            scenes.push(new ParticleSystemTest());
+            //scenes.push(new ParticleExplorer());
+
+            nextBtn = new Sprite();
+            nextBtn.graphics.beginFill(0xFF9900, 1.0);
+            nextBtn.graphics.drawRect(0, 0, 20, 20);
+            nextBtn.buttonMode = true;
+            nextBtn.addEventListener(MouseEvent.CLICK, nextBtnClick);
+            addChild(nextBtn);
+
+            stage.addEventListener(Event.RESIZE, stageResize);
+            stageResize(null);
+
+            activeSceneIdx = 3;
+            nextBtnClick(null);
+        }
+
+        private function nextBtnClick(e:MouseEvent):void {
+
+            camera.reset();
+            setActiveScene(scenes[activeSceneIdx++]);
+            if(activeSceneIdx > scenes.length - 1) {
+                activeSceneIdx = 0;
+            }
+        }
+
+        private function stageResize(e:Event):void {
+            nextBtn.x = 2;
+            nextBtn.y = stage.stageHeight - 22;
         }
     }
 }

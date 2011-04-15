@@ -57,10 +57,12 @@ package tests {
         public function Font2DTest() {
 
             backGroundColor = 0x333333;
-            addEventListener(Event.ADDED_TO_STAGE, addedToStage, false, 0, true);
+            addEventListener(Event.ADDED_TO_STAGE, addedToStage);
         }
 
         private function addedToStage(event:Event):void {
+
+            removeEventListener(Event.ADDED_TO_STAGE, addedToStage);
 
             var fontBmp:BitmapData = new fontTexture().bitmapData;
 
@@ -84,7 +86,7 @@ package tests {
             font.x -= 3.0;
             font.y = stage.stageHeight * 0.5;
 
-            if(font.x < -font.width * 2.0) {
+            if(font.x < -font.width) {
               font.x = stage.stageWidth;
             }
 

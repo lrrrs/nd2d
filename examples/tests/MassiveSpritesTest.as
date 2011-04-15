@@ -48,6 +48,8 @@ package tests {
 
         protected function addedToStage(e:Event):void {
 
+            removeEventListener(Event.ADDED_TO_STAGE, addedToStage);
+
             perlinBmp = new BitmapData(stage.stageWidth, stage.stageHeight, false);
             perlinBmp.perlinNoise(stage.stageWidth * 0.1, stage.stageHeight * 0.1, 3, Math.random() * 10, false, false,
                                   BitmapDataChannel.RED | BitmapDataChannel.GREEN | BitmapDataChannel.BLUE, false);

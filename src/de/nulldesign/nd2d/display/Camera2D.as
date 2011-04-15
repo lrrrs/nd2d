@@ -84,6 +84,11 @@ package de.nulldesign.nd2d.display {
             return renderMatrix;
         }
 
+        public function reset():void {
+            x = y = rotation = 0;
+            zoom = 1;
+        }
+
         private var _x:Number = 0.0;
 
         public function get x():Number {

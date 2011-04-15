@@ -93,7 +93,6 @@ package de.nulldesign.nd2d.display {
 
         public function World2D(renderMode:String, frameRate:uint) {
             this.renderMode = renderMode;
-            this.scene = new Scene2D();
             this.frameRate = frameRate;
             this.stats = Stats(addChild(new Stats()));
             addEventListener(Event.ADDED_TO_STAGE, addedToStage);
@@ -131,26 +130,15 @@ package de.nulldesign.nd2d.display {
             renderTimer = new Timer(1000 / frameRate);
             renderTimer.addEventListener(TimerEvent.TIMER, timerEventHandler);
             renderTimer.start();
-
-            addEventListener(Event.ENTER_FRAME, draw);
-            step(0);
-        }
-
-        private function resizeStage(e:Event):void {
-            stage.stage3Ds[0].viewPort = new Rectangle(0, 0, stage.stageWidth, stage.stageHeight);
-            context3D.configureBackBuffer(stage.stageWidth, stage.stageHeight, antialiasing, false);
-            camera.resizeCameraStage(stage.stageWidth, stage.stageHeight);
         }
 
         private function mouseEventHandler(event:MouseEvent):void {
-            if(scene && stage && camera) {
+            if(scene && scene.mouseEnabled && stage && camera) {
                 var mouseEventType:String = event.type;
-                mousePosition.x = stage.mouseX;
-                mousePosition.y = stage.mouseY;
 
                 // transformation of normalized coordinates between -1 and 1
-                mousePosition.x = (mousePosition.x - 0.0) / camera.sceneWidth * 2.0 - 1.0;
-                mousePosition.y = -((mousePosition.y - 0.0) / camera.sceneHeight * 2.0 - 1.0);
+                mousePosition.x = (stage.mouseX - 0.0) / camera.sceneWidth * 2.0 - 1.0;
+                mousePosition.y = -((stage.mouseY - 0.0) / camera.sceneHeight * 2.0 - 1.0);
                 mousePosition.z = 0.0;
                 mousePosition.w = 1.0;
 
@@ -158,27 +146,23 @@ package de.nulldesign.nd2d.display {
             }
         }
 
-        private function timerEventHandler(event:Event):void {
+        protected function resizeStage(e:Event):void {
+            stage.stage3Ds[0].viewPort = new Rectangle(0, 0, stage.stageWidth, stage.stageHeight);
+            context3D.configureBackBuffer(stage.stageWidth, stage.stageHeight, antialiasing, false);
+            camera.resizeCameraStage(stage.stageWidth, stage.stageHeight);
+        }
+
+        protected function timerEventHandler(event:Event):void {
             var t:Number = getTimer() / 1000;
-
-            if(isPaused) return;
-
-            step(t);
-
-            if(scene) {
-                scene.stepNode(t);
-            }
-        }
-
-        protected function step(t:Number):void {
-            // overwrite and do your movement here
-        }
-
-        protected function draw(event:Event):void {
 
             if(scene) {
                 context3D.clear(scene.br, scene.bg, scene.bb, 1.0);
+
+                if(!isPaused)
+                    scene.stepNode(t);
+
                 scene.drawNode(context3D, camera);
+
                 context3D.present();
             }
         }

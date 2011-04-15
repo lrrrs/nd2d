@@ -143,7 +143,11 @@ package de.nulldesign.nd2d.display {
         protected var _width:Number;
 
         public function get width():Number {
-            return _width;
+            return _width * _scaleX;
+        }
+
+        public function set width(value:Number):void {
+            _scaleX = value / _width;
         }
 
         /**
@@ -152,7 +156,11 @@ package de.nulldesign.nd2d.display {
         protected var _height:Number;
 
         public function get height():Number {
-            return _height;
+            return _height * _scaleY;
+        }
+
+        public function set height(value:Number):void {
+            _scaleY = value / _height;
         }
 
         private var _visible:Boolean = true;
@@ -277,7 +285,8 @@ package de.nulldesign.nd2d.display {
         }
 
         public function set position(value:Point):void {
-            _position = value;
+            _position.x = value.x;
+            _position.y = value.y;
             x = _position.x;
             y = _position.y;
         }
@@ -366,33 +375,6 @@ package de.nulldesign.nd2d.display {
         /**
          * @private
          */
-        internal function drawNode(context:Context3D, camera:Camera2D):void {
-
-            if(!visible) {
-                return;
-            }
-
-            if(refreshPosition) {
-                refreshMatrix();
-            }
-
-            worldModelMatrix.identity();
-            worldModelMatrix.append(localModelMatrix);
-
-            if(parent) {
-                worldModelMatrix.append(parent.worldModelMatrix);
-            }
-
-            draw(context, camera);
-
-            for each(var child:Node2D in children) {
-                child.drawNode(context, camera);
-            }
-        }
-
-        /**
-         * @private
-         */
         internal function processMouseEvents(mousePosition:Vector3D, mouseEventType:String,
                                              projectionMatrix:Matrix3D):void {
 
@@ -415,7 +397,7 @@ package de.nulldesign.nd2d.display {
                 if(!isNaN(width) && !isNaN(height)) {
 
                     var oldMouseInNodeState:Boolean = mouseInNode;
-                    mouseInNode = (mouseX >= -width * 0.5 && mouseX <= width * 0.5 && mouseY >= -height * 0.5 && mouseY <= height * 0.5);
+                    mouseInNode = (mouseX >= -_width * 0.5 && mouseX <= _width * 0.5 && mouseY >= -_height * 0.5 && mouseY <= _height * 0.5);
 
                     if(mouseInNode) {
                         if(!oldMouseInNodeState) {
@@ -438,11 +420,12 @@ package de.nulldesign.nd2d.display {
 
             if(stage != value) {
 
-                stage = value;
-                if(stage) {
+                if(value) {
+                    stage = value;
                     dispatchEvent(new Event(Event.ADDED_TO_STAGE));
                 } else {
                     dispatchEvent(new Event(Event.REMOVED_FROM_STAGE));
+                    stage = value;
                 }
 
                 for each(var child:Node2D in children) {
@@ -458,9 +441,35 @@ package de.nulldesign.nd2d.display {
 
             step(t);
 
-            // TODO update local mouse! ??
             for each(var child:Node2D in children) {
                 child.stepNode(t);
+            }
+        }
+
+        /**
+         * @private
+         */
+        internal function drawNode(context:Context3D, camera:Camera2D):void {
+
+            if(!visible) {
+                return;
+            }
+
+            if(refreshPosition) {
+                refreshMatrix();
+            }
+
+            worldModelMatrix.identity();
+            worldModelMatrix.append(localModelMatrix);
+
+            if(parent) {
+                worldModelMatrix.append(parent.worldModelMatrix);
+            }
+
+            draw(context, camera);
+
+            for each(var child:Node2D in children) {
+                child.drawNode(context, camera);
             }
         }
 
