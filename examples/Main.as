@@ -78,8 +78,8 @@ package {
             scenes.push(new SpriteTest());
             scenes.push(new SpriteAnimTest());
             scenes.push(new StarFieldTest());
-            scenes.push(new ParticleSystemTest());
-            //scenes.push(new ParticleExplorer());
+            //scenes.push(new ParticleSystemTest());
+            scenes.push(new ParticleExplorer());
 
             nextBtn = new Sprite();
             nextBtn.graphics.beginFill(0xFF9900, 1.0);

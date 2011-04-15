@@ -44,7 +44,7 @@ package tests {
 
         public function Grid2DTest() {
 
-            grid = new MorphGrid(8, 8, new spriteTexture().bitmapData);
+            grid = new MorphGrid(12, 12, new spriteTexture().bitmapData);
             addChild(grid);
         }
 

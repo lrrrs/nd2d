@@ -178,9 +178,9 @@ package de.nulldesign.nd2d.display {
             this.scene = value;
 
             if(scene) {
-                scene.setStageRef(stage);
-                scene.setCameraRef(camera);
                 scene.statsRef = stats;
+                scene.setCameraRef(camera);
+                scene.setStageRef(stage);
             }
         }
 

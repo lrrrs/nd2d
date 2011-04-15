@@ -24,10 +24,10 @@ package tests {
             sprites = new Vector.<Sprite2D>();
             var tex:BitmapData = new cubeTexture().bitmapData;
             var s:Sprite2D;
-            spriteSheet = new Sprite2DCloud(4000, tex);
+            spriteSheet = new Sprite2DCloud(3000, tex);
             spriteSheet.blendMode = BlendModePresets.ADD;
 
-            for(var i:int = 0; i < 4000; i++) {
+            for(var i:int = 0; i < 3000; i++) {
                 s = new Sprite2D();
                 s.x = (Math.random() - Math.random()) * 800;
                 s.y = (Math.random() - Math.random()) * 600;

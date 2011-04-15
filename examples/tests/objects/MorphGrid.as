@@ -31,7 +31,6 @@
 
 package tests.objects {
     import de.nulldesign.nd2d.display.Grid2D;
-    import de.nulldesign.nd2d.materials.SpriteSheet;
 
     import flash.display.BitmapData;
 
@@ -45,10 +44,12 @@ package tests.objects {
 
             for(var i:int = 0; i < vertexList.length; i++) {
 
-                var newX:Number = vertexList[i].x + Math.sin(vertexList[i].x + t * 2.0) * 30.0;
-                var newY:Number = vertexList[i].y + Math.cos(vertexList[i].y + t * 2.0) * 30.0;
+                if(i > stepsX && i < vertexList.length - stepsX) {
+                    var newX:Number = vertexList[i].x + vertexList[i].x * Math.sin(vertexList[i].length + t * 2.0) * 0.1;
+                    var newY:Number = vertexList[i].y + vertexList[i].y * Math.cos(vertexList[i].length + t * 2.0) * 0.1;
 
-                material.modifyVertexInBuffer(vertexList[i].bufferIdx, newX, newY);
+                    material.modifyVertexInBuffer(vertexList[i].bufferIdx, newX, newY);
+                }
             }
         }
     }
