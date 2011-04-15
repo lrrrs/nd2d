@@ -87,132 +87,132 @@ package tests {
 
             if(!panel) {
                 panel = new Sprite();
+
+                var s:HUISlider;
+                var c:ColorChooser;
+                var nextY:Number = 5;
+
+                s = new HUISlider(panel, 0, nextY, "minStartX", changeHandler);
+                s.minimum = -stage.stageWidth / 2;
+                s.maximum = stage.stageWidth / 2;
+                nextY += 20;
+
+                s = new HUISlider(panel, 0, nextY, "maxStartX", changeHandler);
+                s.minimum = -stage.stageWidth / 2;
+                s.maximum = stage.stageWidth / 2;
+                nextY += 20;
+
+                s = new HUISlider(panel, 0, nextY, "minStartY", changeHandler);
+                s.minimum = -stage.stageHeight / 2;
+                s.maximum = stage.stageHeight / 2;
+                nextY += 20;
+
+                s = new HUISlider(panel, 0, nextY, "maxStartY", changeHandler);
+                s.minimum = -stage.stageHeight / 2;
+                s.maximum = stage.stageHeight / 2;
+                nextY += 20;
+
+                s = new HUISlider(panel, 0, nextY, "minSpeed", changeHandler);
+                s.minimum = 0;
+                s.maximum = 1000;
+                s.value = preset.minSpeed;
+                nextY += 20;
+
+                s = new HUISlider(panel, 0, nextY, "maxSpeed", changeHandler);
+                s.minimum = 0;
+                s.maximum = 1000;
+                s.value = preset.maxSpeed;
+                nextY += 20;
+
+                s = new HUISlider(panel, 0, nextY, "minEmitAngle", changeHandler);
+                s.minimum = 0;
+                s.maximum = 360;
+                s.value = preset.minEmitAngle;
+                nextY += 20;
+
+                s = new HUISlider(panel, 0, nextY, "maxEmitAngle", changeHandler);
+                s.minimum = 0;
+                s.maximum = 360;
+                s.value = preset.maxEmitAngle;
+                nextY += 20;
+
+                c = new ColorChooser(panel, 0, nextY, preset.startColor, changeHandler);
+                c.tag = 0;
+                nextY += 20;
+
+                c = new ColorChooser(panel, 0, nextY, preset.startColorVariance, changeHandler);
+                c.tag = 1;
+                nextY += 20;
+
+                s = new HUISlider(panel, 0, nextY, "startAlpha", changeHandler);
+                s.minimum = 0;
+                s.maximum = 1;
+                s.value = preset.startAlpha;
+                nextY += 20;
+
+                c = new ColorChooser(panel, 0, nextY, preset.endColor, changeHandler);
+                c.tag = 2;
+                nextY += 20;
+
+                c = new ColorChooser(panel, 0, nextY, preset.endColorVariance, changeHandler);
+                c.tag = 3;
+                nextY += 20;
+
+                s = new HUISlider(panel, 0, nextY, "endAlpha", changeHandler);
+                s.minimum = 0;
+                s.maximum = 1;
+                s.value = preset.endAlpha;
+                nextY += 20;
+
+                s = new HUISlider(panel, 0, nextY, "spawnDelay", changeHandler);
+                s.minimum = 0;
+                s.maximum = 100;
+                s.value = preset.spawnDelay;
+                nextY += 20;
+
+                s = new HUISlider(panel, 0, nextY, "minLife", changeHandler);
+                s.minimum = 0;
+                s.maximum = 10000;
+                s.value = preset.minLife;
+                nextY += 20;
+
+                s = new HUISlider(panel, 0, nextY, "maxLife", changeHandler);
+                s.minimum = 0;
+                s.maximum = 10000;
+                s.value = preset.maxLife;
+                nextY += 20;
+
+                s = new HUISlider(panel, 0, nextY, "minStartSize", changeHandler);
+                s.minimum = 0;
+                s.maximum = 10;
+                s.value = preset.minStartSize;
+                nextY += 20;
+
+                s = new HUISlider(panel, 0, nextY, "maxStartSize", changeHandler);
+                s.minimum = 0;
+                s.maximum = 10;
+                s.value = preset.maxStartSize;
+                nextY += 20;
+
+                s = new HUISlider(panel, 0, nextY, "minEndSize", changeHandler);
+                s.minimum = 0;
+                s.maximum = 10;
+                s.value = preset.minEndSize;
+                nextY += 20;
+
+                s = new HUISlider(panel, 0, nextY, "maxEndSize", changeHandler);
+                s.minimum = 0;
+                s.maximum = 10;
+                s.value = preset.maxEndSize;
+                nextY += 20;
+
+                s = new HUISlider(panel, 0, nextY, "maxParticles", changeHandler);
+                s.minimum = 0;
+                s.maximum = 10000;
+                s.value = maxParticles;
             }
 
             stage.addChild(panel);
-
-            var s:HUISlider;
-            var c:ColorChooser;
-            var nextY:Number = 5;
-
-            s = new HUISlider(panel, 0, nextY, "minStartX", changeHandler);
-            s.minimum = -stage.stageWidth / 2;
-            s.maximum = stage.stageWidth / 2;
-            nextY += 20;
-
-            s = new HUISlider(panel, 0, nextY, "maxStartX", changeHandler);
-            s.minimum = -stage.stageWidth / 2;
-            s.maximum = stage.stageWidth / 2;
-            nextY += 20;
-
-            s = new HUISlider(panel, 0, nextY, "minStartY", changeHandler);
-            s.minimum = -stage.stageHeight / 2;
-            s.maximum = stage.stageHeight / 2;
-            nextY += 20;
-
-            s = new HUISlider(panel, 0, nextY, "maxStartY", changeHandler);
-            s.minimum = -stage.stageHeight / 2;
-            s.maximum = stage.stageHeight / 2;
-            nextY += 20;
-
-            s = new HUISlider(panel, 0, nextY, "minSpeed", changeHandler);
-            s.minimum = 0;
-            s.maximum = 1000;
-            s.value = preset.minSpeed;
-            nextY += 20;
-
-            s = new HUISlider(panel, 0, nextY, "maxSpeed", changeHandler);
-            s.minimum = 0;
-            s.maximum = 1000;
-            s.value = preset.maxSpeed;
-            nextY += 20;
-
-            s = new HUISlider(panel, 0, nextY, "minEmitAngle", changeHandler);
-            s.minimum = 0;
-            s.maximum = 360;
-            s.value = preset.minEmitAngle;
-            nextY += 20;
-
-            s = new HUISlider(panel, 0, nextY, "maxEmitAngle", changeHandler);
-            s.minimum = 0;
-            s.maximum = 360;
-            s.value = preset.maxEmitAngle;
-            nextY += 20;
-
-            c = new ColorChooser(panel, 0, nextY, preset.startColor, changeHandler);
-            c.tag = 0;
-            nextY += 20;
-
-            c = new ColorChooser(panel, 0, nextY, preset.startColorVariance, changeHandler);
-            c.tag = 1;
-            nextY += 20;
-
-            s = new HUISlider(panel, 0, nextY, "startAlpha", changeHandler);
-            s.minimum = 0;
-            s.maximum = 1;
-            s.value = preset.startAlpha;
-            nextY += 20;
-
-            c = new ColorChooser(panel, 0, nextY, preset.endColor, changeHandler);
-            c.tag = 2;
-            nextY += 20;
-
-            c = new ColorChooser(panel, 0, nextY, preset.endColorVariance, changeHandler);
-            c.tag = 3;
-            nextY += 20;
-
-            s = new HUISlider(panel, 0, nextY, "endAlpha", changeHandler);
-            s.minimum = 0;
-            s.maximum = 1;
-            s.value = preset.endAlpha;
-            nextY += 20;
-
-            s = new HUISlider(panel, 0, nextY, "spawnDelay", changeHandler);
-            s.minimum = 0;
-            s.maximum = 100;
-            s.value = preset.spawnDelay;
-            nextY += 20;
-
-            s = new HUISlider(panel, 0, nextY, "minLife", changeHandler);
-            s.minimum = 0;
-            s.maximum = 10000;
-            s.value = preset.minLife;
-            nextY += 20;
-
-            s = new HUISlider(panel, 0, nextY, "maxLife", changeHandler);
-            s.minimum = 0;
-            s.maximum = 10000;
-            s.value = preset.maxLife;
-            nextY += 20;
-
-            s = new HUISlider(panel, 0, nextY, "minStartSize", changeHandler);
-            s.minimum = 0;
-            s.maximum = 10;
-            s.value = preset.minStartSize;
-            nextY += 20;
-
-            s = new HUISlider(panel, 0, nextY, "maxStartSize", changeHandler);
-            s.minimum = 0;
-            s.maximum = 10;
-            s.value = preset.maxStartSize;
-            nextY += 20;
-
-            s = new HUISlider(panel, 0, nextY, "minEndSize", changeHandler);
-            s.minimum = 0;
-            s.maximum = 10;
-            s.value = preset.minEndSize;
-            nextY += 20;
-
-            s = new HUISlider(panel, 0, nextY, "maxEndSize", changeHandler);
-            s.minimum = 0;
-            s.maximum = 10;
-            s.value = preset.maxEndSize;
-            nextY += 20;
-
-            s = new HUISlider(panel, 0, nextY, "maxParticles", changeHandler);
-            s.minimum = 0;
-            s.maximum = 10000;
-            s.value = maxParticles;
         }
 
         private function changeHandler(e:Event):void {

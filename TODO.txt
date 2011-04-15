@@ -13,3 +13,4 @@
 - PVTR support
 - scene transitions???
 - render to texture
+- UV manipulation for Sprite2D: scrollX / Y

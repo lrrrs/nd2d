@@ -129,6 +129,7 @@ package de.nulldesign.nd2d.display {
         }
 
         public function set rotation(value:Number):void {
+            invalidated = true;
             _rotation = value;
         }
 
