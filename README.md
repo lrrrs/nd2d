@@ -18,6 +18,19 @@ Useful links:
 
 ![Examples](http://nulldesign.de/nd2d/nd2d_examples.jpg)
 
+# Features:
+
+- Flash-displaylist-like hierarchy for 2D elements
+- 2D sprites with spritesheets for animation, tinting, blendmodes, pivot points
+- Scenes
+- 2D camera
+- SpriteClouds for massive sprite rendering (batch drawing)
+- Powerful particlesystem that runs entirely on the GPU
+- Full mouseevent support for 2D sprites
+- Utils (Color mixing, random number generation, …)
+- Fast bitmap fonts
+- Distortable 2D grid for wave / ripple effects
+
 # ND2D Performance:
 
 It's already ok, but it could be better in a few places. You'll notice framerate drops when using the Sprite2DCloud and Font2D and in a few other places  at the moment. Things will change, be patient ;)
