@@ -31,6 +31,7 @@
 
 package de.nulldesign.nd2d.display {
     import flash.display.Sprite;
+    import flash.display.Stage3D;
     import flash.display3D.Context3D;
     import flash.display3D.Context3DCompareMode;
     import flash.display3D.Context3DTriangleFace;
@@ -43,6 +44,8 @@ package de.nulldesign.nd2d.display {
     import flash.utils.getTimer;
 
     import net.hires.debug.Stats;
+
+    import spark.primitives.Rect;
 
     /**
      * <p>Baseclass for ND2D</p>
@@ -77,6 +80,7 @@ package de.nulldesign.nd2d.display {
         private var mousePosition:Vector3D = new Vector3D(0.0, 0.0, 0.0);
         private var antialiasing:uint = 2;
         private var enableErrorChecking:Boolean = true;
+        private var bounds:Rectangle;
 
         protected var stats:Stats;
 
@@ -91,9 +95,10 @@ package de.nulldesign.nd2d.display {
             stats.visible = statsVisible;
         }
 
-        public function World2D(renderMode:String, frameRate:uint) {
+        public function World2D(renderMode:String, frameRate:uint, bounds:Rectangle = null) {
             this.renderMode = renderMode;
             this.frameRate = frameRate;
+            this.bounds = bounds;
             this.stats = Stats(addChild(new Stats()));
             addEventListener(Event.ADDED_TO_STAGE, addedToStage);
         }
@@ -121,10 +126,8 @@ package de.nulldesign.nd2d.display {
             context3D.setCulling(Context3DTriangleFace.NONE);
             context3D.setDepthTest(false, Context3DCompareMode.ALWAYS);
 
-            stage.stage3Ds[0].viewPort = new Rectangle(0, 0, stage.stageWidth, stage.stageHeight);
-            context3D.configureBackBuffer(stage.stageWidth, stage.stageHeight, antialiasing, false);
+            resizeStage();
 
-            camera.resizeCameraStage(stage.stageWidth, stage.stageHeight);
             stats.driverInfo = context3D.driverInfo;
 
             renderTimer = new Timer(1000 / frameRate);
@@ -146,10 +149,11 @@ package de.nulldesign.nd2d.display {
             }
         }
 
-        protected function resizeStage(e:Event):void {
-            stage.stage3Ds[0].viewPort = new Rectangle(0, 0, stage.stageWidth, stage.stageHeight);
-            context3D.configureBackBuffer(stage.stageWidth, stage.stageHeight, antialiasing, false);
-            camera.resizeCameraStage(stage.stageWidth, stage.stageHeight);
+        protected function resizeStage(e:Event = null):void {
+            var rect:Rectangle = bounds ? bounds : new Rectangle(0, 0, stage.stageWidth, stage.stageHeight);
+            stage.stage3Ds[0].viewPort = rect;
+            context3D.configureBackBuffer(rect.width, rect.height, antialiasing, false);
+            camera.resizeCameraStage(rect.width, rect.height);
         }
 
         protected function timerEventHandler(event:Event):void {

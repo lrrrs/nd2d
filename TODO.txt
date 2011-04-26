@@ -4,7 +4,6 @@
 - configurable debugging flag: context3D.enableErrorChecking
 - REPLACE ortographic camera with perspective one! for rotationX/Y/Z
 - textureatlas??
-- picking pixelexact
 - more blendmodes
 - glow
 - blur
@@ -13,4 +12,4 @@
 - PVTR support
 - scene transitions???
 - render to texture
-- UV manipulation for Sprite2D: scrollX / Y
+- UV manipulations Sprite2D: scrollX / Y
