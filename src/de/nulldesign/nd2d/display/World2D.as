@@ -31,7 +31,6 @@
 
 package de.nulldesign.nd2d.display {
     import flash.display.Sprite;
-    import flash.display.Stage3D;
     import flash.display3D.Context3D;
     import flash.display3D.Context3DCompareMode;
     import flash.display3D.Context3DTriangleFace;
@@ -44,8 +43,6 @@ package de.nulldesign.nd2d.display {
     import flash.utils.getTimer;
 
     import net.hires.debug.Stats;
-
-    import spark.primitives.Rect;
 
     /**
      * <p>Baseclass for ND2D</p>
