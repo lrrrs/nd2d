@@ -17,8 +17,7 @@ Useful links:
 [ND2D API Documentation](http://www.nulldesign.de/nd2d/docs/) | [Setting up Incubator for IntelliJ](http://www.lidev.com.ar/?p=422)
 
 ![Examples](http://nulldesign.de/nd2d/nd2d_examples.jpg)
-
-[Live Text Examples](http://nulldesign.de/nd2d/tests/)
+[Live ND2D Test Examples](http://nulldesign.de/nd2d/tests/)
 
 # Features:
 
