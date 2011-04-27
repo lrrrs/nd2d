@@ -67,9 +67,9 @@ package de.nulldesign.nd2d.display {
     public class World2D extends Sprite {
 
         protected var camera:Camera2D = new Camera2D(1, 1);
+        protected var context3D:Context3D;
 
         private var renderTimer:Timer;
-        private var context3D:Context3D;
         private var renderMode:String;
         private var scene:Scene2D;
         private var frameRate:uint;
@@ -78,6 +78,9 @@ package de.nulldesign.nd2d.display {
         private var antialiasing:uint = 2;
         private var enableErrorChecking:Boolean = true;
         private var bounds:Rectangle;
+
+        private var deviceInitialized:Boolean = false;
+        private var deviceWasLost:Boolean = false;
 
         protected var stats:Stats;
 
@@ -116,7 +119,7 @@ package de.nulldesign.nd2d.display {
 
         private function context3DCreated(e:Event):void {
 
-            stage.stage3Ds[0].removeEventListener(Event.CONTEXT3D_CREATE, context3DCreated);
+            //stage.stage3Ds[0].removeEventListener(Event.CONTEXT3D_CREATE, context3DCreated);
 
             context3D = stage.stage3Ds[0].context3D;
             context3D.enableErrorChecking = enableErrorChecking;
@@ -127,11 +130,19 @@ package de.nulldesign.nd2d.display {
 
             stats.driverInfo = context3D.driverInfo;
 
-            renderTimer = new Timer(1000 / frameRate);
-            renderTimer.addEventListener(TimerEvent.TIMER, timerEventHandler);
-            renderTimer.start();
+            if(!renderTimer) {
+                renderTimer = new Timer(1000 / frameRate);
+                renderTimer.addEventListener(TimerEvent.TIMER, timerEventHandler);
+                renderTimer.start();
+            }
+
+            // means we got the Event.CONTEXT3D_CREATE for the second time, the device was lost. reinit everything
+            if(deviceInitialized) {
+                deviceWasLost = true;
+            }
 
             //addEventListener(Event.ENTER_FRAME, timerEventHandler);
+            deviceInitialized = true;
         }
 
         private function mouseEventHandler(event:MouseEvent):void {
@@ -164,9 +175,11 @@ package de.nulldesign.nd2d.display {
                 if(!isPaused)
                     scene.stepNode(t);
 
-                scene.drawNode(context3D, camera);
+                scene.drawNode(context3D, camera, deviceWasLost);
 
                 context3D.present();
+
+                deviceWasLost = false;
             }
         }
 

@@ -137,7 +137,7 @@ package de.nulldesign.nd2d.display {
             }
         }
 
-        override internal function drawNode(context:Context3D, camera:Camera2D):void {
+        override internal function drawNode(context:Context3D, camera:Camera2D, handleDeviceLoss:Boolean):void {
 
             if(!visible) {
                 return;
@@ -154,10 +154,18 @@ package de.nulldesign.nd2d.display {
                 worldModelMatrix.append(parent.worldModelMatrix);
             }
 
-            draw(context, camera);
+            if(handleDeviceLoss) {
+                material.texture = null;
+                program = null;
+                vertexBuffer = null;
+                indexBuffer = null;
+                uvInited = false;
+            }
+
+            draw(context, camera, handleDeviceLoss);
         }
 
-        override protected function draw(context:Context3D, camera:Camera2D):void {
+        override protected function draw(context:Context3D, camera:Camera2D, handleDeviceLoss:Boolean):void {
 
             if(!material.texture) {
                 material.texture = TextureHelper.generateTextureFromBitmap(context, material.bitmapData, true);

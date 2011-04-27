@@ -166,13 +166,14 @@ package de.nulldesign.nd2d.materials {
             }
         }
 
-        protected function prepareForRender(context:Context3D):void {
+        protected function prepareForRender(context:Context3D):Boolean {
 
             context.setProgram(program);
             context.setBlendFactors(blendMode.src, blendMode.dst);
 
             if(vertexRegisterMap && !vertexBufferHelper) {
-                vertexBufferHelper = new VertexBufferHelper(context, vertexRegisterMap.inputVertexRegisters, vertexBuffer);
+                vertexBufferHelper = new VertexBufferHelper(context, vertexRegisterMap.inputVertexRegisters,
+                                                            vertexBuffer);
             }
 
             clipSpaceMatrix.identity();
@@ -184,13 +185,28 @@ package de.nulldesign.nd2d.materials {
                 vertexBuffer.uploadFromVector(mVertexBuffer, 0, mVertexBuffer.length / numFloatsPerVertex);
             }
 
+            return true;
             // overwrite and set parameter and vertexbuffers for program
+        }
+
+        public function handleDeviceLoss():void {
+            indexBuffer = null;
+            vertexBuffer = null;
+            mIndexBuffer = null;
+            mVertexBuffer = null;
+            program = null;
+            vertexRegisterMap = null;
+            fragmentRegisterMap = null;
+            parameterBufferHelper = null;
+            vertexBufferHelper = null;
+            needUploadVertexBuffer = true;
         }
 
         public function render(context:Context3D, faceList:Vector.<Face>, numTris:uint):void {
             generateBufferData(context, faceList);
-            prepareForRender(context);
-            context.drawTriangles(indexBuffer, 0, numTris);
+            if(prepareForRender(context)) {
+                context.drawTriangles(indexBuffer, 0, numTris);
+            }
             clearAfterRender(context);
         }
 

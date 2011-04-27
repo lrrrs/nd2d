@@ -448,7 +448,7 @@ package de.nulldesign.nd2d.display {
         /**
          * @private
          */
-        internal function drawNode(context:Context3D, camera:Camera2D):void {
+        internal function drawNode(context:Context3D, camera:Camera2D, handleDeviceLoss:Boolean):void {
 
             if(!visible) {
                 return;
@@ -465,10 +465,10 @@ package de.nulldesign.nd2d.display {
                 worldModelMatrix.append(parent.worldModelMatrix);
             }
 
-            draw(context, camera);
+            draw(context, camera, handleDeviceLoss);
 
             for each(var child:Node2D in children) {
-                child.drawNode(context, camera);
+                child.drawNode(context, camera, handleDeviceLoss);
             }
         }
 
@@ -477,7 +477,7 @@ package de.nulldesign.nd2d.display {
                                          false, (mouseEventType == MouseEvent.MOUSE_DOWN), 0));
         }
 
-        protected function draw(context:Context3D, camera:Camera2D):void {
+        protected function draw(context:Context3D, camera:Camera2D, handleDeviceLoss:Boolean):void {
             // overwrite in extended classes
         }
 

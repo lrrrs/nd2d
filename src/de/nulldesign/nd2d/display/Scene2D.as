@@ -68,13 +68,13 @@ package de.nulldesign.nd2d.display {
             camera = value;
         }
 
-        override internal function drawNode(context:Context3D, camera:Camera2D):void {
+        override internal function drawNode(context:Context3D, camera:Camera2D, handleDeviceLoss:Boolean):void {
 
             var totalTris:int = 0;
             var drawCalls:int = 0;
 
             for each(var child:Node2D in children) {
-                child.drawNode(context, camera);
+                child.drawNode(context, camera, handleDeviceLoss);
                 totalTris += child.numTris;
                 drawCalls += child.drawCalls;
             }

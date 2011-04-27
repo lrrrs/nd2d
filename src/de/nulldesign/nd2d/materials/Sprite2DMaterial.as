@@ -65,12 +65,22 @@ package de.nulldesign.nd2d.materials {
             this.drawCalls = 1;
         }
 
-        override protected function prepareForRender(context:Context3D):void {
+
+        override public function handleDeviceLoss():void {
+            super.handleDeviceLoss();
+            texture = null;
+        }
+
+        override protected function prepareForRender(context:Context3D):Boolean {
 
             super.prepareForRender(context);
 
-            if(!texture) {
+            if(!texture && bitmapData) {
                 texture = TextureHelper.generateTextureFromBitmap(context, bitmapData, true);
+            }
+
+            if(!texture) {
+                return false;
             }
 
             // TODO SET TEXTURE BY NAME!!!
@@ -94,46 +104,49 @@ package de.nulldesign.nd2d.materials {
             parameterBufferHelper.update();
 
             vertexBufferHelper.setVertexBuffers();
-        }
-/*
-        override public function render(context:Context3D, faceList:Vector.<Face>, numTris:uint):void {
-            if(true) {
-                super.render(context, faceList, numTris);
-            } else {
-                renderBlur(context, faceList, numTris);
-            }
+
+            return true;
         }
 
-        protected function renderBlur(context:Context3D, faceList:Vector.<Face>, numTris:uint):void {
+        /*
+         override public function render(context:Context3D, faceList:Vector.<Face>, numTris:uint):void {
+         if(true) {
+         super.render(context, faceList, numTris);
+         } else {
+         renderBlur(context, faceList, numTris);
+         }
+         }
 
-            generateBufferData(context, faceList);
-            prepareForRender(context);
+         protected function renderBlur(context:Context3D, faceList:Vector.<Face>, numTris:uint):void {
 
-            if(!blurTexture) {
-                textureDimensions = TextureHelper.getTextureDimensionsFromBitmap(bitmapData);
-                blurTexture = context.createTexture(textureDimensions.x, textureDimensions.y,
-                                                    Context3DTextureFormat.BGRA, true);
-            }
+         generateBufferData(context, faceList);
+         prepareForRender(context);
 
-            // first pass
-            context.setRenderToTexture(blurTexture, false, 2, 0);
-            context.clear(0.3, 0.3, 0.3);
+         if(!blurTexture) {
+         textureDimensions = TextureHelper.getTextureDimensionsFromBitmap(bitmapData);
+         blurTexture = context.createTexture(textureDimensions.x, textureDimensions.y,
+         Context3DTextureFormat.BGRA, true);
+         }
 
-            var m:Matrix3D = new Matrix3D();
-            m.appendScale(1 / textureDimensions.x * 2, -1 / textureDimensions.y * 2, 1.0);
+         // first pass
+         context.setRenderToTexture(blurTexture, false, 2, 0);
+         context.clear(0.3, 0.3, 0.3);
 
-            context.setProgramConstantsFromMatrix(Context3DProgramType.VERTEX, 0, m, true);
-            context.drawTriangles(indexBuffer, 0, numTris);
+         var m:Matrix3D = new Matrix3D();
+         m.appendScale(1 / textureDimensions.x * 2, -1 / textureDimensions.y * 2, 1.0);
 
-            // second pass
-            context.setRenderToBackBuffer();
-            context.setTextureAt(0, blurTexture);
-            context.setProgramConstantsFromMatrix(Context3DProgramType.VERTEX, 0, clipSpaceMatrix, true);
-            context.drawTriangles(indexBuffer, 0, numTris);
+         context.setProgramConstantsFromMatrix(Context3DProgramType.VERTEX, 0, m, true);
+         context.drawTriangles(indexBuffer, 0, numTris);
 
-            clearAfterRender(context);
-        }
-*/
+         // second pass
+         context.setRenderToBackBuffer();
+         context.setTextureAt(0, blurTexture);
+         context.setProgramConstantsFromMatrix(Context3DProgramType.VERTEX, 0, clipSpaceMatrix, true);
+         context.drawTriangles(indexBuffer, 0, numTris);
+
+         clearAfterRender(context);
+         }
+         */
         override protected function clearAfterRender(context:Context3D):void {
             super.clearAfterRender(context);
             context.setTextureAt(0, null);

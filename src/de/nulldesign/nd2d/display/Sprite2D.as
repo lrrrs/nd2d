@@ -105,9 +105,7 @@ package de.nulldesign.nd2d.display {
                 spriteSheet.update(t);
         }
 
-        override protected function draw(context:Context3D, camera:Camera2D):void {
-
-            super.draw(context, camera);
+        override protected function draw(context:Context3D, camera:Camera2D, handleDeviceLoss:Boolean):void {
 
             material.blendMode = blendMode;
             material.modelViewMatrix = worldModelMatrix;
@@ -124,6 +122,11 @@ package de.nulldesign.nd2d.display {
                 material.color.w = a;
             }
 
+            if(handleDeviceLoss) {
+                material.handleDeviceLoss();
+            }
+
+            // in case of a device lost the texture will be gone
             material.render(context, faceList, numTris);
         }
 

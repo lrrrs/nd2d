@@ -30,9 +30,17 @@
  */
 
 package de.nulldesign.nd2d.display {
+    import de.nulldesign.nd2d.events.TextureEvent;
+
     import flash.display3D.Context3D;
     import flash.display3D.Context3DTextureFormat;
     import flash.display3D.textures.Texture;
+
+    /**
+     * Dispatched when the generated texture is created.
+     * @eventType de.nulldesign.nd2d.events.TextureEvent.READY
+     */
+    [Event(name="textureReady", type="de.nulldesign.nd2d.events.TextureEvent")]
 
     public class TextureRenderer extends Node2D {
 
@@ -47,10 +55,11 @@ package de.nulldesign.nd2d.display {
             _height = textureHeight;
         }
 
-        override internal function drawNode(context:Context3D, camera:Camera2D):void {
+        override internal function drawNode(context:Context3D, camera:Camera2D, handleDeviceLoss:Boolean):void {
 
-            if(!texture) {
+            if(!texture || handleDeviceLoss) {
                 texture = context.createTexture(width, height, Context3DTextureFormat.BGRA, true);
+                dispatchEvent(new TextureEvent(TextureEvent.READY));
             }
 
             context.setRenderToTexture(texture, false, 2, 0);
@@ -62,7 +71,7 @@ package de.nulldesign.nd2d.display {
 
             var visibleState:Boolean = renderNode.visible;
             renderNode.visible = true;
-            renderNode.drawNode(context, texCamera);
+            renderNode.drawNode(context, texCamera, handleDeviceLoss);
             renderNode.visible = visibleState;
 
             context.setRenderToBackBuffer();

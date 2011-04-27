@@ -178,13 +178,15 @@ package de.nulldesign.nd2d.display {
             }
         }
 
-        override protected function draw(context:Context3D, camera:Camera2D):void {
-
-            super.draw(context, camera);
+        override protected function draw(context:Context3D, camera:Camera2D, handleDeviceLoss:Boolean):void {
 
             material.blendMode = blendMode;
             material.modelViewMatrix = worldModelMatrix;
             material.projectionMatrix = camera.getViewProjectionMatrix();
+
+            if(handleDeviceLoss) {
+                material.handleDeviceLoss();
+            }
 
             material.currentTime = currentTime;
             material.gravity = gravity;

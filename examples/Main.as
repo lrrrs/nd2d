@@ -40,11 +40,14 @@ package {
     import flash.display.StageScaleMode;
     import flash.display3D.Context3DRenderMode;
     import flash.events.Event;
+    import flash.events.KeyboardEvent;
     import flash.events.MouseEvent;
 
     import flash.text.TextField;
 
     import flash.text.TextFormat;
+
+    import flash.ui.Keyboard;
 
     import tests.Font2DTest;
     import tests.Grid2DTest;
@@ -88,7 +91,7 @@ package {
             scenes.push(new StarFieldTest());
             scenes.push(new ParticleSystemTest());
             scenes.push(new TextureRendererTest());
-            scenes.push(new ParticleExplorer());
+            //scenes.push(new ParticleExplorer());
 
             nextBtn = new Sprite();
             nextBtn.graphics.beginFill(0xFF9900, 1.0);
@@ -110,6 +113,15 @@ package {
 
             activeSceneIdx = 9;
             nextBtnClick(null);
+
+            stage.addEventListener(KeyboardEvent.KEY_UP, keyUp);
+        }
+
+        // simulate device loss
+        private function keyUp(e:KeyboardEvent):void {
+            if(e.keyCode == Keyboard.D) {
+                context3D.dispose();
+            }
         }
 
         private function nextBtnClick(e:MouseEvent):void {

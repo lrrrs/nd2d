@@ -34,6 +34,7 @@ package tests {
     import de.nulldesign.nd2d.display.Scene2D;
     import de.nulldesign.nd2d.display.Sprite2D;
     import de.nulldesign.nd2d.display.TextureRenderer;
+    import de.nulldesign.nd2d.events.TextureEvent;
 
     import flash.display.BitmapData;
 
@@ -62,9 +63,23 @@ package tests {
             //s.visible = false;
 
             texRenderer = new TextureRenderer(s, 256, 256);
+            texRenderer.addEventListener(TextureEvent.READY, textureReady);
 
             addChild(s);
             addChild(texRenderer);
+        }
+
+        private function textureReady(e:TextureEvent):void {
+
+            if(texturedGrid) {
+                removeChild(texturedGrid);
+                texturedGrid = null;
+            }
+
+            texturedGrid = new MorphGrid(10, 10);
+            texturedGrid.initWithTexture(texRenderer.texture, texRenderer.width, texRenderer.height);
+            texturedGrid.tint = 0x99ff00;
+            addChild(texturedGrid);
         }
 
         override protected function step(t:Number):void {
@@ -73,13 +88,6 @@ package tests {
 
             //s.rotation += 1;
             s2.rotation += 1;
-
-            if(texRenderer.texture && !texturedGrid) {
-                texturedGrid = new MorphGrid(10, 10);
-                texturedGrid.initWithTexture(texRenderer.texture, texRenderer.width, texRenderer.height);
-                texturedGrid.tint = 0x99ff00;
-                addChild(texturedGrid);
-            }
 
             if(texturedGrid) {
                 texturedGrid.x = stage.stageWidth * 0.5 + texturedGrid.width * 0.55;
