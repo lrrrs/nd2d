@@ -36,4 +36,4 @@ Useful links:
 
 # ND2D Performance:
 
-It's already ok, but it could be better in a few places. You'll notice framerate drops when using the Sprite2DCloud and Font2D and in a few other places  at the moment. Things will change, be patient. I'm waiting for the next PixelBender3D release ;)
+You'll notice framerate drops when using the Sprite2DCloud and Font2D at the moment with a huge number of sprites / text, since batch rendering is not yet fully implemented. I'm waiting for the next PixelBender3D release to make this possible. There will be a huge performance boost then ;)
