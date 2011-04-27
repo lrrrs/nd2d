@@ -60,7 +60,10 @@ package de.nulldesign.nd2d.display {
             texCamera.x = -renderNode.x + width * 0.5;
             texCamera.y = -renderNode.y + height * 0.5;
 
+            var visibleState:Boolean = renderNode.visible;
+            renderNode.visible = true;
             renderNode.drawNode(context, texCamera);
+            renderNode.visible = visibleState;
 
             context.setRenderToBackBuffer();
         }

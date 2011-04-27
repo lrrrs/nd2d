@@ -59,6 +59,7 @@ package tests {
             s2.scaleX = s2.scaleY = 0.5;
 
             s.addChild(s2);
+            //s.visible = false;
 
             texRenderer = new TextureRenderer(s, 256, 256);
 
@@ -74,7 +75,7 @@ package tests {
             s2.rotation += 1;
 
             if(texRenderer.texture && !texturedGrid) {
-                texturedGrid = new MorphGrid(12, 12);
+                texturedGrid = new MorphGrid(10, 10);
                 texturedGrid.initWithTexture(texRenderer.texture, texRenderer.width, texRenderer.height);
                 texturedGrid.tint = 0x99ff00;
                 addChild(texturedGrid);

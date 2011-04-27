@@ -30,6 +30,8 @@
  */
 
 package {
+    import avmplus.getQualifiedClassName;
+
     import de.nulldesign.nd2d.display.Scene2D;
     import de.nulldesign.nd2d.display.World2D;
 
@@ -39,6 +41,10 @@ package {
     import flash.display3D.Context3DRenderMode;
     import flash.events.Event;
     import flash.events.MouseEvent;
+
+    import flash.text.TextField;
+
+    import flash.text.TextFormat;
 
     import tests.Font2DTest;
     import tests.Grid2DTest;
@@ -61,6 +67,7 @@ package {
         private var activeSceneIdx:uint = 0;
 
         private var nextBtn:Sprite;
+        private var sceneText:TextField;
 
         public function Main() {
 
@@ -81,7 +88,7 @@ package {
             scenes.push(new StarFieldTest());
             scenes.push(new ParticleSystemTest());
             scenes.push(new TextureRendererTest());
-            //scenes.push(new ParticleExplorer());
+            scenes.push(new ParticleExplorer());
 
             nextBtn = new Sprite();
             nextBtn.graphics.beginFill(0xFF9900, 1.0);
@@ -89,6 +96,14 @@ package {
             nextBtn.buttonMode = true;
             nextBtn.addEventListener(MouseEvent.CLICK, nextBtnClick);
             addChild(nextBtn);
+
+            var tf:TextFormat = new TextFormat("Arial", 11, 0xFFFFFF, true);
+
+            sceneText = new TextField();
+            sceneText.width = 300;
+            sceneText.defaultTextFormat = tf;
+
+            addChild(sceneText);
 
             stage.addEventListener(Event.RESIZE, stageResize);
             stageResize(null);
@@ -100,7 +115,11 @@ package {
         private function nextBtnClick(e:MouseEvent):void {
 
             camera.reset();
+
+            sceneText.text = getQualifiedClassName(scenes[activeSceneIdx]);
+
             setActiveScene(scenes[activeSceneIdx++]);
+
             if(activeSceneIdx > scenes.length - 1) {
                 activeSceneIdx = 0;
             }
@@ -109,6 +128,9 @@ package {
         private function stageResize(e:Event):void {
             nextBtn.x = 2;
             nextBtn.y = stage.stageHeight - 22;
+
+            sceneText.x = 25;
+            sceneText.y = stage.stageHeight - 20;
         }
     }
 }
