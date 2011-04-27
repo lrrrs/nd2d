@@ -9,7 +9,7 @@ You have to compile ND2D with the incubator playerglobal.swc and pb3dlib.swc to 
 ND2D was built to make an ease use of hardware accelerated 2D content in the Flashplayer. The aim is to keep things simple and reintroduce familiar concepts. ND2D has a displaylist and quite the same methods to modify sprites as you are used to.
 If you want to run the ParticleExplorer, you have to download the minimalcomps from Keith Peters as well: [Minimal Comps](http://www.minimalcomps.com/)
 
-!!! It's still in early beta, so there will be bugs and things that do not work. Please file issues to the bugbase!!!
+!!! It's still in early beta, so there will be bugs and things that do not work properly. Please file issues to the bugbase!!!
 
 If you want to contribute, make bugfixes or extend the engine, feel free to fork it or email me: lars[at]nulldesign.de
 
@@ -17,6 +17,8 @@ Useful links:
 [ND2D API Documentation](http://www.nulldesign.de/nd2d/docs/) | [Setting up Incubator for IntelliJ](http://www.lidev.com.ar/?p=422)
 
 ![Examples](http://nulldesign.de/nd2d/nd2d_examples.jpg)
+
+[Live Text Examples](http://nulldesign.de/nd2d/tests/)
 
 # Features:
 
