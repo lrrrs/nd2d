@@ -30,13 +30,8 @@ Useful links:
 - Utils (Color mixing, random number generation, …)
 - Fast bitmap fonts
 - Distortable 2D grid for wave / ripple effects
+- Texturerenderer for displaylist elements
 
 # ND2D Performance:
 
-It's already ok, but it could be better in a few places. You'll notice framerate drops when using the Sprite2DCloud and Font2D and in a few other places  at the moment. Things will change, be patient ;)
-
-# Change Log
-
-2011-04-12 - r01
-
-* initial add
+It's already ok, but it could be better in a few places. You'll notice framerate drops when using the Sprite2DCloud and Font2D and in a few other places  at the moment. Things will change, be patient. I'm waiting for the next PixelBender3D release ;)
