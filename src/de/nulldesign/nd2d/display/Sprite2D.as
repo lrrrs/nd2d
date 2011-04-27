@@ -37,6 +37,7 @@ package de.nulldesign.nd2d.display {
 
     import flash.display.BitmapData;
     import flash.display3D.Context3D;
+    import flash.display3D.textures.Texture;
 
     /**
      * <p>2D sprite class</p>
@@ -63,11 +64,20 @@ package de.nulldesign.nd2d.display {
             }
 
             if(bitmapTexture) {
-                initWithBitmapData(bitmapTexture);
+                initMaterial(bitmapTexture);
             }
         }
 
-        protected function initWithBitmapData(bitmapTexture:BitmapData):void {
+        public function initWithTexture(texture:Texture, width:Number, height:Number):void {
+            _width = width;
+            _height = height;
+
+            material = new Sprite2DMaterial(null, null);
+            material.texture = texture;
+            faceList = TextureHelper.generateQuadFromDimensions(width, height);
+        }
+
+        protected function initMaterial(bitmapTexture:BitmapData):void {
 
             _width = spriteSheet ? spriteSheet.width : bitmapTexture.width;
             _height = spriteSheet ? spriteSheet.height : bitmapTexture.height;

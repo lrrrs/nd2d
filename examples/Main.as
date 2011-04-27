@@ -50,6 +50,7 @@ package {
     import tests.SpriteHierarchyTest;
     import tests.SpriteTest;
     import tests.StarFieldTest;
+    import tests.TextureRendererTest;
 
     //[SWF(width="1000", height="550", frameRate="60", backgroundColor="#000000")]
 
@@ -78,8 +79,9 @@ package {
             scenes.push(new SpriteTest());
             scenes.push(new SpriteAnimTest());
             scenes.push(new StarFieldTest());
-            //scenes.push(new ParticleSystemTest());
-            scenes.push(new ParticleExplorer());
+            scenes.push(new ParticleSystemTest());
+            scenes.push(new TextureRendererTest());
+            //scenes.push(new ParticleExplorer());
 
             nextBtn = new Sprite();
             nextBtn.graphics.beginFill(0xFF9900, 1.0);
@@ -91,7 +93,7 @@ package {
             stage.addEventListener(Event.RESIZE, stageResize);
             stageResize(null);
 
-            activeSceneIdx = 3;
+            activeSceneIdx = 9;
             nextBtnClick(null);
         }
 

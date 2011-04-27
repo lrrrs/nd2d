@@ -29,36 +29,40 @@
  * /
  */
 
-<languageVersion : 1.0;>
-material kernel texture
-<
-    namespace : "ND2D_Shader";
-    vendor : "nulldesign";
-    version : 1;
->
-{
-    input vertex float2 uvCoord
-    <
-        id : "PB3D_UV";
-    >;
+package de.nulldesign.nd2d.display {
+    import flash.display3D.Context3D;
+    import flash.display3D.Context3DTextureFormat;
+    import flash.display3D.textures.Texture;
 
-    parameter float2 uvOffset;
+    public class TextureRenderer extends Node2D {
 
-    interpolated float4 interpolatedUV;
+        protected var renderNode:Node2D;
+        protected var texCamera:Camera2D = new Camera2D(1, 1);
 
-    void evaluateVertex()
-    {
-        interpolatedUV = float4(uvCoord.x + uvOffset.x, uvCoord.y + uvOffset.y, 0.0, 0.0);
-    }
+        public var texture:Texture;
 
-    input image4 textureImage;
-    parameter float4 color;
+        public function TextureRenderer(renderNode:Node2D, textureWidth:Number, textureHeight:Number) {
+            this.renderNode = renderNode;
+            _width = textureWidth;
+            _height = textureHeight;
+        }
 
-    output float4 result;
+        override internal function drawNode(context:Context3D, camera:Camera2D):void {
 
-    void evaluateFragment()
-    {
-        float4 texel = sample(textureImage, float2(interpolatedUV.x, interpolatedUV.y), PB3D_2D | PB3D_MIPNEAREST | PB3D_CLAMP);
-        result = float4(texel.r * color.r, texel.g * color.g, texel.b * color.b, texel.a * color.a);
+            if(!texture) {
+                texture = context.createTexture(width, height, Context3DTextureFormat.BGRA, true);
+            }
+
+            context.setRenderToTexture(texture, false, 2, 0);
+            context.clear(0.0, 0.0, 0.0, 0.0);
+
+            texCamera.resizeCameraStage(width, height);
+            texCamera.x = -renderNode.x + width * 0.5;
+            texCamera.y = -renderNode.y + height * 0.5;
+
+            renderNode.drawNode(context, texCamera);
+
+            context.setRenderToBackBuffer();
+        }
     }
 }

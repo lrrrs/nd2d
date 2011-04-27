@@ -415,7 +415,6 @@ package de.nulldesign.nd2d.display {
             }
         }
 
-
         internal function setStageRef(value:Stage):void {
 
             if(stage != value) {

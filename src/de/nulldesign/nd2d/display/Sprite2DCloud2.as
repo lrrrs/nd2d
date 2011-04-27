@@ -75,15 +75,18 @@ package de.nulldesign.nd2d.display {
             this.faceList = new Vector.<Face>(maxCapacity * 2, true);
 
             var idx:int = 0;
+            var quadIdx:int = 0;
 
             for(var i:uint = 0; i < maxCapacity; ++i) {
                 var quad:Vector.<Face> = TextureHelper.generateQuadFromTexture(bitmapTexture, spriteSheet);
 
-                quad[0].idx = idx;
-                quad[1].idx = idx;
+                quad[0].idx = quadIdx;
+                quad[1].idx = quadIdx;
 
                 faceList[idx++] = quad[0];
                 faceList[idx++] = quad[1];
+
+                ++quadIdx;
             }
         }
 

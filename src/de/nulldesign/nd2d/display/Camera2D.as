@@ -48,14 +48,14 @@ package de.nulldesign.nd2d.display {
             resizeCameraStage(w, h);
         }
 
-        public function resizeCameraStage(w:Number, h:Number):void {
+        internal function resizeCameraStage(w:Number, h:Number):void {
             _sceneWidth = w;
             _sceneHeight = h;
             invalidated = true;
             projectionMatrix = makeOrtographicMatrix(0, w, 0, h);
         }
 
-        public function makeOrtographicMatrix(left:Number, right:Number, top:Number, bottom:Number, zNear:Number = -1,
+        protected function makeOrtographicMatrix(left:Number, right:Number, top:Number, bottom:Number, zNear:Number = -1,
                                               zFar:Number = 1):Matrix3D {
 
             return new Matrix3D(Vector.<Number>([

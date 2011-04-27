@@ -34,32 +34,43 @@ package de.nulldesign.nd2d.display {
     import de.nulldesign.nd2d.geom.UV;
     import de.nulldesign.nd2d.geom.Vertex;
     import de.nulldesign.nd2d.materials.Sprite2DMaterial;
-    import de.nulldesign.nd2d.materials.SpriteSheet;
 
     import flash.display.BitmapData;
+    import flash.display3D.textures.Texture;
 
     public class Grid2D extends Sprite2D {
 
         protected var stepsX:uint;
         protected var stepsY:uint;
         protected var vertexList:Vector.<Vertex>;
-        //protected var uvList:Vector.<UV>;
 
-        public function Grid2D(stepsX:uint, stepsY:uint, bitmapTexture:BitmapData) {
+        public function Grid2D(stepsX:uint, stepsY:uint, bitmapTexture:BitmapData = null) {
             this.stepsX = stepsX;
             this.stepsY = stepsY;
             super(bitmapTexture, null);
         }
 
-        override protected function initWithBitmapData(bitmapTexture:BitmapData):void {
+        override public function initWithTexture(texture:Texture, width:Number, height:Number):void {
+            super.initWithTexture(texture, width, height);
+            generateGrid();
+        }
+
+        override protected function initMaterial(bitmapTexture:BitmapData):void {
 
             _width = bitmapTexture.width;
             _height = bitmapTexture.height;
 
             material = new Sprite2DMaterial(bitmapTexture, spriteSheet);
+            generateGrid();
+        }
+
+        override public function get numTris():uint {
+            return faceList.length;
+        }
+
+        protected function generateGrid():void {
             faceList = new Vector.<Face>();
             vertexList = new Vector.<Vertex>();
-            //uvList = new Vector.<UV>();
 
             var i:uint;
             var j:uint;
@@ -89,17 +100,13 @@ package de.nulldesign.nd2d.display {
 
             for(i = 1; i < ar.length; i++) {
                 for(j = 1; j < ar[i].length; j++) {
-                    faceList.push(new Face(ar[i - 1][j - 1], ar[i - 1][j], ar[i][j],
-                                           uv[i - 1][j - 1], uv[i - 1][j], uv[i][j]));
+                    faceList.push(new Face(ar[i - 1][j - 1], ar[i - 1][j], ar[i][j], uv[i - 1][j - 1], uv[i - 1][j],
+                                           uv[i][j]));
 
-                    faceList.push(new Face(ar[i - 1][j - 1], ar[i][j], ar[i][j - 1],
-                                           uv[i - 1][j - 1], uv[i][j], uv[i][j - 1]));
+                    faceList.push(new Face(ar[i - 1][j - 1], ar[i][j], ar[i][j - 1], uv[i - 1][j - 1], uv[i][j],
+                                           uv[i][j - 1]));
                 }
             }
-        }
-
-        override public function get numTris():uint {
-            return faceList.length;
         }
     }
 }

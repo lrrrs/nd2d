@@ -130,6 +130,8 @@ package de.nulldesign.nd2d.display {
             renderTimer = new Timer(1000 / frameRate);
             renderTimer.addEventListener(TimerEvent.TIMER, timerEventHandler);
             renderTimer.start();
+
+            //addEventListener(Event.ENTER_FRAME, timerEventHandler);
         }
 
         private function mouseEventHandler(event:MouseEvent):void {

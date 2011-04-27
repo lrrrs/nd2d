@@ -15,7 +15,16 @@ package de.nulldesign.nd2d.materials {
     import flash.geom.Point;
 
     public class Sprite2DCloudMaterial extends AMaterial {
+        /*
+        protected const DEFAULT_VERTEX_SHADER:String = "m44 op, va0, vc[va3.x]   \n" + // vertex * clipspace
+                "mov v0, va1		\n" + // copy uv
+                "mov v1, va2		\n"; // copy color
 
+        protected const DEFAULT_FRAGMENT_SHADER:String = "mov ft0, v0\n" + // get interpolated uv coords
+                "tex ft1, ft0, fs0 <2d,clamp,linear>\n" + // sample texture
+                "mul ft1, ft1, v1\n" + // mult with color
+                "mov oc, ft1\n";
+        */
         [Embed (source="../shader/Sprite2DCloudMaterialVertexShader.pbasm", mimeType="application/octet-stream")]
         private static const MaterialVertexProgramClass:Class;
 
@@ -71,12 +80,6 @@ package de.nulldesign.nd2d.materials {
                 clipSpaceMatrix.append(child.localModelMatrix);
                 clipSpaceMatrix.append(projectionMatrix);
 
-                /*
-                 objectToClipSpaceTransform
-                 color
-                 uvOffset
-                 */
-
                 var numConstantsPerSprite:uint = 6; // matrix + offset + color
                 var numConstantsUsedForMatrix:uint = 4;
 
@@ -87,33 +90,9 @@ package de.nulldesign.nd2d.materials {
 
                 context.setProgramConstantsFromVector(Context3DProgramType.VERTEX, i * numConstantsPerSprite + numConstantsUsedForMatrix + 1,
                                                       Vector.<Number>([ offset.x, offset.y, 0.0, 1.0 ]));
-
-                /*
-                 if(i == 0) {
-                 parameterBufferHelper.setMatrixParameterByName(Context3DProgramType.VERTEX,
-                 "objectToClipSpaceTransform0", clipSpaceMatrix,
-                 true);
-                 } else {
-
-                 parameterBufferHelper.setMatrixParameterByName(Context3DProgramType.VERTEX,
-                 "objectToClipSpaceTransform1", clipSpaceMatrix,
-                 true);
-                 }
-
-
-                 parameterBufferHelper.setNumberParameterByName(Context3DProgramType.VERTEX, "uvOffset",
-                 Vector.<Number>([ offset.x, offset.y, 0.0, 1.0 ]));
-
-                 parameterBufferHelper.setNumberParameterByName(Context3DProgramType.VERTEX, "color",
-                 Vector.<Number>([ child.r, child.g, child.b, child.a ]));
-                 */
             }
 
-            parameterBufferHelper.update();
-
             vertexBufferHelper.setVertexBuffers();
-
-            // not finished....
         }
 
         override protected function clearAfterRender(context:Context3D):void {

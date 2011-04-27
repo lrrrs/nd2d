@@ -33,9 +33,7 @@ package tests {
     import de.nulldesign.nd2d.display.Font2D;
     import de.nulldesign.nd2d.display.Node2D;
     import de.nulldesign.nd2d.display.Scene2D;
-
     import de.nulldesign.nd2d.utils.ColorUtil;
-
     import de.nulldesign.nd2d.utils.NumberUtil;
 
     import flash.display.BitmapData;
@@ -87,7 +85,7 @@ package tests {
             font.y = stage.stageHeight * 0.5;
 
             if(font.x < -font.width) {
-              font.x = stage.stageWidth;
+                font.x = stage.stageWidth;
             }
 
             var n:Node2D;
@@ -97,7 +95,7 @@ package tests {
                 n.rotation = n.y;
 
                 if(i == 50) {
-                  n.tint = ColorUtil.mixColors(0xff0000, 0x00ff00, NumberUtil.sin0_1(t));
+                    n.tint = ColorUtil.mixColors(0xff0000, 0x00ff00, NumberUtil.sin0_1(t));
                 }
             }
         }

@@ -172,7 +172,7 @@ package de.nulldesign.nd2d.materials {
             context.setBlendFactors(blendMode.src, blendMode.dst);
 
             if(vertexRegisterMap && !vertexBufferHelper) {
-                vertexBufferHelper = new VertexBufferHelper(context, vertexRegisterMap.vertexRegisters, vertexBuffer);
+                vertexBufferHelper = new VertexBufferHelper(context, vertexRegisterMap.inputVertexRegisters, vertexBuffer);
             }
 
             clipSpaceMatrix.identity();
@@ -195,7 +195,7 @@ package de.nulldesign.nd2d.materials {
         }
 
         protected function clearAfterRender(context:Context3D):void {
-            for(var i:int = 0; i < vertexRegisterMap.vertexRegisters.length; ++i) {
+            for(var i:int = 0; i < vertexRegisterMap.inputVertexRegisters.length; ++i) {
                 context.setVertexBufferAt(i, null);
             }
         }
@@ -218,7 +218,7 @@ package de.nulldesign.nd2d.materials {
 
                 parameterBufferHelper = new ProgramConstantsHelper(context, vertexRegisterMap, fragmentRegisterMap);
 
-                numFloatsPerVertex = VertexBufferHelper.numFloatsPerVertex(vertexRegisterMap.vertexRegisters);
+                numFloatsPerVertex = VertexBufferHelper.numFloatsPerVertex(vertexRegisterMap.inputVertexRegisters);
 
                 program = context.createProgram();
                 program.upload(agalVertexBinary, agalFragmentBinary);
@@ -233,11 +233,11 @@ package de.nulldesign.nd2d.materials {
 
         protected function addVertex(buffer:Vector.<Number>, v:Vertex, uv:UV, face:Face):void {
 
-            var vertexRegisters:Vector.<VertexRegisterInfo> = vertexRegisterMap.vertexRegisters;
+            var vertexRegisters:Vector.<VertexRegisterInfo> = vertexRegisterMap.inputVertexRegisters;
 
-            for(var i:int = 0; i < vertexRegisterMap.vertexRegisters.length; i += 1) {
+            for(var i:int = 0; i < vertexRegisterMap.inputVertexRegisters.length; i += 1) {
 
-                var n:int = getFloatFormat(vertexRegisterMap.vertexRegisters[i].format);
+                var n:int = getFloatFormat(vertexRegisterMap.inputVertexRegisters[i].format);
                 fillBuffer(buffer, v, uv, face, vertexRegisters[i].semantics.id, n);
             }
         }
@@ -246,12 +246,12 @@ package de.nulldesign.nd2d.materials {
 
             if(!mVertexBuffer || mVertexBuffer.length == 0) return;
 
-            var vertexRegisters:Vector.<VertexRegisterInfo> = vertexRegisterMap.vertexRegisters;
+            var vertexRegisters:Vector.<VertexRegisterInfo> = vertexRegisterMap.inputVertexRegisters;
             var idx:uint = bufferIdx * numFloatsPerVertex;
 
-            for(var i:int = 0; i < vertexRegisterMap.vertexRegisters.length; i += 1) {
+            for(var i:int = 0; i < vertexRegisterMap.inputVertexRegisters.length; i += 1) {
                 var semanticsID:String = vertexRegisters[i].semantics.id;
-                var floatFormat:int = getFloatFormat(vertexRegisterMap.vertexRegisters[i].format);
+                var floatFormat:int = getFloatFormat(vertexRegisterMap.inputVertexRegisters[i].format);
 
                 if(semanticsID == "PB3D_POSITION") {
 

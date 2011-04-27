@@ -122,6 +122,36 @@ package de.nulldesign.nd2d.utils {
             tmp.dispose();
         }
 
+        public static function generateQuadFromDimensions(width:Number, height:Number):Vector.<Face> {
+            var faceList:Vector.<Face> = new Vector.<Face>(2, true);
+
+            var texW:Number = width * 0.5;
+            var texH:Number = height * 0.5;
+            var uv1:UV;
+            var uv2:UV;
+            var uv3:UV;
+            var uv4:UV;
+            var v1:Vertex;
+            var v2:Vertex;
+            var v3:Vertex;
+            var v4:Vertex;
+
+            uv1 = new UV(0, 0);
+            uv2 = new UV(1, 0);
+            uv3 = new UV(1, 1);
+            uv4 = new UV(0, 1);
+
+            v1 = new Vertex(-texW, -texH, 0.0);
+            v2 = new Vertex(texW, -texH, 0.0);
+            v3 = new Vertex(texW, texH, 0.0);
+            v4 = new Vertex(-texW, texH, 0.0);
+
+            faceList[0] = new Face(v1, v2, v3, uv1, uv2, uv3);
+            faceList[1] = new Face(v1, v3, v4, uv1, uv3, uv4);
+
+            return faceList;
+        }
+
         public static function generateQuadFromTexture(bitmapTexture:BitmapData,
                                                        spriteSheet:SpriteSheet):Vector.<Face> {
 

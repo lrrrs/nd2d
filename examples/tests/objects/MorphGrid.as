@@ -35,7 +35,7 @@ package tests.objects {
     import flash.display.BitmapData;
 
     public class MorphGrid extends Grid2D {
-        public function MorphGrid(stepsX:uint, stepsY:uint, bitmapTexture:BitmapData) {
+        public function MorphGrid(stepsX:uint, stepsY:uint, bitmapTexture:BitmapData = null) {
             super(stepsX, stepsY, bitmapTexture);
         }
 

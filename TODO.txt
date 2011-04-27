@@ -12,4 +12,4 @@
 - PVTR support
 - scene transitions???
 - render to texture
-- UV manipulations Sprite2D: scrollX / Y
+- UV manipulations Sprite2D: scrollX / Y -> PB3D_REPEAT broken in current release

@@ -102,8 +102,8 @@ package de.nulldesign.nd2d.display {
             return material.drawCalls;
         }
 
-        override protected function initWithBitmapData(bitmapTexture:BitmapData):void {
-            super.initWithBitmapData(bitmapTexture);
+        override protected function initMaterial(bitmapTexture:BitmapData):void {
+            super.initMaterial(bitmapTexture);
 
             // kinda hackish ...
             v1 = faceList[0].v1;
