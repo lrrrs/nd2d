@@ -30,6 +30,8 @@
  */
 
 package de.nulldesign.nd2d.materials {
+    import com.adobe.pixelBender3D.Semantics;
+
     import de.nulldesign.nd2d.utils.TextureHelper;
 
     import flash.display.BitmapData;
@@ -52,9 +54,6 @@ package de.nulldesign.nd2d.materials {
 
         public var texture:Texture;
         public var bitmapData:BitmapData;
-        //protected var blurTexture:Texture;
-        //protected var textureDimensions:Point;
-
         public var color:Vector3D = new Vector3D(1.0, 1.0, 1.0, 1.0);
 
         protected var spriteSheet:SpriteSheet;
@@ -83,8 +82,7 @@ package de.nulldesign.nd2d.materials {
                 return false;
             }
 
-            // TODO SET TEXTURE BY NAME!!!
-            context.setTextureAt(0, texture);
+            parameterBufferHelper.setTextureByName("textureImage", texture);
 
             parameterBufferHelper.setNumberParameterByName(Context3DProgramType.FRAGMENT, "color",
                                                            Vector.<Number>([ color.x, color.y, color.z, color.w ]));
@@ -108,45 +106,6 @@ package de.nulldesign.nd2d.materials {
             return true;
         }
 
-        /*
-         override public function render(context:Context3D, faceList:Vector.<Face>, numTris:uint):void {
-         if(true) {
-         super.render(context, faceList, numTris);
-         } else {
-         renderBlur(context, faceList, numTris);
-         }
-         }
-
-         protected function renderBlur(context:Context3D, faceList:Vector.<Face>, numTris:uint):void {
-
-         generateBufferData(context, faceList);
-         prepareForRender(context);
-
-         if(!blurTexture) {
-         textureDimensions = TextureHelper.getTextureDimensionsFromBitmap(bitmapData);
-         blurTexture = context.createTexture(textureDimensions.x, textureDimensions.y,
-         Context3DTextureFormat.BGRA, true);
-         }
-
-         // first pass
-         context.setRenderToTexture(blurTexture, false, 2, 0);
-         context.clear(0.3, 0.3, 0.3);
-
-         var m:Matrix3D = new Matrix3D();
-         m.appendScale(1 / textureDimensions.x * 2, -1 / textureDimensions.y * 2, 1.0);
-
-         context.setProgramConstantsFromMatrix(Context3DProgramType.VERTEX, 0, m, true);
-         context.drawTriangles(indexBuffer, 0, numTris);
-
-         // second pass
-         context.setRenderToBackBuffer();
-         context.setTextureAt(0, blurTexture);
-         context.setProgramConstantsFromMatrix(Context3DProgramType.VERTEX, 0, clipSpaceMatrix, true);
-         context.drawTriangles(indexBuffer, 0, numTris);
-
-         clearAfterRender(context);
-         }
-         */
         override protected function clearAfterRender(context:Context3D):void {
             super.clearAfterRender(context);
             context.setTextureAt(0, null);

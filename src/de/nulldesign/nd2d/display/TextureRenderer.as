@@ -59,6 +59,7 @@ package de.nulldesign.nd2d.display {
 
             if(!texture || handleDeviceLoss) {
                 texture = context.createTexture(width, height, Context3DTextureFormat.BGRA, true);
+
                 dispatchEvent(new TextureEvent(TextureEvent.READY));
             }
 

@@ -285,6 +285,7 @@ package de.nulldesign.nd2d.materials {
                 }
             }
 
+            //TODO: implement partial vertex buffer uploads? performance? test...
             needUploadVertexBuffer = true;
         }
 

@@ -50,7 +50,7 @@ package de.nulldesign.nd2d.materials {
             this.drawCalls = 1;
         }
 
-        override protected function prepareForRender(context:Context3D):void {
+        override protected function prepareForRender(context:Context3D):Boolean {
 
             super.prepareForRender(context);
 
@@ -93,6 +93,8 @@ package de.nulldesign.nd2d.materials {
             }
 
             vertexBufferHelper.setVertexBuffers();
+
+            return true;
         }
 
         override protected function clearAfterRender(context:Context3D):void {

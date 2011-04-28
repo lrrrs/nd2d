@@ -1,4 +1,4 @@
-- HANDLE DEVICE LOST -> Event.CONTEXT3D_CREATE
++ HANDLE DEVICE LOST -> Event.CONTEXT3D_CREATE
 - Batching for Spriteclouds -> wait for PB3D fix :(
 - enable zbuffering / alpha textures / KIL ???
 - configurable debugging flag: context3D.enableErrorChecking
@@ -11,5 +11,5 @@
 - motor2 / box2d physics?
 - PVTR support
 - scene transitions???
-- render to texture
++ render to texture
 - UV manipulations Sprite2D: scrollX / Y -> PB3D_REPEAT broken in current release

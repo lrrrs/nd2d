@@ -78,7 +78,7 @@ package de.nulldesign.nd2d.materials {
                 texture = TextureHelper.generateTextureFromBitmap(context, particleTexture, true);
             }
 
-            context.setTextureAt(0, texture);
+            parameterBufferHelper.setTextureByName("textureImage", texture);
 
             parameterBufferHelper.setMatrixParameterByName(Context3DProgramType.VERTEX, "objectToClipSpaceTransform",
                                                            clipSpaceMatrix, true);

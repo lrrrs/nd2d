@@ -126,7 +126,6 @@ package de.nulldesign.nd2d.display {
                 material.handleDeviceLoss();
             }
 
-            // in case of a device lost the texture will be gone
             material.render(context, faceList, numTris);
         }
 
