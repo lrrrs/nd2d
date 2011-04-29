@@ -38,7 +38,7 @@ package tests.objects {
 
         private var strength:Number;
 
-        public function MorphGrid(stepsX:uint, stepsY:uint, bitmapTexture:BitmapData = null, strength:Number = 0.1) {
+        public function MorphGrid(stepsX:uint, stepsY:uint, bitmapTexture:BitmapData = null, strength:Number = 0.07) {
             this.strength = strength;
             super(stepsX, stepsY, bitmapTexture);
         }
@@ -47,7 +47,11 @@ package tests.objects {
 
             for(var i:int = 0; i < vertexList.length; i++) {
 
-                if(i > stepsX && i < vertexList.length - stepsY - 1) {
+                var yPos:uint = Math.floor(i / (stepsX + 1));
+                var xPos:uint = i % (stepsY + 1);
+
+                if(xPos > 0 && yPos > 0 && xPos < stepsX && yPos < stepsY) {
+
                     var newX:Number = vertexList[i].x + vertexList[i].x * Math.sin(vertexList[i].length + t * 2.0) * strength;
                     var newY:Number = vertexList[i].y + vertexList[i].y * Math.cos(vertexList[i].length + t * 2.0) * strength;
 
