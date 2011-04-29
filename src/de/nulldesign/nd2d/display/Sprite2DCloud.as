@@ -117,7 +117,7 @@ package de.nulldesign.nd2d.display {
             uv4 = faceList[1].uv3;
         }
 
-        override public function addChildAt(child:Node2D, idx:uint):void {
+        override public function addChildAt(child:Node2D, idx:uint):Node2D {
 
             if(!(child is Sprite2D)) {
                 throw new Error("Sprite2DCloud accepts Sprite2D childs only");
@@ -128,13 +128,16 @@ package de.nulldesign.nd2d.display {
                 super.addChildAt(child, idx);
 
                 var c:Sprite2D = child as Sprite2D;
-                c.mouseEnabled = false;
+                // set w/h of sprite
+                c.setTexture(null, width, height);
 
                 // distribute spritesheets to sprites
                 if(c && spriteSheet && !c.spriteSheet) {
                     c.spriteSheet = spriteSheet.clone();
                 }
             }
+
+            return child;
         }
 
         override internal function drawNode(context:Context3D, camera:Camera2D, handleDeviceLoss:Boolean):void {
@@ -194,6 +197,8 @@ package de.nulldesign.nd2d.display {
             var i:int = -1;
             var child:Sprite2D;
             var n:uint = children.length;
+            var sx:Number;
+            var sy:Number;
             var somethingChanged:Boolean = false;
 
             // TODO: get rid of this implementation and do batch rendering! :)
@@ -212,6 +217,8 @@ package de.nulldesign.nd2d.display {
                 }
 
                 offset = new Point();
+                sx = child.scaleX;
+                sy = child.scaleY;
 
                 var initUV:Boolean = !uvInited;
 
@@ -230,8 +237,8 @@ package de.nulldesign.nd2d.display {
 
                 // v1
                 if(child.refreshPosition) {
-                    mVertexBuffer[vIdx] = v1.x * cr - v1.y * sr + child.x;
-                    mVertexBuffer[vIdx + 1] = v1.x * sr + v1.y * cr + child.y;
+                    mVertexBuffer[vIdx] = v1.x * sx * cr - v1.y * sy * sr + child.x;
+                    mVertexBuffer[vIdx + 1] = v1.x * sx * sr + v1.y * sy * cr + child.y;
                     somethingChanged = true;
                 }
 
@@ -251,8 +258,8 @@ package de.nulldesign.nd2d.display {
 
                 // v2
                 if(child.refreshPosition) {
-                    mVertexBuffer[vIdx + 8] = v2.x * cr - v2.y * sr + child.x;
-                    mVertexBuffer[vIdx + 9] = v2.x * sr + v2.y * cr + child.y;
+                    mVertexBuffer[vIdx + 8] = v2.x * sx * cr - v2.y * sy * sr + child.x;
+                    mVertexBuffer[vIdx + 9] = v2.x * sx * sr + v2.y * sy * cr + child.y;
                 }
 
                 if(initUV) {
@@ -269,8 +276,8 @@ package de.nulldesign.nd2d.display {
 
                 // v3
                 if(child.refreshPosition) {
-                    mVertexBuffer[vIdx + 16] = v3.x * cr - v3.y * sr + child.x;
-                    mVertexBuffer[vIdx + 17] = v3.x * sr + v3.y * cr + child.y;
+                    mVertexBuffer[vIdx + 16] = v3.x * sx * cr - v3.y * sy * sr + child.x;
+                    mVertexBuffer[vIdx + 17] = v3.x * sx * sr + v3.y * sy * cr + child.y;
                 }
 
                 if(initUV) {
@@ -287,8 +294,8 @@ package de.nulldesign.nd2d.display {
 
                 // v4
                 if(child.refreshPosition) {
-                    mVertexBuffer[vIdx + 24] = v4.x * cr - v4.y * sr + child.x;
-                    mVertexBuffer[vIdx + 25] = v4.x * sr + v4.y * cr + child.y;
+                    mVertexBuffer[vIdx + 24] = v4.x * sx * cr - v4.y * sy * sr + child.x;
+                    mVertexBuffer[vIdx + 25] = v4.x * sx * sr + v4.y * sy * cr + child.y;
                 }
 
                 if(initUV) {

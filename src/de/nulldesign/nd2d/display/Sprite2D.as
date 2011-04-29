@@ -68,13 +68,15 @@ package de.nulldesign.nd2d.display {
             }
         }
 
-        public function initWithTexture(texture:Texture, width:Number, height:Number):void {
+        public function setTexture(texture:Texture, width:Number, height:Number):void {
             _width = width;
             _height = height;
 
-            material = new Sprite2DMaterial(null, null);
-            material.texture = texture;
-            faceList = TextureHelper.generateQuadFromDimensions(width, height);
+            if(texture) {
+                material = new Sprite2DMaterial(null, null);
+                material.texture = texture;
+                faceList = TextureHelper.generateQuadFromDimensions(width, height);
+            }
         }
 
         protected function initMaterial(bitmapTexture:BitmapData):void {
@@ -87,19 +89,19 @@ package de.nulldesign.nd2d.display {
         }
 
         override public function get numTris():uint {
-            return 2;
+            return 2 + super.numTris;
         }
 
         override public function get drawCalls():uint {
-            return material.drawCalls;
+            return material.drawCalls + super.drawCalls;
         }
 
         /**
          * @private
          */
-        override internal function stepNode(t:Number):void {
+        override internal function stepNode(t:Number, elapsed:Number):void {
 
-            super.stepNode(t);
+            super.stepNode(t, elapsed);
 
             if(spriteSheet)
                 spriteSheet.update(t);
@@ -126,7 +128,7 @@ package de.nulldesign.nd2d.display {
                 material.handleDeviceLoss();
             }
 
-            material.render(context, faceList, numTris);
+            material.render(context, faceList, faceList.length);
         }
 
         /*

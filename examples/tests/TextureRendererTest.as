@@ -77,12 +77,12 @@ package tests {
             }
 
             texturedGrid = new MorphGrid(10, 10);
-            texturedGrid.initWithTexture(texRenderer.texture, texRenderer.width, texRenderer.height);
+            texturedGrid.setTexture(texRenderer.texture, texRenderer.width, texRenderer.height);
             texturedGrid.tint = 0x99ff00;
             addChild(texturedGrid);
         }
 
-        override protected function step(t:Number):void {
+        override protected function step(t:Number, elapsed:Number):void {
             s.x = stage.stageWidth * 0.5 - s.width * 0.55;
             s.y = stage.stageHeight * 0.5;
 

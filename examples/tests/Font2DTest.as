@@ -75,7 +75,7 @@ package tests {
             addChild(counter);
         }
 
-        override protected function step(t:Number):void {
+        override protected function step(t:Number, elapsed:Number):void {
 
             counter.x = stage.stageWidth * 0.5;
             counter.y = 20.0;

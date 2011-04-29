@@ -17,6 +17,8 @@ package tests {
         private var sprites:Vector.<Sprite2D>;
         private var spriteCloud:Node2D;
 
+        private var numSprites:uint = 1600;
+
         public function MassiveSpriteCloudTest() {
 
             backGroundColor = 0x666666;
@@ -31,9 +33,9 @@ package tests {
             sheet.addAnimation("down", [6, 7, 8], true);
             sheet.addAnimation("left", [9, 10, 11], true);
 
-            spriteCloud = new Sprite2DCloud(1600, null, sheet);
+            spriteCloud = new Sprite2DCloud(numSprites, null, sheet);
 
-            for(var i:int = 0; i < 1600; i++) {
+            for(var i:int = 0; i < numSprites; i++) {
 
                 s = new Sprite2D();
                 s.x = Math.round(Math.random() * 1000);
@@ -50,7 +52,7 @@ package tests {
             addChild(spriteCloud);
         }
 
-        override protected function step(t:Number):void {
+        override protected function step(t:Number, elapsed:Number):void {
 
             var s:Sprite2D;
             var len:int = sprites.length;

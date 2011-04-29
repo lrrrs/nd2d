@@ -55,6 +55,7 @@ package {
     import tests.MassiveSpritesTest;
     import tests.ParticleExplorer;
     import tests.ParticleSystemTest;
+    import tests.SideScrollerTest;
     import tests.SpriteAnimTest;
     import tests.SpriteHierarchyTest;
     import tests.SpriteTest;
@@ -65,11 +66,9 @@ package {
 
     public class Main extends World2D {
 
-        private var mainScene:Scene2D;
         private var scenes:Vector.<Scene2D> = new Vector.<Scene2D>();
         private var activeSceneIdx:uint = 0;
 
-        private var nextBtn:Sprite;
         private var sceneText:TextField;
 
         public function Main() {
@@ -77,7 +76,7 @@ package {
             stage.scaleMode = StageScaleMode.NO_SCALE;
             stage.align = StageAlign.TOP_LEFT;
 
-            super(Context3DRenderMode.AUTO, 60);
+            super(Context3DRenderMode.AUTO, 60, true);
 
             //statsVisible = false;
 
@@ -91,14 +90,8 @@ package {
             scenes.push(new StarFieldTest());
             scenes.push(new ParticleSystemTest());
             scenes.push(new TextureRendererTest());
+            scenes.push(new SideScrollerTest());
             //scenes.push(new ParticleExplorer());
-
-            nextBtn = new Sprite();
-            nextBtn.graphics.beginFill(0xFF9900, 1.0);
-            nextBtn.graphics.drawRect(0, 0, 20, 20);
-            nextBtn.buttonMode = true;
-            nextBtn.addEventListener(MouseEvent.CLICK, nextBtnClick);
-            addChild(nextBtn);
 
             var tf:TextFormat = new TextFormat("Arial", 11, 0xFFFFFF, true);
 
@@ -112,7 +105,7 @@ package {
             stageResize(null);
 
             activeSceneIdx = 9;
-            nextBtnClick(null);
+            nextBtnClick();
 
             stage.addEventListener(KeyboardEvent.KEY_UP, keyUp);
         }
@@ -121,14 +114,16 @@ package {
         private function keyUp(e:KeyboardEvent):void {
             if(e.keyCode == Keyboard.D) {
                 context3D.dispose();
+            } else if(e.keyCode == Keyboard.SPACE) {
+                nextBtnClick();
             }
         }
 
-        private function nextBtnClick(e:MouseEvent):void {
+        private function nextBtnClick():void {
 
             camera.reset();
 
-            sceneText.text = getQualifiedClassName(scenes[activeSceneIdx]);
+            sceneText.text = getQualifiedClassName(scenes[activeSceneIdx]) + " // hit space for next test.";
 
             setActiveScene(scenes[activeSceneIdx++]);
 
@@ -138,10 +133,7 @@ package {
         }
 
         private function stageResize(e:Event):void {
-            nextBtn.x = 2;
-            nextBtn.y = stage.stageHeight - 22;
-
-            sceneText.x = 25;
+            sceneText.x = 5;
             sceneText.y = stage.stageHeight - 20;
         }
     }

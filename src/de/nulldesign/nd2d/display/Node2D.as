@@ -143,7 +143,7 @@ package de.nulldesign.nd2d.display {
         protected var _width:Number;
 
         public function get width():Number {
-            return _width * _scaleX;
+            return Math.abs(_width * _scaleX);
         }
 
         public function set width(value:Number):void {
@@ -156,7 +156,7 @@ package de.nulldesign.nd2d.display {
         protected var _height:Number;
 
         public function get height():Number {
-            return _height * _scaleY;
+            return Math.abs(_height * _scaleY);
         }
 
         public function set height(value:Number):void {
@@ -313,24 +313,38 @@ package de.nulldesign.nd2d.display {
             return _rotation;
         }
 
-        private var _mouseX:Number;
+        private var _mouseX:Number = 0.0;
 
         public function get mouseX():Number {
             return _mouseX;
         }
 
-        private var _mouseY:Number;
+        private var _mouseY:Number = 0.0;
 
         public function get mouseY():Number {
             return _mouseY;
         }
 
         public function get numTris():uint {
-            return 0;
+
+            var tris:uint = 0;
+
+            for(var i:int = 0; i < children.length; i++) {
+               tris += children[i].numTris;
+            }
+
+            return tris;
         }
 
         public function get drawCalls():uint {
-            return 0;
+
+            var calls:uint = 0;
+
+            for(var i:int = 0; i < children.length; i++) {
+               calls += children[i].drawCalls;
+            }
+
+            return calls;
         }
 
         public function get numChildren():uint {
@@ -436,12 +450,12 @@ package de.nulldesign.nd2d.display {
         /**
          * @private
          */
-        internal function stepNode(t:Number):void {
+        internal function stepNode(t:Number, elapsed:Number):void {
 
-            step(t);
+            step(t, elapsed);
 
             for each(var child:Node2D in children) {
-                child.stepNode(t);
+                child.stepNode(t, elapsed);
             }
         }
 
@@ -481,18 +495,19 @@ package de.nulldesign.nd2d.display {
             // overwrite in extended classes
         }
 
-        protected function step(t:Number):void {
+        protected function step(t:Number, elapsed:Number):void {
             // overwrite in extended classes
         }
 
-        public function addChild(child:Node2D):void {
-            addChildAt(child, children.length);
+        public function addChild(child:Node2D):Node2D {
+            return addChildAt(child, children.length);
         }
 
-        public function addChildAt(child:Node2D, idx:uint):void {
+        public function addChildAt(child:Node2D, idx:uint):Node2D {
             child.parent = this;
             child.setStageRef(stage);
             children.splice(idx, 0, child);
+            return child;
         }
 
         public function removeChild(child:Node2D):void {

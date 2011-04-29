@@ -144,9 +144,9 @@ package de.nulldesign.nd2d.materials {
             animationMap[name] = activeAnimation;
         }
 
-        public function playAnimation(name:String):void {
-            if(activeAnimation != animationMap[name]) {
-                frameIdx = 0;
+        public function playAnimation(name:String, startIdx:uint = 0, restart:Boolean = false):void {
+            if(restart || activeAnimation != animationMap[name]) {
+                frameIdx = startIdx;
                 activeAnimation = animationMap[name];
             }
         }

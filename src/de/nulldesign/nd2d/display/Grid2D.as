@@ -50,8 +50,8 @@ package de.nulldesign.nd2d.display {
             super(bitmapTexture, null);
         }
 
-        override public function initWithTexture(texture:Texture, width:Number, height:Number):void {
-            super.initWithTexture(texture, width, height);
+        override public function setTexture(texture:Texture, width:Number, height:Number):void {
+            super.setTexture(texture, width, height);
             generateGrid();
         }
 

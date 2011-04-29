@@ -63,7 +63,7 @@ package tests {
             event.target.tint = Math.random() * 0xffffff;
         }
 
-        override protected function step(t:Number):void {
+        override protected function step(t:Number, elapsed:Number):void {
 
             //s.x = stage.stageWidth / 2;
             //s.y = stage.stageHeight / 2;

@@ -48,7 +48,7 @@ package tests {
             addChild(grid);
         }
 
-        override protected function step(t:Number):void {
+        override protected function step(t:Number, elapsed:Number):void {
             grid.x = stage.stageWidth * 0.5;
             grid.y = stage.stageHeight * 0.5;
         }

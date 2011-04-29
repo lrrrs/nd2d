@@ -69,6 +69,7 @@ package de.nulldesign.nd2d.display {
         protected var camera:Camera2D = new Camera2D(1, 1);
         protected var context3D:Context3D;
 
+        private var stageID:uint;
         private var renderTimer:Timer;
         private var renderMode:String;
         private var scene:Scene2D;
@@ -78,11 +79,13 @@ package de.nulldesign.nd2d.display {
         private var antialiasing:uint = 2;
         private var enableErrorChecking:Boolean = true;
         private var bounds:Rectangle;
+        private var frameBased:Boolean;
 
         private var deviceInitialized:Boolean = false;
         private var deviceWasLost:Boolean = false;
 
         protected var stats:Stats;
+        protected var lastFramesTime:Number = 0.0;
 
         private var _statsVisible:Boolean = true;
 
@@ -95,10 +98,22 @@ package de.nulldesign.nd2d.display {
             stats.visible = statsVisible;
         }
 
-        public function World2D(renderMode:String, frameRate:uint, bounds:Rectangle = null) {
+        /**
+         * Constructor of class world
+         * @param renderMode Context3DRenderMode (auto, software)
+         * @param frameRate timer and the swf will be set to this framerate
+         * @param frameBased whether to use a timer or a enterFrame to step()
+         * @param bounds the worlds boundaries
+         * @param stageID
+         */
+        public function World2D(renderMode:String, frameRate:uint, frameBased:Boolean, bounds:Rectangle = null,
+                                stageID:uint = 0) {
+
             this.renderMode = renderMode;
             this.frameRate = frameRate;
             this.bounds = bounds;
+            this.frameBased = frameBased;
+            this.stageID = stageID;
             this.stats = Stats(addChild(new Stats()));
             addEventListener(Event.ADDED_TO_STAGE, addedToStage);
         }
@@ -108,8 +123,8 @@ package de.nulldesign.nd2d.display {
             removeEventListener(Event.ADDED_TO_STAGE, addedToStage);
             stage.addEventListener(Event.RESIZE, resizeStage);
             stage.frameRate = frameRate;
-            stage.stage3Ds[0].addEventListener(Event.CONTEXT3D_CREATE, context3DCreated);
-            stage.stage3Ds[0].requestContext3D(renderMode);
+            stage.stage3Ds[stageID].addEventListener(Event.CONTEXT3D_CREATE, context3DCreated);
+            stage.stage3Ds[stageID].requestContext3D(renderMode);
 
             stage.addEventListener(MouseEvent.CLICK, mouseEventHandler);
             stage.addEventListener(MouseEvent.MOUSE_DOWN, mouseEventHandler);
@@ -121,7 +136,7 @@ package de.nulldesign.nd2d.display {
 
             //stage.stage3Ds[0].removeEventListener(Event.CONTEXT3D_CREATE, context3DCreated);
 
-            context3D = stage.stage3Ds[0].context3D;
+            context3D = stage.stage3Ds[stageID].context3D;
             context3D.enableErrorChecking = enableErrorChecking;
             context3D.setCulling(Context3DTriangleFace.NONE);
             context3D.setDepthTest(false, Context3DCompareMode.ALWAYS);
@@ -130,18 +145,22 @@ package de.nulldesign.nd2d.display {
 
             stats.driverInfo = context3D.driverInfo;
 
-            if(!renderTimer) {
-                renderTimer = new Timer(1000 / frameRate);
-                renderTimer.addEventListener(TimerEvent.TIMER, timerEventHandler);
-                renderTimer.start();
-            }
-
             // means we got the Event.CONTEXT3D_CREATE for the second time, the device was lost. reinit everything
             if(deviceInitialized) {
                 deviceWasLost = true;
             }
 
-            //addEventListener(Event.ENTER_FRAME, timerEventHandler);
+            if(frameBased) {
+                removeEventListener(Event.ENTER_FRAME, timerEventHandler);
+                addEventListener(Event.ENTER_FRAME, timerEventHandler);
+            } else {
+                if(!renderTimer) {
+                    renderTimer = new Timer(1000 / frameRate);
+                    renderTimer.addEventListener(TimerEvent.TIMER, timerEventHandler);
+                    renderTimer.start();
+                }
+            }
+
             deviceInitialized = true;
         }
 
@@ -161,19 +180,20 @@ package de.nulldesign.nd2d.display {
 
         protected function resizeStage(e:Event = null):void {
             var rect:Rectangle = bounds ? bounds : new Rectangle(0, 0, stage.stageWidth, stage.stageHeight);
-            stage.stage3Ds[0].viewPort = rect;
+            stage.stage3Ds[stageID].viewPort = rect;
             context3D.configureBackBuffer(rect.width, rect.height, antialiasing, false);
             camera.resizeCameraStage(rect.width, rect.height);
         }
 
-        protected function timerEventHandler(event:Event):void {
+        protected function timerEventHandler(e:Event):void {
             var t:Number = getTimer() / 1000;
+            var elapsed:Number = t - lastFramesTime;
 
             if(scene) {
                 context3D.clear(scene.br, scene.bg, scene.bb, 1.0);
 
                 if(!isPaused)
-                    scene.stepNode(t);
+                    scene.stepNode(t, elapsed);
 
                 scene.drawNode(context3D, camera, deviceWasLost);
 
@@ -181,6 +201,8 @@ package de.nulldesign.nd2d.display {
 
                 deviceWasLost = false;
             }
+
+            lastFramesTime = t;
         }
 
         protected function setActiveScene(value:Scene2D):void {

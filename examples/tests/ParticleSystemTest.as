@@ -53,7 +53,7 @@ package tests {
             particles.reset();
         }
 
-        override protected function step(t:Number):void {
+        override protected function step(t:Number, elapsed:Number):void {
             particles.x = stage.stageWidth / 2;
             particles.y = stage.stageHeight / 2;
             particles.gravity.x = (stage.mouseX / stage.stageWidth * 2.0 - 1.0) * 2000.0;

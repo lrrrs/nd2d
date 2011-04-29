@@ -35,18 +35,21 @@ package tests.objects {
     import flash.display.BitmapData;
 
     public class MorphGrid extends Grid2D {
-        public function MorphGrid(stepsX:uint, stepsY:uint, bitmapTexture:BitmapData = null) {
+
+        private var strength:Number;
+
+        public function MorphGrid(stepsX:uint, stepsY:uint, bitmapTexture:BitmapData = null, strength:Number = 0.1) {
+            this.strength = strength;
             super(stepsX, stepsY, bitmapTexture);
         }
 
-        override protected function step(t:Number):void {
-            super.step(t);
+        override protected function step(t:Number, elapsed:Number):void {
 
             for(var i:int = 0; i < vertexList.length; i++) {
 
-                if(i > stepsX && i < vertexList.length - stepsX) {
-                    var newX:Number = vertexList[i].x + vertexList[i].x * Math.sin(vertexList[i].length + t * 2.0) * 0.1;
-                    var newY:Number = vertexList[i].y + vertexList[i].y * Math.cos(vertexList[i].length + t * 2.0) * 0.1;
+                if(i > stepsX && i < vertexList.length - stepsY - 1) {
+                    var newX:Number = vertexList[i].x + vertexList[i].x * Math.sin(vertexList[i].length + t * 2.0) * strength;
+                    var newY:Number = vertexList[i].y + vertexList[i].y * Math.cos(vertexList[i].length + t * 2.0) * strength;
 
                     material.modifyVertexInBuffer(vertexList[i].bufferIdx, newX, newY);
                 }

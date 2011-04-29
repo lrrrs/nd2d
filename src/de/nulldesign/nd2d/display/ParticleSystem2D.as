@@ -170,7 +170,7 @@ package de.nulldesign.nd2d.display {
             ++activeParticles;
         }
 
-        override protected function step(t:Number):void {
+        override protected function step(t:Number, elapsed:Number):void {
             currentTime = getTimer() - startTime;
 
             if(activeParticles < maxCapacity) {

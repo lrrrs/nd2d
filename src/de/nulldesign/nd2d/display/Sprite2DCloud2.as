@@ -90,9 +90,9 @@ package de.nulldesign.nd2d.display {
             }
         }
 
-        override protected function draw(context:Context3D, camera:Camera2D):void {
+        override protected function draw(context:Context3D, camera:Camera2D, handleDeviceLoss:Boolean):void {
 
-            super.draw(context, camera);
+            super.draw(context, camera, handleDeviceLoss);
 
             material.blendMode = blendMode;
             material.modelViewMatrix = worldModelMatrix;
@@ -100,7 +100,7 @@ package de.nulldesign.nd2d.display {
             material.render(context, faceList, numChildren * 2);
         }
 
-        override internal function drawNode(context:Context3D, camera:Camera2D):void {
+        override internal function drawNode(context:Context3D, camera:Camera2D, handleDeviceLoss:Boolean):void {
 
             if(!visible) {
                 return;
@@ -117,12 +117,12 @@ package de.nulldesign.nd2d.display {
                 worldModelMatrix.append(parent.worldModelMatrix);
             }
 
-            draw(context, camera);
+            draw(context, camera, handleDeviceLoss);
 
             // don't draw childs here....
         }
 
-        override public function addChildAt(child:Node2D, idx:uint):void {
+        override public function addChildAt(child:Node2D, idx:uint):Node2D {
 
             if(!(child is Sprite2D)) {
                 throw new Error("Sprite2DCloud accepts Sprite2D childs only");
