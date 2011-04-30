@@ -30,38 +30,55 @@
  */
 
 <languageVersion : 1.0;>
-material kernel particlesystem
+material kernel texture
 <
     namespace : "ND2D_Shader";
     vendor : "nulldesign";
     version : 1;
 >
 {
-    input vertex float4 uvCoord
+    input vertex float2 uvCoord
     <
         id : "PB3D_UV";
     >;
-        
-    input vertex float4 color
+
+    input vertex float4 clipPosition
     <
-        id : "PB3D_RESULT_COLOR";
+        id : "PB3D_CLIP_POSITION";
     >;
 
+    parameter float2 uvOffset;
+    parameter float sceneHeight;
+
     interpolated float4 interpolatedUV;
-    interpolated float4 interpolatedColor;
+    interpolated float4 interpolatedPosition;
 
     void evaluateVertex()
     {
-        interpolatedUV = uvCoord;
-        interpolatedColor = color;
+        interpolatedUV = float4(uvCoord.x + uvOffset.x, uvCoord.y + uvOffset.y, 0.0, 0.0);
+        // add half of the screen height...
+        interpolatedPosition = float4(clipPosition.x, clipPosition.y * sceneHeight * 0.5, 0.0, 1.0);
     }
 
     input image4 textureImage;
+    parameter float4 color;
+
     output float4 result;
 
     void evaluateFragment()
     {
-        float4 texel = sample(textureImage, float2(interpolatedUV.x, interpolatedUV.y), PB3D_MIPNEAREST);
-        result = float4(texel.r * interpolatedColor.r, texel.g * interpolatedColor.g, texel.b * interpolatedColor.b, texel.a * interpolatedColor.a);
+        float4 texel = sample(textureImage,
+                              float2(interpolatedUV.x, interpolatedUV.y),
+                              PB3D_2D | PB3D_MIPNEAREST | PB3D_CLAMP);
+
+        //float alphaValue = mod(interpolatedPosition.y, 3.0);
+        float y = interpolatedPosition.y;
+        float x = 3.0;
+        float alphaValue = y - x * floor(y / x);
+
+        result = float4(texel.r * color.r,
+                        texel.g * color.g,
+                        texel.b * color.b,
+                        texel.a * color.a * alphaValue);
     }
 }

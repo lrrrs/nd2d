@@ -36,7 +36,7 @@ module_vertex_program defaultshader
             end_metadata
         output vertex float-4 color
             metadata
-                id const(string, "PB3D_COLOR")
+                id const(string, "PB3D_RESULT_COLOR")
             end_metadata
         output clipcoord float-4 vertexClipPosition
     end_globals

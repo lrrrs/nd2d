@@ -36,8 +36,9 @@ package de.nulldesign.nd2d.display {
     public class Camera2D {
 
         protected var renderMatrix:Matrix3D = new Matrix3D();
-        protected var projectionMatrix:Matrix3D = new Matrix3D();
-        protected var viewMatrix:Matrix3D = new Matrix3D();
+
+        public var projectionMatrix:Matrix3D = new Matrix3D();
+        public var viewMatrix:Matrix3D = new Matrix3D();
 
         protected var _sceneWidth:Number;
         protected var _sceneHeight:Number;

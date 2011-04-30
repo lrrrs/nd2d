@@ -76,9 +76,9 @@ package de.nulldesign.nd2d.materials {
                 if(child.invalidateMatrix) child.updateMatrix();
 
                 clipSpaceMatrix.identity();
-                clipSpaceMatrix.append(modelViewMatrix);
+                clipSpaceMatrix.append(modelMatrix);
                 clipSpaceMatrix.append(child.localModelMatrix);
-                clipSpaceMatrix.append(projectionMatrix);
+                clipSpaceMatrix.append(viewProjectionMatrix);
 
                 var numConstantsPerSprite:uint = 6; // matrix + offset + color
                 var numConstantsUsedForMatrix:uint = 4;

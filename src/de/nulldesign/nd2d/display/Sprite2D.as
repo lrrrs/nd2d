@@ -31,13 +31,16 @@
 
 package de.nulldesign.nd2d.display {
     import de.nulldesign.nd2d.geom.Face;
+    import de.nulldesign.nd2d.materials.AMaterial;
     import de.nulldesign.nd2d.materials.Sprite2DMaterial;
+    import de.nulldesign.nd2d.materials.Sprite2DScanlineMaterial;
     import de.nulldesign.nd2d.materials.SpriteSheet;
     import de.nulldesign.nd2d.utils.TextureHelper;
 
     import flash.display.BitmapData;
     import flash.display3D.Context3D;
     import flash.display3D.textures.Texture;
+    import flash.geom.Matrix3D;
 
     /**
      * <p>2D sprite class</p>
@@ -110,8 +113,9 @@ package de.nulldesign.nd2d.display {
         override protected function draw(context:Context3D, camera:Camera2D, handleDeviceLoss:Boolean):void {
 
             material.blendMode = blendMode;
-            material.modelViewMatrix = worldModelMatrix;
-            material.projectionMatrix = camera.getViewProjectionMatrix();
+            material.modelMatrix = worldModelMatrix;
+            material.projectionMatrix = camera.projectionMatrix;
+            material.viewProjectionMatrix = camera.getViewProjectionMatrix();
 
             // TODO optimize there is always a parent!
             if(invalidateColors || parent) {

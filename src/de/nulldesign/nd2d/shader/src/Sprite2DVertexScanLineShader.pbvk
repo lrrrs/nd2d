@@ -30,38 +30,29 @@
  */
 
 <languageVersion : 1.0;>
-material kernel particlesystem
+vertex kernel default_sprite2d_shader
 <
     namespace : "ND2D_Shader";
     vendor : "nulldesign";
     version : 1;
 >
 {
-    input vertex float4 uvCoord
+    parameter float4x4 objectToClipSpaceTransform;
+
+    input vertex float2 vertexPosition
     <
-        id : "PB3D_UV";
-    >;
-        
-    input vertex float4 color
-    <
-        id : "PB3D_RESULT_COLOR";
+        id : "PB3D_POSITION";
     >;
 
-    interpolated float4 interpolatedUV;
-    interpolated float4 interpolatedColor;
+    output vertex float4 clipPosition
+    <
+        id : "PB3D_CLIP_POSITION";
+    >;
+
+    output float4 vertexClipPosition;
 
     void evaluateVertex()
     {
-        interpolatedUV = uvCoord;
-        interpolatedColor = color;
-    }
-
-    input image4 textureImage;
-    output float4 result;
-
-    void evaluateFragment()
-    {
-        float4 texel = sample(textureImage, float2(interpolatedUV.x, interpolatedUV.y), PB3D_MIPNEAREST);
-        result = float4(texel.r * interpolatedColor.r, texel.g * interpolatedColor.g, texel.b * interpolatedColor.b, texel.a * interpolatedColor.a);
+        vertexClipPosition = clipPosition = float4(vertexPosition.x, vertexPosition.y, 0.0, 1.0) * objectToClipSpaceTransform;
     }
 }

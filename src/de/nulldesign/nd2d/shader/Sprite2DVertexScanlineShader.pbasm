@@ -1,0 +1,51 @@
+module_vertex_program default_sprite2d_shader
+
+    metadata
+        namespace const(string, "ND2D_Shader")
+        vendor const(string, "nulldesign")
+        version const(int, 1)
+    end_metadata
+    
+    transformations
+        SCF INTOSSA OPT(DCE* {APR DCE*}*)
+    end_transformations
+    
+    globals
+        global parameter float-4-4 objectToClipSpaceTransform
+        input vertex float-2 vertexPosition
+            metadata
+                id const(string, "PB3D_POSITION")
+            end_metadata
+        output vertex float-4 clipPosition
+            metadata
+                id const(string, "PB3D_CLIP_POSITION")
+            end_metadata
+        output clipcoord float-4 vertexClipPosition
+    end_globals
+    
+    functions
+        external_function void evaluateVertex()
+            body
+                basic_block entry%A !! outlets(basic%A)
+                    jump block(basic%A) : void
+                end_basic_block
+                basic_block basic%A !! inlets(entry%A) outlets(exit%A)
+                    vertexPositionElem%A-0 = extractVE vertexPosition, const(int, 0) : float
+                    vertexPositionElem%B-0 = extractVE vertexPosition, const(int, 1) : float
+                    _anonVec%A-0 = makeFloatVector vertexPositionElem%A-0, vertexPositionElem%B-0, const(float, 0), const(float, 1) : float-4
+                    _mulResult%A-0 = mul _anonVec%A-0, objectToClipSpaceTransform : float-4
+                    _LD_clipPosition-1 = assign _mulResult%A-0 : float-4
+                    _LD_vertexClipPosition-1 = assign _mulResult%A-0 : float-4
+                    jump block(exit%A) : void
+                end_basic_block
+                basic_block exit%A !! inlets(basic%A)
+                    moveToNonSSA _LD_clipPosition-1, clipPosition : void
+                    moveToNonSSA _LD_vertexClipPosition-1, vertexClipPosition : void
+                    ret : void
+                end_basic_block
+            end_body
+        end_external_function
+    end_functions
+    
+end_module_vertex_program
+

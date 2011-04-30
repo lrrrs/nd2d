@@ -95,8 +95,8 @@ package de.nulldesign.nd2d.display {
             super.draw(context, camera, handleDeviceLoss);
 
             material.blendMode = blendMode;
-            material.modelViewMatrix = worldModelMatrix;
-            material.projectionMatrix = camera.getViewProjectionMatrix();
+            material.modelMatrix = worldModelMatrix;
+            material.viewProjectionMatrix = camera.getViewProjectionMatrix();
             material.render(context, faceList, numChildren * 2);
         }
 

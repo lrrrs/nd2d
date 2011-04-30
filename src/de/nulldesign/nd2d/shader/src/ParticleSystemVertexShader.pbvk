@@ -91,7 +91,7 @@ vertex kernel defaultshader
 
     output vertex float4 color
     <
-        id : "PB3D_COLOR";
+        id : "PB3D_RESULT_COLOR";
     >;
     
     output float4 vertexClipPosition;

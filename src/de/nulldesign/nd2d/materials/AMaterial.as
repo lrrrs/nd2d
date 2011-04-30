@@ -54,8 +54,15 @@ package de.nulldesign.nd2d.materials {
 
     public class AMaterial {
 
+        // cameras view projectionmatrix
+        public var viewProjectionMatrix:Matrix3D;
+
+        // cameras projection matrix
         public var projectionMatrix:Matrix3D;
-        public var modelViewMatrix:Matrix3D;
+
+        // models modelmatrix
+        public var modelMatrix:Matrix3D;
+
         public var clipSpaceMatrix:Matrix3D = new Matrix3D();
 
         public var numTris:int = 0;
@@ -177,8 +184,8 @@ package de.nulldesign.nd2d.materials {
             }
 
             clipSpaceMatrix.identity();
-            clipSpaceMatrix.append(modelViewMatrix);
-            clipSpaceMatrix.append(projectionMatrix);
+            clipSpaceMatrix.append(modelMatrix);
+            clipSpaceMatrix.append(viewProjectionMatrix);
 
             if(needUploadVertexBuffer) {
                 needUploadVertexBuffer = false;

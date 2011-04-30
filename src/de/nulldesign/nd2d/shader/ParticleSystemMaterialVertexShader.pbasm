@@ -14,7 +14,7 @@ module_material_vertex_program particlesystem
         input image image-4 textureImage
         input vertex float-4 color
             metadata
-                id const(string, "PB3D_COLOR")
+                id const(string, "PB3D_RESULT_COLOR")
             end_metadata
         input vertex float-4 uvCoord
             metadata

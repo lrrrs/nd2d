@@ -181,8 +181,8 @@ package de.nulldesign.nd2d.display {
         override protected function draw(context:Context3D, camera:Camera2D, handleDeviceLoss:Boolean):void {
 
             material.blendMode = blendMode;
-            material.modelViewMatrix = worldModelMatrix;
-            material.projectionMatrix = camera.getViewProjectionMatrix();
+            material.modelMatrix = worldModelMatrix;
+            material.viewProjectionMatrix = camera.getViewProjectionMatrix();
 
             if(handleDeviceLoss) {
                 material.handleDeviceLoss();
