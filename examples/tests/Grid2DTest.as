@@ -44,13 +44,15 @@ package tests {
 
         public function Grid2DTest() {
 
-            grid = new MorphGrid(12, 12, new spriteTexture().bitmapData);
+            grid = new MorphGrid(16, 16, new spriteTexture().bitmapData);
             addChild(grid);
         }
 
         override protected function step(t:Number, elapsed:Number):void {
             grid.x = stage.stageWidth * 0.5;
             grid.y = stage.stageHeight * 0.5;
+            grid.width = stage.stageWidth;
+            grid.height = stage.stageHeight;
         }
     }
 }

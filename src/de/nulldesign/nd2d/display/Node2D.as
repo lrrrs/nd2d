@@ -114,12 +114,12 @@ package de.nulldesign.nd2d.display {
         /**
          * @private
          */
-        public var refreshPosition:Boolean = true;
+        public var invalidateMatrix:Boolean = true;
 
         /**
          * @private
          */
-        public var refreshColors:Boolean = true;
+        public var invalidateColors:Boolean = true;
 
         public var children:Vector.<Node2D> = new Vector.<Node2D>();
         public var parent:Node2D;
@@ -147,7 +147,7 @@ package de.nulldesign.nd2d.display {
         }
 
         public function set width(value:Number):void {
-            _scaleX = value / _width;
+            scaleX = value / _width;
         }
 
         /**
@@ -160,7 +160,7 @@ package de.nulldesign.nd2d.display {
         }
 
         public function set height(value:Number):void {
-            _scaleY = value / _height;
+            scaleY = value / _height;
         }
 
         private var _visible:Boolean = true;
@@ -176,9 +176,11 @@ package de.nulldesign.nd2d.display {
         private var _alpha:Number = 1.0;
 
         public function set alpha(value:Number):void {
-            _alpha = value;
-            refreshColors = true;
-            visible = alpha > 0.0;
+            if(alpha != value) {
+                _alpha = value;
+                invalidateColors = true;
+                visible = alpha > 0.0;
+            }
         }
 
         public function get alpha():Number {
@@ -224,8 +226,10 @@ package de.nulldesign.nd2d.display {
         private var _tint:Number = 0xFFFFFF;
 
         public function set tint(value:Number):void {
-            _tint = value;
-            refreshColors = true;
+            if(tint != value) {
+                _tint = value;
+                invalidateColors = true;
+            }
         }
 
         public function get tint():Number {
@@ -235,8 +239,10 @@ package de.nulldesign.nd2d.display {
         private var _scaleX:Number = 1.0;
 
         public function set scaleX(value:Number):void {
-            _scaleX = value;
-            refreshPosition = true;
+            if(scaleX != value) {
+                _scaleX = value;
+                invalidateMatrix = true;
+            }
         }
 
         public function get scaleX():Number {
@@ -246,8 +252,10 @@ package de.nulldesign.nd2d.display {
         private var _scaleY:Number = 1.0;
 
         public function set scaleY(value:Number):void {
-            _scaleY = value;
-            refreshPosition = true;
+            if(scaleY != value) {
+                _scaleY = value;
+                invalidateMatrix = true;
+            }
         }
 
         public function get scaleY():Number {
@@ -257,9 +265,11 @@ package de.nulldesign.nd2d.display {
         private var _x:Number = 0.0;
 
         public function set x(value:Number):void {
-            _x = value;
-            position.x = x;
-            refreshPosition = true;
+            if(x != value) {
+                _x = value;
+                position.x = x;
+                invalidateMatrix = true;
+            }
         }
 
         public function get x():Number {
@@ -269,9 +279,11 @@ package de.nulldesign.nd2d.display {
         private var _y:Number = 0.0;
 
         public function set y(value:Number):void {
-            _y = value;
-            position.y = y;
-            refreshPosition = true;
+            if(y != value) {
+                _y = value;
+                position.y = y;
+                invalidateMatrix = true;
+            }
         }
 
         public function get y():Number {
@@ -285,10 +297,12 @@ package de.nulldesign.nd2d.display {
         }
 
         public function set position(value:Point):void {
-            _position.x = value.x;
-            _position.y = value.y;
-            x = _position.x;
-            y = _position.y;
+            if(x != value.x || y != value.y) {
+                _position.x = value.x;
+                _position.y = value.y;
+                x = _position.x;
+                y = _position.y;
+            }
         }
 
         private var _pivot:Point = new Point(0.0, 0.0);
@@ -298,15 +312,20 @@ package de.nulldesign.nd2d.display {
         }
 
         public function set pivot(value:Point):void {
-            _pivot = value;
-            refreshPosition = true;
+            if(pivot.x != value.x || pivot.y != value.y) {
+                _pivot.x = value.x;
+                _pivot.y = value.y;
+                invalidateMatrix = true;
+            }
         }
 
         private var _rotation:Number = 0.0;
 
         public function set rotation(value:Number):void {
-            _rotation = value;
-            refreshPosition = true;
+            if(rotation != value) {
+                _rotation = value;
+                invalidateMatrix = true;
+            }
         }
 
         public function get rotation():Number {
@@ -330,7 +349,7 @@ package de.nulldesign.nd2d.display {
             var tris:uint = 0;
 
             for(var i:int = 0; i < children.length; i++) {
-               tris += children[i].numTris;
+                tris += children[i].numTris;
             }
 
             return tris;
@@ -341,7 +360,7 @@ package de.nulldesign.nd2d.display {
             var calls:uint = 0;
 
             for(var i:int = 0; i < children.length; i++) {
-               calls += children[i].drawCalls;
+                calls += children[i].drawCalls;
             }
 
             return calls;
@@ -357,8 +376,8 @@ package de.nulldesign.nd2d.display {
         /**
          * @private
          */
-        public function refreshMatrix():void {
-            refreshPosition = false;
+        public function updateMatrix():void {
+            invalidateMatrix = false;
             localModelMatrix.identity();
             localModelMatrix.appendTranslation(-pivot.x, -pivot.y, 0);
             localModelMatrix.appendScale(scaleX, scaleY, 1.0);
@@ -371,7 +390,7 @@ package de.nulldesign.nd2d.display {
          */
         public function updateColors():void {
 
-            refreshColors = false;
+            invalidateColors = false;
 
             _r = (tint >> 16) / 255.0;
             _g = (tint >> 8 & 255) / 255.0;
@@ -468,8 +487,8 @@ package de.nulldesign.nd2d.display {
                 return;
             }
 
-            if(refreshPosition) {
-                refreshMatrix();
+            if(invalidateMatrix) {
+                updateMatrix();
             }
 
             worldModelMatrix.identity();

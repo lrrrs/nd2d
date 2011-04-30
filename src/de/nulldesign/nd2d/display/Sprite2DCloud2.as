@@ -106,8 +106,8 @@ package de.nulldesign.nd2d.display {
                 return;
             }
 
-            if(refreshPosition) {
-                refreshMatrix();
+            if(invalidateMatrix) {
+                updateMatrix();
             }
 
             worldModelMatrix.identity();

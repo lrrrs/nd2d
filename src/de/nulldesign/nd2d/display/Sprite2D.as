@@ -114,7 +114,7 @@ package de.nulldesign.nd2d.display {
             material.projectionMatrix = camera.getViewProjectionMatrix();
 
             // TODO optimize there is always a parent!
-            if(refreshColors || parent) {
+            if(invalidateColors || parent) {
 
                 updateColors();
 

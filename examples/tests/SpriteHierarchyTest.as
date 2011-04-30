@@ -9,6 +9,7 @@ package tests {
     import flash.display.BitmapData;
     import flash.events.MouseEvent;
     import flash.geom.Point;
+    import flash.utils.getTimer;
 
     public class SpriteHierarchyTest extends Scene2D {
 
@@ -34,8 +35,8 @@ package tests {
             s2.mouseEnabled = true;
             s2.addEventListener(MouseEvent.MOUSE_OVER, mouseOver);
             s2.addEventListener(MouseEvent.MOUSE_OUT, mouseOut);
-            s2.x = 50;
-            s2.y = 50;
+            s2.x = 80;
+            s2.y = 80;
             s2.scaleX = 0.5;
             s2.scaleY = 0.5;
             s.addChild(s2);

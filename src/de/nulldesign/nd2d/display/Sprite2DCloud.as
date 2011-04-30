@@ -146,8 +146,8 @@ package de.nulldesign.nd2d.display {
                 return;
             }
 
-            if(refreshPosition) {
-                refreshMatrix();
+            if(invalidateMatrix) {
+                updateMatrix();
             }
 
             worldModelMatrix.identity();
@@ -209,7 +209,7 @@ package de.nulldesign.nd2d.display {
                 spriteSheet = child.spriteSheet;
 
                 // TODO mix with parent colors -> Sprite2D
-                if(child.refreshColors) {
+                if(child.invalidateColors) {
                     r = (child.tint >> 16) / 255;
                     g = (child.tint >> 8 & 255) / 255;
                     b = (child.tint & 255) / 255;
@@ -229,14 +229,14 @@ package de.nulldesign.nd2d.display {
                     offset = spriteSheet.getOffsetForFrame();
                 }
 
-                if(child.refreshPosition) {
+                if(child.invalidateMatrix) {
                     rot = VectorUtil.deg2rad(child.rotation);
                     cr = Math.cos(rot);
                     sr = Math.sin(rot);
                 }
 
                 // v1
-                if(child.refreshPosition) {
+                if(child.invalidateMatrix) {
                     mVertexBuffer[vIdx] = v1.x * sx * cr - v1.y * sy * sr + child.x;
                     mVertexBuffer[vIdx + 1] = v1.x * sx * sr + v1.y * sy * cr + child.y;
                     somethingChanged = true;
@@ -248,7 +248,7 @@ package de.nulldesign.nd2d.display {
                     somethingChanged = true;
                 }
 
-                if(child.refreshColors) {
+                if(child.invalidateColors) {
                     mVertexBuffer[vIdx + 4] = r; // r
                     mVertexBuffer[vIdx + 5] = g; // g
                     mVertexBuffer[vIdx + 6] = b; // b
@@ -257,7 +257,7 @@ package de.nulldesign.nd2d.display {
                 }
 
                 // v2
-                if(child.refreshPosition) {
+                if(child.invalidateMatrix) {
                     mVertexBuffer[vIdx + 8] = v2.x * sx * cr - v2.y * sy * sr + child.x;
                     mVertexBuffer[vIdx + 9] = v2.x * sx * sr + v2.y * sy * cr + child.y;
                 }
@@ -267,7 +267,7 @@ package de.nulldesign.nd2d.display {
                     mVertexBuffer[vIdx + 11] = uv2.v + offset.y; // v
                 }
 
-                if(child.refreshColors) {
+                if(child.invalidateColors) {
                     mVertexBuffer[vIdx + 12] = r; // r
                     mVertexBuffer[vIdx + 13] = g; // g
                     mVertexBuffer[vIdx + 14] = b; // b
@@ -275,7 +275,7 @@ package de.nulldesign.nd2d.display {
                 }
 
                 // v3
-                if(child.refreshPosition) {
+                if(child.invalidateMatrix) {
                     mVertexBuffer[vIdx + 16] = v3.x * sx * cr - v3.y * sy * sr + child.x;
                     mVertexBuffer[vIdx + 17] = v3.x * sx * sr + v3.y * sy * cr + child.y;
                 }
@@ -285,7 +285,7 @@ package de.nulldesign.nd2d.display {
                     mVertexBuffer[vIdx + 19] = uv3.v + offset.y; // v
                 }
 
-                if(child.refreshColors) {
+                if(child.invalidateColors) {
                     mVertexBuffer[vIdx + 20] = r; // r
                     mVertexBuffer[vIdx + 21] = g; // g
                     mVertexBuffer[vIdx + 22] = b; // b
@@ -293,7 +293,7 @@ package de.nulldesign.nd2d.display {
                 }
 
                 // v4
-                if(child.refreshPosition) {
+                if(child.invalidateMatrix) {
                     mVertexBuffer[vIdx + 24] = v4.x * sx * cr - v4.y * sy * sr + child.x;
                     mVertexBuffer[vIdx + 25] = v4.x * sx * sr + v4.y * sy * cr + child.y;
                 }
@@ -303,7 +303,7 @@ package de.nulldesign.nd2d.display {
                     mVertexBuffer[vIdx + 27] = uv4.v + offset.y; // v
                 }
 
-                if(child.refreshColors) {
+                if(child.invalidateColors) {
                     mVertexBuffer[vIdx + 28] = r; // r
                     mVertexBuffer[vIdx + 29] = g; // g
                     mVertexBuffer[vIdx + 30] = b; // b
@@ -312,7 +312,7 @@ package de.nulldesign.nd2d.display {
 
                 vIdx += 32;
 
-                child.refreshPosition = child.refreshColors = false;
+                child.invalidateMatrix = child.invalidateColors = false;
             }
 
             uvInited = true;

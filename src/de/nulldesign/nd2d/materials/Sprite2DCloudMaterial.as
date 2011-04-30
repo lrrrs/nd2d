@@ -72,8 +72,8 @@ package de.nulldesign.nd2d.materials {
                 offset = spriteSheet.getOffsetForFrame();
 
                 // TODO update properties internally
-                if(child.refreshColors) child.updateColors();
-                if(child.refreshPosition) child.refreshMatrix();
+                if(child.invalidateColors) child.updateColors();
+                if(child.invalidateMatrix) child.updateMatrix();
 
                 clipSpaceMatrix.identity();
                 clipSpaceMatrix.append(modelViewMatrix);
