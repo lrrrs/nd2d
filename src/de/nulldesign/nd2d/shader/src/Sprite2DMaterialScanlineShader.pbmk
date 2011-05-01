@@ -49,6 +49,7 @@ material kernel texture
 
     parameter float2 uvOffset;
     parameter float sceneHeight;
+    parameter float seed;
 
     interpolated float4 interpolatedUV;
     interpolated float4 interpolatedPosition;
@@ -57,7 +58,7 @@ material kernel texture
     {
         interpolatedUV = float4(uvCoord.x + uvOffset.x, uvCoord.y + uvOffset.y, 0.0, 0.0);
         // add half of the screen height...
-        interpolatedPosition = float4(clipPosition.x, clipPosition.y * sceneHeight * 0.5, 0.0, 1.0);
+        interpolatedPosition = float4(clipPosition.x, clipPosition.y * sceneHeight * 0.5 + seed, 0.0, 1.0);
     }
 
     input image4 textureImage;
@@ -71,14 +72,16 @@ material kernel texture
                               float2(interpolatedUV.x, interpolatedUV.y),
                               PB3D_2D | PB3D_MIPNEAREST | PB3D_CLAMP);
 
+        // mod is broken at the moment...
         //float alphaValue = mod(interpolatedPosition.y, 3.0);
+
         float y = interpolatedPosition.y;
         float x = 3.0;
         float alphaValue = y - x * floor(y / x);
 
-        result = float4(texel.r * color.r,
-                        texel.g * color.g,
-                        texel.b * color.b,
+        result = float4(texel.r * color.r / texel.a,
+                        texel.g * color.g / texel.a,
+                        texel.b * color.b / texel.a,
                         texel.a * color.a * alphaValue);
     }
 }

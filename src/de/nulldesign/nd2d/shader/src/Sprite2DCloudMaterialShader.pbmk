@@ -67,6 +67,9 @@ material kernel sprite2dcloud_material_shader
     void evaluateFragment()
     {
         float4 texel = sample(textureImage, float2(interpolatedUV.x, interpolatedUV.y), PB3D_MIPNEAREST /*PB3D_2D | PB3D_LINEAR | PB3D_REPEAT*/);
-        result = float4(texel.r * interpolatedColor.r, texel.g * interpolatedColor.g, texel.b * interpolatedColor.b, texel.a * interpolatedColor.a);
+        result = float4(texel.r * interpolatedColor.r / texel.a,
+                        texel.g * interpolatedColor.g / texel.a,
+                        texel.b * interpolatedColor.b / texel.a,
+                        texel.a * interpolatedColor.a);
     }
 }

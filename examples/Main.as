@@ -53,6 +53,7 @@ package {
     import tests.Grid2DTest;
     import tests.MassiveSpriteCloudTest;
     import tests.MassiveSpritesTest;
+    import tests.MaterialsTest;
     import tests.ParticleExplorer;
     import tests.ParticleSystemTest;
     import tests.SideScrollerTest;
@@ -91,6 +92,7 @@ package {
             scenes.push(new ParticleSystemTest());
             scenes.push(new TextureRendererTest());
             scenes.push(new SideScrollerTest());
+            scenes.push(new MaterialsTest());
             //scenes.push(new ParticleExplorer());
 
             var tf:TextFormat = new TextFormat("Arial", 11, 0xFFFFFF, true);
@@ -104,7 +106,7 @@ package {
             stage.addEventListener(Event.RESIZE, stageResize);
             stageResize(null);
 
-            activeSceneIdx = 9;
+            activeSceneIdx = 11;
             nextBtnClick();
 
             stage.addEventListener(KeyboardEvent.KEY_UP, keyUp);

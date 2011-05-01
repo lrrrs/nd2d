@@ -55,8 +55,7 @@ package de.nulldesign.nd2d.materials {
         public var texture:Texture;
         public var bitmapData:BitmapData;
         public var color:Vector3D = new Vector3D(1.0, 1.0, 1.0, 1.0);
-
-        protected var spriteSheet:SpriteSheet;
+        public var spriteSheet:SpriteSheet;
 
         public function Sprite2DMaterial(bitmapData:BitmapData, spriteSheet:SpriteSheet = null) {
             this.bitmapData = bitmapData;

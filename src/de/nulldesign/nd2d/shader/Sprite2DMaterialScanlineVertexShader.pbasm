@@ -13,6 +13,7 @@ module_material_vertex_program texture
     globals
         global parameter float-4 color
         global parameter float sceneHeight
+        global parameter float seed
         input image image-4 textureImage
         global parameter float-2 uvOffset
         input vertex float-4 clipPosition
@@ -51,7 +52,8 @@ module_material_vertex_program texture
                     clipPositionElem%B-0 = extractVE clipPosition, const(int, 1) : float
                     _mulResult%A-0 = mul clipPositionElem%B-0, sceneHeight : float
                     _mulResult%B-0 = mul _mulResult%A-0, const(float, 0.5) : float
-                    _LD_interpolatedPosition-1 = makeFloatVector clipPositionElem%A-0, _mulResult%B-0, const(float, 0), const(float, 1) : float-4
+                    _addResult%C-0 = add _mulResult%B-0, seed : float
+                    _LD_interpolatedPosition-1 = makeFloatVector clipPositionElem%A-0, _addResult%C-0, const(float, 0), const(float, 1) : float-4
                     jump block(exit%A) : void
                 end_basic_block
                 basic_block exit%A !! inlets(basic%A)

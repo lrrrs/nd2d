@@ -48,16 +48,22 @@ module_fragment_program sprite2dcloud_material_shader
                     _LD_texelElem%A-0 = extractVE _LD_texel-1, const(int, 0) : float
                     interpolatedColorElem%A-0 = extractVE interpolatedColor, const(int, 0) : float
                     _mulResult%A-0 = mul _LD_texelElem%A-0, interpolatedColorElem%A-0 : float
-                    _LD_texelElem%B-0 = extractVE _LD_texel-1, const(int, 1) : float
+                    _LD_texelElem%B-0 = extractVE _LD_texel-1, const(int, 3) : float
+                    _divResult%A-0 = div _mulResult%A-0, _LD_texelElem%B-0 : float
+                    _LD_texelElem%C-0 = extractVE _LD_texel-1, const(int, 1) : float
                     interpolatedColorElem%B-0 = extractVE interpolatedColor, const(int, 1) : float
-                    _mulResult%B-0 = mul _LD_texelElem%B-0, interpolatedColorElem%B-0 : float
-                    _LD_texelElem%C-0 = extractVE _LD_texel-1, const(int, 2) : float
-                    interpolatedColorElem%C-0 = extractVE interpolatedColor, const(int, 2) : float
-                    _mulResult%C-0 = mul _LD_texelElem%C-0, interpolatedColorElem%C-0 : float
+                    _mulResult%B-0 = mul _LD_texelElem%C-0, interpolatedColorElem%B-0 : float
                     _LD_texelElem%D-0 = extractVE _LD_texel-1, const(int, 3) : float
+                    _divResult%B-0 = div _mulResult%B-0, _LD_texelElem%D-0 : float
+                    _LD_texelElem%E-0 = extractVE _LD_texel-1, const(int, 2) : float
+                    interpolatedColorElem%C-0 = extractVE interpolatedColor, const(int, 2) : float
+                    _mulResult%C-0 = mul _LD_texelElem%E-0, interpolatedColorElem%C-0 : float
+                    _LD_texelElem%F-0 = extractVE _LD_texel-1, const(int, 3) : float
+                    _divResult%C-0 = div _mulResult%C-0, _LD_texelElem%F-0 : float
+                    _LD_texelElem%G-0 = extractVE _LD_texel-1, const(int, 3) : float
                     interpolatedColorElem%D-0 = extractVE interpolatedColor, const(int, 3) : float
-                    _mulResult%D-0 = mul _LD_texelElem%D-0, interpolatedColorElem%D-0 : float
-                    _LD_result-1 = makeFloatVector _mulResult%A-0, _mulResult%B-0, _mulResult%C-0, _mulResult%D-0 : float-4
+                    _mulResult%D-0 = mul _LD_texelElem%G-0, interpolatedColorElem%D-0 : float
+                    _LD_result-1 = makeFloatVector _divResult%A-0, _divResult%B-0, _divResult%C-0, _mulResult%D-0 : float-4
                     jump block(exit%A) : void
                 end_basic_block
                 basic_block exit%A !! inlets(basic%A)

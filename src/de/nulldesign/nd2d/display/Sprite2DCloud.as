@@ -34,6 +34,7 @@ package de.nulldesign.nd2d.display {
 
     import de.nulldesign.nd2d.geom.UV;
     import de.nulldesign.nd2d.geom.Vertex;
+    import de.nulldesign.nd2d.materials.Sprite2DMaterial;
     import de.nulldesign.nd2d.materials.SpriteSheet;
     import de.nulldesign.nd2d.utils.TextureHelper;
     import de.nulldesign.nd2d.utils.VectorUtil;
@@ -102,8 +103,8 @@ package de.nulldesign.nd2d.display {
             return material.drawCalls;
         }
 
-        override protected function initMaterial(bitmapTexture:BitmapData):void {
-            super.initMaterial(bitmapTexture);
+        override public function setMaterial(material:Sprite2DMaterial):void {
+            super.setMaterial(material);
 
             // kinda hackish ...
             v1 = faceList[0].v1;

@@ -55,12 +55,8 @@ package de.nulldesign.nd2d.display {
             generateGrid();
         }
 
-        override protected function initMaterial(bitmapTexture:BitmapData):void {
-
-            _width = bitmapTexture.width;
-            _height = bitmapTexture.height;
-
-            material = new Sprite2DMaterial(bitmapTexture, spriteSheet);
+        override public function setMaterial(material:Sprite2DMaterial):void {
+            super.setMaterial(material);
             generateGrid();
         }
 

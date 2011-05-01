@@ -31,16 +31,13 @@
 
 package de.nulldesign.nd2d.display {
     import de.nulldesign.nd2d.geom.Face;
-    import de.nulldesign.nd2d.materials.AMaterial;
     import de.nulldesign.nd2d.materials.Sprite2DMaterial;
-    import de.nulldesign.nd2d.materials.Sprite2DScanlineMaterial;
     import de.nulldesign.nd2d.materials.SpriteSheet;
     import de.nulldesign.nd2d.utils.TextureHelper;
 
     import flash.display.BitmapData;
     import flash.display3D.Context3D;
     import flash.display3D.textures.Texture;
-    import flash.geom.Matrix3D;
 
     /**
      * <p>2D sprite class</p>
@@ -67,8 +64,16 @@ package de.nulldesign.nd2d.display {
             }
 
             if(bitmapTexture) {
-                initMaterial(bitmapTexture);
+                setMaterial(new Sprite2DMaterial(bitmapTexture, spriteSheet));
             }
+        }
+
+        public function setMaterial(material:Sprite2DMaterial):void {
+            _width = material.spriteSheet ? material.spriteSheet.width : material.bitmapData.width;
+            _height = material.spriteSheet ? material.spriteSheet.height : material.bitmapData.height;
+
+            this.material = material;
+            faceList = TextureHelper.generateQuadFromTexture(material.bitmapData, material.spriteSheet);
         }
 
         public function setTexture(texture:Texture, width:Number, height:Number):void {
@@ -80,15 +85,6 @@ package de.nulldesign.nd2d.display {
                 material.texture = texture;
                 faceList = TextureHelper.generateQuadFromDimensions(width, height);
             }
-        }
-
-        protected function initMaterial(bitmapTexture:BitmapData):void {
-
-            _width = spriteSheet ? spriteSheet.width : bitmapTexture.width;
-            _height = spriteSheet ? spriteSheet.height : bitmapTexture.height;
-
-            material = new Sprite2DMaterial(bitmapTexture, spriteSheet);
-            faceList = TextureHelper.generateQuadFromTexture(bitmapTexture, spriteSheet);
         }
 
         override public function get numTris():uint {

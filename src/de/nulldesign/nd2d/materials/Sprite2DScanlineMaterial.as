@@ -33,6 +33,7 @@ package de.nulldesign.nd2d.materials {
     import flash.display.BitmapData;
     import flash.display3D.Context3D;
     import flash.display3D.Context3DProgramType;
+    import flash.utils.getTimer;
 
     public class Sprite2DScanlineMaterial extends Sprite2DMaterial {
 
@@ -49,6 +50,8 @@ package de.nulldesign.nd2d.materials {
             super(bitmapData, spriteSheet);
         }
 
+        public var seed:uint = 0;
+
         override protected function prepareForRender(context:Context3D):Boolean {
 
             if(parameterBufferHelper) {
@@ -56,6 +59,9 @@ package de.nulldesign.nd2d.materials {
                 var sceneHeight:Number = Math.abs(1 / (projectionMatrix.rawData[5] / 2));
                 parameterBufferHelper.setNumberParameterByName(Context3DProgramType.VERTEX, "sceneHeight",
                                                                Vector.<Number>([ sceneHeight ]));
+
+                parameterBufferHelper.setNumberParameterByName(Context3DProgramType.VERTEX, "seed",
+                                                               Vector.<Number>([ seed ]));
             }
 
             return super.prepareForRender(context);
