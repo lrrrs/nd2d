@@ -49,6 +49,7 @@ package {
 
     import flash.ui.Keyboard;
 
+    import tests.CameraTest;
     import tests.Font2DTest;
     import tests.Grid2DTest;
     import tests.MassiveSpriteCloudTest;
@@ -93,6 +94,7 @@ package {
             scenes.push(new TextureRendererTest());
             scenes.push(new SideScrollerTest());
             scenes.push(new MaterialsTest());
+            scenes.push(new CameraTest());
             //scenes.push(new ParticleExplorer());
 
             var tf:TextFormat = new TextFormat("Arial", 11, 0xFFFFFF, true);
@@ -106,7 +108,7 @@ package {
             stage.addEventListener(Event.RESIZE, stageResize);
             stageResize(null);
 
-            activeSceneIdx = 11;
+            activeSceneIdx = 12;
             nextBtnClick();
 
             stage.addEventListener(KeyboardEvent.KEY_UP, keyUp);
