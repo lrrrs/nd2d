@@ -140,6 +140,8 @@ package de.nulldesign.nd2d.display {
                     c.spriteSheet = spriteSheet.clone();
                 }
             }
+
+            return child;
         }
     }
 }

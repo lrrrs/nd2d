@@ -30,12 +30,7 @@
  */
 
 package de.nulldesign.nd2d.materials {
-    import com.adobe.pixelBender3D.AGALProgramPair;
-    import com.adobe.pixelBender3D.PBASMCompiler;
-    import com.adobe.pixelBender3D.PBASMProgram;
-    import com.adobe.pixelBender3D.RegisterMap;
     import com.adobe.pixelBender3D.VertexRegisterInfo;
-    import com.adobe.pixelBender3D.utils.ProgramConstantsHelper;
     import com.adobe.pixelBender3D.utils.VertexBufferHelper;
 
     import de.nulldesign.nd2d.geom.Face;
@@ -46,10 +41,8 @@ package de.nulldesign.nd2d.materials {
     import flash.display3D.Context3D;
     import flash.display3D.Context3DVertexBufferFormat;
     import flash.display3D.IndexBuffer3D;
-    import flash.display3D.Program3D;
     import flash.display3D.VertexBuffer3D;
     import flash.geom.Matrix3D;
-    import flash.utils.ByteArray;
     import flash.utils.Dictionary;
 
     public class AMaterial {
@@ -68,27 +61,19 @@ package de.nulldesign.nd2d.materials {
         public var numTris:int = 0;
         public var drawCalls:int = 0;
 
+        public var blendMode:NodeBlendMode = BlendModePresets.NORMAL;
+
+        public var needUploadVertexBuffer:Boolean = false;
+
         protected var indexBuffer:IndexBuffer3D;
         protected var vertexBuffer:VertexBuffer3D;
-
-        public var blendMode:NodeBlendMode = BlendModePresets.NORMAL;
 
         protected var mIndexBuffer:Vector.<uint>;
         protected var mVertexBuffer:Vector.<Number>;
 
-        protected var vertexProgram:String;
-        protected var materialVertexProgram:String;
-        protected var materialFragmentProgram:String;
+        protected var programData:ProgramData;
 
-        protected var program:Program3D;
-
-        protected var numFloatsPerVertex:int;
-        protected var vertexRegisterMap:RegisterMap;
-        protected var fragmentRegisterMap:RegisterMap;
-        protected var parameterBufferHelper:ProgramConstantsHelper;
         protected var vertexBufferHelper:VertexBufferHelper;
-
-        public var needUploadVertexBuffer:Boolean = false;
 
         public function AMaterial() {
 
@@ -158,10 +143,10 @@ package de.nulldesign.nd2d.materials {
             }
 
             duplicateCheck = null;
-            numIndices = mVertexBuffer.length / numFloatsPerVertex;
+            numIndices = mVertexBuffer.length / programData.numFloatsPerVertex;
 
             // GENERATE BUFFERS
-            vertexBuffer = context.createVertexBuffer(numIndices, numFloatsPerVertex);
+            vertexBuffer = context.createVertexBuffer(numIndices, programData.numFloatsPerVertex);
             vertexBuffer.uploadFromVector(mVertexBuffer, 0, numIndices);
 
             if(!indexBuffer) {
@@ -175,11 +160,11 @@ package de.nulldesign.nd2d.materials {
 
         protected function prepareForRender(context:Context3D):Boolean {
 
-            context.setProgram(program);
+            context.setProgram(programData.program);
             context.setBlendFactors(blendMode.src, blendMode.dst);
 
-            if(vertexRegisterMap && !vertexBufferHelper) {
-                vertexBufferHelper = new VertexBufferHelper(context, vertexRegisterMap.inputVertexRegisters,
+            if(!vertexBufferHelper) {
+                vertexBufferHelper = new VertexBufferHelper(context, programData.vertexRegisterMap.inputVertexRegisters,
                                                             vertexBuffer);
             }
 
@@ -189,7 +174,7 @@ package de.nulldesign.nd2d.materials {
 
             if(needUploadVertexBuffer) {
                 needUploadVertexBuffer = false;
-                vertexBuffer.uploadFromVector(mVertexBuffer, 0, mVertexBuffer.length / numFloatsPerVertex);
+                vertexBuffer.uploadFromVector(mVertexBuffer, 0, mVertexBuffer.length / programData.numFloatsPerVertex);
             }
 
             return true;
@@ -201,10 +186,7 @@ package de.nulldesign.nd2d.materials {
             vertexBuffer = null;
             mIndexBuffer = null;
             mVertexBuffer = null;
-            program = null;
-            vertexRegisterMap = null;
-            fragmentRegisterMap = null;
-            parameterBufferHelper = null;
+            programData = null;
             vertexBufferHelper = null;
             needUploadVertexBuffer = true;
         }
@@ -218,49 +200,22 @@ package de.nulldesign.nd2d.materials {
         }
 
         protected function clearAfterRender(context:Context3D):void {
-            for(var i:int = 0; i < vertexRegisterMap.inputVertexRegisters.length; ++i) {
+            for(var i:int = 0; i < programData.vertexRegisterMap.inputVertexRegisters.length; ++i) {
                 context.setVertexBufferAt(i, null);
             }
         }
 
         protected function initProgram(context:Context3D):void {
-            if(!program) {
-
-                var inputVertexProgram:PBASMProgram = new PBASMProgram(vertexProgram);
-                var inputMaterialVertexProgram:PBASMProgram = new PBASMProgram(materialVertexProgram);
-                var inputFragmentProgram:PBASMProgram = new PBASMProgram(materialFragmentProgram);
-
-                var programs:AGALProgramPair = PBASMCompiler.compile(inputVertexProgram, inputMaterialVertexProgram,
-                                                                     inputFragmentProgram);
-
-                var agalVertexBinary:ByteArray = programs.vertexProgram.byteCode;
-                var agalFragmentBinary:ByteArray = programs.fragmentProgram.byteCode;
-
-                vertexRegisterMap = programs.vertexProgram.registers;
-                fragmentRegisterMap = programs.fragmentProgram.registers;
-
-                parameterBufferHelper = new ProgramConstantsHelper(context, vertexRegisterMap, fragmentRegisterMap);
-
-                numFloatsPerVertex = VertexBufferHelper.numFloatsPerVertex(vertexRegisterMap.inputVertexRegisters);
-
-                program = context.createProgram();
-                program.upload(agalVertexBinary, agalFragmentBinary);
-            }
-        }
-
-        protected function readFile(f:Class):String {
-            var bytes:ByteArray;
-            bytes = new f();
-            return bytes.readUTFBytes(bytes.bytesAvailable);
+            // implement in concrete material
         }
 
         protected function addVertex(buffer:Vector.<Number>, v:Vertex, uv:UV, face:Face):void {
 
-            var vertexRegisters:Vector.<VertexRegisterInfo> = vertexRegisterMap.inputVertexRegisters;
+            var vertexRegisters:Vector.<VertexRegisterInfo> = programData.vertexRegisterMap.inputVertexRegisters;
 
-            for(var i:int = 0; i < vertexRegisterMap.inputVertexRegisters.length; i += 1) {
+            for(var i:int = 0; i < programData.vertexRegisterMap.inputVertexRegisters.length; i += 1) {
 
-                var n:int = getFloatFormat(vertexRegisterMap.inputVertexRegisters[i].format);
+                var n:int = getFloatFormat(programData.vertexRegisterMap.inputVertexRegisters[i].format);
                 fillBuffer(buffer, v, uv, face, vertexRegisters[i].semantics.id, n);
             }
         }
@@ -269,12 +224,12 @@ package de.nulldesign.nd2d.materials {
 
             if(!mVertexBuffer || mVertexBuffer.length == 0) return;
 
-            var vertexRegisters:Vector.<VertexRegisterInfo> = vertexRegisterMap.inputVertexRegisters;
-            var idx:uint = bufferIdx * numFloatsPerVertex;
+            var vertexRegisters:Vector.<VertexRegisterInfo> = programData.vertexRegisterMap.inputVertexRegisters;
+            var idx:uint = bufferIdx * programData.numFloatsPerVertex;
 
-            for(var i:int = 0; i < vertexRegisterMap.inputVertexRegisters.length; i += 1) {
+            for(var i:int = 0; i < programData.vertexRegisterMap.inputVertexRegisters.length; i += 1) {
                 var semanticsID:String = vertexRegisters[i].semantics.id;
-                var floatFormat:int = getFloatFormat(vertexRegisterMap.inputVertexRegisters[i].format);
+                var floatFormat:int = getFloatFormat(programData.vertexRegisterMap.inputVertexRegisters[i].format);
 
                 if(semanticsID == "PB3D_POSITION") {
 
@@ -354,7 +309,6 @@ package de.nulldesign.nd2d.materials {
                 return 4;
 
             throw new Error("bad format");
-
             return 0;
         }
     }

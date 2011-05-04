@@ -103,13 +103,7 @@ package de.nulldesign.nd2d.materials {
         }
 
         override protected function initProgram(context:Context3D):void {
-            if(!program) {
-                vertexProgram = readFile(VertexProgramClass);
-                materialVertexProgram = readFile(MaterialVertexProgramClass);
-                materialFragmentProgram = readFile(MaterialFragmentProgramClass);
-            }
-
-            super.initProgram(context);
+            // TODO
         }
     }
 }

@@ -33,7 +33,6 @@ package de.nulldesign.nd2d.materials {
     import flash.display.BitmapData;
     import flash.display3D.Context3D;
     import flash.display3D.Context3DProgramType;
-    import flash.utils.getTimer;
 
     public class Sprite2DScanlineMaterial extends Sprite2DMaterial {
 
@@ -46,6 +45,8 @@ package de.nulldesign.nd2d.materials {
         [Embed (source="../shader/Sprite2DVertexScanlineShader.pbasm", mimeType="application/octet-stream")]
         private static const VertexProgramClass:Class;
 
+        private static var scanlineProgramData:ProgramData;
+
         public function Sprite2DScanlineMaterial(bitmapData:BitmapData, spriteSheet:SpriteSheet = null) {
             super(bitmapData, spriteSheet);
         }
@@ -54,27 +55,26 @@ package de.nulldesign.nd2d.materials {
 
         override protected function prepareForRender(context:Context3D):Boolean {
 
-            if(parameterBufferHelper) {
+            if(programData.parameterBufferHelper) {
 
                 var sceneHeight:Number = Math.abs(1 / (projectionMatrix.rawData[5] / 2));
-                parameterBufferHelper.setNumberParameterByName(Context3DProgramType.VERTEX, "sceneHeight",
-                                                               Vector.<Number>([ sceneHeight ]));
+                programData.parameterBufferHelper.setNumberParameterByName(Context3DProgramType.VERTEX, "sceneHeight",
+                                                                           Vector.<Number>([ sceneHeight ]));
 
-                parameterBufferHelper.setNumberParameterByName(Context3DProgramType.VERTEX, "seed",
-                                                               Vector.<Number>([ seed ]));
+                programData.parameterBufferHelper.setNumberParameterByName(Context3DProgramType.VERTEX, "seed",
+                                                                           Vector.<Number>([ seed ]));
             }
 
             return super.prepareForRender(context);
         }
 
         override protected function initProgram(context:Context3D):void {
-            if(!vertexProgram) {
-                vertexProgram = readFile(VertexProgramClass);
-                materialVertexProgram = readFile(MaterialVertexProgramClass);
-                materialFragmentProgram = readFile(MaterialFragmentProgramClass);
+            if(!scanlineProgramData) {
+                scanlineProgramData = new ProgramData(context, VertexProgramClass, MaterialVertexProgramClass,
+                                                      MaterialFragmentProgramClass);
             }
 
-            super.initProgram(context);
+            programData = scanlineProgramData;
         }
     }
 }

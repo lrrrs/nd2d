@@ -53,6 +53,8 @@ package de.nulldesign.nd2d.materials {
         [Embed (source="../shader/ParticleSystemMaterialFragmentShader.pbasm", mimeType="application/octet-stream")]
         protected static const MaterialFragmentProgramClass:Class;
 
+        private static var particleSystemProgramData:ProgramData;
+
         protected var texture:Texture;
         protected var particleTexture:BitmapData;
 
@@ -78,18 +80,19 @@ package de.nulldesign.nd2d.materials {
                 texture = TextureHelper.generateTextureFromBitmap(context, particleTexture, true);
             }
 
-            parameterBufferHelper.setTextureByName("textureImage", texture);
+            programData.parameterBufferHelper.setTextureByName("textureImage", texture);
 
-            parameterBufferHelper.setMatrixParameterByName(Context3DProgramType.VERTEX, "objectToClipSpaceTransform",
-                                                           clipSpaceMatrix, true);
+            programData.parameterBufferHelper.setMatrixParameterByName(Context3DProgramType.VERTEX,
+                                                                       "objectToClipSpaceTransform", clipSpaceMatrix,
+                                                                       true);
 
-            parameterBufferHelper.setNumberParameterByName(Context3DProgramType.VERTEX, "currentTime",
-                                                           Vector.<Number>([ currentTime ]));
+            programData.parameterBufferHelper.setNumberParameterByName(Context3DProgramType.VERTEX, "currentTime",
+                                                                       Vector.<Number>([ currentTime ]));
 
-            parameterBufferHelper.setNumberParameterByName(Context3DProgramType.VERTEX, "gravity",
-                                                           Vector.<Number>([ gravity.x, gravity.y, 0.0, 1.0 ]));
+            programData.parameterBufferHelper.setNumberParameterByName(Context3DProgramType.VERTEX, "gravity",
+                                                                       Vector.<Number>([ gravity.x, gravity.y, 0.0, 1.0 ]));
 
-            parameterBufferHelper.update();
+            programData.parameterBufferHelper.update();
 
             vertexBufferHelper.setVertexBuffers();
 
@@ -102,17 +105,16 @@ package de.nulldesign.nd2d.materials {
         }
 
         override protected function initProgram(context:Context3D):void {
-            if(!program) {
-                vertexProgram = readFile(VertexProgramClass);
-                materialVertexProgram = readFile(MaterialVertexProgramClass);
-                materialFragmentProgram = readFile(MaterialFragmentProgramClass);
+            if(!particleSystemProgramData) {
+                particleSystemProgramData = new ProgramData(context, VertexProgramClass, MaterialVertexProgramClass,
+                                                            MaterialFragmentProgramClass);
             }
 
-            super.initProgram(context);
+            programData = particleSystemProgramData;
         }
 
         override protected function fillBuffer(buffer:Vector.<Number>, v:Vertex, uv:UV, face:Face, semanticsID:String,
-                                      floatFormat:int):void {
+                                               floatFormat:int):void {
 
             super.fillBuffer(buffer, v, uv, face, semanticsID, floatFormat);
 
@@ -135,22 +137,22 @@ package de.nulldesign.nd2d.materials {
             }
 
             /*
-            if(semanticsID == "PB3D_BIRTH") {
-                buffer.push(pv.startTime);
-            }
+             if(semanticsID == "PB3D_BIRTH") {
+             buffer.push(pv.startTime);
+             }
 
-            if(semanticsID == "PB3D_LIFE") {
-                buffer.push(pv.life);
-            }
+             if(semanticsID == "PB3D_LIFE") {
+             buffer.push(pv.life);
+             }
 
-            if(semanticsID == "PB3D_STARTSIZE") {
-                buffer.push(pv.startSize);
-            }
+             if(semanticsID == "PB3D_STARTSIZE") {
+             buffer.push(pv.startSize);
+             }
 
-            if(semanticsID == "PB3D_ENDSIZE") {
-                buffer.push(pv.endSize);
-            }
-            */
+             if(semanticsID == "PB3D_ENDSIZE") {
+             buffer.push(pv.endSize);
+             }
+             */
         }
     }
 }

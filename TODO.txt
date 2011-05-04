@@ -8,7 +8,6 @@
 - glow
 - blur
 - scene management / culling
-- motor2 / box2d physics?
 - PVTR support
 - scene transitions???
 + render to texture

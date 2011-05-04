@@ -30,8 +30,6 @@
  */
 
 package de.nulldesign.nd2d.materials {
-    import com.adobe.pixelBender3D.Semantics;
-
     import de.nulldesign.nd2d.utils.TextureHelper;
 
     import flash.display.BitmapData;
@@ -52,6 +50,8 @@ package de.nulldesign.nd2d.materials {
         [Embed (source="../shader/Sprite2DVertexShader.pbasm", mimeType="application/octet-stream")]
         private static const VertexProgramClass:Class;
 
+        private static var sprite2DProgramData:ProgramData;
+
         public var texture:Texture;
         public var bitmapData:BitmapData;
         public var color:Vector3D = new Vector3D(1.0, 1.0, 1.0, 1.0);
@@ -67,6 +67,7 @@ package de.nulldesign.nd2d.materials {
         override public function handleDeviceLoss():void {
             super.handleDeviceLoss();
             texture = null;
+            sprite2DProgramData = null;
         }
 
         override protected function prepareForRender(context:Context3D):Boolean {
@@ -78,13 +79,14 @@ package de.nulldesign.nd2d.materials {
             }
 
             if(!texture) {
+                // can happen after a device loss
                 return false;
             }
 
-            parameterBufferHelper.setTextureByName("textureImage", texture);
+            programData.parameterBufferHelper.setTextureByName("textureImage", texture);
 
-            parameterBufferHelper.setNumberParameterByName(Context3DProgramType.FRAGMENT, "color",
-                                                           Vector.<Number>([ color.x, color.y, color.z, color.w ]));
+            programData.parameterBufferHelper.setNumberParameterByName(Context3DProgramType.FRAGMENT, "color",
+                                                                       Vector.<Number>([ color.x, color.y, color.z, color.w ]));
 
             var offset:Point = new Point();
 
@@ -92,13 +94,14 @@ package de.nulldesign.nd2d.materials {
                 offset = spriteSheet.getOffsetForFrame();
             }
 
-            parameterBufferHelper.setMatrixParameterByName(Context3DProgramType.VERTEX, "objectToClipSpaceTransform",
-                                                           clipSpaceMatrix, true);
+            programData.parameterBufferHelper.setMatrixParameterByName(Context3DProgramType.VERTEX,
+                                                                       "objectToClipSpaceTransform", clipSpaceMatrix,
+                                                                       true);
 
-            parameterBufferHelper.setNumberParameterByName(Context3DProgramType.VERTEX, "uvOffset",
-                                                           Vector.<Number>([ offset.x, offset.y ]));
+            programData.parameterBufferHelper.setNumberParameterByName(Context3DProgramType.VERTEX, "uvOffset",
+                                                                       Vector.<Number>([ offset.x, offset.y ]));
 
-            parameterBufferHelper.update();
+            programData.parameterBufferHelper.update();
 
             vertexBufferHelper.setVertexBuffers();
 
@@ -111,13 +114,14 @@ package de.nulldesign.nd2d.materials {
         }
 
         override protected function initProgram(context:Context3D):void {
-            if(!vertexProgram) {
-                vertexProgram = readFile(VertexProgramClass);
-                materialVertexProgram = readFile(MaterialVertexProgramClass);
-                materialFragmentProgram = readFile(MaterialFragmentProgramClass);
+
+            // program will be only created once and cached as static var in material
+            if(!sprite2DProgramData) {
+                sprite2DProgramData = new ProgramData(context, VertexProgramClass, MaterialVertexProgramClass,
+                                                      MaterialFragmentProgramClass);
             }
 
-            super.initProgram(context);
+            programData = sprite2DProgramData;
         }
     }
 }
