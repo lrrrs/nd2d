@@ -131,6 +131,8 @@ package de.nulldesign.nd2d.display {
 
         public var mouseEnabled:Boolean = false;
 
+        public var timeSinceStartInSeconds:Number = 0.0;
+
         protected var stage:Stage;
 
         private var localMouse:Vector3D;
@@ -469,12 +471,13 @@ package de.nulldesign.nd2d.display {
         /**
          * @private
          */
-        internal function stepNode(t:Number, elapsed:Number):void {
+        internal function stepNode(elapsed:Number):void {
 
-            step(t, elapsed);
+            step(elapsed);
 
             for each(var child:Node2D in children) {
-                child.stepNode(t, elapsed);
+                child.timeSinceStartInSeconds = timeSinceStartInSeconds;
+                child.stepNode(elapsed);
             }
         }
 
@@ -514,7 +517,7 @@ package de.nulldesign.nd2d.display {
             // overwrite in extended classes
         }
 
-        protected function step(t:Number, elapsed:Number):void {
+        protected function step(elapsed:Number):void {
             // overwrite in extended classes
         }
 

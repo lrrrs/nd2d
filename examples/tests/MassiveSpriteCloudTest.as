@@ -52,7 +52,7 @@ package tests {
             addChild(spriteCloud);
         }
 
-        override protected function step(t:Number, elapsed:Number):void {
+        override protected function step(elapsed:Number):void {
 
             var s:Sprite2D;
             var len:int = sprites.length;

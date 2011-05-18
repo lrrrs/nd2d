@@ -77,7 +77,7 @@ package de.nulldesign.nd2d.display {
         private var isPaused:Boolean = false;
         private var mousePosition:Vector3D = new Vector3D(0.0, 0.0, 0.0);
         private var antialiasing:uint = 2;
-        private var enableErrorChecking:Boolean = true;
+        private var enableErrorChecking:Boolean = false;
         private var bounds:Rectangle;
         private var frameBased:Boolean;
 
@@ -193,7 +193,10 @@ package de.nulldesign.nd2d.display {
                 context3D.clear(scene.br, scene.bg, scene.bb, 1.0);
 
                 if(!isPaused)
-                    scene.stepNode(t, elapsed);
+                {
+                    scene.timeSinceStartInSeconds = t;
+                    scene.stepNode(elapsed);
+                }
 
                 scene.drawNode(context3D, camera, deviceWasLost);
 

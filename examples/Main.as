@@ -93,7 +93,7 @@ package {
             scenes.push(new ParticleSystemTest());
             scenes.push(new TextureRendererTest());
             scenes.push(new SideScrollerTest());
-            scenes.push(new MaterialsTest());
+            //scenes.push(new MaterialsTest());
             scenes.push(new CameraTest());
             //scenes.push(new ParticleExplorer());
 

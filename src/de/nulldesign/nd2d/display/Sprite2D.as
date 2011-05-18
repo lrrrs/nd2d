@@ -98,12 +98,12 @@ package de.nulldesign.nd2d.display {
         /**
          * @private
          */
-        override internal function stepNode(t:Number, elapsed:Number):void {
+        override internal function stepNode(elapsed:Number):void {
 
-            super.stepNode(t, elapsed);
+            super.stepNode(elapsed);
 
             if(spriteSheet)
-                spriteSheet.update(t);
+                spriteSheet.update(timeSinceStartInSeconds);
         }
 
         override protected function draw(context:Context3D, camera:Camera2D, handleDeviceLoss:Boolean):void {

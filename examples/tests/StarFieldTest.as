@@ -37,7 +37,7 @@ package tests {
             addChild(starfield4);
         }
 
-        override protected function step(t:Number, elapsed:Number):void {
+        override protected function step(elapsed:Number):void {
 
             starfield1.width = stage.stageWidth;
             starfield1.scaleY = starfield1.scaleX;

@@ -64,7 +64,7 @@ package tests {
                                   BitmapDataChannel.RED | BitmapDataChannel.GREEN | BitmapDataChannel.BLUE, false);
         }
 
-        override protected function step(t:Number, elapsed:Number):void {
+        override protected function step(elapsed:Number):void {
 
             var p:Number;
             var s:Sprite2D;

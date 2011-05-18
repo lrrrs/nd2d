@@ -28,7 +28,7 @@ package tests {
             addChild(s3);
         }
 
-        override protected function step(t:Number, elapsed:Number):void {
+        override protected function step(elapsed:Number):void {
 
             s.x = stage.stageWidth / 2;
             s.y = stage.stageHeight / 2;

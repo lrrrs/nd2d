@@ -251,7 +251,7 @@ package tests {
             grassSprites[0].addChild(plasma);
         }
 
-        override protected function step(t:Number, elapsed:Number):void {
+        override protected function step(elapsed:Number):void {
 
             var i:int;
 

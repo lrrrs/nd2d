@@ -35,6 +35,7 @@ package de.nulldesign.nd2d.materials {
     import flash.display.BitmapData;
     import flash.geom.Point;
     import flash.utils.Dictionary;
+    import flash.utils.getTimer;
 
     public class SpriteSheet {
 

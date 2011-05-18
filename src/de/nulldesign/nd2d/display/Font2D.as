@@ -77,7 +77,7 @@ package de.nulldesign.nd2d.display {
             super(maxTextLen, null, spriteSheet);
         }
 
-        override protected function step(t:Number, elapsed:Number):void {
+        override protected function step(elapsed:Number):void {
 
             if(textChanged) {
                 textChanged = false;

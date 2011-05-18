@@ -33,6 +33,7 @@ package tests.objects {
     import de.nulldesign.nd2d.display.Grid2D;
 
     import flash.display.BitmapData;
+    import flash.utils.getTimer;
 
     public class MorphGrid extends Grid2D {
 
@@ -43,7 +44,7 @@ package tests.objects {
             super(stepsX, stepsY, bitmapTexture);
         }
 
-        override protected function step(t:Number, elapsed:Number):void {
+        override protected function step(elapsed:Number):void {
 
             for(var i:int = 0; i < vertexList.length; i++) {
 
@@ -52,8 +53,8 @@ package tests.objects {
 
                 if(xPos > 0 && yPos > 0 && xPos < stepsX && yPos < stepsY) {
 
-                    var newX:Number = vertexList[i].x + vertexList[i].x * Math.sin(vertexList[i].length + t * 2.0) * strength;
-                    var newY:Number = vertexList[i].y + vertexList[i].y * Math.cos(vertexList[i].length + t * 2.0) * strength;
+                    var newX:Number = vertexList[i].x + vertexList[i].x * Math.sin(vertexList[i].length + timeSinceStartInSeconds * 2.0) * strength;
+                    var newY:Number = vertexList[i].y + vertexList[i].y * Math.cos(vertexList[i].length + timeSinceStartInSeconds * 2.0) * strength;
 
                     material.modifyVertexInBuffer(vertexList[i].bufferIdx, newX, newY);
                 }
