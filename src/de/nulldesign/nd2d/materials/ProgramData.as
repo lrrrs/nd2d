@@ -29,11 +29,6 @@
  * /
  */
 
-/**
- * (c) 2010 by nulldesign
- * Created by lars
- * Date: 04.05.11 22:32
- */
 package de.nulldesign.nd2d.materials {
     import com.adobe.pixelBender3D.AGALProgramPair;
     import com.adobe.pixelBender3D.PBASMCompiler;

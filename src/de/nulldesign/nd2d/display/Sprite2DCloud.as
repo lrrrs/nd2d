@@ -48,6 +48,7 @@ package de.nulldesign.nd2d.display {
     import flash.display3D.VertexBuffer3D;
     import flash.geom.Matrix3D;
     import flash.geom.Point;
+    import flash.utils.getQualifiedClassName;
 
     /**
      * Sprite2DCloud
@@ -120,7 +121,7 @@ package de.nulldesign.nd2d.display {
 
         override public function addChildAt(child:Node2D, idx:uint):Node2D {
 
-            if(!(child is Sprite2D)) {
+            if(getQualifiedClassName(child) != getQualifiedClassName(Sprite2D)) {
                 throw new Error("Sprite2DCloud accepts Sprite2D childs only");
             }
 

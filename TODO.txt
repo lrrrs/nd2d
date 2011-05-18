@@ -12,3 +12,4 @@
 - scene transitions???
 + render to texture
 - UV manipulations Sprite2D: scrollX / Y -> PB3D_REPEAT broken in current release
+- TextureAtlas / TexturePacker: http://blog.kaourantin.net/?p=110
