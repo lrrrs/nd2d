@@ -179,6 +179,7 @@ package de.nulldesign.nd2d.display {
         }
 
         protected function resizeStage(e:Event = null):void {
+            if(!context3D) return;
             var rect:Rectangle = bounds ? bounds : new Rectangle(0, 0, stage.stageWidth, stage.stageHeight);
             stage.stage3Ds[stageID].viewPort = rect;
             context3D.configureBackBuffer(rect.width, rect.height, antialiasing, false);

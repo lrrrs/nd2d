@@ -55,7 +55,7 @@ package de.nulldesign.nd2d.display {
             generateGrid();
         }
 
-        override public function setMaterial(material:Sprite2DMaterial):void {
+        override protected function setMaterial(material:Sprite2DMaterial):void {
             super.setMaterial(material);
             generateGrid();
         }

@@ -19,7 +19,8 @@ package tests {
             sheet.addAnimation("down", [6, 7, 8], true);
             sheet.addAnimation("left", [9, 10, 11], true);
 
-            s = new Sprite2D(null, sheet);
+            s = new Sprite2D();
+            s.setSpriteSheet(sheet);
             addChild(s);
         }
 

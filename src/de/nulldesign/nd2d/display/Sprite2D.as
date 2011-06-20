@@ -57,7 +57,6 @@ package de.nulldesign.nd2d.display {
          * @param spriteSheet optional spritesheet. If a spritesheet is provided the bitmapTexture is ignored
          */
         public function Sprite2D(bitmapTexture:BitmapData = null, spriteSheet:SpriteSheet = null) {
-            this.spriteSheet = spriteSheet;
 
             if(spriteSheet) {
                 bitmapTexture = spriteSheet.bitmapData;
@@ -68,12 +67,9 @@ package de.nulldesign.nd2d.display {
             }
         }
 
-        public function setMaterial(material:Sprite2DMaterial):void {
-            _width = material.spriteSheet ? material.spriteSheet.width : material.bitmapData.width;
-            _height = material.spriteSheet ? material.spriteSheet.height : material.bitmapData.height;
-
-            this.material = material;
-            faceList = TextureHelper.generateQuadFromTexture(material.bitmapData, material.spriteSheet);
+        public function setSpriteSheet(spriteSheet:SpriteSheet):void
+        {
+            setMaterial(new Sprite2DMaterial(spriteSheet.bitmapData, spriteSheet));
         }
 
         public function setTexture(texture:Texture, width:Number, height:Number):void {
@@ -104,6 +100,16 @@ package de.nulldesign.nd2d.display {
 
             if(spriteSheet)
                 spriteSheet.update(timeSinceStartInSeconds);
+        }
+
+        protected function setMaterial(material:Sprite2DMaterial):void {
+
+            _width = material.spriteSheet ? material.spriteSheet.width : material.bitmapData.width;
+            _height = material.spriteSheet ? material.spriteSheet.height : material.bitmapData.height;
+
+            this.material = material;
+            this.spriteSheet = material.spriteSheet;
+            faceList = TextureHelper.generateQuadFromTexture(material.bitmapData, material.spriteSheet);
         }
 
         override protected function draw(context:Context3D, camera:Camera2D, handleDeviceLoss:Boolean):void {

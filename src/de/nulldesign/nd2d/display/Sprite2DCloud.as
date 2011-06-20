@@ -104,7 +104,7 @@ package de.nulldesign.nd2d.display {
             return material.drawCalls;
         }
 
-        override public function setMaterial(material:Sprite2DMaterial):void {
+        override protected function setMaterial(material:Sprite2DMaterial):void {
             super.setMaterial(material);
 
             // kinda hackish ...
@@ -121,8 +121,8 @@ package de.nulldesign.nd2d.display {
 
         override public function addChildAt(child:Node2D, idx:uint):Node2D {
 
-            if(getQualifiedClassName(child) != getQualifiedClassName(Sprite2D)) {
-                throw new Error("Sprite2DCloud accepts Sprite2D childs only");
+            if(child is Sprite2DCloud) {
+                throw new Error("You can't nest Sprite2DClouds");
             }
 
             if(children.length < maxCapacity) {
