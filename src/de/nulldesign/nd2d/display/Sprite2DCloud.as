@@ -137,9 +137,10 @@ package de.nulldesign.nd2d.display {
                 if(c && spriteSheet && !c.spriteSheet) {
                     c.spriteSheet = spriteSheet.clone();
                 }
+                return child;
             }
 
-            return child;
+            return null;
         }
 
         override internal function drawNode(context:Context3D, camera:Camera2D, handleDeviceLoss:Boolean):void {
