@@ -85,7 +85,8 @@ package com.adobe.utils {
             var isFrag:Boolean = false;
 
             if(mode == FRAGMENT)
-                isFrag = true else if(mode != VERTEX)
+                isFrag = true;
+            else if(mode != VERTEX)
                 _error = 'ERROR: mode needs to be "' + FRAGMENT + '" or "' + VERTEX + '" but is "' + mode + '".';
 
             agalcode.endian = Endian.LITTLE_ENDIAN;
@@ -258,7 +259,7 @@ package com.adobe.utils {
                         }
                         if(!isDest)
                             for(; k <= 4; k++)
-                                regmask |= cv << ( ( k - 1 ) << 1 ) // repeat last
+                                regmask |= cv << ( ( k - 1 ) << 1 ); // repeat last
                     } else {
                         regmask = isDest ? 0xf : 0xe4; // id swizzle or mask
                     }
@@ -578,7 +579,7 @@ package com.adobe.utils {
 // ================================================================================
 //	Helper Classes
 // --------------------------------------------------------------------------------
-{
+
     // ===========================================================================
     //	Class
     // ---------------------------------------------------------------------------
@@ -725,4 +726,3 @@ package com.adobe.utils {
             return "[Sampler name=\"" + _name + "\", flag=\"" + _flag + "\", mask=" + mask + "]";
         }
     }
-}
