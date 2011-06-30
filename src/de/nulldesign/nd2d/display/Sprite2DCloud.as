@@ -225,7 +225,7 @@ package de.nulldesign.nd2d.display {
                 r = child.r;
                 g = child.g;
                 b = child.b;
-                a = child.a;
+                a = child.visible ? child.a : 0.0; // fake visibility for now ... it's faster
 
                 offset = new Point();
                 sx = child.scaleX;
@@ -365,8 +365,6 @@ package de.nulldesign.nd2d.display {
             context.setVertexBufferAt(0, vertexBuffer, 0, Context3DVertexBufferFormat.FLOAT_2); // vertex
             context.setVertexBufferAt(1, vertexBuffer, 2, Context3DVertexBufferFormat.FLOAT_2); // uv
             context.setVertexBufferAt(2, vertexBuffer, 4, Context3DVertexBufferFormat.FLOAT_4); // color
-            //context.setDepthTest(false, Context3DCompareMode.NEVER);
-            //context.setCulling(Context3DTriangleFace.NONE);
 
             context.setBlendFactors(blendMode.src, blendMode.dst);
 
