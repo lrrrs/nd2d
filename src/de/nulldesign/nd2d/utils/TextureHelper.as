@@ -155,8 +155,7 @@ package de.nulldesign.nd2d.utils {
         public static function generateQuadFromTexture(bitmapTexture:BitmapData,
                                                        spriteSheet:SpriteSheet):Vector.<Face> {
 
-            var faceList:Vector.<Face> = new Vector.<Face>(2, true);
-
+            var faceList:Vector.<Face>;
             var texW:Number;
             var texH:Number;
             var uv1:UV;
@@ -170,6 +169,8 @@ package de.nulldesign.nd2d.utils {
 
             if(!spriteSheet) {
 
+                faceList = new Vector.<Face>(2, true);
+
                 var textureDimensions:Point = TextureHelper.getTextureDimensionsFromBitmap(bitmapTexture);
 
                 texW = textureDimensions.x * 0.5;
@@ -180,24 +181,34 @@ package de.nulldesign.nd2d.utils {
                 uv3 = new UV(1, 1);
                 uv4 = new UV(0, 1);
 
+                v1 = new Vertex(-texW, -texH, 0.0);
+                v2 = new Vertex(texW, -texH, 0.0);
+                v3 = new Vertex(texW, texH, 0.0);
+                v4 = new Vertex(-texW, texH, 0.0);
+
+                faceList[0] = new Face(v1, v2, v3, uv1, uv2, uv3);
+                faceList[1] = new Face(v1, v3, v4, uv1, uv3, uv4);
+
             } else {
+
+                faceList = new Vector.<Face>(2, true);
+
                 texW = spriteSheet.width * 0.5;
                 texH = spriteSheet.height * 0.5;
 
                 uv1 = new UV(spriteSheet.uvOffset.x, spriteSheet.uvOffset.y);
                 uv2 = new UV(spriteSheet.uvOffset.x + spriteSheet.uvSize.x, spriteSheet.uvOffset.y);
-                uv3 = new UV(spriteSheet.uvOffset.x + spriteSheet.uvSize.x,
-                             spriteSheet.uvOffset.y + spriteSheet.uvSize.y);
+                uv3 = new UV(spriteSheet.uvOffset.x + spriteSheet.uvSize.x, spriteSheet.uvOffset.y + spriteSheet.uvSize.y);
                 uv4 = new UV(spriteSheet.uvOffset.x, spriteSheet.uvOffset.y + spriteSheet.uvSize.y);
+
+                v1 = new Vertex(-texW, -texH, 0.0);
+                v2 = new Vertex(texW, -texH, 0.0);
+                v3 = new Vertex(texW, texH, 0.0);
+                v4 = new Vertex(-texW, texH, 0.0);
+
+                faceList[0] = new Face(v1, v2, v3, uv1, uv2, uv3);
+                faceList[1] = new Face(v1, v3, v4, uv1, uv3, uv4);
             }
-
-            v1 = new Vertex(-texW, -texH, 0.0);
-            v2 = new Vertex(texW, -texH, 0.0);
-            v3 = new Vertex(texW, texH, 0.0);
-            v4 = new Vertex(-texW, texH, 0.0);
-
-            faceList[0] = new Face(v1, v2, v3, uv1, uv2, uv3);
-            faceList[1] = new Face(v1, v3, v4, uv1, uv3, uv4);
 
             return faceList;
         }

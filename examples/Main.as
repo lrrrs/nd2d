@@ -77,6 +77,7 @@ package {
 
             stage.scaleMode = StageScaleMode.NO_SCALE;
             stage.align = StageAlign.TOP_LEFT;
+            enableErrorChecking = false;
 
             super(Context3DRenderMode.AUTO, 60, true);
 

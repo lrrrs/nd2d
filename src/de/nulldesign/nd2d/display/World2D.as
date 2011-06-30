@@ -77,7 +77,6 @@ package de.nulldesign.nd2d.display {
         private var isPaused:Boolean = false;
         private var mousePosition:Vector3D = new Vector3D(0.0, 0.0, 0.0);
         private var antialiasing:uint = 2;
-        private var enableErrorChecking:Boolean = false;
         private var bounds:Rectangle;
         private var frameBased:Boolean;
 
@@ -86,6 +85,7 @@ package de.nulldesign.nd2d.display {
 
         protected var stats:Stats;
         protected var lastFramesTime:Number = 0.0;
+        protected var enableErrorChecking:Boolean = false;
 
         private var _statsVisible:Boolean = true;
 

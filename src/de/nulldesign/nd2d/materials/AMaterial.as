@@ -108,7 +108,7 @@ package de.nulldesign.nd2d.materials {
                 tmpUID = face.v1.uid + "." + face.uv1.uid;
 
                 if(duplicateCheck[tmpUID] == undefined) {
-                    addVertex(mVertexBuffer, face.v1, face.uv1, face);
+                    addVertex(context, mVertexBuffer, face.v1, face.uv1, face);
                     duplicateCheck[tmpUID] = indexBufferIdx;
                     mIndexBuffer.push(indexBufferIdx);
                     face.v1.bufferIdx = indexBufferIdx;
@@ -120,7 +120,7 @@ package de.nulldesign.nd2d.materials {
                 tmpUID = face.v2.uid + "." + face.uv2.uid;
 
                 if(duplicateCheck[tmpUID] == undefined) {
-                    addVertex(mVertexBuffer, face.v2, face.uv2, face);
+                    addVertex(context, mVertexBuffer, face.v2, face.uv2, face);
                     duplicateCheck[tmpUID] = indexBufferIdx;
                     mIndexBuffer.push(indexBufferIdx);
                     face.v2.bufferIdx = indexBufferIdx;
@@ -132,7 +132,7 @@ package de.nulldesign.nd2d.materials {
                 tmpUID = face.v3.uid + "." + face.uv3.uid;
 
                 if(duplicateCheck[tmpUID] == undefined) {
-                    addVertex(mVertexBuffer, face.v3, face.uv3, face);
+                    addVertex(context, mVertexBuffer, face.v3, face.uv3, face);
                     duplicateCheck[tmpUID] = indexBufferIdx;
                     mIndexBuffer.push(indexBufferIdx);
                     face.v3.bufferIdx = indexBufferIdx;
@@ -155,6 +155,11 @@ package de.nulldesign.nd2d.materials {
                 indexBuffer.uploadFromVector(mIndexBuffer, 0, mIndexBuffer.length);
 
                 numTris = int(mIndexBuffer.length / 3);
+
+                if(context.enableErrorChecking)
+                {
+                    trace("mIndexBuffer: " + mIndexBuffer);
+                }
             }
         }
 
@@ -209,14 +214,29 @@ package de.nulldesign.nd2d.materials {
             // implement in concrete material
         }
 
-        protected function addVertex(buffer:Vector.<Number>, v:Vertex, uv:UV, face:Face):void {
+        protected function addVertex(context:Context3D, buffer:Vector.<Number>, v:Vertex, uv:UV, face:Face):void {
 
             var vertexRegisters:Vector.<VertexRegisterInfo> = programData.vertexRegisterMap.inputVertexRegisters;
 
-            for(var i:int = 0; i < programData.vertexRegisterMap.inputVertexRegisters.length; i += 1) {
+            var vertexBufferFormat:String = null;
+            if(context.enableErrorChecking && buffer.length == 0)
+            {
+                 vertexBufferFormat = "vertexBufferFormat: ";
+            }
 
+            for(var i:int = 0; i < programData.vertexRegisterMap.inputVertexRegisters.length; i += 1) {
                 var n:int = getFloatFormat(programData.vertexRegisterMap.inputVertexRegisters[i].format);
                 fillBuffer(buffer, v, uv, face, vertexRegisters[i].semantics.id, n);
+
+                if(context.enableErrorChecking && vertexBufferFormat)
+                {
+                    vertexBufferFormat += vertexRegisters[i].semantics.id + " float" + n + ", ";
+                }
+            }
+
+            if(context.enableErrorChecking && vertexBufferFormat)
+            {
+                trace(vertexBufferFormat);
             }
         }
 
@@ -309,7 +329,6 @@ package de.nulldesign.nd2d.materials {
                 return 4;
 
             throw new Error("bad format");
-            return 0;
         }
     }
 }

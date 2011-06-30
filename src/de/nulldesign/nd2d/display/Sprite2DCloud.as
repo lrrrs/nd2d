@@ -30,6 +30,7 @@
  */
 
 package de.nulldesign.nd2d.display {
+
     import com.adobe.utils.AGALMiniAssembler;
 
     import de.nulldesign.nd2d.geom.UV;
@@ -48,7 +49,6 @@ package de.nulldesign.nd2d.display {
     import flash.display3D.VertexBuffer3D;
     import flash.geom.Matrix3D;
     import flash.geom.Point;
-    import flash.utils.getQualifiedClassName;
 
     /**
      * Sprite2DCloud
@@ -211,13 +211,21 @@ package de.nulldesign.nd2d.display {
 
                 spriteSheet = child.spriteSheet;
 
-                // TODO mix with parent colors -> Sprite2D
-                if(child.invalidateColors) {
-                    r = (child.tint >> 16) / 255;
-                    g = (child.tint >> 8 & 255) / 255;
-                    b = (child.tint & 255) / 255;
-                    a = child.alpha;
+                if(invalidateColors || parent) {
+
+                    updateColors();
+                    invalidateColors = true;
+
+                    if(child.invalidateColors) {
+                        child.updateColors();
+                        child.invalidateColors = true;
+                    }
                 }
+
+                r = child.r;
+                g = child.g;
+                b = child.b;
+                a = child.a;
 
                 offset = new Point();
                 sx = child.scaleX;
@@ -251,7 +259,7 @@ package de.nulldesign.nd2d.display {
                     somethingChanged = true;
                 }
 
-                if(child.invalidateColors) {
+                if(invalidateColors || child.invalidateColors) {
                     mVertexBuffer[vIdx + 4] = r; // r
                     mVertexBuffer[vIdx + 5] = g; // g
                     mVertexBuffer[vIdx + 6] = b; // b
@@ -270,7 +278,7 @@ package de.nulldesign.nd2d.display {
                     mVertexBuffer[vIdx + 11] = uv2.v + offset.y; // v
                 }
 
-                if(child.invalidateColors) {
+                if(invalidateColors || child.invalidateColors) {
                     mVertexBuffer[vIdx + 12] = r; // r
                     mVertexBuffer[vIdx + 13] = g; // g
                     mVertexBuffer[vIdx + 14] = b; // b
@@ -288,7 +296,7 @@ package de.nulldesign.nd2d.display {
                     mVertexBuffer[vIdx + 19] = uv3.v + offset.y; // v
                 }
 
-                if(child.invalidateColors) {
+                if(invalidateColors || child.invalidateColors) {
                     mVertexBuffer[vIdx + 20] = r; // r
                     mVertexBuffer[vIdx + 21] = g; // g
                     mVertexBuffer[vIdx + 22] = b; // b
@@ -306,7 +314,7 @@ package de.nulldesign.nd2d.display {
                     mVertexBuffer[vIdx + 27] = uv4.v + offset.y; // v
                 }
 
-                if(child.invalidateColors) {
+                if(invalidateColors || child.invalidateColors) {
                     mVertexBuffer[vIdx + 28] = r; // r
                     mVertexBuffer[vIdx + 29] = g; // g
                     mVertexBuffer[vIdx + 30] = b; // b
@@ -316,6 +324,7 @@ package de.nulldesign.nd2d.display {
                 vIdx += 32;
 
                 child.invalidateMatrix = child.invalidateColors = false;
+                invalidateColors = false;
             }
 
             uvInited = true;
