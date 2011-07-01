@@ -211,15 +211,14 @@ package de.nulldesign.nd2d.display {
 
                 spriteSheet = child.spriteSheet;
 
-                if(invalidateColors || parent) {
-
+                if(invalidateColors) {
                     updateColors();
                     invalidateColors = true;
+                }
 
-                    if(child.invalidateColors) {
-                        child.updateColors();
-                        child.invalidateColors = true;
-                    }
+                if(child.invalidateColors) {
+                    child.updateColors();
+                    child.invalidateColors = true;
                 }
 
                 r = child.r;

@@ -196,10 +196,10 @@ package de.nulldesign.nd2d.materials {
             needUploadVertexBuffer = true;
         }
 
-        public function render(context:Context3D, faceList:Vector.<Face>, numTris:uint):void {
+        public function render(context:Context3D, faceList:Vector.<Face>, startTri:uint,  numTris:uint):void {
             generateBufferData(context, faceList);
             if(prepareForRender(context)) {
-                context.drawTriangles(indexBuffer, 0, numTris);
+                context.drawTriangles(indexBuffer, startTri * 3, numTris);
             }
             clearAfterRender(context);
         }

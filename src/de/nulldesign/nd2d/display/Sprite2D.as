@@ -30,6 +30,7 @@
  */
 
 package de.nulldesign.nd2d.display {
+
     import de.nulldesign.nd2d.geom.Face;
     import de.nulldesign.nd2d.materials.Sprite2DMaterial;
     import de.nulldesign.nd2d.materials.SpriteSheet;
@@ -67,8 +68,7 @@ package de.nulldesign.nd2d.display {
             }
         }
 
-        public function setSpriteSheet(spriteSheet:SpriteSheet):void
-        {
+        public function setSpriteSheet(spriteSheet:SpriteSheet):void {
             setMaterial(new Sprite2DMaterial(spriteSheet.bitmapData, spriteSheet));
         }
 
@@ -104,8 +104,8 @@ package de.nulldesign.nd2d.display {
 
         protected function setMaterial(material:Sprite2DMaterial):void {
 
-            _width = material.spriteSheet ? material.spriteSheet.width : material.bitmapData.width;
-            _height = material.spriteSheet ? material.spriteSheet.height : material.bitmapData.height;
+            _width = material.spriteSheet ? material.spriteSheet.spriteWidth : material.bitmapData.width;
+            _height = material.spriteSheet ? material.spriteSheet.spriteHeight : material.bitmapData.height;
 
             this.material = material;
             this.spriteSheet = material.spriteSheet;
@@ -134,7 +134,7 @@ package de.nulldesign.nd2d.display {
                 material.handleDeviceLoss();
             }
 
-            material.render(context, faceList, faceList.length);
+            material.render(context, faceList, 0, faceList.length);
         }
     }
 }

@@ -94,12 +94,13 @@ package de.nulldesign.nd2d.materials {
                 offset = spriteSheet.getOffsetForFrame();
             }
 
+            programData.parameterBufferHelper.setNumberParameterByName(Context3DProgramType.VERTEX, "uvOffset",
+                                                                       Vector.<Number>([ offset.x, offset.y ]));
+
+
             programData.parameterBufferHelper.setMatrixParameterByName(Context3DProgramType.VERTEX,
                                                                        "objectToClipSpaceTransform", clipSpaceMatrix,
                                                                        true);
-
-            programData.parameterBufferHelper.setNumberParameterByName(Context3DProgramType.VERTEX, "uvOffset",
-                                                                       Vector.<Number>([ offset.x, offset.y ]));
 
             programData.parameterBufferHelper.update();
 

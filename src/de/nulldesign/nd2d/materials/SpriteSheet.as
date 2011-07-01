@@ -39,8 +39,8 @@ package de.nulldesign.nd2d.materials {
 
     public class SpriteSheet {
 
-        protected var spriteWidth:Number;
-        protected var spriteHeight:Number;
+        protected var _spriteWidth:Number;
+        protected var _spriteHeight:Number;
 
         protected var ctime:Number = 0.0;
         protected var otime:Number = 0.0;
@@ -50,17 +50,20 @@ package de.nulldesign.nd2d.materials {
         protected var activeAnimation:SpriteSheetAnimation;
         protected var animationMap:Dictionary = new Dictionary();
 
+        protected var numSheetsPerRow:uint;
+        protected var numRows:uint;
+        protected var numSheets:uint;
+
         public var bitmapData:BitmapData;
         public var uvOffset:Point = new Point(0.0, 0.0);
         public var uvSize:Point = new Point(0.0, 0.0);
-        public var numSheetsPerRow:uint;
 
-        public function get width():Number {
-            return spriteWidth;
+        public function get spriteWidth():Number {
+            return _spriteWidth;
         }
 
-        public function get height():Number {
-            return spriteHeight;
+        public function get spriteHeight():Number {
+            return _spriteHeight;
         }
 
         protected var frameIdx:uint = 0;
@@ -80,10 +83,14 @@ package de.nulldesign.nd2d.materials {
             }
         }
 
+        public function get totalFrames():uint{
+            return numSheets;
+        }
+
         public function SpriteSheet(bitmapData:BitmapData, spriteWidth:Number, spriteHeight:Number, fps:uint) {
             this.bitmapData = bitmapData;
-            this.spriteWidth = spriteWidth;
-            this.spriteHeight = spriteHeight;
+            this._spriteWidth = spriteWidth;
+            this._spriteHeight = spriteHeight;
             this.fps = fps;
 
             init();
@@ -98,9 +105,11 @@ package de.nulldesign.nd2d.materials {
             uvOffset.x /= textureDimensions.x;
             uvOffset.y /= textureDimensions.y;
 
-            uvSize = new Point(width / textureDimensions.x, height / textureDimensions.y);
+            uvSize = new Point(spriteWidth / textureDimensions.x, spriteHeight / textureDimensions.y);
 
-            numSheetsPerRow = Math.round(bitmapData.width / width);
+            numSheetsPerRow = Math.round(bitmapData.width / spriteWidth);
+            numRows = Math.round(bitmapData.height / spriteHeight);
+            numSheets = numSheetsPerRow * numRows;
         }
 
         public function update(t:Number):void {
@@ -153,7 +162,7 @@ package de.nulldesign.nd2d.materials {
         }
 
         public function clone():SpriteSheet {
-            var s:SpriteSheet = new SpriteSheet(bitmapData, spriteWidth, spriteHeight, fps);
+            var s:SpriteSheet = new SpriteSheet(bitmapData, _spriteWidth, _spriteHeight, fps);
             s.frame = frame;
 
             for(var name:String in animationMap) {

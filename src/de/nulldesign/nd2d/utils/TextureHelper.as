@@ -30,6 +30,7 @@
  */
 
 package de.nulldesign.nd2d.utils {
+
     import de.nulldesign.nd2d.geom.Face;
     import de.nulldesign.nd2d.geom.UV;
     import de.nulldesign.nd2d.geom.Vertex;
@@ -167,9 +168,9 @@ package de.nulldesign.nd2d.utils {
             var v3:Vertex;
             var v4:Vertex;
 
-            if(!spriteSheet) {
+            faceList = new Vector.<Face>(2, true);
 
-                faceList = new Vector.<Face>(2, true);
+            if(!spriteSheet) {
 
                 var textureDimensions:Point = TextureHelper.getTextureDimensionsFromBitmap(bitmapTexture);
 
@@ -191,10 +192,8 @@ package de.nulldesign.nd2d.utils {
 
             } else {
 
-                faceList = new Vector.<Face>(2, true);
-
-                texW = spriteSheet.width * 0.5;
-                texH = spriteSheet.height * 0.5;
+                texW = spriteSheet.spriteWidth * 0.5;
+                texH = spriteSheet.spriteHeight * 0.5;
 
                 uv1 = new UV(spriteSheet.uvOffset.x, spriteSheet.uvOffset.y);
                 uv2 = new UV(spriteSheet.uvOffset.x + spriteSheet.uvSize.x, spriteSheet.uvOffset.y);

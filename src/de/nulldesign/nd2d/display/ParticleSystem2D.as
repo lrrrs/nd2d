@@ -190,7 +190,7 @@ package de.nulldesign.nd2d.display {
 
             material.currentTime = currentTime;
             material.gravity = gravity;
-            material.render(context, faceList, activeParticles * 2);
+            material.render(context, faceList, 0, activeParticles * 2);
         }
     }
 }

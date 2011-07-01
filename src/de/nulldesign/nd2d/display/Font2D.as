@@ -97,16 +97,16 @@ package de.nulldesign.nd2d.display {
                 var curChar:String;
                 var frame:int;
                 var childIdx:uint = 0;
-                var startX:Number = spriteSheet.width * 0.5;
+                var startX:Number = spriteSheet.spriteWidth * 0.5;
 
                 switch(textAlign) {
 
                     case TextAlign.CENTER:
-                        startX -= (text.length * spriteSheet.width) * 0.5;
+                        startX -= (text.length * spriteSheet.spriteWidth) * 0.5;
                         break;
 
                     case TextAlign.RIGHT:
-                        startX += -(text.length * spriteSheet.width);
+                        startX += -(text.length * spriteSheet.spriteWidth);
                         break;
                 }
 
@@ -126,8 +126,8 @@ package de.nulldesign.nd2d.display {
                     }
                 }
 
-                _width = s.x + spriteSheet.width;
-                _height = spriteSheet.height;
+                _width = s.x + spriteSheet.spriteWidth;
+                _height = spriteSheet.spriteHeight;
             }
         }
     }

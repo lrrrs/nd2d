@@ -1,4 +1,5 @@
 package tests {
+
     import de.nulldesign.nd2d.display.Node2D;
     import de.nulldesign.nd2d.display.Scene2D;
     import de.nulldesign.nd2d.display.Sprite2D;
@@ -78,10 +79,15 @@ package tests {
                 s.y = Math.round(Math.random() * 1000);
                 s.vx = (Math.random() - Math.random()) * 3;
                 s.vy = (Math.random() - Math.random()) * 3;
-                //s.scaleX = s.scaleY = 2.0; // NOT IMPLEMENTED
 
                 if(spriteCloud.addChild(s)) {
                     sprites.push(s);
+                }
+
+                if(sprites.length == 1) {   // alpha, tint & scale test for sprites in clouds
+                    s.alpha = 0.2;
+                    s.tint = 0x00FF00;
+                    s.scaleX = s.scaleY = 2.0;
                 }
             }
         }
