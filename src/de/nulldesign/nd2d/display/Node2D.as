@@ -526,6 +526,11 @@ package de.nulldesign.nd2d.display {
         }
 
         public function addChildAt(child:Node2D, idx:uint):Node2D {
+
+            if(getChildIndex(child) != -1) {
+                removeChild(child);
+            }
+
             child.parent = this;
             child.setStageRef(stage);
             children.splice(idx, 0, child);

@@ -125,6 +125,10 @@ package de.nulldesign.nd2d.display {
                 throw new Error("You can't nest Sprite2DClouds");
             }
 
+            if(getChildIndex(child) != -1) {
+                removeChild(child);
+            }
+
             if(children.length < maxCapacity) {
 
                 super.addChildAt(child, idx);
@@ -204,6 +208,11 @@ package de.nulldesign.nd2d.display {
             var sy:Number;
             var somethingChanged:Boolean = false;
 
+            if(invalidateColors) {
+                updateColors();
+                invalidateColors = true;
+            }
+
             // TODO: get rid of this implementation and do batch rendering! :)
             while(++i < n) {
 
@@ -211,12 +220,7 @@ package de.nulldesign.nd2d.display {
 
                 spriteSheet = child.spriteSheet;
 
-                if(invalidateColors) {
-                    updateColors();
-                    invalidateColors = true;
-                }
-
-                if(child.invalidateColors) {
+                if(invalidateColors || child.invalidateColors) {
                     child.updateColors();
                     child.invalidateColors = true;
                 }
@@ -323,9 +327,9 @@ package de.nulldesign.nd2d.display {
                 vIdx += 32;
 
                 child.invalidateMatrix = child.invalidateColors = false;
-                invalidateColors = false;
             }
 
+            invalidateColors = false;
             uvInited = true;
 
             if(!vertexBuffer) {
