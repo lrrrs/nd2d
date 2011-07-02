@@ -54,7 +54,10 @@ package de.nulldesign.nd2d.display {
      * Sprite2DCloud
      * Use a sprite cloud to batch sprites with the same texture / spritesheet.
      * all sprites will be batched in one single draw call
-     * Mouseevents are disabled and won't work for spriteclouds
+     *
+     * Limitations:
+     * - Mouseevents are disabled and won't work for spriteclouds
+     * - Reordering childs (add, remove) is very expensive. Try to avoid it!
      */
     public class Sprite2DCloud extends Sprite2D {
 
@@ -125,11 +128,7 @@ package de.nulldesign.nd2d.display {
                 throw new Error("You can't nest Sprite2DClouds");
             }
 
-            if(getChildIndex(child) != -1) {
-                removeChild(child);
-            }
-
-            if(children.length < maxCapacity) {
+            if(children.length < maxCapacity || getChildIndex(child) != -1) {
 
                 super.addChildAt(child, idx);
 
@@ -141,10 +140,36 @@ package de.nulldesign.nd2d.display {
                 if(c && spriteSheet && !c.spriteSheet) {
                     c.spriteSheet = spriteSheet.clone();
                 }
+
+                for(var i:int = 0; i < children.length; i++) {
+                    children[i].invalidateColors = true;
+                    children[i].invalidateMatrix = true;
+                }
+
                 return child;
             }
 
             return null;
+        }
+
+        override public function removeChildAt(idx:uint):void {
+
+            if(idx < children.length) {
+                super.removeChildAt(idx);
+
+                for(var i:int = 0; i < children.length; i++) {
+                    children[i].invalidateColors = true;
+                    children[i].invalidateMatrix = true;
+                }
+            }
+        }
+
+        override public function swapChildren(child1:Node2D, child2:Node2D):void {
+            super.swapChildren(child1, child2);
+            child1.invalidateColors = true;
+            child1.invalidateMatrix = true;
+            child2.invalidateColors = true;
+            child2.invalidateMatrix = true;
         }
 
         override internal function drawNode(context:Context3D, camera:Camera2D, handleDeviceLoss:Boolean):void {
@@ -208,17 +233,13 @@ package de.nulldesign.nd2d.display {
             var sy:Number;
             var somethingChanged:Boolean = false;
 
-            if(invalidateColors) {
-                updateColors();
-                invalidateColors = true;
-            }
-
             // TODO: get rid of this implementation and do batch rendering! :)
             while(++i < n) {
 
                 child = Sprite2D(children[i]);
 
                 spriteSheet = child.spriteSheet;
+
 
                 if(invalidateColors || child.invalidateColors) {
                     child.updateColors();
@@ -327,9 +348,9 @@ package de.nulldesign.nd2d.display {
                 vIdx += 32;
 
                 child.invalidateMatrix = child.invalidateColors = false;
+                invalidateColors = false;
             }
 
-            invalidateColors = false;
             uvInited = true;
 
             if(!vertexBuffer) {

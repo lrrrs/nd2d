@@ -60,6 +60,7 @@ package {
     import tests.SideScrollerTest;
     import tests.SpriteAnimTest;
     import tests.SpriteHierarchyTest;
+    import tests.SpriteHierarchyTest2;
     import tests.SpriteTest;
     import tests.StarFieldTest;
     import tests.TextureRendererTest;
@@ -86,6 +87,7 @@ package {
             scenes.push(new MassiveSpritesTest());
             scenes.push(new MassiveSpriteCloudTest());
             scenes.push(new SpriteHierarchyTest());
+            scenes.push(new SpriteHierarchyTest2());
             scenes.push(new Font2DTest());
             scenes.push(new Grid2DTest());
             scenes.push(new SpriteTest());
@@ -109,7 +111,7 @@ package {
             stage.addEventListener(Event.RESIZE, stageResize);
             stageResize(null);
 
-            activeSceneIdx = 3; //10;
+            activeSceneIdx = 2; //10;
             nextBtnClick();
 
             stage.addEventListener(KeyboardEvent.KEY_UP, keyUp);

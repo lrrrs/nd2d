@@ -405,6 +405,10 @@ package de.nulldesign.nd2d.display {
                 _b *= parent.b;
                 _a *= parent.a;
             }
+
+            for(var i:int = 0; i < children.length; i++) {
+               children[i].updateColors();
+            }
         }
 
         /**
@@ -490,6 +494,10 @@ package de.nulldesign.nd2d.display {
                 return;
             }
 
+            if(invalidateColors) {
+                updateColors();
+            }
+
             if(invalidateMatrix) {
                 updateMatrix();
             }
@@ -527,8 +535,9 @@ package de.nulldesign.nd2d.display {
 
         public function addChildAt(child:Node2D, idx:uint):Node2D {
 
-            if(getChildIndex(child) != -1) {
-                removeChild(child);
+            var existingIdx:int = getChildIndex(child);
+            if(existingIdx != -1) {
+                removeChildAt(existingIdx);
             }
 
             child.parent = this;

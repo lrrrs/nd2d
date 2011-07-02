@@ -119,16 +119,10 @@ package de.nulldesign.nd2d.display {
             material.projectionMatrix = camera.projectionMatrix;
             material.viewProjectionMatrix = camera.getViewProjectionMatrix();
 
-            // TODO optimize there is always a parent!
-            if(invalidateColors || parent) {
-
-                updateColors();
-
-                material.color.x = r;
-                material.color.y = g;
-                material.color.z = b;
-                material.color.w = a;
-            }
+            material.color.x = r;
+            material.color.y = g;
+            material.color.z = b;
+            material.color.w = a;
 
             if(handleDeviceLoss) {
                 material.handleDeviceLoss();
