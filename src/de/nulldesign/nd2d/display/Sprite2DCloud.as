@@ -283,7 +283,7 @@ package de.nulldesign.nd2d.display {
                     somethingChanged = true;
                 }
 
-                if(invalidateColors || child.invalidateColors) {
+                if(invalidateColors || child.invalidateColors || child.invalidateVisibility) {
                     mVertexBuffer[vIdx + 4] = r; // r
                     mVertexBuffer[vIdx + 5] = g; // g
                     mVertexBuffer[vIdx + 6] = b; // b
@@ -302,7 +302,7 @@ package de.nulldesign.nd2d.display {
                     mVertexBuffer[vIdx + 11] = uv2.v + offset.y; // v
                 }
 
-                if(invalidateColors || child.invalidateColors) {
+                if(invalidateColors || child.invalidateColors || child.invalidateVisibility) {
                     mVertexBuffer[vIdx + 12] = r; // r
                     mVertexBuffer[vIdx + 13] = g; // g
                     mVertexBuffer[vIdx + 14] = b; // b
@@ -320,7 +320,7 @@ package de.nulldesign.nd2d.display {
                     mVertexBuffer[vIdx + 19] = uv3.v + offset.y; // v
                 }
 
-                if(invalidateColors || child.invalidateColors) {
+                if(invalidateColors || child.invalidateColors || child.invalidateVisibility) {
                     mVertexBuffer[vIdx + 20] = r; // r
                     mVertexBuffer[vIdx + 21] = g; // g
                     mVertexBuffer[vIdx + 22] = b; // b
@@ -338,7 +338,7 @@ package de.nulldesign.nd2d.display {
                     mVertexBuffer[vIdx + 27] = uv4.v + offset.y; // v
                 }
 
-                if(invalidateColors || child.invalidateColors) {
+                if(invalidateColors || child.invalidateColors || child.invalidateVisibility) {
                     mVertexBuffer[vIdx + 28] = r; // r
                     mVertexBuffer[vIdx + 29] = g; // g
                     mVertexBuffer[vIdx + 30] = b; // b
@@ -347,7 +347,7 @@ package de.nulldesign.nd2d.display {
 
                 vIdx += 32;
 
-                child.invalidateMatrix = child.invalidateColors = false;
+                child.invalidateMatrix = child.invalidateColors = child.invalidateVisibility = false;
                 invalidateColors = false;
             }
 

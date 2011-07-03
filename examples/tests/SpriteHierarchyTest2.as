@@ -89,11 +89,14 @@ package tests {
         private function keyUp(event:KeyboardEvent):void {
             // cycle z-index
             if(event.keyCode == Keyboard.C) {
-                s.addChild(s.getChildAt(0));
-                sc.addChild(sc.getChildAt(0));
+                //s.addChild(s.getChildAt(0));
+                //sc.addChild(sc.getChildAt(0));
 
-                //s.addChildAt(s.getChildAt(s.numChildren - 1), 0);
-                //sc.addChildAt(sc.getChildAt(sc.numChildren - 1), 0);
+                s.addChildAt(s.getChildAt(s.numChildren - 1), 0);
+                sc.addChildAt(sc.getChildAt(sc.numChildren - 1), 0);
+
+                //s.getChildAt(0).visible = !s.getChildAt(0).visible;
+                //sc.getChildAt(0).visible = !sc.getChildAt(0).visible;
             }
         }
     }

@@ -1,9 +1,7 @@
 + HANDLE DEVICE LOST -> Event.CONTEXT3D_CREATE
 - Batching for Spriteclouds -> wait for PB3D fix :(
 - enable zbuffering / alpha textures / KIL ???
-- configurable debugging flag: context3D.enableErrorChecking
 - REPLACE ortographic camera with perspective one! for rotationX/Y/Z
-- textureatlas??
 - more blendmodes
 - glow
 - blur
@@ -13,34 +11,6 @@
 + render to texture
 - UV manipulations Sprite2D: scrollX / Y -> PB3D_REPEAT broken in current release
 - TextureAtlas / TexturePacker: http://blog.kaourantin.net/?p=110
-- Spritesheets: Put frames in vertexbuffer!
 - ParticleSystem2D: add support for bursts!
-
-- Sprite2D Vertexbuffer / Indexbuffer:
-
-no spritesheet:
-xy rgba uv
-xy rgba uv
-xy rgba uv
-xy rgba uv
-
-0,1,2,0,2,3
-drawTris(0, 2)
-
-spritesheet two frames:
-xy rgba uv
-xy rgba uv
-xy rgba uv
-xy rgba uv
-
-xy rgba uv
-xy rgba uv
-xy rgba uv
-xy rgba uv
-
-0,1,2,0,2,3 4,5,6,4,6,7
-
-frame1: drawTris(0, 2)
-frame2: drawTris(numFloatsperVertex, 2)
 
 

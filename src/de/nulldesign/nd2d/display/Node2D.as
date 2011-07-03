@@ -119,6 +119,11 @@ package de.nulldesign.nd2d.display {
         /**
          * @private
          */
+        public var invalidateVisibility:Boolean = true;
+
+        /**
+         * @private
+         */
         public var invalidateColors:Boolean = true;
 
         public var children:Vector.<Node2D> = new Vector.<Node2D>();
@@ -165,17 +170,20 @@ package de.nulldesign.nd2d.display {
             scaleY = value / _height;
         }
 
-        private var _visible:Boolean = true;
+        protected var _visible:Boolean = true;
 
         public function get visible():Boolean {
             return _visible;
         }
 
         public function set visible(value:Boolean):void {
-            _visible = value;
+            if(visible != value) {
+                _visible = value;
+                invalidateVisibility = true;
+            }
         }
 
-        private var _alpha:Number = 1.0;
+        protected var _alpha:Number = 1.0;
 
         public function set alpha(value:Number):void {
             if(alpha != value) {
@@ -225,7 +233,7 @@ package de.nulldesign.nd2d.display {
             return _b;
         }
 
-        private var _tint:Number = 0xFFFFFF;
+        protected var _tint:Number = 0xFFFFFF;
 
         public function set tint(value:Number):void {
             if(tint != value) {
@@ -238,7 +246,7 @@ package de.nulldesign.nd2d.display {
             return _tint;
         }
 
-        private var _scaleX:Number = 1.0;
+        protected var _scaleX:Number = 1.0;
 
         public function set scaleX(value:Number):void {
             if(scaleX != value) {
@@ -251,7 +259,7 @@ package de.nulldesign.nd2d.display {
             return _scaleX;
         }
 
-        private var _scaleY:Number = 1.0;
+        protected var _scaleY:Number = 1.0;
 
         public function set scaleY(value:Number):void {
             if(scaleY != value) {
@@ -264,7 +272,7 @@ package de.nulldesign.nd2d.display {
             return _scaleY;
         }
 
-        private var _x:Number = 0.0;
+        protected var _x:Number = 0.0;
 
         public function set x(value:Number):void {
             if(x != value) {
@@ -278,7 +286,7 @@ package de.nulldesign.nd2d.display {
             return _x;
         }
 
-        private var _y:Number = 0.0;
+        protected var _y:Number = 0.0;
 
         public function set y(value:Number):void {
             if(y != value) {
@@ -292,7 +300,7 @@ package de.nulldesign.nd2d.display {
             return _y;
         }
 
-        private var _position:Point = new Point(0.0, 0.0);
+        protected var _position:Point = new Point(0.0, 0.0);
 
         public function get position():Point {
             return _position;
@@ -307,7 +315,7 @@ package de.nulldesign.nd2d.display {
             }
         }
 
-        private var _pivot:Point = new Point(0.0, 0.0);
+        protected var _pivot:Point = new Point(0.0, 0.0);
 
         public function get pivot():Point {
             return _pivot;
@@ -321,7 +329,7 @@ package de.nulldesign.nd2d.display {
             }
         }
 
-        private var _rotation:Number = 0.0;
+        protected var _rotation:Number = 0.0;
 
         public function set rotation(value:Number):void {
             if(rotation != value) {
@@ -334,13 +342,13 @@ package de.nulldesign.nd2d.display {
             return _rotation;
         }
 
-        private var _mouseX:Number = 0.0;
+        protected var _mouseX:Number = 0.0;
 
         public function get mouseX():Number {
             return _mouseX;
         }
 
-        private var _mouseY:Number = 0.0;
+        protected var _mouseY:Number = 0.0;
 
         public function get mouseY():Number {
             return _mouseY;
