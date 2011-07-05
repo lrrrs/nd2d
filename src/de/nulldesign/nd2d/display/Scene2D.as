@@ -36,7 +36,10 @@ package de.nulldesign.nd2d.display {
 
     /**
      * A scene that can contain 2D nodes
-     */ public class Scene2D extends Node2D {
+     * Even if a scene has x,y, rotation etc. properties you can't modify a scene this way.
+     * Use the built in camera instance to pan and zoom over your scene.
+     */
+    public class Scene2D extends Node2D {
 
         public var statsRef:Stats;
 
@@ -68,13 +71,13 @@ package de.nulldesign.nd2d.display {
             camera = value;
         }
 
-        override internal function drawNode(context:Context3D, camera:Camera2D, handleDeviceLoss:Boolean):void {
+        override internal function drawNode(context:Context3D, camera:Camera2D, parentMatrixChanged:Boolean, handleDeviceLoss:Boolean):void {
 
             var totalTris:int = 0;
             var drawCalls:int = 0;
 
             for each(var child:Node2D in children) {
-                child.drawNode(context, camera, handleDeviceLoss);
+                child.drawNode(context, camera, false, handleDeviceLoss);
                 totalTris += child.numTris;
                 drawCalls += child.drawCalls;
             }

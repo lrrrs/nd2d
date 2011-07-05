@@ -55,7 +55,7 @@ package de.nulldesign.nd2d.display {
             generateGrid();
         }
 
-        override protected function setMaterial(material:Sprite2DMaterial):void {
+        override public function setMaterial(material:Sprite2DMaterial):void {
             super.setMaterial(material);
             generateGrid();
         }
@@ -79,7 +79,7 @@ package de.nulldesign.nd2d.display {
 
             for(i = 0; i <= stepsX; i++) {
                 ar.push([]);
-                uv.push([])
+                uv.push([]);
                 for(j = 0; j <= stepsY; j++) {
                     var x:Number = i * (width / stepsX) - width / 2;
                     var y:Number = j * (height / stepsY) - height / 2;

@@ -30,6 +30,7 @@
  */
 
 package de.nulldesign.nd2d.display {
+
     import de.nulldesign.nd2d.materials.BlendModePresets;
     import de.nulldesign.nd2d.utils.NodeBlendMode;
 
@@ -415,7 +416,7 @@ package de.nulldesign.nd2d.display {
             }
 
             for(var i:int = 0; i < children.length; i++) {
-               children[i].updateColors();
+                children[i].updateColors();
             }
         }
 
@@ -496,7 +497,10 @@ package de.nulldesign.nd2d.display {
         /**
          * @private
          */
-        internal function drawNode(context:Context3D, camera:Camera2D, handleDeviceLoss:Boolean):void {
+        internal function drawNode(context:Context3D, camera:Camera2D, parentMatrixChanged:Boolean,
+                                   handleDeviceLoss:Boolean):void {
+
+            var myMatrixChanged:Boolean = false;
 
             if(!visible) {
                 return;
@@ -508,19 +512,22 @@ package de.nulldesign.nd2d.display {
 
             if(invalidateMatrix) {
                 updateMatrix();
+                myMatrixChanged = true;
             }
 
-            worldModelMatrix.identity();
-            worldModelMatrix.append(localModelMatrix);
+            if(parentMatrixChanged || myMatrixChanged) {
+                worldModelMatrix.identity();
+                worldModelMatrix.append(localModelMatrix);
 
-            if(parent) {
-                worldModelMatrix.append(parent.worldModelMatrix);
+                if(parent) {
+                    worldModelMatrix.append(parent.worldModelMatrix);
+                }
             }
 
             draw(context, camera, handleDeviceLoss);
 
             for each(var child:Node2D in children) {
-                child.drawNode(context, camera, handleDeviceLoss);
+                child.drawNode(context, camera, myMatrixChanged, handleDeviceLoss);
             }
         }
 

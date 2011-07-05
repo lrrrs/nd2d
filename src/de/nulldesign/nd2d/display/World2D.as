@@ -199,7 +199,7 @@ package de.nulldesign.nd2d.display {
                     scene.stepNode(elapsed);
                 }
 
-                scene.drawNode(context3D, camera, deviceWasLost);
+                scene.drawNode(context3D, camera, false, deviceWasLost);
 
                 context3D.present();
 

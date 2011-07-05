@@ -83,6 +83,16 @@ package de.nulldesign.nd2d.display {
             }
         }
 
+        public function setMaterial(material:Sprite2DMaterial):void {
+
+            _width = material.spriteSheet ? material.spriteSheet.spriteWidth : material.bitmapData.width;
+            _height = material.spriteSheet ? material.spriteSheet.spriteHeight : material.bitmapData.height;
+
+            this.material = material;
+            this.spriteSheet = material.spriteSheet;
+            faceList = TextureHelper.generateQuadFromTexture(material.bitmapData, material.spriteSheet);
+        }
+
         override public function get numTris():uint {
             return 2 + super.numTris;
         }
@@ -100,16 +110,6 @@ package de.nulldesign.nd2d.display {
 
             if(spriteSheet)
                 spriteSheet.update(timeSinceStartInSeconds);
-        }
-
-        protected function setMaterial(material:Sprite2DMaterial):void {
-
-            _width = material.spriteSheet ? material.spriteSheet.spriteWidth : material.bitmapData.width;
-            _height = material.spriteSheet ? material.spriteSheet.spriteHeight : material.bitmapData.height;
-
-            this.material = material;
-            this.spriteSheet = material.spriteSheet;
-            faceList = TextureHelper.generateQuadFromTexture(material.bitmapData, material.spriteSheet);
         }
 
         override protected function draw(context:Context3D, camera:Camera2D, handleDeviceLoss:Boolean):void {

@@ -60,17 +60,17 @@ package tests {
             addChild(s2);
         }
 
-        override protected function step(t:Number, elapsed:Number):void {
-            super.step(t, elapsed);
+        override protected function step(elapsed:Number):void {
+            super.step(elapsed);
 
             s.x = s2.x = camera.sceneWidth * 0.5;
             s.y = s2.y = camera.sceneHeight * 0.5;
 
-            s2.x += Math.sin(t) * 100.0;
-            s2.y += Math.cos(t) * 50.0;
+            s2.x += Math.sin(timeSinceStartInSeconds) * 100.0;
+            s2.y += Math.cos(timeSinceStartInSeconds) * 50.0;
             s2.rotation += 1;
 
-            scanlineMaterial.seed = scanlineMaterial2.seed = Math.round(t * 20.0);
+            scanlineMaterial.seed = scanlineMaterial2.seed = Math.round(timeSinceStartInSeconds * 20.0);
         }
     }
 }

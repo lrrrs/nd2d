@@ -107,7 +107,7 @@ package de.nulldesign.nd2d.display {
             return material.drawCalls;
         }
 
-        override protected function setMaterial(material:Sprite2DMaterial):void {
+        override public function setMaterial(material:Sprite2DMaterial):void {
             super.setMaterial(material);
 
             // kinda hackish ...
@@ -172,21 +172,27 @@ package de.nulldesign.nd2d.display {
             child2.invalidateMatrix = true;
         }
 
-        override internal function drawNode(context:Context3D, camera:Camera2D, handleDeviceLoss:Boolean):void {
+        override internal function drawNode(context:Context3D, camera:Camera2D, parentMatrixChanged:Boolean,
+                                            handleDeviceLoss:Boolean):void {
 
             if(!visible) {
                 return;
             }
 
+            var myMatrixChanged:Boolean = false;
+
             if(invalidateMatrix) {
                 updateMatrix();
+                myMatrixChanged = true;
             }
 
-            worldModelMatrix.identity();
-            worldModelMatrix.append(localModelMatrix);
+            if(parentMatrixChanged || myMatrixChanged) {
+                worldModelMatrix.identity();
+                worldModelMatrix.append(localModelMatrix);
 
-            if(parent) {
-                worldModelMatrix.append(parent.worldModelMatrix);
+                if(parent) {
+                    worldModelMatrix.append(parent.worldModelMatrix);
+                }
             }
 
             if(handleDeviceLoss) {
@@ -232,6 +238,11 @@ package de.nulldesign.nd2d.display {
             var sx:Number;
             var sy:Number;
             var somethingChanged:Boolean = false;
+
+            if(invalidateColors) {
+                updateColors();
+                invalidateColors = true;
+            }
 
             // TODO: get rid of this implementation and do batch rendering! :)
             while(++i < n) {
@@ -348,9 +359,9 @@ package de.nulldesign.nd2d.display {
                 vIdx += 32;
 
                 child.invalidateMatrix = child.invalidateColors = child.invalidateVisibility = false;
-                invalidateColors = false;
             }
 
+            invalidateColors = false;
             uvInited = true;
 
             if(!vertexBuffer) {

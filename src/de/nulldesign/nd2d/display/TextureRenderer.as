@@ -55,7 +55,7 @@ package de.nulldesign.nd2d.display {
             _height = textureHeight;
         }
 
-        override internal function drawNode(context:Context3D, camera:Camera2D, handleDeviceLoss:Boolean):void {
+        override internal function drawNode(context:Context3D, camera:Camera2D, parentMatrixChanged:Boolean, handleDeviceLoss:Boolean):void {
 
             if(!texture || handleDeviceLoss) {
                 texture = context.createTexture(width, height, Context3DTextureFormat.BGRA, true);
@@ -72,7 +72,7 @@ package de.nulldesign.nd2d.display {
 
             var visibleState:Boolean = renderNode.visible;
             renderNode.visible = true;
-            renderNode.drawNode(context, texCamera, handleDeviceLoss);
+            renderNode.drawNode(context, texCamera, parentMatrixChanged, handleDeviceLoss);
             renderNode.visible = visibleState;
 
             context.setRenderToBackBuffer();
