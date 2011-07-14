@@ -1,5 +1,7 @@
 package tests {
 
+    import com.bit101.components.PushButton;
+
     import de.nulldesign.nd2d.display.Node2D;
     import de.nulldesign.nd2d.display.Scene2D;
     import de.nulldesign.nd2d.display.Sprite2D;
@@ -7,10 +9,8 @@ package tests {
     import de.nulldesign.nd2d.materials.SpriteSheet;
 
     import flash.display.BitmapData;
-    import flash.display.Sprite;
     import flash.events.Event;
     import flash.events.MouseEvent;
-    import flash.text.TextField;
 
     public class MassiveSpriteCloudTest extends Scene2D {
 
@@ -22,7 +22,7 @@ package tests {
 
         private var numSprites:uint = 1600;
 
-        private var addSpritesButton:Sprite;
+        private var addSpritesButton:PushButton;
 
         public function MassiveSpriteCloudTest() {
 
@@ -46,27 +46,6 @@ package tests {
 
             addEventListener(Event.ADDED_TO_STAGE, addedToStage);
             addEventListener(Event.REMOVED_FROM_STAGE, removedFromStage);
-
-            // drrty button :)
-            addSpritesButton = new Sprite();
-            addSpritesButton.graphics.beginFill(0x000000, 1.0);
-            addSpritesButton.graphics.drawRect(0.0, 0.0, 100.0, 20.0);
-            addSpritesButton.graphics.endFill();
-            addSpritesButton.buttonMode = true;
-            addSpritesButton.useHandCursor = true;
-            var t:TextField = new TextField();
-            t.textColor = 0xFFFFFF;
-            t.width = 100.0;
-            t.height = 30.0;
-            t.text = "addChild";
-            t.selectable = false;
-            t.x = 5.0;
-            t.y = 3.0;
-            t.mouseEnabled = false;
-            addSpritesButton.addChild(t);
-            addSpritesButton.x = 10.0;
-            addSpritesButton.y = 150.0;
-            addSpritesButton.addEventListener(MouseEvent.CLICK, addSpritesClick);
         }
 
         private function addSpritesClick(event:MouseEvent = null):void {
@@ -99,6 +78,11 @@ package tests {
         }
 
         private function addedToStage(event:Event):void {
+
+            if(!addSpritesButton) {
+                addSpritesButton = new PushButton(stage, 0.0, 150.0, "addChild", addSpritesClick);
+            }
+
             if(!stage.contains(addSpritesButton)) {
                 stage.addChild(addSpritesButton);
             }

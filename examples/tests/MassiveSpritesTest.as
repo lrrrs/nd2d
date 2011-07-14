@@ -1,8 +1,8 @@
 package tests {
+
     import de.nulldesign.nd2d.display.Scene2D;
     import de.nulldesign.nd2d.display.Sprite2D;
     import de.nulldesign.nd2d.display.Sprite2DCloud;
-    import de.nulldesign.nd2d.display.World2D;
     import de.nulldesign.nd2d.materials.BlendModePresets;
 
     import flash.display.BitmapData;
@@ -19,39 +19,41 @@ package tests {
 
         private var perlinBmp:BitmapData;
 
+        private var maxParticles:uint = 4000;
+
         public function MassiveSpritesTest() {
-
-            sprites = new Vector.<Sprite2D>();
-            var tex:BitmapData = new cubeTexture().bitmapData;
-            var s:Sprite2D;
-            spriteSheet = new Sprite2DCloud(3000, tex);
-            spriteSheet.blendMode = BlendModePresets.ADD;
-
-            for(var i:int = 0; i < 3000; i++) {
-                s = new Sprite2D();
-                s.x = (Math.random() - Math.random()) * 800;
-                s.y = (Math.random() - Math.random()) * 600;
-                s.vx = (Math.random() - Math.random()) * 15;
-                s.vy = (Math.random() - Math.random()) * 15;
-
-                sprites[i] = s;
-
-                spriteSheet.addChild(s);
-
-                //scene.addChild(s);
-            }
-
-            addChild(spriteSheet);
-
             addEventListener(Event.ADDED_TO_STAGE, addedToStage);
+        }
+
+        protected function randomizeParticle(s:Sprite2D):void {
+            s.x = Math.random() * stage.stageWidth;
+            s.y = Math.random() * stage.stageHeight;
+            s.vx = (Math.random() - Math.random()) * 15;
+            s.vy = (Math.random() - Math.random()) * 15;
+            s.alpha = 1.0;
         }
 
         protected function addedToStage(e:Event):void {
 
             removeEventListener(Event.ADDED_TO_STAGE, addedToStage);
 
+            sprites = new Vector.<Sprite2D>();
+            var tex:BitmapData = new cubeTexture().bitmapData;
+            var s:Sprite2D;
+            spriteSheet = new Sprite2DCloud(maxParticles, tex);
+            spriteSheet.blendMode = BlendModePresets.ADD;
+
+            for(var i:int = 0; i < maxParticles; i++) {
+                s = new Sprite2D();
+                randomizeParticle(s);
+                sprites[i] = s;
+                spriteSheet.addChild(s);
+            }
+
+            addChild(spriteSheet);
+
             perlinBmp = new BitmapData(stage.stageWidth, stage.stageHeight, false);
-            perlinBmp.perlinNoise(stage.stageWidth * 0.1, stage.stageHeight * 0.1, 3, Math.random() * 10, false, false,
+            perlinBmp.perlinNoise(stage.stageWidth * 0.1, stage.stageHeight * 0.1, 3, Math.random() * 20, false, false,
                                   BitmapDataChannel.RED | BitmapDataChannel.GREEN | BitmapDataChannel.BLUE, false);
 
             stage.addEventListener(Event.RESIZE, resizeStage);
@@ -60,7 +62,7 @@ package tests {
         protected function resizeStage(e:Event):void {
 
             perlinBmp = new BitmapData(stage.stageWidth, stage.stageHeight, false);
-            perlinBmp.perlinNoise(stage.stageWidth * 0.1, stage.stageHeight * 0.1, 3, Math.random() * 10, false, false,
+            perlinBmp.perlinNoise(stage.stageWidth * 0.1, stage.stageHeight * 0.1, 3, Math.random() * 20, true, false,
                                   BitmapDataChannel.RED | BitmapDataChannel.GREEN | BitmapDataChannel.BLUE, false);
         }
 
@@ -81,29 +83,25 @@ package tests {
                 if(s.x < 0) {
                     //s.x = 0;
                     //s.vx *= -1;
-                    s.x = Math.random() * stage.stageWidth;
-                    s.y = Math.random() * stage.stageHeight;
+                    randomizeParticle(s);
                 }
 
                 if(s.x > stage.stageWidth) {
                     //s.x = stage.stageWidth;
                     //s.vx *= -1;
-                    s.x = Math.random() * stage.stageWidth;
-                    s.y = Math.random() * stage.stageHeight;
+                    randomizeParticle(s);
                 }
 
                 if(s.y < 0) {
                     //s.y = 0;
                     //s.vy *= -1;
-                    s.x = Math.random() * stage.stageWidth;
-                    s.y = Math.random() * stage.stageHeight;
+                    randomizeParticle(s);
                 }
 
                 if(s.y > stage.stageHeight) {
                     //s.y = stage.stageHeight;
                     //s.vy *= -1;
-                    s.x = Math.random() * stage.stageWidth;
-                    s.y = Math.random() * stage.stageHeight;
+                    randomizeParticle(s);
                 }
 
                 p = perlinBmp.getPixel(s.x, s.y);
@@ -125,8 +123,8 @@ package tests {
                 g = (s.y / stage.stageHeight) * 255;
                 b = Math.abs(Math.round((s.vx + s.vy))) * 10;
                 s.tint = (r << 16 | g << 8 | b);
+                s.alpha -= 0.001;
             }
-
         }
     }
 }

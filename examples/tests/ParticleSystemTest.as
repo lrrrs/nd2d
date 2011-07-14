@@ -1,4 +1,5 @@
 package tests {
+
     import de.nulldesign.nd2d.display.ParticleSystem2D;
     import de.nulldesign.nd2d.display.Scene2D;
     import de.nulldesign.nd2d.materials.BlendModePresets;
@@ -7,6 +8,7 @@ package tests {
     import flash.display.Sprite;
     import flash.events.Event;
     import flash.events.MouseEvent;
+    import flash.geom.Point;
 
     public class ParticleSystemTest extends Scene2D {
 
@@ -19,7 +21,21 @@ package tests {
 
         public function ParticleSystemTest() {
 
-            particles = new ParticleSystem2D(new particleClass().bitmapData, 3000, new ParticleSystemPreset());
+            var psp:ParticleSystemPreset = new ParticleSystemPreset();
+            psp.minStartPosition.x = -300.0;
+            psp.maxStartPosition.x = 300.0;
+            psp.startColor = 0x00FF00;
+            psp.startColorVariance = 0x0000FF;
+            psp.endColor = 0xAAFF33;
+            psp.endColorVariance = 0xFF9966;
+            psp.minStartSize = 3.0;
+            psp.maxStartSize = 5.0;
+            psp.minEndSize = 0.0;
+            psp.maxEndSize = 0.0;
+            psp.spawnDelay = 5.0;
+
+            particles = new ParticleSystem2D(new particleClass().bitmapData, 1000, psp);
+            particles.gravity = new Point(0.0, -1500.0);
             //particles.scaleX = particles.scaleY = 4.0;
             particles.blendMode = BlendModePresets.ADD;
 
@@ -54,11 +70,8 @@ package tests {
         }
 
         override protected function step(elapsed:Number):void {
-            particles.x = stage.stageWidth / 2;
-            particles.y = stage.stageHeight / 2;
-            particles.gravity.x = (stage.mouseX / stage.stageWidth * 2.0 - 1.0) * 2000.0;
-            particles.gravity.y = (stage.mouseY / stage.stageHeight * 2.0 - 1.0) * 2000.0;
-            //particles.rotation += 1;
+            particles.x = stage.stageWidth / 2.0;
+            particles.y = stage.stageHeight - 50.0;
         }
     }
 }

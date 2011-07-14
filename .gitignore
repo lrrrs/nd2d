@@ -1,5 +1,5 @@
 docs
-libs
+libs/playerglobal.swc
 bin
 bin-test
 build_swc.sh

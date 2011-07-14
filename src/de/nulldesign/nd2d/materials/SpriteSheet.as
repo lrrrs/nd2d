@@ -150,8 +150,7 @@ package de.nulldesign.nd2d.materials {
         }
 
         public function addAnimation(name:String, keyFrames:Array, loop:Boolean):void {
-            activeAnimation = new SpriteSheetAnimation(keyFrames, loop);
-            animationMap[name] = activeAnimation;
+            animationMap[name] = new SpriteSheetAnimation(keyFrames, loop);
         }
 
         public function playAnimation(name:String, startIdx:uint = 0, restart:Boolean = false):void {

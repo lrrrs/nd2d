@@ -30,6 +30,7 @@
  */
 
 package de.nulldesign.nd2d.display {
+
     import flash.display.Sprite;
     import flash.display3D.Context3D;
     import flash.display3D.Context3DCompareMode;
@@ -63,6 +64,8 @@ package de.nulldesign.nd2d.display {
      * You can switch between scenes with the setActiveScene method of World2D.
      * There can be only one active scene.
      *
+     * NOTICE: API change. You have to call start once to initialize the world
+     *
      */
     public class World2D extends Sprite {
 
@@ -88,6 +91,7 @@ package de.nulldesign.nd2d.display {
         protected var enableErrorChecking:Boolean = false;
 
         private var _statsVisible:Boolean = true;
+        private var initializeNodesAfterStartUp:Boolean = false;
 
         public function get statsVisible():Boolean {
             return _statsVisible;
@@ -150,18 +154,11 @@ package de.nulldesign.nd2d.display {
                 deviceWasLost = true;
             }
 
-            if(frameBased) {
-                removeEventListener(Event.ENTER_FRAME, timerEventHandler);
-                addEventListener(Event.ENTER_FRAME, timerEventHandler);
-            } else {
-                if(!renderTimer) {
-                    renderTimer = new Timer(1000 / frameRate);
-                    renderTimer.addEventListener(TimerEvent.TIMER, timerEventHandler);
-                    renderTimer.start();
-                }
-            }
-
             deviceInitialized = true;
+
+            if(initializeNodesAfterStartUp) {
+                doInitializeNodes();
+            }
         }
 
         private function mouseEventHandler(event:MouseEvent):void {
@@ -181,7 +178,9 @@ package de.nulldesign.nd2d.display {
         protected function resizeStage(e:Event = null):void {
             if(!context3D) return;
             var rect:Rectangle = bounds ? bounds : new Rectangle(0, 0, stage.stageWidth, stage.stageHeight);
-            stage.stage3Ds[stageID].viewPort = rect;
+            stage.stage3Ds[stageID].x = rect.x;
+            stage.stage3Ds[stageID].y = rect.y;
+
             context3D.configureBackBuffer(rect.width, rect.height, antialiasing, false);
             camera.resizeCameraStage(rect.width, rect.height);
         }
@@ -193,8 +192,7 @@ package de.nulldesign.nd2d.display {
             if(scene) {
                 context3D.clear(scene.br, scene.bg, scene.bb, 1.0);
 
-                if(!isPaused)
-                {
+                if(!isPaused) {
                     scene.timeSinceStartInSeconds = t;
                     scene.stepNode(elapsed);
                 }
@@ -226,16 +224,83 @@ package de.nulldesign.nd2d.display {
             }
         }
 
-        protected function pause():void {
+        public function start():void {
+
+            if(!renderTimer && !frameBased) {
+                renderTimer = new Timer(1000 / frameRate);
+                renderTimer.addEventListener(TimerEvent.TIMER, timerEventHandler);
+            }
+
+            wakeUp();
+        }
+
+        /**
+         * Pause all movement in your game. The drawing loop will still fire
+         */
+        public function pause():void {
             isPaused = true;
         }
 
-        protected function resume():void {
+        /**
+         * Resume movement in your game.
+         */
+        public function resume():void {
             isPaused = false;
         }
 
+        /**
+         * Put everything to sleep, no drawing and step loop will be fired
+         */
+        public function sleep():void {
+            if(frameBased) {
+                removeEventListener(Event.ENTER_FRAME, timerEventHandler);
+            } else {
+                if(renderTimer.running)
+                    renderTimer.stop();
+            }
+
+            if(context3D) {
+                context3D.clear(scene.br, scene.bg, scene.bb, 1.0);
+                context3D.present();
+            }
+        }
+
+        /**
+         * wake up from sleep. draw / step loops will start to fire again
+         */
+        public function wakeUp():void {
+            if(frameBased) {
+                removeEventListener(Event.ENTER_FRAME, timerEventHandler);
+                addEventListener(Event.ENTER_FRAME, timerEventHandler);
+            } else {
+                if(!renderTimer.running)
+                    renderTimer.start();
+            }
+        }
+
+        /**
+         * optionally you can call this method to initialize all your object in the active scene
+         * an event will be dispatched when the initializing is done
+         */
+        public function initializeNodes():void {
+
+            if(deviceInitialized) {
+                doInitializeNodes();
+            } else {
+                initializeNodesAfterStartUp = true;
+            }
+        }
+
+        private function doInitializeNodes():void {
+            // TODO traverse through displaylist and initialize nodes in a seperate thread / loop? dispatch event when ready, etc...
+            trace("TODO! Implement initializeNodes");
+        }
+
         public function destroy():void {
-            // TODO
+            sleep();
+            if(context3D) {
+                context3D.dispose();
+            }
         }
     }
 }

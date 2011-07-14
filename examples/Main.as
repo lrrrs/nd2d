@@ -30,23 +30,22 @@
  */
 
 package {
+
     import avmplus.getQualifiedClassName;
+
+    import com.bit101.components.PushButton;
 
     import de.nulldesign.nd2d.display.Scene2D;
     import de.nulldesign.nd2d.display.World2D;
 
-    import flash.display.Sprite;
     import flash.display.StageAlign;
     import flash.display.StageScaleMode;
     import flash.display3D.Context3DRenderMode;
     import flash.events.Event;
     import flash.events.KeyboardEvent;
     import flash.events.MouseEvent;
-
     import flash.text.TextField;
-
     import flash.text.TextFormat;
-
     import flash.ui.Keyboard;
 
     import tests.CameraTest;
@@ -54,7 +53,6 @@ package {
     import tests.Grid2DTest;
     import tests.MassiveSpriteCloudTest;
     import tests.MassiveSpritesTest;
-    import tests.MaterialsTest;
     import tests.ParticleExplorer;
     import tests.ParticleSystemTest;
     import tests.SideScrollerTest;
@@ -84,6 +82,7 @@ package {
 
             //statsVisible = false;
 
+            scenes.push(new SideScrollerTest());
             scenes.push(new MassiveSpritesTest());
             scenes.push(new MassiveSpriteCloudTest());
             scenes.push(new SpriteHierarchyTest());
@@ -95,10 +94,9 @@ package {
             scenes.push(new StarFieldTest());
             scenes.push(new ParticleSystemTest());
             scenes.push(new TextureRendererTest());
-            scenes.push(new SideScrollerTest());
             //scenes.push(new MaterialsTest());
             scenes.push(new CameraTest());
-            //scenes.push(new ParticleExplorer());
+            scenes.push(new ParticleExplorer());
 
             var tf:TextFormat = new TextFormat("Arial", 11, 0xFFFFFF, true);
 
@@ -111,10 +109,43 @@ package {
             stage.addEventListener(Event.RESIZE, stageResize);
             stageResize(null);
 
-            activeSceneIdx = 4; //10;
+            activeSceneIdx = 0;
             nextBtnClick();
 
             stage.addEventListener(KeyboardEvent.KEY_UP, keyUp);
+
+            /********************************
+             * API CHANGE: YOU HAVE TO CALL START TO INITIALIZE THE WORLD2D. OTHERWISE YOUR SCREEN WILL BE BLANK
+             ********************************/
+            start();
+
+            // test buttons
+            var b:PushButton;
+            b = new PushButton(this, 0, 460, "pause", buttonClicked);
+            b.tag = 0;
+            b = new PushButton(this, 0, 480, "resume", buttonClicked);
+            b.tag = 1;
+            b = new PushButton(this, 0, 500, "sleep", buttonClicked);
+            b.tag = 2;
+            b = new PushButton(this, 0, 520, "wakeup", buttonClicked);
+            b.tag = 3;
+        }
+
+        private function buttonClicked(e:MouseEvent):void {
+            switch(e.target.tag) {
+                case 0:
+                    pause();
+                    break;
+                case 1:
+                    resume();
+                    break;
+                case 2:
+                    sleep();
+                    break;
+                case 3:
+                    wakeUp();
+                    break;
+            }
         }
 
         // simulate device loss
@@ -130,7 +161,7 @@ package {
 
             camera.reset();
 
-            sceneText.text = getQualifiedClassName(scenes[activeSceneIdx]) + " // hit space for next test.";
+            sceneText.text = "(" + (activeSceneIdx + 1) + "/" + scenes.length + ") " + getQualifiedClassName(scenes[activeSceneIdx]) + " // hit space for next test.";
 
             setActiveScene(scenes[activeSceneIdx++]);
 

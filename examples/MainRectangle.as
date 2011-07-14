@@ -52,6 +52,7 @@ package {
 
             world = new RectangleWorld(Context3DRenderMode.AUTO, 60, new Rectangle(20, 20, 760, 560));
             addChild(world);
+            world.start();
         }
     }
 }

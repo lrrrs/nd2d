@@ -34,8 +34,6 @@ package de.nulldesign.nd2d.utils {
 
     public class ParticleSystemPreset {
 
-        public var gravity:Point = new Point(0.0, 0.0);
-
         public var minStartPosition:Point = new Point(-5.0, 0.0);
         public var maxStartPosition:Point = new Point(5.0, 0.0);
 
