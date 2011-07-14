@@ -7,7 +7,6 @@ ND2D is a 2D sprite engine using the new GPU hardware features of flash currentl
 You have to compile ND2D with the FP11 beta playerglobal.swc to get it to work.
 
 ND2D was built to make an ease use of hardware accelerated 2D content in the Flashplayer. The aim is to keep things simple and reintroduce familiar concepts. ND2D has a displaylist and quite the same methods to modify sprites as you are used to.
-If you want to run the ParticleExplorer, you have to download the minimalcomps from Keith Peters as well: [Minimal Comps](http://www.minimalcomps.com/)
 
 !!! It's still in early beta, so there will be bugs and things that do not work properly. Please file issues to the bugbase!!!
 
