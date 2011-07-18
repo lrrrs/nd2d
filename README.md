@@ -2,7 +2,7 @@
 
 ND2D is a 2D sprite engine using the new GPU hardware features of flash currently available in a beta build. To run this engine you must download and install the latest flash player:
 
-[Flash Player 11 Beta](http://labs.adobe.com/downloads/flashplayer11.html)
+[Flash Player 11 Beta](http://labs.adobe.com/downloads/flashplayer11.html) | [http://download.macromedia.com/pub/labs/flashplatformruntimes/flashplayer11/flashplayer11_b1_playerglobal_071311.swc](playerglobal.swc)
 
 You have to compile ND2D with the FP11 beta playerglobal.swc to get it to work.
 
