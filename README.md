@@ -38,7 +38,6 @@ Useful links:
 2011-07-20
 
 - !!! API CHANGE IN World2D: You have to call start() now to get the engine running, otherwise your screen will be black.
-
 - Blendmodes have been renamed and fixed for premultiplied alpha bitmaps: NORMAL -> NORMAL_PREMULTIPLIED_ALPHA.
 
 2011-07-14
