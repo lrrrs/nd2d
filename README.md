@@ -33,6 +33,20 @@ Useful links:
 - Distortable 2D grid for wave / ripple effects
 - Texturerenderer for displaylist elements
 
-# ND2D Performance:
+# Changelog:
 
-You'll notice framerate drops when using the Sprite2DCloud and Font2D at the moment with a huge number of sprites / text, since batch rendering is not yet fully implemented. I'm waiting for the next PixelBender3D release to make this possible. There will be a huge performance boost then ;)
+2011-07-20
+- !!! API CHANGE IN World2D: You have to call start() now to get the engine running, otherwise your screen will be black.
+- Blendmodes have been renamed and fixed for premultiplied alpha bitmaps: NORMAL -> NORMAL_PREMULTIPLIED_ALPHA.
+
+2011-07-14
+- updated engine for new public FP11 beta player. stage3Ds[i].x/y used instead of old rectangle
+
+2011-07-05
+- Fixed runtime cloud child visibility 
+
+2011-07-02
+- altered addChild method: existing childs are removed first, before added again
+
+2011-06-22
+- added some ; to satisfy FDT4 ;) 
