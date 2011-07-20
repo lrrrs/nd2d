@@ -61,10 +61,11 @@ material kernel particlesystem
 
     void evaluateFragment()
     {
-        float4 texel = sample(textureImage, float2(interpolatedUV.x, interpolatedUV.y), PB3D_MIPNEAREST);
-        result = float4(texel.r * interpolatedColor.r / texel.a,
-                        texel.g * interpolatedColor.g / texel.a,
-                        texel.b * interpolatedColor.b / texel.a,
+        float4 texel = sample(textureImage, float2(interpolatedUV.x, interpolatedUV.y), PB3D_2D | PB3D_NEAREST | PB3D_MIPNEAREST | PB3D_CLAMP);
+
+        result = float4(texel.r * interpolatedColor.r,
+                        texel.g * interpolatedColor.g,
+                        texel.b * interpolatedColor.b,
                         texel.a * interpolatedColor.a);
     }
 }

@@ -47,7 +47,10 @@ package de.nulldesign.nd2d.materials {
         public static const MODULATE:NodeBlendMode = new NodeBlendMode(Context3DBlendFactor.DESTINATION_COLOR,
                                                                        Context3DBlendFactor.ZERO);
 
-        public static const NORMAL:NodeBlendMode = new NodeBlendMode(Context3DBlendFactor.SOURCE_ALPHA,
+        public static const NORMAL_PREMULTIPLIED_ALPHA:NodeBlendMode = new NodeBlendMode(Context3DBlendFactor.ONE,
+                                                                     Context3DBlendFactor.ONE_MINUS_SOURCE_ALPHA);
+
+        public static const NORMAL_NO_PREMULTIPLIED_ALPHA:NodeBlendMode = new NodeBlendMode(Context3DBlendFactor.SOURCE_ALPHA,
                                                                      Context3DBlendFactor.ONE_MINUS_SOURCE_ALPHA);
 
         public static const ADD:NodeBlendMode = new NodeBlendMode(Context3DBlendFactor.SOURCE_ALPHA,

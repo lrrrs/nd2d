@@ -8,6 +8,7 @@ package tests {
     import flash.display.BitmapData;
     import flash.display.BitmapDataChannel;
     import flash.events.Event;
+    import flash.geom.Point;
 
     public class MassiveSpritesTest extends Scene2D {
 
@@ -19,7 +20,7 @@ package tests {
 
         private var perlinBmp:BitmapData;
 
-        private var maxParticles:uint = 4000;
+        private var maxParticles:uint = 6000;
 
         public function MassiveSpritesTest() {
             addEventListener(Event.ADDED_TO_STAGE, addedToStage);
@@ -74,6 +75,7 @@ package tests {
             var r:uint;
             var g:uint;
             var b:uint;
+            var mdiff:Point = new Point(0.0, 0.0);
 
             for(var i:int = 0; i < len; i++) {
                 s = sprites[i];
@@ -102,6 +104,14 @@ package tests {
                     //s.y = stage.stageHeight;
                     //s.vy *= -1;
                     randomizeParticle(s);
+                }
+
+                mdiff.x = stage.mouseX - s.x;
+                mdiff.y = stage.mouseY - s.y;
+
+                if(mdiff.length < 100.0) {
+                    s.vx -= mdiff.x * 0.02;
+                    s.vy -= mdiff.y * 0.02;
                 }
 
                 p = perlinBmp.getPixel(s.x, s.y);

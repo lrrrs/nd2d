@@ -133,7 +133,7 @@ package de.nulldesign.nd2d.display {
         public var vx:Number = 0.0;
         public var vy:Number = 0.0;
 
-        public var blendMode:NodeBlendMode = BlendModePresets.NORMAL;
+        public var blendMode:NodeBlendMode = BlendModePresets.NORMAL_PREMULTIPLIED_ALPHA;
 
         public var mouseEnabled:Boolean = false;
 

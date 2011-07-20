@@ -61,7 +61,7 @@ package de.nulldesign.nd2d.materials {
         public var numTris:int = 0;
         public var drawCalls:int = 0;
 
-        public var blendMode:NodeBlendMode = BlendModePresets.NORMAL;
+        public var blendMode:NodeBlendMode = BlendModePresets.NORMAL_PREMULTIPLIED_ALPHA;
 
         public var needUploadVertexBuffer:Boolean = false;
 

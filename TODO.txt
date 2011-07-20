@@ -15,5 +15,7 @@
 - clear bitmapdata after texture creation?
 - multitouch events
 - init method for world -> async buffer & texture creation w/ event before launching the world. (no startup lag anymore, "preloadable")
+- disposing of textures, etc. cleanUp / destroy
+- periodically framerate drops? why? player?
 
 

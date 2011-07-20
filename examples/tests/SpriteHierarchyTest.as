@@ -54,7 +54,7 @@ package tests {
             s3.scaleX = s3.scaleY = 4.0;
             s2.addChild(s3);
 
-            s3.blendMode = BlendModePresets.NORMAL;
+            s3.blendMode = BlendModePresets.NORMAL_PREMULTIPLIED_ALPHA;
         }
 
         private function mouseOut(event:MouseEvent):void {

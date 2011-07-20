@@ -76,7 +76,7 @@ package de.nulldesign.nd2d.display {
                 "mov v1, va2		\n"; // copy color
 
         protected const DEFAULT_FRAGMENT_SHADER:String = "mov ft0, v0\n" + // get interpolated uv coords
-                "tex ft1, ft0, fs0 <2d,clamp,linear>\n" + // sample texture
+                "tex ft1, ft0, fs0 <2d,clamp,linear,nomip>\n" + // sample texture
                 "mul ft1, ft1, v1\n" + // mult with color
                 "mov oc, ft1\n";
 
@@ -209,7 +209,7 @@ package de.nulldesign.nd2d.display {
         override protected function draw(context:Context3D, camera:Camera2D, handleDeviceLoss:Boolean):void {
 
             if(!material.texture) {
-                material.texture = TextureHelper.generateTextureFromBitmap(context, material.bitmapData, true);
+                material.texture = TextureHelper.generateTextureFromBitmap(context, material.bitmapData, false);
             }
 
             if(!program) {
