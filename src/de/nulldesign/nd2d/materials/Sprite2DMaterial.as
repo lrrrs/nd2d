@@ -30,6 +30,7 @@
  */
 
 package de.nulldesign.nd2d.materials {
+
     import de.nulldesign.nd2d.utils.TextureHelper;
 
     import flash.display.BitmapData;
@@ -123,6 +124,14 @@ package de.nulldesign.nd2d.materials {
             }
 
             programData = sprite2DProgramData;
+        }
+
+        override public function cleanUp():void {
+            super.cleanUp();
+            if(texture) {
+                texture.dispose();
+                texture = null;
+            }
         }
     }
 }

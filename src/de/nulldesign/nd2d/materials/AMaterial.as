@@ -30,6 +30,7 @@
  */
 
 package de.nulldesign.nd2d.materials {
+
     import com.adobe.pixelBender3D.VertexRegisterInfo;
     import com.adobe.pixelBender3D.utils.VertexBufferHelper;
 
@@ -156,8 +157,7 @@ package de.nulldesign.nd2d.materials {
 
                 numTris = int(mIndexBuffer.length / 3);
 
-                if(context.enableErrorChecking)
-                {
+                if(context.enableErrorChecking) {
                     trace("mIndexBuffer: " + mIndexBuffer);
                 }
             }
@@ -196,7 +196,7 @@ package de.nulldesign.nd2d.materials {
             needUploadVertexBuffer = true;
         }
 
-        public function render(context:Context3D, faceList:Vector.<Face>, startTri:uint,  numTris:uint):void {
+        public function render(context:Context3D, faceList:Vector.<Face>, startTri:uint, numTris:uint):void {
             generateBufferData(context, faceList);
             if(prepareForRender(context)) {
                 context.drawTriangles(indexBuffer, startTri * 3, numTris);
@@ -219,23 +219,20 @@ package de.nulldesign.nd2d.materials {
             var vertexRegisters:Vector.<VertexRegisterInfo> = programData.vertexRegisterMap.inputVertexRegisters;
 
             var vertexBufferFormat:String = null;
-            if(context.enableErrorChecking && buffer.length == 0)
-            {
-                 vertexBufferFormat = "vertexBufferFormat: ";
+            if(context.enableErrorChecking && buffer.length == 0) {
+                vertexBufferFormat = "vertexBufferFormat: ";
             }
 
             for(var i:int = 0; i < programData.vertexRegisterMap.inputVertexRegisters.length; i += 1) {
                 var n:int = getFloatFormat(programData.vertexRegisterMap.inputVertexRegisters[i].format);
                 fillBuffer(buffer, v, uv, face, vertexRegisters[i].semantics.id, n);
 
-                if(context.enableErrorChecking && vertexBufferFormat)
-                {
+                if(context.enableErrorChecking && vertexBufferFormat) {
                     vertexBufferFormat += vertexRegisters[i].semantics.id + " float" + n + ", ";
                 }
             }
 
-            if(context.enableErrorChecking && vertexBufferFormat)
-            {
+            if(context.enableErrorChecking && vertexBufferFormat) {
                 trace(vertexBufferFormat);
             }
         }
@@ -329,6 +326,21 @@ package de.nulldesign.nd2d.materials {
                 return 4;
 
             throw new Error("bad format");
+        }
+
+        public function cleanUp():void {
+            if(indexBuffer) {
+                indexBuffer.dispose();
+                indexBuffer = null;
+            }
+            if(vertexBuffer) {
+                vertexBuffer.dispose();
+                vertexBuffer = null;
+            }
+            if(programData) {
+                programData.program.dispose();
+                programData = null;
+            }
         }
     }
 }

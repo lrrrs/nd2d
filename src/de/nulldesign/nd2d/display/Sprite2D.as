@@ -130,5 +130,11 @@ package de.nulldesign.nd2d.display {
 
             material.render(context, faceList, 0, faceList.length);
         }
+
+        override public function cleanUp():void {
+            if(material) {
+                material.cleanUp();
+            }
+        }
     }
 }

@@ -154,5 +154,13 @@ package de.nulldesign.nd2d.materials {
              }
              */
         }
+
+        override public function cleanUp():void {
+            super.cleanUp();
+            if(texture) {
+                texture.dispose();
+                texture = null;
+            }
+        }
     }
 }

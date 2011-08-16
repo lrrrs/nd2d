@@ -602,5 +602,9 @@ package de.nulldesign.nd2d.display {
                 removeChildAt(0);
             }
         }
+
+        public function cleanUp():void {
+
+        }
     }
 }
