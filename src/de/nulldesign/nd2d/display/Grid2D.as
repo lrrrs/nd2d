@@ -47,7 +47,7 @@ package de.nulldesign.nd2d.display {
         public function Grid2D(stepsX:uint, stepsY:uint, bitmapTexture:BitmapData = null) {
             this.stepsX = stepsX;
             this.stepsY = stepsY;
-            super(bitmapTexture, null);
+            super(bitmapTexture);
         }
 
         override public function setTexture(texture:Texture, width:Number, height:Number):void {

@@ -13,7 +13,7 @@ module_material_vertex_program texture
     globals
         global parameter float-4 color
         input image image-4 textureImage
-        global parameter float-2 uvOffset
+        global parameter float-4 uvOffsetAndScale
         input vertex float-2 uvCoord
             metadata
                 id const(string, "PB3D_UV")
@@ -32,11 +32,15 @@ module_material_vertex_program texture
                 end_basic_block
                 basic_block basic%A !! inlets(entry%A) outlets(exit%A)
                     uvCoordElem%A-0 = extractVE uvCoord, const(int, 0) : float
-                    uvOffsetElem%A-0 = extractVE uvOffset, const(int, 0) : float
-                    _addResult%A-0 = add uvCoordElem%A-0, uvOffsetElem%A-0 : float
+                    uvOffsetAndScaleElem%A-0 = extractVE uvOffsetAndScale, const(int, 2) : float
+                    _mulResult%A-0 = mul uvCoordElem%A-0, uvOffsetAndScaleElem%A-0 : float
+                    uvOffsetAndScaleElem%B-0 = extractVE uvOffsetAndScale, const(int, 0) : float
+                    _addResult%A-0 = add _mulResult%A-0, uvOffsetAndScaleElem%B-0 : float
                     uvCoordElem%B-0 = extractVE uvCoord, const(int, 1) : float
-                    uvOffsetElem%B-0 = extractVE uvOffset, const(int, 1) : float
-                    _addResult%B-0 = add uvCoordElem%B-0, uvOffsetElem%B-0 : float
+                    uvOffsetAndScaleElem%C-0 = extractVE uvOffsetAndScale, const(int, 3) : float
+                    _mulResult%B-0 = mul uvCoordElem%B-0, uvOffsetAndScaleElem%C-0 : float
+                    uvOffsetAndScaleElem%D-0 = extractVE uvOffsetAndScale, const(int, 1) : float
+                    _addResult%B-0 = add _mulResult%B-0, uvOffsetAndScaleElem%D-0 : float
                     _LD_interpolatedUV-1 = makeFloatVector _addResult%A-0, _addResult%B-0, const(float, 0), const(float, 0) : float-4
                     jump block(exit%A) : void
                 end_basic_block

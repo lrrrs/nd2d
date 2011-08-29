@@ -38,7 +38,8 @@ vertex kernel sprite2dcloud_shader
 >
 {
     // DOESNT WORK: [Fault] exception, information=Error: Register allocator has run out of registers.
-    parameter float4x4 objectToClipSpaceTransform[21];
+
+    parameter float4x4 objectToClipSpaceTransform[2];
 
     input vertex float4 vertexPosition
     <

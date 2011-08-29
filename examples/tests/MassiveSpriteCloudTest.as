@@ -38,7 +38,7 @@ package tests {
             sheet.addAnimation("down", [6, 7, 8], true);
             sheet.addAnimation("left", [9, 10, 11], true);
 
-            spriteCloud = new Sprite2DCloud(numSprites, null, sheet);
+            spriteCloud = new Sprite2DCloud(numSprites, sheet);
 
             addSpritesClick();
 

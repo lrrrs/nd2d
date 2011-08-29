@@ -34,7 +34,9 @@ package de.nulldesign.nd2d.utils {
     import de.nulldesign.nd2d.geom.Face;
     import de.nulldesign.nd2d.geom.UV;
     import de.nulldesign.nd2d.geom.Vertex;
+    import de.nulldesign.nd2d.materials.ASpriteSheetBase;
     import de.nulldesign.nd2d.materials.SpriteSheet;
+    import de.nulldesign.nd2d.materials.TextureAtlas;
 
     import flash.display.BitmapData;
     import flash.display3D.Context3D;
@@ -153,8 +155,7 @@ package de.nulldesign.nd2d.utils {
             return faceList;
         }
 
-        public static function generateQuadFromTexture(bitmapTexture:BitmapData,
-                                                       spriteSheet:SpriteSheet):Vector.<Face> {
+        public static function generateQuadFromSpriteSheet(spriteSheet:ASpriteSheetBase):Vector.<Face> {
 
             var faceList:Vector.<Face>;
             var texW:Number;
@@ -170,44 +171,38 @@ package de.nulldesign.nd2d.utils {
 
             faceList = new Vector.<Face>(2, true);
 
-            if(!spriteSheet) {
+            texW = spriteSheet.spriteWidth * 0.5;
+            texH = spriteSheet.spriteHeight * 0.5;
 
-                var textureDimensions:Point = TextureHelper.getTextureDimensionsFromBitmap(bitmapTexture);
+            var sheet:SpriteSheet = spriteSheet as SpriteSheet;
 
-                texW = textureDimensions.x * 0.5;
-                texH = textureDimensions.y * 0.5;
+            if(sheet) {
 
-                uv1 = new UV(0, 0);
-                uv2 = new UV(1, 0);
-                uv3 = new UV(1, 1);
-                uv4 = new UV(0, 1);
-
-                v1 = new Vertex(-texW, -texH, 0.0);
-                v2 = new Vertex(texW, -texH, 0.0);
-                v3 = new Vertex(texW, texH, 0.0);
-                v4 = new Vertex(-texW, texH, 0.0);
-
-                faceList[0] = new Face(v1, v2, v3, uv1, uv2, uv3);
-                faceList[1] = new Face(v1, v3, v4, uv1, uv3, uv4);
-
-            } else {
-
-                texW = spriteSheet.spriteWidth * 0.5;
-                texH = spriteSheet.spriteHeight * 0.5;
-
-                uv1 = new UV(spriteSheet.uvOffset.x, spriteSheet.uvOffset.y);
-                uv2 = new UV(spriteSheet.uvOffset.x + spriteSheet.uvSize.x, spriteSheet.uvOffset.y);
-                uv3 = new UV(spriteSheet.uvOffset.x + spriteSheet.uvSize.x, spriteSheet.uvOffset.y + spriteSheet.uvSize.y);
-                uv4 = new UV(spriteSheet.uvOffset.x, spriteSheet.uvOffset.y + spriteSheet.uvSize.y);
+                uv1 = new UV(sheet.uvOffset.x, sheet.uvOffset.y);
+                uv2 = new UV(sheet.uvOffset.x + sheet.uvSize.x, sheet.uvOffset.y);
+                uv3 = new UV(sheet.uvOffset.x + sheet.uvSize.x, sheet.uvOffset.y + sheet.uvSize.y);
+                uv4 = new UV(sheet.uvOffset.x, sheet.uvOffset.y + sheet.uvSize.y);
 
                 v1 = new Vertex(-texW, -texH, 0.0);
                 v2 = new Vertex(texW, -texH, 0.0);
                 v3 = new Vertex(texW, texH, 0.0);
                 v4 = new Vertex(-texW, texH, 0.0);
 
-                faceList[0] = new Face(v1, v2, v3, uv1, uv2, uv3);
-                faceList[1] = new Face(v1, v3, v4, uv1, uv3, uv4);
+            } else if(spriteSheet is TextureAtlas) {
+
+                uv1 = new UV(0.0, 0.0);
+                uv2 = new UV(1.0, 0.0);
+                uv3 = new UV(1.0, 1.0);
+                uv4 = new UV(0.0, 1.0);
+
+                v1 = new Vertex(-1.0, -1.0, 0.0);
+                v2 = new Vertex(1.0, -1.0, 0.0);
+                v3 = new Vertex(1.0, 1.0, 0.0);
+                v4 = new Vertex(-1.0, 1.0, 0.0);
             }
+
+            faceList[0] = new Face(v1, v2, v3, uv1, uv2, uv3);
+            faceList[1] = new Face(v1, v3, v4, uv1, uv3, uv4);
 
             return faceList;
         }

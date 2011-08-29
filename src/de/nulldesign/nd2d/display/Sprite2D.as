@@ -32,11 +32,13 @@
 package de.nulldesign.nd2d.display {
 
     import de.nulldesign.nd2d.geom.Face;
+    import de.nulldesign.nd2d.materials.ASpriteSheetBase;
     import de.nulldesign.nd2d.materials.Sprite2DMaterial;
     import de.nulldesign.nd2d.materials.SpriteSheet;
     import de.nulldesign.nd2d.utils.TextureHelper;
 
-    import flash.display.BitmapData;
+    import flash.display.Sprite;
+
     import flash.display3D.Context3D;
     import flash.display3D.textures.Texture;
 
@@ -47,29 +49,25 @@ package de.nulldesign.nd2d.display {
      */
     public class Sprite2D extends Node2D {
 
-        public var spriteSheet:SpriteSheet;
+        public var spriteSheet:ASpriteSheetBase;
 
         protected var material:Sprite2DMaterial;
         protected var faceList:Vector.<Face>;
 
+        //protected var mask:Sprite2D;
+
         /**
          * Constructor of class Sprite2D
-         * @param bitmapTexture the sprite image
-         * @param spriteSheet optional spritesheet. If a spritesheet is provided the bitmapTexture is ignored
+         * @param textureObject can be a BitmapData, SpriteSheet or TextureAtlas
          */
-        public function Sprite2D(bitmapTexture:BitmapData = null, spriteSheet:SpriteSheet = null) {
-
-            if(spriteSheet) {
-                bitmapTexture = spriteSheet.bitmapData;
-            }
-
-            if(bitmapTexture) {
-                setMaterial(new Sprite2DMaterial(bitmapTexture, spriteSheet));
+        public function Sprite2D(textureObject:Object = null) {
+            if(textureObject) {
+                setMaterial(new Sprite2DMaterial(textureObject));
             }
         }
 
         public function setSpriteSheet(spriteSheet:SpriteSheet):void {
-            setMaterial(new Sprite2DMaterial(spriteSheet.bitmapData, spriteSheet));
+            setMaterial(new Sprite2DMaterial(spriteSheet));
         }
 
         public function setTexture(texture:Texture, width:Number, height:Number):void {
@@ -77,7 +75,7 @@ package de.nulldesign.nd2d.display {
             _height = height;
 
             if(texture) {
-                material = new Sprite2DMaterial(null, null);
+                material = new Sprite2DMaterial(null);
                 material.texture = texture;
                 faceList = TextureHelper.generateQuadFromDimensions(width, height);
             }
@@ -85,14 +83,24 @@ package de.nulldesign.nd2d.display {
 
         public function setMaterial(material:Sprite2DMaterial):void {
 
-            _width = material.spriteSheet ? material.spriteSheet.spriteWidth : material.bitmapData.width;
-            _height = material.spriteSheet ? material.spriteSheet.spriteHeight : material.bitmapData.height;
+            if(material) {
+                material.cleanUp();
+            }
+
+            _width = material.spriteSheet.spriteWidth;
+            _height = material.spriteSheet.spriteHeight;
+
+            this.spriteSheet = material.spriteSheet;
+            faceList = TextureHelper.generateQuadFromSpriteSheet(material.spriteSheet);
 
             this.material = material;
-            this.spriteSheet = material.spriteSheet;
-            faceList = TextureHelper.generateQuadFromTexture(material.bitmapData, material.spriteSheet);
         }
 
+        /*
+         public function setMask(mask:Sprite2D):void {
+         this.mask = mask;
+         }
+         */
         override public function get numTris():uint {
             return 2 + super.numTris;
         }
@@ -108,8 +116,11 @@ package de.nulldesign.nd2d.display {
 
             super.stepNode(elapsed);
 
-            if(spriteSheet)
+            if(spriteSheet) {
                 spriteSheet.update(timeSinceStartInSeconds);
+                _width = spriteSheet.spriteWidth;
+                _height = spriteSheet.spriteHeight;
+            }
         }
 
         override protected function draw(context:Context3D, camera:Camera2D, handleDeviceLoss:Boolean):void {
@@ -118,7 +129,17 @@ package de.nulldesign.nd2d.display {
             material.modelMatrix = worldModelMatrix;
             material.projectionMatrix = camera.projectionMatrix;
             material.viewProjectionMatrix = camera.getViewProjectionMatrix();
+            /*
+             if(mask) {
+             material.maskBitmap = mask.material.bitmapData;
 
+             if(mask.invalidateMatrix) {
+             mask.updateMatrix();
+             }
+
+             material.maskModelMatrix = mask.localModelMatrix;
+             }
+             */
             material.color.x = r;
             material.color.y = g;
             material.color.z = b;
@@ -135,6 +156,8 @@ package de.nulldesign.nd2d.display {
             if(material) {
                 material.cleanUp();
             }
+
+            super.cleanUp();
         }
     }
 }

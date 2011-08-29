@@ -177,7 +177,7 @@ package tests {
 
             sheet.addAnimation("wave", ar, true);
 
-            cloud = new Sprite2DCloud(100, null, sheet);
+            cloud = new Sprite2DCloud(100, sheet);
 
             grassSprites[0].addChild(cloud);
 

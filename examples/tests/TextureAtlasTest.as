@@ -28,63 +28,40 @@
  *  THE SOFTWARE.
  * /
  */
+package tests {
 
-<languageVersion : 1.0;>
-material kernel texture
-<
-    namespace : "ND2D_Shader";
-    vendor : "nulldesign";
-    version : 1;
->
-{
-    input vertex float2 uvCoord
-    <
-        id : "PB3D_UV";
-    >;
+    import de.nulldesign.nd2d.display.Scene2D;
+    import de.nulldesign.nd2d.display.Sprite2D;
+    import de.nulldesign.nd2d.materials.TextureAtlas;
 
-    /*
-        x,y = offset
-        z,w = scale (width / height)
-    */
-    parameter float4 uvOffsetAndScale;
+    public class TextureAtlasTest extends Scene2D {
 
-    interpolated float4 interpolatedUV;
+        [Embed(source="/assets/textureatlas_test.png")]
+        private var textureAtlasBitmap:Class;
 
-    void evaluateVertex()
-    {
-        interpolatedUV = float4((uvCoord.x * uvOffsetAndScale.z) + uvOffsetAndScale.x,
-                                (uvCoord.y * uvOffsetAndScale.w) + uvOffsetAndScale.y, 0.0, 0.0);
-    }
+        [Embed(source="/assets/textureatlas_test.plist", mimeType="application/octet-stream")]
+        private var textureAtlasXML:Class;
 
-    input image4 textureImage;
-    parameter float4 color;
+        private var s:Sprite2D;
 
-    output float4 result;
+        public function TextureAtlasTest() {
 
-    void evaluateFragment()
-    {
-        /*
+            backGroundColor = 0xDDDDDD;
 
-         PB3D_NEAREST
-         PB3D_LINEAR
+            var atlas:TextureAtlas = new TextureAtlas(new textureAtlasBitmap().bitmapData,
+                                                      new XML(new textureAtlasXML()), 1);
+            s = addChild(new Sprite2D(atlas)) as Sprite2D;
 
-         PB3D_MIPDISABLE
-         PB3D_MIPLINEAR
-         PB3D_MIPNEAREST
+            atlas.addAnimation("blah", ["01", "02", "03", "04", "05", "06", "07", "08", "09", "10", "11", "12", "13", "14", "15",
+                                        "c01", "c02", "c03", "c04", "c05", "c06", "c07", "c08", "c09", "c10", "c11", "c12"], true);
+            atlas.playAnimation("blah");
+        }
 
-         PB3D_CLAMP
-         PB3D_REPEAT
+        override protected function step(elapsed:Number):void {
+            super.step(elapsed);
 
-         PB3D_2D
-         PB3D_CUBE
-
-         */
-
-        float4 texel = sample(textureImage, float2(interpolatedUV.x, interpolatedUV.y), PB3D_2D | PB3D_MIPNEAREST /*PB3D_MIPDISABLE*/ | PB3D_CLAMP);
-
-        result = float4(texel.r * color.r,
-                        texel.g * color.g,
-                        texel.b * color.b,
-                        texel.a * color.a);
+            s.x = stage.stageWidth * 0.5;
+            s.y = stage.stageHeight * 0.5;
+        }
     }
 }

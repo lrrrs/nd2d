@@ -49,6 +49,7 @@ package de.nulldesign.nd2d.display {
     import flash.display3D.VertexBuffer3D;
     import flash.geom.Matrix3D;
     import flash.geom.Point;
+    import flash.geom.Rectangle;
 
     /**
      * Sprite2DCloud
@@ -90,9 +91,8 @@ package de.nulldesign.nd2d.display {
 
         protected var clipSpaceMatrix:Matrix3D = new Matrix3D();
 
-        public function Sprite2DCloud(maxCapacity:uint, bitmapTexture:BitmapData = null,
-                                      spriteSheet:SpriteSheet = null) {
-            super(bitmapTexture, spriteSheet);
+        public function Sprite2DCloud(maxCapacity:uint, textureObject:Object) {
+            super(textureObject);
             this.maxCapacity = maxCapacity;
 
             mVertexBuffer = new Vector.<Number>(maxCapacity * 8 * 4, true);
@@ -208,10 +208,10 @@ package de.nulldesign.nd2d.display {
 
         override protected function draw(context:Context3D, camera:Camera2D, handleDeviceLoss:Boolean):void {
 
-            if(!material.texture) {
-                material.texture = TextureHelper.generateTextureFromBitmap(context, material.bitmapData, false);
-            }
 
+if(!material.texture) {
+                material.texture = TextureHelper.generateTextureFromBitmap(context, material.spriteSheet.bitmapData, false);
+            }
             if(!program) {
                 var vertexShaderAssembler:AGALMiniAssembler = new AGALMiniAssembler();
                 vertexShaderAssembler.assemble(Context3DProgramType.VERTEX, DEFAULT_VERTEX_SHADER);
@@ -228,7 +228,7 @@ package de.nulldesign.nd2d.display {
             var g:Number;
             var b:Number;
             var a:Number;
-            var offset:Point;
+            var offset:Rectangle;
             var rot:Number;
             var cr:Number;
             var sr:Number;
@@ -251,7 +251,6 @@ package de.nulldesign.nd2d.display {
 
                 spriteSheet = child.spriteSheet;
 
-
                 if(invalidateColors || child.invalidateColors) {
                     child.updateColors();
                     child.invalidateColors = true;
@@ -262,17 +261,16 @@ package de.nulldesign.nd2d.display {
                 b = child.b;
                 a = child.visible ? child.a : 0.0; // fake visibility for now ... it's faster
 
-                offset = new Point();
                 sx = child.scaleX;
                 sy = child.scaleY;
 
                 var initUV:Boolean = !uvInited;
 
-                if(spriteSheet && spriteSheet.frameUpdated) {
+                if(spriteSheet.frameUpdated) {
 
                     spriteSheet.frameUpdated = false;
                     initUV = true;
-                    offset = spriteSheet.getOffsetForFrame();
+                    offset = spriteSheet.getRectForFrame();
                 }
 
                 if(child.invalidateMatrix) {

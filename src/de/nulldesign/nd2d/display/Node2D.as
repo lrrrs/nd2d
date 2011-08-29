@@ -604,7 +604,9 @@ package de.nulldesign.nd2d.display {
         }
 
         public function cleanUp():void {
-
+            for each(var child:Node2D in children) {
+                child.cleanUp();
+            }
         }
     }
 }

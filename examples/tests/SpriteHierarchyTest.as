@@ -47,7 +47,7 @@ package tests {
             sheet.addAnimation("up", [6, 7, 8], true);
             sheet.playAnimation("up", 0, true);
 
-            s3 = new Sprite2D(null, sheet);
+            s3 = new Sprite2D(sheet);
             s3.mouseEnabled = true;
             s3.addEventListener(MouseEvent.MOUSE_OVER, mouseOver);
             s3.addEventListener(MouseEvent.MOUSE_OUT, mouseOut);

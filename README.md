@@ -35,6 +35,12 @@ Useful links:
 
 # Changelog:
 
+2011-08-29
+- Arguments of Sprite2D / Sprite2DMaterial reduced to one (non typed)
+- Refactored SpriteSheet classes
+- NEW: Cocos2D-TexturePacker compatible TextureAtlas (not pixel precise and fully implemented yet!)
+- Added example for TexturePacker
+
 2011-07-20
 
 - !!! API CHANGE IN World2D: You have to call start() now to get the engine running, otherwise your screen will be black.

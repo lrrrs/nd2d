@@ -13,7 +13,7 @@ module_fragment_program texture
     globals
         global parameter float-4 color
         input image image-4 textureImage
-        global parameter float-2 uvOffset
+        global parameter float-4 uvOffsetAndScale
         input vertex float-2 uvCoord
             metadata
                 id const(string, "PB3D_UV")

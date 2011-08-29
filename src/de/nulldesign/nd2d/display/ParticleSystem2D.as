@@ -192,6 +192,13 @@ package de.nulldesign.nd2d.display {
             material.gravity = gravity;
             material.render(context, faceList, 0, activeParticles * 2);
         }
+
+        override public function cleanUp():void {
+            if(material) {
+                material.cleanUp();
+            }
+            super.cleanUp();
+        }
     }
 }
 

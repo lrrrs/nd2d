@@ -34,54 +34,18 @@ package de.nulldesign.nd2d.materials {
 
     import flash.display.BitmapData;
     import flash.geom.Point;
+    import flash.geom.Rectangle;
     import flash.utils.Dictionary;
     import flash.utils.getTimer;
 
-    public class SpriteSheet {
-
-        protected var _spriteWidth:Number;
-        protected var _spriteHeight:Number;
-
-        protected var ctime:Number = 0.0;
-        protected var otime:Number = 0.0;
-        protected var interp:Number = 0.0;
-        protected var fps:uint;
-
-        protected var activeAnimation:SpriteSheetAnimation;
-        protected var animationMap:Dictionary = new Dictionary();
+    public class SpriteSheet extends ASpriteSheetBase {
 
         protected var numSheetsPerRow:uint;
         protected var numRows:uint;
         protected var numSheets:uint;
 
-        public var bitmapData:BitmapData;
         public var uvOffset:Point = new Point(0.0, 0.0);
         public var uvSize:Point = new Point(0.0, 0.0);
-
-        public function get spriteWidth():Number {
-            return _spriteWidth;
-        }
-
-        public function get spriteHeight():Number {
-            return _spriteHeight;
-        }
-
-        protected var frameIdx:uint = 0;
-
-        public var frameUpdated:Boolean = true;
-
-        protected var _frame:uint = 0;
-
-        public function get frame():uint {
-            return _frame;
-        }
-
-        public function set frame(value:uint):void {
-            if(frame != value) {
-                _frame = value;
-                frameUpdated = true;
-            }
-        }
 
         public function get totalFrames():uint{
             return numSheets;
@@ -112,55 +76,17 @@ package de.nulldesign.nd2d.materials {
             numSheets = numSheetsPerRow * numRows;
         }
 
-        public function update(t:Number):void {
-
-            if(!activeAnimation) return;
-
-            ctime = t;
-
-            // Update the timer part, to get time based animation
-            interp += fps * (ctime - otime);
-            if(interp >= 1.0) {
-                frameIdx++;
-                interp = 0;
-            }
-
-            if(activeAnimation.loop) {
-                frameIdx = frameIdx % activeAnimation.numFrames;
-            } else {
-                frameIdx = Math.min(frameIdx, activeAnimation.numFrames - 1);
-            }
-
-            frame = activeAnimation.frames[frameIdx];
-
-            otime = ctime;
-        }
-
-        public function getOffsetForFrame():Point {
+        override public function getRectForFrame():Rectangle {
 
             var rowIdx:uint = frame % numSheetsPerRow;
             var colIdx:uint = Math.floor(frame / numSheetsPerRow);
 
-            var offset:Point = new Point();
+            var rect:Rectangle = new Rectangle(uvSize.x * rowIdx, uvSize.y * colIdx, 1.0, 1.0);
 
-            offset.x = uvSize.x * rowIdx;
-            offset.y = uvSize.y * colIdx;
-
-            return offset;
+            return rect;
         }
 
-        public function addAnimation(name:String, keyFrames:Array, loop:Boolean):void {
-            animationMap[name] = new SpriteSheetAnimation(keyFrames, loop);
-        }
-
-        public function playAnimation(name:String, startIdx:uint = 0, restart:Boolean = false):void {
-            if(restart || activeAnimation != animationMap[name]) {
-                frameIdx = startIdx;
-                activeAnimation = animationMap[name];
-            }
-        }
-
-        public function clone():SpriteSheet {
+        override public function clone():ASpriteSheetBase {
             var s:SpriteSheet = new SpriteSheet(bitmapData, _spriteWidth, _spriteHeight, fps);
             s.frame = frame;
 

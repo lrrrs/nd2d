@@ -30,6 +30,7 @@
  */
 
 package de.nulldesign.nd2d.geom {
+
     import flash.geom.Vector3D;
 
     public class Face {
@@ -70,6 +71,11 @@ package de.nulldesign.nd2d.geom {
             n = ac.crossProduct(ab);
             n.normalize();
             return n;
+        }
+
+        public function clone():Face {
+            return new Face(v1.clone() as Vertex, v2.clone() as Vertex, v3.clone() as Vertex,
+                            uv1 ? uv1.clone() : null, uv2 ? uv2.clone() : null, uv3 ? uv3.clone() : null);
         }
 
         public function toString():String {

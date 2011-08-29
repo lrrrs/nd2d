@@ -61,6 +61,7 @@ package {
     import tests.SpriteHierarchyTest2;
     import tests.SpriteTest;
     import tests.StarFieldTest;
+    import tests.TextureAtlasTest;
     import tests.TextureRendererTest;
 
     //[SWF(width="1000", height="550", frameRate="60", backgroundColor="#000000")]
@@ -97,6 +98,9 @@ package {
             //scenes.push(new MaterialsTest());
             scenes.push(new CameraTest());
             scenes.push(new ParticleExplorer());
+            //scenes.push(new MaskTest());
+            //scenes.push(new BatchTest());
+            scenes.push(new TextureAtlasTest());
 
             var tf:TextFormat = new TextFormat("Arial", 11, 0xFFFFFF, true);
 
