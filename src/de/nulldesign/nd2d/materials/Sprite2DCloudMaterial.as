@@ -5,49 +5,39 @@
  */
 package de.nulldesign.nd2d.materials {
 
+    import com.adobe.utils.AGALMiniAssembler;
+
     import de.nulldesign.nd2d.display.Node2D;
     import de.nulldesign.nd2d.display.Sprite2D;
     import de.nulldesign.nd2d.geom.Face;
+    import de.nulldesign.nd2d.geom.UV;
+    import de.nulldesign.nd2d.geom.Vertex;
     import de.nulldesign.nd2d.utils.TextureHelper;
 
-    import flash.display.BitmapData;
     import flash.display3D.Context3D;
     import flash.display3D.Context3DProgramType;
-    import flash.display3D.textures.Texture;
-    import flash.geom.Point;
+    import flash.display3D.Context3DVertexBufferFormat;
 
-    public class Sprite2DCloudMaterial extends AMaterial {
-        /*
-         protected const DEFAULT_VERTEX_SHADER:String = "m44 op, va0, vc[va3.x]   \n" + // vertex * clipspace
-         "mov v0, va1		\n" + // copy uv
-         "mov v1, va2		\n"; // copy color
+    public class Sprite2DCloudMaterial extends Sprite2DMaterial {
 
-         protected const DEFAULT_FRAGMENT_SHADER:String = "mov ft0, v0\n" + // get interpolated uv coords
-         "tex ft1, ft0, fs0 <2d,clamp,linear>\n" + // sample texture
-         "mul ft1, ft1, v1\n" + // mult with color
-         "mov oc, ft1\n";
-         */
-        [Embed (source="../shader/Sprite2DCloudMaterialVertexShader.pbasm", mimeType="application/octet-stream")]
-        private static const MaterialVertexProgramClass:Class;
+        protected const DEFAULT_VERTEX_SHADER:String = "m44 op, va0, vc[va2.x]   \n" + // vertex * clipspace[idx]
+                "mov v0, va1		\n" + // copy uv
+                "mov v1, vc[va2.y]	\n"; // copy color from array
 
-        [Embed (source="../shader/Sprite2DCloudMaterialFragmentShader.pbasm", mimeType="application/octet-stream")]
-        private static const MaterialFragmentProgramClass:Class;
+        protected const DEFAULT_FRAGMENT_SHADER:String = "mov ft0, v0\n" + // get interpolated uv coords
+                "tex ft1, ft0, fs0 <2d,clamp,linear,nomip>\n" + // sample texture
+                "mul ft1, ft1, v1\n" + // mult with color
+                "mov oc, ft1\n";
 
-        [Embed (source="../shader/Sprite2DCloudVertexShader.pbasm", mimeType="application/octet-stream")]
-        private static const VertexProgramClass:Class;
+        protected var constantsPerSprite:uint = 5;
+        protected var constantsPerMatrix:uint = 4;
 
-        protected static var sprite2DCloudProgramData:ProgramData;
-
-        protected var texture:Texture;
-        protected var bitmapData:BitmapData;
-        protected var spriteSheet:SpriteSheet;
+        protected static var cloudProgramData:ProgramData;
 
         protected const BATCH_SIZE:uint = 2;
 
-        public function Sprite2DCloudMaterial(bitmapData:BitmapData, spriteSheet:SpriteSheet = null) {
-            this.bitmapData = bitmapData;
-            this.spriteSheet = spriteSheet;
-            this.drawCalls = 1;
+        public function Sprite2DCloudMaterial(textureObject:Object) {
+            super(textureObject);
         }
 
         override protected function generateBufferData(context:Context3D, faceList:Vector.<Face>):void {
@@ -76,55 +66,16 @@ package de.nulldesign.nd2d.materials {
 
         override protected function prepareForRender(context:Context3D):Boolean {
 
-            super.prepareForRender(context);
-
-            refreshClipspaceMatrix();
-
             if(!texture) {
-                texture = TextureHelper.generateTextureFromBitmap(context, bitmapData, true);
+                texture = TextureHelper.generateTextureFromBitmap(context, spriteSheet.bitmapData, false);
             }
 
+            context.setProgram(programData.program);
+            context.setBlendFactors(blendMode.src, blendMode.dst);
             context.setTextureAt(0, texture);
-
-            /*
-             // TODO SET TEXTURE BY NAME!!!
-             context.setTextureAt(0, texture);
-
-             var child:Sprite2D;
-             var spriteSheet:SpriteSheet;
-             var offset:Point;
-
-             for(var i:uint = 0; i < childList.length; i++) {
-
-             child = Sprite2D(childList[i]);
-             spriteSheet = child.spriteSheet;
-             offset = spriteSheet.getOffsetForFrame();
-
-             // TODO update properties internally
-             if(child.invalidateColors) child.updateColors();
-             if(child.invalidateMatrix) child.updateMatrix();
-
-             clipSpaceMatrix.identity();
-             clipSpaceMatrix.append(modelMatrix);
-             clipSpaceMatrix.append(child.localModelMatrix);
-             clipSpaceMatrix.append(viewProjectionMatrix);
-
-             var numConstantsPerSprite:uint = 6; // matrix + offset + color
-             var numConstantsUsedForMatrix:uint = 4;
-
-             context.setProgramConstantsFromMatrix(Context3DProgramType.VERTEX, i * numConstantsPerSprite,
-             clipSpaceMatrix, true);
-
-             context.setProgramConstantsFromVector(Context3DProgramType.VERTEX,
-             i * numConstantsPerSprite + numConstantsUsedForMatrix,
-             Vector.<Number>([ child.r, child.g, child.b, child.a ]));
-
-             context.setProgramConstantsFromVector(Context3DProgramType.VERTEX,
-             i * numConstantsPerSprite + numConstantsUsedForMatrix + 1,
-             Vector.<Number>([ offset.x, offset.y, 0.0, 1.0 ]));
-             }
-             */
-            vertexBufferHelper.setVertexBuffers();
+            context.setVertexBufferAt(0, vertexBuffer, 0, Context3DVertexBufferFormat.FLOAT_2); // vertex
+            context.setVertexBufferAt(1, vertexBuffer, 2, Context3DVertexBufferFormat.FLOAT_2); // uv
+            context.setVertexBufferAt(2, vertexBuffer, 4, Context3DVertexBufferFormat.FLOAT_2); // idx
 
             return true;
         }
@@ -134,17 +85,13 @@ package de.nulldesign.nd2d.materials {
             generateBufferData(context, faceList);
 
             if(prepareForRender(context)) {
-                //context.drawTriangles(indexBuffer, 0, 2);
 
                 var child:Sprite2D;
-                var spriteSheet:SpriteSheet;
-                var offset:Point;
+                var childIdx:uint = 0;
 
                 for(var i:uint = 0; i < 2; i++) {
 
                     child = Sprite2D(childList[i]);
-                    //spriteSheet = child.spriteSheet;
-                    //offset = spriteSheet.getOffsetForFrame();
 
                     if(child.invalidateColors) child.updateColors();
                     if(child.invalidateMatrix) child.updateMatrix();
@@ -156,49 +103,108 @@ package de.nulldesign.nd2d.materials {
                         clipSpaceMatrix.append(child.localModelMatrix);
                         clipSpaceMatrix.append(viewProjectionMatrix);
 
-                        // set shader parameters...
-                        var numConstantsPerSprite:uint = 6; // matrix + offset + color
-                        var numConstantsUsedForMatrix:uint = 4;
-
-                        context.setProgramConstantsFromMatrix(Context3DProgramType.VERTEX, i * numConstantsPerSprite,
+                        context.setProgramConstantsFromMatrix(Context3DProgramType.VERTEX, childIdx * constantsPerSprite,
                                                               clipSpaceMatrix, true);
 
-                        context.setProgramConstantsFromVector(Context3DProgramType.VERTEX,
-                                                              i * numConstantsPerSprite + numConstantsUsedForMatrix,
-                                                              Vector.<Number>([ child.r, child.g, child.b, child.a ]));
+                        context.setProgramConstantsFromVector(Context3DProgramType.VERTEX, childIdx * constantsPerSprite + constantsPerMatrix,
+                                                              Vector.<Number>([ child.r,  child.g, child.b, child.a]));
 
-                        context.setProgramConstantsFromVector(Context3DProgramType.VERTEX,
-                                                              i * numConstantsPerSprite + numConstantsUsedForMatrix + 1,
-                                                              Vector.<Number>([ offset.x, offset.y, 0.0, 1.0 ]));
+                        ++childIdx;
                     }
                 }
+
+                context.drawTriangles(indexBuffer, 0, 4);
+                clearAfterRender(context);
+
+                /*
+                 var child:Sprite2D;
+                 var spriteSheet:SpriteSheet;
+                 var offset:Point;
+
+                 for(var i:uint = 0; i < 2; i++) {
+
+                 child = Sprite2D(childList[i]);
+                 //spriteSheet = child.spriteSheet;
+                 //offset = spriteSheet.getOffsetForFrame();
+
+                 if(child.invalidateColors) child.updateColors();
+                 if(child.invalidateMatrix) child.updateMatrix();
+
+                 if(child.visible) {
+
+                 clipSpaceMatrix.identity();
+                 clipSpaceMatrix.append(modelMatrix);
+                 clipSpaceMatrix.append(child.localModelMatrix);
+                 clipSpaceMatrix.append(viewProjectionMatrix);
+
+                 // set shader parameters...
+                 var numConstantsPerSprite:uint = 6; // matrix + offset + color
+                 var numConstantsUsedForMatrix:uint = 4;
+
+                 context.setProgramConstantsFromMatrix(Context3DProgramType.VERTEX, i * numConstantsPerSprite,
+                 clipSpaceMatrix, true);
+
+                 context.setProgramConstantsFromVector(Context3DProgramType.VERTEX,
+                 i * numConstantsPerSprite + numConstantsUsedForMatrix,
+                 Vector.<Number>([ child.r, child.g, child.b, child.a ]));
+
+                 context.setProgramConstantsFromVector(Context3DProgramType.VERTEX,
+                 i * numConstantsPerSprite + numConstantsUsedForMatrix + 1,
+                 Vector.<Number>([ offset.x, offset.y, 0.0, 1.0 ]));
+                 }
+                 }
+                 */
+
             }
-            clearAfterRender(context);
         }
 
         override protected function clearAfterRender(context:Context3D):void {
-            super.clearAfterRender(context);
             context.setTextureAt(0, null);
+            context.setVertexBufferAt(0, null);
+            context.setVertexBufferAt(1, null);
+            context.setVertexBufferAt(2, null);
         }
 
         override protected function initProgram(context:Context3D):void {
 
-            // program will be only created once and cached as static var in material
-            if(!sprite2DCloudProgramData) {
-                sprite2DCloudProgramData = new ProgramData(context, VertexProgramClass, MaterialVertexProgramClass,
-                                                           MaterialFragmentProgramClass);
-            }
+            if(!cloudProgramData) {
+                var vertexShaderAssembler:AGALMiniAssembler = new AGALMiniAssembler();
+                vertexShaderAssembler.assemble(Context3DProgramType.VERTEX, DEFAULT_VERTEX_SHADER);
 
-            programData = sprite2DCloudProgramData;
+                var colorFragmentShaderAssembler:AGALMiniAssembler = new AGALMiniAssembler();
+                colorFragmentShaderAssembler.assemble(Context3DProgramType.FRAGMENT, DEFAULT_FRAGMENT_SHADER);
+
+                cloudProgramData = programData = new ProgramData(null, null, null, null);
+                cloudProgramData.numFloatsPerVertex = 6;
+                cloudProgramData.program = context.createProgram();
+                cloudProgramData.program.upload(vertexShaderAssembler.agalcode, colorFragmentShaderAssembler.agalcode);
+            }
+        }
+
+        override protected function addVertex(context:Context3D, buffer:Vector.<Number>, v:Vertex, uv:UV,
+                                              face:Face):void {
+
+            fillBuffer(buffer, v, uv, face, "PB3D_POSITION", 2);
+            fillBuffer(buffer, v, uv, face, "PB3D_UV", 2);
+            fillBuffer(buffer, v, uv, face, "PB3D_IDX", -1);
+        }
+
+        override protected function fillBuffer(buffer:Vector.<Number>, v:Vertex, uv:UV, face:Face, semanticsID:String,
+                                      floatFormat:int):void {
+
+            if(semanticsID == "PB3D_IDX") {
+                // first float will be used for matrix index
+                buffer.push(face.idx * constantsPerSprite);
+                // second, color idx
+                buffer.push(face.idx * constantsPerSprite + constantsPerMatrix);
+
+            } else {
+                super.fillBuffer(buffer, v,  uv,  face, semanticsID, floatFormat);
+            }
         }
 
         override public function cleanUp():void {
-
             super.cleanUp();
-            if(texture) {
-                texture.dispose();
-                texture = null;
-            }
         }
     }
 }

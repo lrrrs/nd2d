@@ -106,7 +106,7 @@ package de.nulldesign.nd2d.display {
         }
 
         override public function get drawCalls():uint {
-            return material.drawCalls + super.drawCalls;
+            return material ? (material.drawCalls + super.drawCalls) : 0;
         }
 
         /**

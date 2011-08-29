@@ -205,11 +205,11 @@ package de.nulldesign.nd2d.display {
 
         override protected function draw(context:Context3D, camera:Camera2D, handleDeviceLoss:Boolean):void {
 
-
             if(!material.texture) {
                 material.texture = TextureHelper.generateTextureFromBitmap(context, material.spriteSheet.bitmapData,
                                                                            false);
             }
+
             if(!program) {
                 var vertexShaderAssembler:AGALMiniAssembler = new AGALMiniAssembler();
                 vertexShaderAssembler.assemble(Context3DProgramType.VERTEX, DEFAULT_VERTEX_SHADER);

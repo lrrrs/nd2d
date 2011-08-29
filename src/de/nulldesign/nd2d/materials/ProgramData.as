@@ -53,6 +53,8 @@ package de.nulldesign.nd2d.materials {
         public function ProgramData(context:Context3D, vertexProgramClass:Class, materialVertexProgramClass:Class,
                                        materialFragmentProgramClass:Class) {
 
+            if(!context) return;
+
             var inputVertexProgram:PBASMProgram = new PBASMProgram(readFile(vertexProgramClass));
             var inputMaterialVertexProgram:PBASMProgram = new PBASMProgram(readFile(materialVertexProgramClass));
             var inputFragmentProgram:PBASMProgram = new PBASMProgram(readFile(materialFragmentProgramClass));

@@ -48,6 +48,8 @@ package {
     import flash.text.TextFormat;
     import flash.ui.Keyboard;
 
+    import tests.BatchTest;
+
     import tests.CameraTest;
     import tests.Font2DTest;
     import tests.Grid2DTest;
@@ -77,7 +79,7 @@ package {
 
             stage.scaleMode = StageScaleMode.NO_SCALE;
             stage.align = StageAlign.TOP_LEFT;
-            enableErrorChecking = false;
+            enableErrorChecking = true;
 
             super(Context3DRenderMode.AUTO, 60, true);
 
@@ -99,8 +101,8 @@ package {
             scenes.push(new CameraTest());
             scenes.push(new ParticleExplorer());
             //scenes.push(new MaskTest());
-            //scenes.push(new BatchTest());
             scenes.push(new TextureAtlasTest());
+            scenes.push(new BatchTest());
 
             var tf:TextFormat = new TextFormat("Arial", 11, 0xFFFFFF, true);
 
@@ -113,7 +115,7 @@ package {
             stage.addEventListener(Event.RESIZE, stageResize);
             stageResize(null);
 
-            activeSceneIdx = 14;
+            activeSceneIdx = 15;
             nextBtnClick();
 
             stage.addEventListener(KeyboardEvent.KEY_UP, keyUp);

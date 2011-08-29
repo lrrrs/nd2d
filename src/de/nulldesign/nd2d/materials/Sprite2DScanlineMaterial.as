@@ -47,8 +47,8 @@ package de.nulldesign.nd2d.materials {
 
         private static var scanlineProgramData:ProgramData;
 
-        public function Sprite2DScanlineMaterial(bitmapData:BitmapData, spriteSheet:SpriteSheet = null) {
-            super(bitmapData, spriteSheet);
+        public function Sprite2DScanlineMaterial(textureObject:Object) {
+            super(textureObject);
         }
 
         public var seed:uint = 0;
