@@ -37,6 +37,7 @@ package de.nulldesign.nd2d.materials {
     import flash.display3D.Context3D;
     import flash.display3D.Context3DProgramType;
     import flash.display3D.textures.Texture;
+    import flash.geom.Point;
     import flash.geom.Rectangle;
     import flash.geom.Vector3D;
 
@@ -143,19 +144,26 @@ package de.nulldesign.nd2d.materials {
             var rect:Rectangle = new Rectangle(0.0, 0.0, 1.0, 1.0);
 
             if(spriteSheet) {
-                rect = spriteSheet.getRectForFrame();
 
-                if(spriteSheet is TextureAtlas) {
+                rect = spriteSheet.getUVRectForFrame();
 
-                    // test!
-                    // TODO: add offset and use sourceRect / sourceSize
-                    clipSpaceMatrix.prependScale(rect.width * 0.5, rect.height * 0.5, 1.0);
+                var atlas:TextureAtlas = spriteSheet as TextureAtlas;
 
-                    rect.x /= spriteSheet.bitmapData.width;
-                    rect.y /= spriteSheet.bitmapData.height;
-                    rect.width /= spriteSheet.bitmapData.width;
-                    rect.height /= spriteSheet.bitmapData.height;
+                if(atlas) {
+
+                    var offset:Point = atlas.getOffsetForFrame();
+
+                    clipSpaceMatrix.identity();
+                    clipSpaceMatrix.appendScale(spriteSheet.spriteWidth * 0.5, spriteSheet.spriteHeight * 0.5, 1.0);
+                    clipSpaceMatrix.append(modelMatrix);
+                    clipSpaceMatrix.appendTranslation(offset.x, offset.y, 0.0);
+                    clipSpaceMatrix.append(viewProjectionMatrix);
+
+                } else {
+                    refreshClipspaceMatrix();
                 }
+            } else {
+                refreshClipspaceMatrix();
             }
 
             programData.parameterBufferHelper.setNumberParameterByName(Context3DProgramType.VERTEX, "uvOffsetAndScale",

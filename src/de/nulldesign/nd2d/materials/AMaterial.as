@@ -173,10 +173,6 @@ package de.nulldesign.nd2d.materials {
                                                             vertexBuffer);
             }
 
-            clipSpaceMatrix.identity();
-            clipSpaceMatrix.append(modelMatrix);
-            clipSpaceMatrix.append(viewProjectionMatrix);
-
             if(needUploadVertexBuffer) {
                 needUploadVertexBuffer = false;
                 vertexBuffer.uploadFromVector(mVertexBuffer, 0, mVertexBuffer.length / programData.numFloatsPerVertex);
@@ -212,6 +208,13 @@ package de.nulldesign.nd2d.materials {
 
         protected function initProgram(context:Context3D):void {
             // implement in concrete material
+        }
+
+        protected function refreshClipspaceMatrix():Matrix3D {
+            clipSpaceMatrix.identity();
+            clipSpaceMatrix.append(modelMatrix);
+            clipSpaceMatrix.append(viewProjectionMatrix);
+            return clipSpaceMatrix;
         }
 
         protected function addVertex(context:Context3D, buffer:Vector.<Number>, v:Vertex, uv:UV, face:Face):void {

@@ -44,6 +44,7 @@ package de.nulldesign.nd2d.materials {
         protected var numRows:uint;
         protected var numSheets:uint;
 
+        public var pixelOffset:Point = new Point(0.0, 0.0);
         public var uvOffset:Point = new Point(0.0, 0.0);
         public var uvSize:Point = new Point(0.0, 0.0);
 
@@ -64,24 +65,29 @@ package de.nulldesign.nd2d.materials {
 
             var textureDimensions:Point = TextureHelper.getTextureDimensionsFromBitmap(bitmapData);
 
-            uvOffset = new Point((textureDimensions.x - bitmapData.width) / 2.0,
-                                 (textureDimensions.y - bitmapData.height) / 2.0);
-            uvOffset.x /= textureDimensions.x;
-            uvOffset.y /= textureDimensions.y;
+            _textureWidth = textureDimensions.x;
+            _textureHeight = textureDimensions.y;
 
-            uvSize = new Point(spriteWidth / textureDimensions.x, spriteHeight / textureDimensions.y);
+            pixelOffset = new Point((_textureWidth - bitmapData.width) / 2.0,
+                                 (_textureHeight - bitmapData.height) / 2.0);
+            uvOffset.x = pixelOffset.x / _textureWidth;
+            uvOffset.y = pixelOffset.y / _textureHeight;
+
+            uvSize = new Point((spriteWidth - 1.0) / _textureWidth, (spriteHeight - 1.0) / _textureHeight);
 
             numSheetsPerRow = Math.round(bitmapData.width / spriteWidth);
             numRows = Math.round(bitmapData.height / spriteHeight);
             numSheets = numSheetsPerRow * numRows;
         }
 
-        override public function getRectForFrame():Rectangle {
+        override public function getUVRectForFrame():Rectangle {
 
             var rowIdx:uint = frame % numSheetsPerRow;
             var colIdx:uint = Math.floor(frame / numSheetsPerRow);
 
-            var rect:Rectangle = new Rectangle(uvSize.x * rowIdx, uvSize.y * colIdx, 1.0, 1.0);
+            //var rect:Rectangle = new Rectangle(uvOffset.x + uvSize.x * rowIdx, uvOffset.y + uvSize.y * colIdx, 1.0, 1.0);
+            var rect:Rectangle = new Rectangle((0.5 + pixelOffset.x + spriteWidth * rowIdx) / _textureWidth,
+                                               (0.5 + pixelOffset.y + spriteHeight * colIdx) / _textureHeight, 1.0, 1.0);
 
             return rect;
         }

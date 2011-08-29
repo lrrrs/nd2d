@@ -178,10 +178,10 @@ package de.nulldesign.nd2d.utils {
 
             if(sheet) {
 
-                uv1 = new UV(sheet.uvOffset.x, sheet.uvOffset.y);
-                uv2 = new UV(sheet.uvOffset.x + sheet.uvSize.x, sheet.uvOffset.y);
-                uv3 = new UV(sheet.uvOffset.x + sheet.uvSize.x, sheet.uvOffset.y + sheet.uvSize.y);
-                uv4 = new UV(sheet.uvOffset.x, sheet.uvOffset.y + sheet.uvSize.y);
+                uv1 = new UV(0.0, 0.0);
+                uv2 = new UV(sheet.uvSize.x, 0.0);
+                uv3 = new UV(sheet.uvSize.x, sheet.uvSize.y);
+                uv4 = new UV(0.0, sheet.uvSize.y);
 
                 v1 = new Vertex(-texW, -texH, 0.0);
                 v2 = new Vertex(texW, -texH, 0.0);

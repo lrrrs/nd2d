@@ -84,7 +84,7 @@ package tests {
             font.x -= 3.0;
             font.y = stage.stageHeight * 0.5;
 
-            if(font.x < -font.width) {
+            if(font.x < -40 * font.text.length) {
                 font.x = stage.stageWidth;
             }
 

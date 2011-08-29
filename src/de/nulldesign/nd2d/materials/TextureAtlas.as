@@ -31,6 +31,8 @@
 
 package de.nulldesign.nd2d.materials {
 
+    import de.nulldesign.nd2d.utils.TextureHelper;
+
     import flash.display.BitmapData;
     import flash.geom.Point;
     import flash.geom.Rectangle;
@@ -46,11 +48,35 @@ package de.nulldesign.nd2d.materials {
         public function TextureAtlas(textureBitmap:BitmapData, cocos2DXML:XML, fps:uint) {
             this.fps = fps;
             this.bitmapData = textureBitmap;
+
+            var textureDimensions:Point = TextureHelper.getTextureDimensionsFromBitmap(bitmapData);
+
+            _textureWidth = textureDimensions.x;
+            _textureHeight = textureDimensions.y;
+
             parseCocos2DXML(cocos2DXML);
         }
 
-        override public function getRectForFrame():Rectangle {
-            return frames[frame].clone();
+         public function getOffsetForFrame():Point {
+            return offsets[frame];
+         }
+
+        override public function getUVRectForFrame():Rectangle {
+
+            var rect:Rectangle = frames[frame].clone();
+
+            rect.x += 0.5;
+            rect.y += 0.5;
+
+            rect.width -= 1.0;
+            rect.height -= 1.0;
+
+            rect.x /= textureWidth;
+            rect.y /= textureHeight;
+            rect.width /= textureWidth;
+            rect.height /= textureHeight;
+
+            return rect;
         }
 
         override public function set frame(value:uint):void {
@@ -119,7 +145,8 @@ package de.nulldesign.nd2d.materials {
                                     {
                                         if(type == "string") {
                                             array = data.split(/[^0-9-]+/);
-                                            offsets.push(new Point(array[1], array[2]));
+                                            // our coordinate system is different than the cocos one
+                                            offsets.push(new Point(array[1], -array[2]));
                                         } else {
                                             throw new Error("Error parsing descriptor format");
                                         }

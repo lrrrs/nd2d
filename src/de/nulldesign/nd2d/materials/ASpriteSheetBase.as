@@ -51,6 +51,17 @@ package de.nulldesign.nd2d.materials {
 
         protected var fps:uint;
 
+        protected var _textureWidth:Number;
+        protected var _textureHeight:Number;
+
+        public function get textureWidth():Number {
+            return _textureWidth;
+        }
+
+        public function get textureHeight():Number {
+            return _textureHeight;
+        }
+
         protected var _spriteWidth:Number;
         protected var _spriteHeight:Number;
 
@@ -117,7 +128,7 @@ package de.nulldesign.nd2d.materials {
             return null;
         }
 
-        public function getRectForFrame():Rectangle {
+        public function getUVRectForFrame():Rectangle {
             return null;
         }
     }

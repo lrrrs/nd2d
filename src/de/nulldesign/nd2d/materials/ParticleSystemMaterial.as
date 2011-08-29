@@ -76,6 +76,8 @@ package de.nulldesign.nd2d.materials {
 
             super.prepareForRender(context);
 
+            refreshClipspaceMatrix();
+
             if(!texture) {
                 texture = TextureHelper.generateTextureFromBitmap(context, particleTexture, true);
             }
