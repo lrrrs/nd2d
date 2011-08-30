@@ -30,26 +30,25 @@
  */
 
 package de.nulldesign.nd2d.materials {
+
     import de.nulldesign.nd2d.utils.TextureHelper;
 
     import flash.display.BitmapData;
     import flash.geom.Point;
     import flash.geom.Rectangle;
-    import flash.utils.Dictionary;
-    import flash.utils.getTimer;
 
     public class SpriteSheet extends ASpriteSheetBase {
 
         protected var numSheetsPerRow:uint;
         protected var numRows:uint;
         protected var numSheets:uint;
-        protected var uvRects:Vector.<Rectangle> = new Vector.<Rectangle>();
+        protected var uvRects:Vector.<Rectangle>;
 
         public var pixelOffset:Point = new Point(0.0, 0.0);
         public var uvOffset:Point = new Point(0.0, 0.0);
         public var uvSize:Point = new Point(0.0, 0.0);
 
-        public function get totalFrames():uint{
+        public function get totalFrames():uint {
             return numSheets;
         }
 
@@ -70,7 +69,8 @@ package de.nulldesign.nd2d.materials {
             _textureHeight = textureDimensions.y;
 
             pixelOffset = new Point((_textureWidth - bitmapData.width) / 2.0,
-                                 (_textureHeight - bitmapData.height) / 2.0);
+                                    (_textureHeight - bitmapData.height) / 2.0);
+
             uvOffset.x = pixelOffset.x / _textureWidth;
             uvOffset.y = pixelOffset.y / _textureHeight;
 
@@ -79,11 +79,13 @@ package de.nulldesign.nd2d.materials {
             numSheetsPerRow = Math.round(bitmapData.width / spriteWidth);
             numRows = Math.round(bitmapData.height / spriteHeight);
             numSheets = numSheetsPerRow * numRows;
+
+            uvRects = new Vector.<Rectangle>(numSheets, true)
         }
 
         override public function getUVRectForFrame():Rectangle {
 
-            if(uvRects.length > frame) {
+            if(uvRects[frame]) {
                 return uvRects[frame];
             }
 

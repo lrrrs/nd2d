@@ -9,7 +9,6 @@ package de.nulldesign.nd2d.materials {
 
     import de.nulldesign.nd2d.display.Node2D;
     import de.nulldesign.nd2d.display.Sprite2D;
-    import de.nulldesign.nd2d.display.Sprite2D;
     import de.nulldesign.nd2d.geom.Face;
     import de.nulldesign.nd2d.geom.UV;
     import de.nulldesign.nd2d.geom.Vertex;
@@ -18,19 +17,32 @@ package de.nulldesign.nd2d.materials {
     import flash.display3D.Context3D;
     import flash.display3D.Context3DProgramType;
     import flash.display3D.Context3DVertexBufferFormat;
+    import flash.geom.Point;
     import flash.geom.Rectangle;
-    import flash.utils.getTimer;
 
     public class Sprite2DBatchMaterial extends Sprite2DMaterial {
 
-        protected const DEFAULT_VERTEX_SHADER:String = "m44 op, va0, vc[va2.x]   \n" + // vertex * clipspace[idx]
-                "add vt0, va1, vc[va2.z]\n" + "mov v0, vt0		\n" + // copy uv
-                "mov v1, vc[va2.y]	\n"; // copy color from array
+        protected const DEFAULT_VERTEX_SHADER:String =
+                "m44 op, va0, vc[va2.x]             \n" + // vertex * clipspace[idx]
+                "mov vt0, va1                       \n" + // save uv in temp register
+                "mul vt0.xy, vt0.xy, vc[va2.z].zw   \n" + // mult with uv-scale
+                "add vt0.xy, vt0.xy, vc[va2.z].xy   \n" + // add uv offset
+                "mov v0, vt0                        \n" + // copy uv
+                "mov v1, vc[va2.y]	                \n"; // copy color[idx]
 
-        protected const DEFAULT_FRAGMENT_SHADER:String = "mov ft0, v0\n" + // get interpolated uv coords
-                "tex ft1, ft0, fs0 <2d,clamp,linear,nomip>\n" + // sample texture
-                "mul ft1, ft1, v1\n" + // mult with color
-                "mov oc, ft1\n";
+        /*
+         protected const DEFAULT_VERTEX_SHADER:String =
+         "m44 op, va0, vc[va2.x]     \n" + // vertex * clipspace[idx]
+         "add vt0, va1, vc[va2.z]    \n" + // add uvoffset[idx] to uv coords
+         "mov v0, vt0                \n" + // copy uv
+         "mov v1, vc[va2.y]	        \n"; // copy color[idx]
+         */
+
+        protected const DEFAULT_FRAGMENT_SHADER:String =
+                "mov ft0, v0                                \n" + // get interpolated uv coords
+                "tex ft1, ft0, fs0 <2d,clamp,linear,nomip>  \n" + // sample texture
+                "mul ft1, ft1, v1                           \n" + // mult with color
+                "mov oc, ft1                                \n";
 
         protected var constantsPerSprite:uint = 6; // matrix, color, uvoffset
         protected var constantsPerMatrix:uint = 4;
@@ -91,6 +103,10 @@ package de.nulldesign.nd2d.materials {
             return true;
         }
 
+        public function renderSingle(context:Context3D, faceList:Vector.<Face>, child:Node2D):void {
+            renderBatch(context, faceList, Vector.<Node2D>([child]));
+        }
+
         public function renderBatch(context:Context3D, faceList:Vector.<Face>, childList:Vector.<Node2D>):void {
 
             drawCalls = 0;
@@ -104,7 +120,8 @@ package de.nulldesign.nd2d.materials {
                 var uvoffset:Vector.<Number> = new Vector.<Number>(4, true);
                 var i:int = -1;
                 var n:int = childList.length;
-                var uvRect:Rectangle;
+                var uvOffsetAndScale:Rectangle;
+                var atlasOffset:Point;
 
                 while(++i < n) {
 
@@ -115,22 +132,38 @@ package de.nulldesign.nd2d.materials {
                         if(child.invalidateColors) child.updateColors();
                         if(child.invalidateMatrix) child.updateMatrix();
 
-                        clipSpaceMatrix.identity();
-                        clipSpaceMatrix.append(modelMatrix);
-                        clipSpaceMatrix.append(child.localModelMatrix);
-                        clipSpaceMatrix.append(viewProjectionMatrix);
+                        var atlas:TextureAtlas = spriteSheet as TextureAtlas;
+
+                        if(atlas) {
+
+                            atlasOffset = atlas.getOffsetForFrame();
+
+                            clipSpaceMatrix.identity();
+                            clipSpaceMatrix.appendScale(spriteSheet.spriteWidth * 0.5, spriteSheet.spriteHeight * 0.5, 1.0);
+                            clipSpaceMatrix.append(modelMatrix);
+                            clipSpaceMatrix.append(child.localModelMatrix);
+                            clipSpaceMatrix.appendTranslation(atlasOffset.x, atlasOffset.y, 0.0);
+                            clipSpaceMatrix.append(viewProjectionMatrix);
+
+                        } else {
+
+                            clipSpaceMatrix.identity();
+                            clipSpaceMatrix.append(modelMatrix);
+                            clipSpaceMatrix.append(child.localModelMatrix);
+                            clipSpaceMatrix.append(viewProjectionMatrix);
+                        }
 
                         color[0] = child.r;
                         color[1] = child.g;
                         color[2] = child.b;
                         color[3] = child.a;
 
-                        uvRect = child.spriteSheet.getUVRectForFrame();
+                        uvOffsetAndScale = child.spriteSheet.getUVRectForFrame();
 
-                        uvoffset[0] = uvRect.x;
-                        uvoffset[1] = uvRect.y;
-                        uvoffset[2] = 0.0;
-                        uvoffset[3] = 0.0;
+                        uvoffset[0] = uvOffsetAndScale.x;
+                        uvoffset[1] = uvOffsetAndScale.y;
+                        uvoffset[2] = uvOffsetAndScale.width;
+                        uvoffset[3] = uvOffsetAndScale.height;
 
                         context.setProgramConstantsFromMatrix(Context3DProgramType.VERTEX,
                                                               batchLen * constantsPerSprite, clipSpaceMatrix, true);

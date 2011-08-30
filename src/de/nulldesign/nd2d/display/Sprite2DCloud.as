@@ -209,7 +209,6 @@ package de.nulldesign.nd2d.display {
                 material.texture = TextureHelper.generateTextureFromBitmap(context, material.spriteSheet.bitmapData,
                                                                            false);
             }
-
             if(!program) {
                 var vertexShaderAssembler:AGALMiniAssembler = new AGALMiniAssembler();
                 vertexShaderAssembler.assemble(Context3DProgramType.VERTEX, DEFAULT_VERTEX_SHADER);

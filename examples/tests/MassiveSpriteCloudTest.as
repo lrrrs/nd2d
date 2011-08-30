@@ -5,6 +5,7 @@ package tests {
     import de.nulldesign.nd2d.display.Node2D;
     import de.nulldesign.nd2d.display.Scene2D;
     import de.nulldesign.nd2d.display.Sprite2D;
+    import de.nulldesign.nd2d.display.Sprite2DBatch;
     import de.nulldesign.nd2d.display.Sprite2DCloud;
     import de.nulldesign.nd2d.materials.SpriteSheet;
 
@@ -39,6 +40,7 @@ package tests {
             sheet.addAnimation("left", [9, 10, 11], true);
 
             spriteCloud = new Sprite2DCloud(numSprites, sheet);
+            //spriteCloud = new Sprite2DBatch(sheet);
 
             addSpritesClick();
 
