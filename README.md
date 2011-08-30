@@ -36,6 +36,7 @@ Useful links:
 # Changelog:
 
 2011-08-29
+
 - Arguments of Sprite2D / Sprite2DMaterial reduced to one (non typed)
 - Refactored SpriteSheet classes
 - NEW: Cocos2D-TexturePacker compatible TextureAtlas (not pixel precise and fully implemented yet!)
