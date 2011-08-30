@@ -9,6 +9,7 @@ package de.nulldesign.nd2d.materials {
 
     import de.nulldesign.nd2d.display.Node2D;
     import de.nulldesign.nd2d.display.Sprite2D;
+    import de.nulldesign.nd2d.display.Sprite2D;
     import de.nulldesign.nd2d.geom.Face;
     import de.nulldesign.nd2d.geom.UV;
     import de.nulldesign.nd2d.geom.Vertex;
@@ -18,8 +19,9 @@ package de.nulldesign.nd2d.materials {
     import flash.display3D.Context3DProgramType;
     import flash.display3D.Context3DVertexBufferFormat;
     import flash.geom.Rectangle;
+    import flash.utils.getTimer;
 
-    public class Sprite2DCloudMaterial extends Sprite2DMaterial {
+    public class Sprite2DBatchMaterial extends Sprite2DMaterial {
 
         protected const DEFAULT_VERTEX_SHADER:String = "m44 op, va0, vc[va2.x]   \n" + // vertex * clipspace[idx]
                 "add vt0, va1, vc[va2.z]\n" + "mov v0, vt0		\n" + // copy uv
@@ -37,11 +39,15 @@ package de.nulldesign.nd2d.materials {
 
         protected const BATCH_SIZE:uint = 126 / constantsPerSprite;
 
-        public function Sprite2DCloudMaterial(textureObject:Object) {
+        public function Sprite2DBatchMaterial(textureObject:Object) {
             super(textureObject);
         }
 
         override protected function generateBufferData(context:Context3D, faceList:Vector.<Face>):void {
+
+            if(vertexBuffer) {
+                return;
+            }
 
             // use first two faces and extend facelist to max. batch size
             var f0:Face = faceList[0];
@@ -65,6 +71,10 @@ package de.nulldesign.nd2d.materials {
             super.generateBufferData(context, newFaceList);
         }
 
+        override public function render(context:Context3D, faceList:Vector.<Face>, startTri:uint, numTris:uint):void {
+            throw new Error("please call renderBatch for this material");
+        }
+
         override protected function prepareForRender(context:Context3D):Boolean {
 
             if(!texture) {
@@ -83,17 +93,20 @@ package de.nulldesign.nd2d.materials {
 
         public function renderBatch(context:Context3D, faceList:Vector.<Face>, childList:Vector.<Node2D>):void {
 
-            drawCalls = Math.ceil(childList.length / BATCH_SIZE);
-
+            drawCalls = 0;
             generateBufferData(context, faceList);
 
             if(prepareForRender(context)) {
 
                 var batchLen:uint = 0;
+                var child:Sprite2D;
+                var color:Vector.<Number> = new Vector.<Number>(4, true);
+                var uvoffset:Vector.<Number> = new Vector.<Number>(4, true);
+                var i:int = -1;
+                var n:int = childList.length;
+                var uvRect:Rectangle;
 
-                for(var i:uint = 0; i < childList.length; i++) {
-
-                    var child:Sprite2D;
+                while(++i < n) {
 
                     child = Sprite2D(childList[i]);
 
@@ -107,29 +120,38 @@ package de.nulldesign.nd2d.materials {
                         clipSpaceMatrix.append(child.localModelMatrix);
                         clipSpaceMatrix.append(viewProjectionMatrix);
 
-                        var uvRect:Rectangle = spriteSheet.getUVRectForFrame();
+                        color[0] = child.r;
+                        color[1] = child.g;
+                        color[2] = child.b;
+                        color[3] = child.a;
+
+                        uvRect = child.spriteSheet.getUVRectForFrame();
+
+                        uvoffset[0] = uvRect.x;
+                        uvoffset[1] = uvRect.y;
+                        uvoffset[2] = 0.0;
+                        uvoffset[3] = 0.0;
 
                         context.setProgramConstantsFromMatrix(Context3DProgramType.VERTEX,
                                                               batchLen * constantsPerSprite, clipSpaceMatrix, true);
 
                         context.setProgramConstantsFromVector(Context3DProgramType.VERTEX,
                                                               batchLen * constantsPerSprite + constantsPerMatrix,
-                                                              Vector.<Number>([ child.r,  child.g, child.b, child.a]));
+                                                              color);
 
                         context.setProgramConstantsFromVector(Context3DProgramType.VERTEX,
                                                               batchLen * constantsPerSprite + constantsPerMatrix + 1,
-                                                              Vector.<Number>([ uvRect.x, uvRect.y]));
+                                                              uvoffset);
+
                         ++batchLen;
 
-                        if(batchLen == BATCH_SIZE) {
+                        if(batchLen == BATCH_SIZE || i == n - 1) {
                             context.drawTriangles(indexBuffer, 0, batchLen * 2);
                             batchLen = 0;
+                            ++drawCalls;
                         }
                     }
                 }
-
-                if(batchLen > 0)
-                    context.drawTriangles(indexBuffer, 0, batchLen * 2);
 
                 clearAfterRender(context);
             }
@@ -176,7 +198,7 @@ package de.nulldesign.nd2d.materials {
                 buffer.push(face.idx * constantsPerSprite);
                 // second, color idx
                 buffer.push(face.idx * constantsPerSprite + constantsPerMatrix);
-                // third uv offset
+                // third uv offset idx
                 buffer.push(face.idx * constantsPerSprite + constantsPerMatrix + 1);
 
             } else {

@@ -43,6 +43,7 @@ package de.nulldesign.nd2d.materials {
         protected var numSheetsPerRow:uint;
         protected var numRows:uint;
         protected var numSheets:uint;
+        protected var uvRects:Vector.<Rectangle> = new Vector.<Rectangle>();
 
         public var pixelOffset:Point = new Point(0.0, 0.0);
         public var uvOffset:Point = new Point(0.0, 0.0);
@@ -82,12 +83,17 @@ package de.nulldesign.nd2d.materials {
 
         override public function getUVRectForFrame():Rectangle {
 
+            if(uvRects.length > frame) {
+                return uvRects[frame];
+            }
+
             var rowIdx:uint = frame % numSheetsPerRow;
             var colIdx:uint = Math.floor(frame / numSheetsPerRow);
 
-            //var rect:Rectangle = new Rectangle(uvOffset.x + uvSize.x * rowIdx, uvOffset.y + uvSize.y * colIdx, 1.0, 1.0);
-            var rect:Rectangle = new Rectangle((0.5 + pixelOffset.x + spriteWidth * rowIdx) / _textureWidth,
-                                               (0.5 + pixelOffset.y + spriteHeight * colIdx) / _textureHeight, 1.0, 1.0);
+            var rect:Rectangle = new Rectangle((0.5 + pixelOffset.x + spriteWidth * rowIdx) / textureWidth,
+                                               (0.5 + pixelOffset.y + spriteHeight * colIdx) / textureHeight, 1.0, 1.0);
+
+            uvRects[frame] = rect;
 
             return rect;
         }

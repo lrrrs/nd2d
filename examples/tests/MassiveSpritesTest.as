@@ -43,8 +43,13 @@ package tests {
             sprites = new Vector.<Sprite2D>();
             var tex:BitmapData = new cubeTexture().bitmapData;
             var s:Sprite2D;
+
+            // CPU 95%, FPS 60
             //spriteCloud = new Sprite2DCloud(maxParticles, tex);
+
+            // CPU 122%, FPS 46
             spriteCloud = new Sprite2DBatch(tex);
+
             spriteCloud.blendMode = BlendModePresets.ADD;
 
             for(var i:int = 0; i < maxParticles; i++) {
