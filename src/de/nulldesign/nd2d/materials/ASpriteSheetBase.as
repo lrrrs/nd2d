@@ -113,7 +113,7 @@ package de.nulldesign.nd2d.materials {
             otime = ctime;
         }
 
-        public function addAnimation(name:String, keyFrames:Array, loop:Boolean):void {
+        public function addAnimation(name:String, keyFrames:Array, loop:Boolean, keyIsString:Boolean = false):void {
             animationMap[name] = new SpriteSheetAnimation(keyFrames, loop);
         }
 

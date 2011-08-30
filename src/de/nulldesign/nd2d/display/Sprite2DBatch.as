@@ -41,6 +41,18 @@ package de.nulldesign.nd2d.display {
             return super.addChildAt(child, idx);
         }
 
+        override internal function stepNode(elapsed:Number):void {
+
+            step(elapsed);
+
+            for each(var child:Node2D in children) {
+                child.timeSinceStartInSeconds = timeSinceStartInSeconds;
+                child.stepNode(elapsed);
+            }
+
+            // don't refresh own spritesheet
+        }
+
         override internal function drawNode(context:Context3D, camera:Camera2D, parentMatrixChanged:Boolean,
                                             handleDeviceLoss:Boolean):void {
 

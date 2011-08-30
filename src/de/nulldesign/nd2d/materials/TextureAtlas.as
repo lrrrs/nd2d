@@ -44,24 +44,31 @@ package de.nulldesign.nd2d.materials {
         protected var offsets:Vector.<Point> = new Vector.<Point>();
         protected var sourceSizes:Vector.<Point> = new Vector.<Point>();
         protected var frameNameToIndex:Dictionary = new Dictionary();
+        protected var xmlData:XML;
+        protected var uvRects:Vector.<Rectangle>;
 
         public function TextureAtlas(textureBitmap:BitmapData, cocos2DXML:XML, fps:uint) {
             this.fps = fps;
             this.bitmapData = textureBitmap;
+            this.xmlData = cocos2DXML;
 
             var textureDimensions:Point = TextureHelper.getTextureDimensionsFromBitmap(bitmapData);
 
             _textureWidth = textureDimensions.x;
             _textureHeight = textureDimensions.y;
 
-            parseCocos2DXML(cocos2DXML);
+            parseCocos2DXML(xmlData);
         }
 
-         public function getOffsetForFrame():Point {
+        public function getOffsetForFrame():Point {
             return offsets[frame];
-         }
+        }
 
         override public function getUVRectForFrame():Rectangle {
+
+            if(uvRects[frame]) {
+                return uvRects[frame];
+            }
 
             var rect:Rectangle = frames[frame].clone();
 
@@ -76,6 +83,8 @@ package de.nulldesign.nd2d.materials {
             rect.width /= textureWidth;
             rect.height /= textureHeight;
 
+            uvRects[frame] = rect;
+
             return rect;
         }
 
@@ -85,13 +94,18 @@ package de.nulldesign.nd2d.materials {
             _spriteHeight = frames[frame].height;
         }
 
-        override public function addAnimation(name:String, keyFrames:Array, loop:Boolean):void {
+        override public function addAnimation(name:String, keyFrames:Array, loop:Boolean,
+                                              keyIsString:Boolean = false):void {
 
             // make indices out of names
             var keyFramesIndices:Array = [];
 
-            for(var i:int = 0; i < keyFrames.length; i++) {
-                keyFramesIndices.push(frameNameToIndex[keyFrames[i]]);
+            if(keyIsString) {
+                for(var i:int = 0; i < keyFrames.length; i++) {
+                    keyFramesIndices.push(frameNameToIndex[keyFrames[i]]);
+                }
+            } else {
+                keyFramesIndices = keyFrames;
             }
 
             super.addAnimation(name, keyFramesIndices, loop);
@@ -176,9 +190,12 @@ package de.nulldesign.nd2d.materials {
                         break;
                 }
             }
+
             if(frames.length == 0) {
                 throw new Error("Error parsing descriptor format");
             }
+
+            uvRects = new Vector.<Rectangle>(frames.length, true);
 
             /*
              Frame:
@@ -196,6 +213,20 @@ package de.nulldesign.nd2d.materials {
              Desktop Version 0-0.4b: 1
              Desktop Version 1.x: 2
              */
+        }
+
+        override public function clone():ASpriteSheetBase {
+
+            var t:TextureAtlas = new TextureAtlas(bitmapData, xmlData, fps);
+
+            for(var name:String in animationMap) {
+                var anim:SpriteSheetAnimation = animationMap[name];
+                t.addAnimation(name, anim.frames.concat(), anim.loop, false);
+            }
+
+            t.frame = frame;
+
+            return t;
         }
     }
 }

@@ -35,6 +35,10 @@ Useful links:
 
 # Changelog:
 
+2011-08-30
+
+- NEW: Sprite2DBatch - Batches drawCalls, Alternative to Sprite2DCloud, not yet finished
+
 2011-08-29
 
 - Arguments of Sprite2D / Sprite2DMaterial reduced to one (non typed)

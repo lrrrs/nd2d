@@ -122,6 +122,7 @@ package de.nulldesign.nd2d.materials {
                 var n:int = childList.length;
                 var uvOffsetAndScale:Rectangle;
                 var atlasOffset:Point;
+                var atlas:TextureAtlas;
 
                 while(++i < n) {
 
@@ -132,24 +133,24 @@ package de.nulldesign.nd2d.materials {
                         if(child.invalidateColors) child.updateColors();
                         if(child.invalidateMatrix) child.updateMatrix();
 
-                        var atlas:TextureAtlas = spriteSheet as TextureAtlas;
+                        atlas = child.spriteSheet as TextureAtlas;
 
                         if(atlas) {
 
                             atlasOffset = atlas.getOffsetForFrame();
 
                             clipSpaceMatrix.identity();
-                            clipSpaceMatrix.appendScale(spriteSheet.spriteWidth * 0.5, spriteSheet.spriteHeight * 0.5, 1.0);
-                            clipSpaceMatrix.append(modelMatrix);
+                            clipSpaceMatrix.appendScale(atlas.spriteWidth * 0.5, atlas.spriteHeight * 0.5, 1.0);
                             clipSpaceMatrix.append(child.localModelMatrix);
                             clipSpaceMatrix.appendTranslation(atlasOffset.x, atlasOffset.y, 0.0);
+                            clipSpaceMatrix.append(modelMatrix);
                             clipSpaceMatrix.append(viewProjectionMatrix);
 
                         } else {
 
                             clipSpaceMatrix.identity();
-                            clipSpaceMatrix.append(modelMatrix);
                             clipSpaceMatrix.append(child.localModelMatrix);
+                            clipSpaceMatrix.append(modelMatrix);
                             clipSpaceMatrix.append(viewProjectionMatrix);
                         }
 

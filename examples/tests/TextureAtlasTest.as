@@ -32,8 +32,11 @@ package tests {
 
     import de.nulldesign.nd2d.display.Scene2D;
     import de.nulldesign.nd2d.display.Sprite2D;
+    import de.nulldesign.nd2d.display.Sprite2DBatch;
     import de.nulldesign.nd2d.materials.SpriteSheet;
     import de.nulldesign.nd2d.materials.TextureAtlas;
+
+    import flash.display.BitmapData;
 
     public class TextureAtlasTest extends Scene2D {
 
@@ -48,39 +51,53 @@ package tests {
         [Embed(source="/assets/spritechar1.png")]
         private var spriteTexture:Class;
 
-        private var s2:Sprite2D;
+        private var s2:Sprite2DBatch;
 
         public function TextureAtlasTest() {
 
             backGroundColor = 0xDDDDDD;
 
-            var atlas:TextureAtlas = new TextureAtlas(new textureAtlasBitmap().bitmapData,
-                                                      new XML(new textureAtlasXML()), 5);
-            s = addChild(new Sprite2D(atlas)) as Sprite2D;
+            var tex:BitmapData = new textureAtlasBitmap().bitmapData;
 
-            atlas.addAnimation("blah", ["c01", "c02", "c03", "c04", "c05", "c06", "c07", "c08", "c09", "c10", "c11", "c12",
-                                        "01", "02", "03", "04", "05", "06", "07", "08", "09", "10", "11", "12", "13", "14", "15"], true);
-
-            //atlas.addAnimation("blah", ["c01", "c02", "c03", "c04", "c05", "c06", "c07", "c08", "c09", "c10", "c11", "c12"], true);
-            atlas.playAnimation("blah");
-
-            var sheet:SpriteSheet = new SpriteSheet(new spriteTexture().bitmapData, 24, 32, 5);
+            var sheet:SpriteSheet = new SpriteSheet(tex, 24, 32, 5);
             sheet.addAnimation("blah", [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11], true);
             sheet.playAnimation("blah", 0, true);
 
-            s2 = new Sprite2D();
-            s2.setSpriteSheet(sheet);
-            addChild(s2);
+            var atlas:TextureAtlas = new TextureAtlas(tex, new XML(new textureAtlasXML()), 20);
+            s = addChild(new Sprite2D(atlas)) as Sprite2D;
+
+            atlas.addAnimation("blah",
+                               ["c01", "c02", "c03", "c04", "c05", "c06", "c07", "c08", "c09", "c10", "c11", "c12",
+                                   "01", "02", "03", "04", "05", "06", "07", "08", "09", "10", "11", "12", "13", "14", "15"],
+                               true, true);
+
+            atlas.playAnimation("blah");
+
+            s2 = new Sprite2DBatch(atlas);
+
+            for(var i:int = 0; i < 100; i++) {
+                var batchChild:Sprite2D = new Sprite2D();
+                batchChild.x = (i % 10) * 50.0;
+                batchChild.y = Math.floor(i / 10) * 50.0;
+
+                s2.addChild(batchChild);
+                addChild(s2);
+                batchChild.spriteSheet.playAnimation("blah", i, true);
+            }
+
+            s.x = 200.0;
+            s.y = 20.0;
+
+            s2.x = 300.0;
+            s2.y = 20.0;
         }
 
         override protected function step(elapsed:Number):void {
             super.step(elapsed);
 
-            s.x = stage.stageWidth * 0.5;
-            s.y = stage.stageHeight * 0.5;
-
-            s2.x = stage.stageWidth * 0.5 + 30.0;
-            s2.y = stage.stageHeight * 0.5;
+            for(var i:int = 0; i < s2.children.length; i++) {
+                s2.children[i].rotation += 1.0 + i * 0.1;
+            }
         }
     }
 }
