@@ -15,8 +15,6 @@ package de.nulldesign.nd2d.materials {
     import de.nulldesign.nd2d.utils.TextureHelper;
 
     import flash.display3D.Context3D;
-
-    import flash.display3D.Context3D;
     import flash.display3D.Context3DProgramType;
     import flash.display3D.Context3DVertexBufferFormat;
     import flash.geom.Rectangle;
@@ -85,11 +83,13 @@ package de.nulldesign.nd2d.materials {
 
         public function renderBatch(context:Context3D, faceList:Vector.<Face>, childList:Vector.<Node2D>):void {
 
+            drawCalls = Math.ceil(childList.length / BATCH_SIZE);
+
             generateBufferData(context, faceList);
 
             if(prepareForRender(context)) {
 
-                var batchCollection:Vector.<Sprite2D> = new Vector.<Sprite2D>();
+                var batchLen:uint = 0;
 
                 for(var i:uint = 0; i < childList.length; i++) {
 
@@ -102,56 +102,37 @@ package de.nulldesign.nd2d.materials {
                         if(child.invalidateColors) child.updateColors();
                         if(child.invalidateMatrix) child.updateMatrix();
 
-                        batchCollection.push(child);
+                        clipSpaceMatrix.identity();
+                        clipSpaceMatrix.append(modelMatrix);
+                        clipSpaceMatrix.append(child.localModelMatrix);
+                        clipSpaceMatrix.append(viewProjectionMatrix);
 
-                        if(batchCollection.length == BATCH_SIZE) {
-                            blitBatch(context, batchCollection);
-                            batchCollection = new Vector.<Sprite2D>();
+                        var uvRect:Rectangle = spriteSheet.getUVRectForFrame();
+
+                        context.setProgramConstantsFromMatrix(Context3DProgramType.VERTEX,
+                                                              batchLen * constantsPerSprite, clipSpaceMatrix, true);
+
+                        context.setProgramConstantsFromVector(Context3DProgramType.VERTEX,
+                                                              batchLen * constantsPerSprite + constantsPerMatrix,
+                                                              Vector.<Number>([ child.r,  child.g, child.b, child.a]));
+
+                        context.setProgramConstantsFromVector(Context3DProgramType.VERTEX,
+                                                              batchLen * constantsPerSprite + constantsPerMatrix + 1,
+                                                              Vector.<Number>([ uvRect.x, uvRect.y]));
+                        ++batchLen;
+
+                        if(batchLen == BATCH_SIZE) {
+                            context.drawTriangles(indexBuffer, 0, batchLen * 2);
+                            batchLen = 0;
                         }
                     }
                 }
 
-                if(batchCollection.length > 0)
-                    blitBatch(context, batchCollection);
+                if(batchLen > 0)
+                    context.drawTriangles(indexBuffer, 0, batchLen * 2);
 
                 clearAfterRender(context);
             }
-        }
-
-        protected function blitBatch(context:Context3D, batchObjects:Vector.<Sprite2D>):void {
-
-            var child:Sprite2D;
-
-            for(var i:uint = 0; i < batchObjects.length; i++) {
-
-                child = batchObjects[i];
-
-                if(child.invalidateColors) child.updateColors();
-                if(child.invalidateMatrix) child.updateMatrix();
-
-                if(child.visible) {
-
-                    clipSpaceMatrix.identity();
-                    clipSpaceMatrix.append(modelMatrix);
-                    clipSpaceMatrix.append(child.localModelMatrix);
-                    clipSpaceMatrix.append(viewProjectionMatrix);
-
-                    var uvRect:Rectangle = spriteSheet.getUVRectForFrame();
-
-                    context.setProgramConstantsFromMatrix(Context3DProgramType.VERTEX, i * constantsPerSprite,
-                                                          clipSpaceMatrix, true);
-
-                    context.setProgramConstantsFromVector(Context3DProgramType.VERTEX,
-                                                          i * constantsPerSprite + constantsPerMatrix,
-                                                          Vector.<Number>([ child.r,  child.g, child.b, child.a]));
-
-                    context.setProgramConstantsFromVector(Context3DProgramType.VERTEX,
-                                                          i * constantsPerSprite + constantsPerMatrix + 1,
-                                                          Vector.<Number>([ uvRect.x, uvRect.y]));
-                }
-            }
-
-            context.drawTriangles(indexBuffer, 0, batchObjects.length * 2);
         }
 
         override protected function clearAfterRender(context:Context3D):void {
@@ -170,11 +151,13 @@ package de.nulldesign.nd2d.materials {
                 var colorFragmentShaderAssembler:AGALMiniAssembler = new AGALMiniAssembler();
                 colorFragmentShaderAssembler.assemble(Context3DProgramType.FRAGMENT, DEFAULT_FRAGMENT_SHADER);
 
-                cloudProgramData = programData = new ProgramData(null, null, null, null);
+                cloudProgramData = new ProgramData(null, null, null, null);
                 cloudProgramData.numFloatsPerVertex = 7;
                 cloudProgramData.program = context.createProgram();
                 cloudProgramData.program.upload(vertexShaderAssembler.agalcode, colorFragmentShaderAssembler.agalcode);
             }
+
+            programData = cloudProgramData;
         }
 
         override protected function addVertex(context:Context3D, buffer:Vector.<Number>, v:Vertex, uv:UV,

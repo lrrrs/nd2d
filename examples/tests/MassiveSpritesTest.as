@@ -1,7 +1,9 @@
 package tests {
 
+    import de.nulldesign.nd2d.display.Node2D;
     import de.nulldesign.nd2d.display.Scene2D;
     import de.nulldesign.nd2d.display.Sprite2D;
+    import de.nulldesign.nd2d.display.Sprite2DBatch;
     import de.nulldesign.nd2d.display.Sprite2DCloud;
     import de.nulldesign.nd2d.materials.BlendModePresets;
 
@@ -16,7 +18,7 @@ package tests {
         private var cubeTexture:Class;
 
         private var sprites:Vector.<Sprite2D>;
-        private var spriteSheet:Sprite2DCloud;
+        private var spriteCloud:Node2D;
 
         private var perlinBmp:BitmapData;
 
@@ -41,17 +43,18 @@ package tests {
             sprites = new Vector.<Sprite2D>();
             var tex:BitmapData = new cubeTexture().bitmapData;
             var s:Sprite2D;
-            spriteSheet = new Sprite2DCloud(maxParticles, tex);
-            spriteSheet.blendMode = BlendModePresets.ADD;
+            //spriteCloud = new Sprite2DCloud(maxParticles, tex);
+            spriteCloud = new Sprite2DBatch(tex);
+            spriteCloud.blendMode = BlendModePresets.ADD;
 
             for(var i:int = 0; i < maxParticles; i++) {
                 s = new Sprite2D();
                 randomizeParticle(s);
                 sprites[i] = s;
-                spriteSheet.addChild(s);
+                spriteCloud.addChild(s);
             }
 
-            addChild(spriteSheet);
+            addChild(spriteCloud);
 
             perlinBmp = new BitmapData(stage.stageWidth, stage.stageHeight, false);
             perlinBmp.perlinNoise(stage.stageWidth * 0.1, stage.stageHeight * 0.1, 3, Math.random() * 20, false, false,

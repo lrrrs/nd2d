@@ -24,7 +24,7 @@ package de.nulldesign.nd2d.display {
         }
 
         override public function get drawCalls():uint {
-            return 1; // todo
+            return material.drawCalls;
         }
 
         override internal function drawNode(context:Context3D, camera:Camera2D, parentMatrixChanged:Boolean,
@@ -65,13 +65,6 @@ package de.nulldesign.nd2d.display {
             material.modelMatrix = worldModelMatrix;
             material.projectionMatrix = camera.projectionMatrix;
             material.viewProjectionMatrix = camera.getViewProjectionMatrix();
-
-            /*
-            material.color.x = r;
-            material.color.y = g;
-            material.color.z = b;
-            material.color.w = a;
-            */
 
             if(handleDeviceLoss) {
                 material.handleDeviceLoss();
