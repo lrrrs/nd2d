@@ -45,10 +45,10 @@ package tests {
             var s:Sprite2D;
 
             // CPU 95%, FPS 60
-            //spriteCloud = new Sprite2DCloud(maxParticles, tex);
+            spriteCloud = new Sprite2DCloud(maxParticles, tex);
 
             // CPU 122%, FPS 46
-            spriteCloud = new Sprite2DBatch(tex);
+            //spriteCloud = new Sprite2DBatch(tex);
 
             spriteCloud.blendMode = BlendModePresets.ADD;
 
