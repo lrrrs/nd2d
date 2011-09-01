@@ -52,7 +52,6 @@ package tests {
         public function MaskTest() {
 
             sprite = new Sprite2D(new spriteImage().bitmapData);
-            sprite.tint = 0x00ff00;
             addChild(sprite);
 
             mask = new Sprite2D(new maskImage().bitmapData);
@@ -88,8 +87,8 @@ package tests {
             sprite.x = camera.sceneWidth * 0.5;
             sprite.y = camera.sceneHeight * 0.5;
 
-            mask.x = sprite.x;
-            mask.y = sprite.y;
+            mask.x = mouseX;
+            mask.y = mouseY;
         }
     }
 }

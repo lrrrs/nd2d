@@ -49,10 +49,10 @@ package de.nulldesign.nd2d.materials {
 
         protected const DEFAULT_VERTEX_SHADER:String =
                 "m44 vt0, va0, vc0              \n" + // vertex(va0) * clipspace
-                "m44 vt1, vt0, vc1              \n" + // calc local pos in mask
-                "add vt1, vt1, vc2.xy           \n" + // add half masksize to local pos
-                "div vt1, vt1, vc2.zw           \n" + // local pos / masksize
-                "mov v0, va1                    \n" + // copy uv(va1)
+                "m44 vt1, vt0, vc4              \n" + // clipsace to local pos in mask
+                "add vt1.xy, vt1.xy, vc8.xy     \n" + // add half masksize to local pos
+                "div vt1.xy, vt1.xy, vc8.zw     \n" + // local pos / masksize
+                "mov v0, va1                    \n" + // copy uv
                 "mov v1, vt1                    \n" + // copy mask uv
                 "mov op, vt0                    \n";  // output position
 
@@ -71,7 +71,7 @@ package de.nulldesign.nd2d.materials {
 
         protected var maskTexture:Texture;
         protected var maskDimensions:Point;
-        protected var maskClipSpaceMatrix:Matrix3D;
+        protected var maskClipSpaceMatrix:Matrix3D = new Matrix3D();
 
         protected static var maskProgramData:ProgramData;
 
@@ -99,8 +99,9 @@ package de.nulldesign.nd2d.materials {
 
             refreshClipspaceMatrix();
 
-            // TODO: TEST REPLACE LATER
-            maskClipSpaceMatrix = clipSpaceMatrix.clone();
+            maskClipSpaceMatrix.identity();
+            maskClipSpaceMatrix.append(maskModelMatrix);
+            maskClipSpaceMatrix.append(viewProjectionMatrix);
             maskClipSpaceMatrix.invert();
 
             context.setProgramConstantsFromMatrix(Context3DProgramType.VERTEX, 0, clipSpaceMatrix, true);
