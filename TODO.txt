@@ -1,25 +1,12 @@
-- Batching for Spriteclouds -> wait for PB3D fix :(
-- enable zbuffering / alpha textures / KIL / nailboard sprites ????
-- REPLACE ortographic camera with perspective one! for rotationX/Y/Z
-- more blendmodes
-- glow
-- blur
-- scene management / culling
 - PVTR support
-- scene transitions???
 - UV manipulations Sprite2D: scrollX / Y -> PB3D_REPEAT broken in current release
-- TextureAtlas / TexturePacker: http://blog.kaourantin.net/?p=110
 - ParticleSystem2D: add support for bursts!
 - Lines?
-- clear bitmapdata after texture creation?
-- multitouch events
+- Multitouch events!!!
 - init method for world -> async buffer & texture creation w/ event before launching the world. (no startup lag anymore, "preloadable")
 - disposing of textures, etc. cleanUp / destroy
-- periodically framerate drops? why? player?
-- masks
-- stick to 15, 30 or 60 FPS!!!
-
-Feature request: could you make an option to use nearest neighbor instead of linear filtering when you zoom in? Pixel art looks much better if you have big pixels instead of a blurry image.
-Also, are you planning to make tilemaps?
+- Masks
+- Filtering options:  nearest neighbor / linear filtering, etc...
+- Tilemaps?
 
 

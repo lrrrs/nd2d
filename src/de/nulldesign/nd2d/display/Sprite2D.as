@@ -32,6 +32,7 @@ package de.nulldesign.nd2d.display {
 
     import de.nulldesign.nd2d.geom.Face;
     import de.nulldesign.nd2d.materials.ASpriteSheetBase;
+    import de.nulldesign.nd2d.materials.Sprite2DMaskMaterial;
     import de.nulldesign.nd2d.materials.Sprite2DMaterial;
     import de.nulldesign.nd2d.materials.SpriteSheet;
     import de.nulldesign.nd2d.utils.TextureHelper;
@@ -51,7 +52,7 @@ package de.nulldesign.nd2d.display {
         protected var material:Sprite2DMaterial;
         protected var faceList:Vector.<Face>;
 
-        //protected var mask:Sprite2D;
+        protected var mask:Sprite2D;
 
         /**
          * Constructor of class Sprite2D
@@ -93,11 +94,17 @@ package de.nulldesign.nd2d.display {
             this.material = material;
         }
 
-        /*
-         public function setMask(mask:Sprite2D):void {
-         this.mask = mask;
-         }
-         */
+        public function setMask(mask:Sprite2D):void {
+
+            this.mask = mask;
+
+            if(mask) {
+                setMaterial(new Sprite2DMaskMaterial(spriteSheet));
+            } else {
+                setMaterial(new Sprite2DMaterial(spriteSheet));
+            }
+        }
+
         override public function get numTris():uint {
             return 2 + super.numTris;
         }
@@ -126,17 +133,7 @@ package de.nulldesign.nd2d.display {
             material.modelMatrix = worldModelMatrix;
             material.projectionMatrix = camera.projectionMatrix;
             material.viewProjectionMatrix = camera.getViewProjectionMatrix();
-            /*
-             if(mask) {
-             material.maskBitmap = mask.material.bitmapData;
 
-             if(mask.invalidateMatrix) {
-             mask.updateMatrix();
-             }
-
-             material.maskModelMatrix = mask.localModelMatrix;
-             }
-             */
             material.color.x = r;
             material.color.y = g;
             material.color.z = b;
@@ -144,6 +141,17 @@ package de.nulldesign.nd2d.display {
 
             if(handleDeviceLoss) {
                 material.handleDeviceLoss();
+            }
+
+            if(mask) {
+
+                if(mask.invalidateMatrix) {
+                    mask.updateMatrix();
+                }
+
+                var maskMat:Sprite2DMaskMaterial = Sprite2DMaskMaterial(material);
+                maskMat.maskBitmap = mask.spriteSheet.bitmapData;
+                maskMat.maskModelMatrix = mask.localModelMatrix;
             }
 
             material.render(context, faceList, 0, faceList.length);
