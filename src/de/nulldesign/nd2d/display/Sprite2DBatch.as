@@ -36,6 +36,12 @@ package de.nulldesign.nd2d.display {
 
     import flash.display3D.Context3D;
 
+    /**
+     * Sprite2DBatch
+     * Similar to a Sprite2DCloud. In general it's a bit slower than the cloud, but it supports mouseevents for
+     * childs and adding or removing childs doesn't slow down the rendering, it's free.
+     * So in particular cases it could be faster.
+     */
     public class Sprite2DBatch extends Node2D {
 
         private var material:Sprite2DBatchMaterial;

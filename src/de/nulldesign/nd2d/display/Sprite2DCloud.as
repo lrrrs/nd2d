@@ -33,33 +33,42 @@ package de.nulldesign.nd2d.display {
 
     import com.adobe.utils.AGALMiniAssembler;
 
+    import de.nulldesign.nd2d.geom.Face;
     import de.nulldesign.nd2d.geom.UV;
     import de.nulldesign.nd2d.geom.Vertex;
-    import de.nulldesign.nd2d.materials.Sprite2DMaterial;
+    import de.nulldesign.nd2d.materials.ASpriteSheetBase;
+    import de.nulldesign.nd2d.materials.SpriteSheet;
     import de.nulldesign.nd2d.materials.TextureAtlas;
     import de.nulldesign.nd2d.utils.TextureHelper;
     import de.nulldesign.nd2d.utils.VectorUtil;
 
+    import flash.display.BitmapData;
     import flash.display3D.Context3D;
     import flash.display3D.Context3DProgramType;
     import flash.display3D.Context3DVertexBufferFormat;
     import flash.display3D.IndexBuffer3D;
     import flash.display3D.Program3D;
     import flash.display3D.VertexBuffer3D;
+    import flash.display3D.textures.Texture;
     import flash.geom.Matrix3D;
     import flash.geom.Point;
     import flash.geom.Rectangle;
 
     /**
      * Sprite2DCloud
-     * Use a sprite cloud to batch sprites with the same texture / spritesheet.
-     * all sprites will be batched in one single draw call
+     * Use a sprite cloud to batch sprites with the same Texture, SpriteSheet or TextureAtlas.
+     * all sprites will be rendered in one single draw call. It will be fast ;)
      *
      * Limitations:
-     * - Mouseevents are disabled and won't work for spriteclouds
-     * - Reordering childs (add, remove) is very expensive. Try to avoid it!
+     * - Mouseevents are disabled and won't work for childs
+     * - Reordering childs (add, remove) is very expensive. Try to avoid it! A Sprite2DBatch might work better in this case
+     * - Pivot points are not supported for childs
      */
-    public class Sprite2DCloud extends Sprite2D {
+    public class Sprite2DCloud extends Node2D {
+
+        protected var faceList:Vector.<Face>;
+        protected var spriteSheet:ASpriteSheetBase;
+        protected var texture:Texture;
 
         protected var v1:Vertex;
         protected var v2:Vertex;
@@ -91,7 +100,31 @@ package de.nulldesign.nd2d.display {
         protected var clipSpaceMatrix:Matrix3D = new Matrix3D();
 
         public function Sprite2DCloud(maxCapacity:uint, textureObject:Object) {
-            super(textureObject);
+
+            if(textureObject is BitmapData) {
+                var bmp:BitmapData = textureObject as BitmapData;
+                spriteSheet = new SpriteSheet(bmp, bmp.width, bmp.height, 0);
+            } else if(textureObject is SpriteSheet) {
+                spriteSheet = textureObject as SpriteSheet;
+            } else if(textureObject is TextureAtlas) {
+                spriteSheet = textureObject as TextureAtlas;
+            }
+
+            faceList = TextureHelper.generateQuadFromSpriteSheet(spriteSheet);
+
+            _width = spriteSheet.spriteWidth;
+            _height = spriteSheet.spriteWidth;
+
+            v1 = faceList[0].v1;
+            v2 = faceList[0].v2;
+            v3 = faceList[0].v3;
+            v4 = faceList[1].v3;
+
+            uv1 = faceList[0].uv1;
+            uv2 = faceList[0].uv2;
+            uv3 = faceList[0].uv3;
+            uv4 = faceList[1].uv3;
+
             this.maxCapacity = maxCapacity;
 
             mVertexBuffer = new Vector.<Number>(maxCapacity * 8 * 4, true);
@@ -103,22 +136,7 @@ package de.nulldesign.nd2d.display {
         }
 
         override public function get drawCalls():uint {
-            return material.drawCalls;
-        }
-
-        override public function setMaterial(material:Sprite2DMaterial):void {
-            super.setMaterial(material);
-
-            // kinda hackish ...
-            v1 = faceList[0].v1;
-            v2 = faceList[0].v2;
-            v3 = faceList[0].v3;
-            v4 = faceList[1].v3;
-
-            uv1 = faceList[0].uv1;
-            uv2 = faceList[0].uv2;
-            uv3 = faceList[0].uv3;
-            uv4 = faceList[1].uv3;
+            return 1;
         }
 
         override public function addChildAt(child:Node2D, idx:uint):Node2D {
@@ -200,7 +218,7 @@ package de.nulldesign.nd2d.display {
             }
 
             if(handleDeviceLoss) {
-                material.texture = null;
+                texture = null;
                 program = null;
                 vertexBuffer = null;
                 indexBuffer = null;
@@ -212,9 +230,8 @@ package de.nulldesign.nd2d.display {
 
         override protected function draw(context:Context3D, camera:Camera2D, handleDeviceLoss:Boolean):void {
 
-            if(!material.texture) {
-                material.texture = TextureHelper.generateTextureFromBitmap(context, material.spriteSheet.bitmapData,
-                                                                           false);
+            if(!texture) {
+                texture = TextureHelper.generateTextureFromBitmap(context, spriteSheet.bitmapData, false);
             }
 
             if(!program) {
@@ -409,7 +426,7 @@ package de.nulldesign.nd2d.display {
                 indexBuffer.uploadFromVector(mIndexBuffer, 0, mIndexBuffer.length);
             }
 
-            context.setTextureAt(0, material.texture);
+            context.setTextureAt(0, texture);
             context.setProgram(program);
             context.setVertexBufferAt(0, vertexBuffer, 0, Context3DVertexBufferFormat.FLOAT_2); // vertex
             context.setVertexBufferAt(1, vertexBuffer, 2, Context3DVertexBufferFormat.FLOAT_2); // uv
