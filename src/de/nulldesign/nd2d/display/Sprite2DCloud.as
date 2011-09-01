@@ -36,6 +36,7 @@ package de.nulldesign.nd2d.display {
     import de.nulldesign.nd2d.geom.UV;
     import de.nulldesign.nd2d.geom.Vertex;
     import de.nulldesign.nd2d.materials.Sprite2DMaterial;
+    import de.nulldesign.nd2d.materials.TextureAtlas;
     import de.nulldesign.nd2d.utils.TextureHelper;
     import de.nulldesign.nd2d.utils.VectorUtil;
 
@@ -46,6 +47,7 @@ package de.nulldesign.nd2d.display {
     import flash.display3D.Program3D;
     import flash.display3D.VertexBuffer3D;
     import flash.geom.Matrix3D;
+    import flash.geom.Point;
     import flash.geom.Rectangle;
 
     /**
@@ -141,6 +143,7 @@ package de.nulldesign.nd2d.display {
                 for(var i:int = 0; i < children.length; i++) {
                     children[i].invalidateColors = true;
                     children[i].invalidateMatrix = true;
+                    Sprite2D(children[i]).spriteSheet.frameUpdated = true;
                 }
 
                 return child;
@@ -157,6 +160,7 @@ package de.nulldesign.nd2d.display {
                 for(var i:int = 0; i < children.length; i++) {
                     children[i].invalidateColors = true;
                     children[i].invalidateMatrix = true;
+                    Sprite2D(children[i]).spriteSheet.frameUpdated = true;
                 }
             }
         }
@@ -165,8 +169,11 @@ package de.nulldesign.nd2d.display {
             super.swapChildren(child1, child2);
             child1.invalidateColors = true;
             child1.invalidateMatrix = true;
+            Sprite2D(child1).spriteSheet.frameUpdated = true;
+
             child2.invalidateColors = true;
             child2.invalidateMatrix = true;
+            Sprite2D(child2).spriteSheet.frameUpdated = true;
         }
 
         override internal function drawNode(context:Context3D, camera:Camera2D, parentMatrixChanged:Boolean,
@@ -209,6 +216,7 @@ package de.nulldesign.nd2d.display {
                 material.texture = TextureHelper.generateTextureFromBitmap(context, material.spriteSheet.bitmapData,
                                                                            false);
             }
+
             if(!program) {
                 var vertexShaderAssembler:AGALMiniAssembler = new AGALMiniAssembler();
                 vertexShaderAssembler.assemble(Context3DProgramType.VERTEX, DEFAULT_VERTEX_SHADER);
@@ -225,7 +233,7 @@ package de.nulldesign.nd2d.display {
             var g:Number;
             var b:Number;
             var a:Number;
-            var offset:Rectangle;
+            var uvOffsetAndScale:Rectangle;
             var rot:Number;
             var cr:Number;
             var sr:Number;
@@ -235,13 +243,14 @@ package de.nulldesign.nd2d.display {
             var sx:Number;
             var sy:Number;
             var somethingChanged:Boolean = false;
+            var atlasOffset:Point = new Point();
+            var atlas:TextureAtlas;
 
             if(invalidateColors) {
                 updateColors();
                 invalidateColors = true;
             }
 
-            // TODO: get rid of this implementation and do batch rendering! :)
             while(++i < n) {
 
                 child = Sprite2D(children[i]);
@@ -256,18 +265,28 @@ package de.nulldesign.nd2d.display {
                 r = child.r;
                 g = child.g;
                 b = child.b;
-                a = child.visible ? child.a : 0.0; // fake visibility for now ... it's faster
+                a = child.visible ? child.a : 0.0; // fake visibility. just set alpha to zero, it's faster
 
                 sx = child.scaleX;
                 sy = child.scaleY;
 
+                atlas = child.spriteSheet as TextureAtlas;
+
+                if(atlas) {
+                    sx *= atlas.spriteWidth * 0.5;
+                    sy *= atlas.spriteHeight * 0.5;
+                    atlasOffset = atlas.getOffsetForFrame();
+                } else {
+                    atlasOffset.x = 0.0;
+                    atlasOffset.y = 0.0;
+                }
+
                 var initUV:Boolean = !uvInited;
 
                 if(spriteSheet.frameUpdated) {
-
                     spriteSheet.frameUpdated = false;
                     initUV = true;
-                    offset = spriteSheet.getUVRectForFrame();
+                    uvOffsetAndScale = spriteSheet.getUVRectForFrame();
                 }
 
                 if(child.invalidateMatrix) {
@@ -278,77 +297,77 @@ package de.nulldesign.nd2d.display {
 
                 // v1
                 if(child.invalidateMatrix) {
-                    mVertexBuffer[vIdx] = v1.x * sx * cr - v1.y * sy * sr + child.x;
-                    mVertexBuffer[vIdx + 1] = v1.x * sx * sr + v1.y * sy * cr + child.y;
+                    mVertexBuffer[vIdx] = v1.x * sx * cr - v1.y * sy * sr + child.x + atlasOffset.x;
+                    mVertexBuffer[vIdx + 1] = v1.x * sx * sr + v1.y * sy * cr + child.y + atlasOffset.y;
                     somethingChanged = true;
                 }
 
                 if(initUV) {
-                    mVertexBuffer[vIdx + 2] = uv1.u + offset.x; // u
-                    mVertexBuffer[vIdx + 3] = uv1.v + offset.y; // v
+                    mVertexBuffer[vIdx + 2] = uvOffsetAndScale.width * uv1.u + uvOffsetAndScale.x;
+                    mVertexBuffer[vIdx + 3] = uvOffsetAndScale.height * uv1.v + uvOffsetAndScale.y;
                     somethingChanged = true;
                 }
 
                 if(invalidateColors || child.invalidateColors || child.invalidateVisibility) {
-                    mVertexBuffer[vIdx + 4] = r; // r
-                    mVertexBuffer[vIdx + 5] = g; // g
-                    mVertexBuffer[vIdx + 6] = b; // b
-                    mVertexBuffer[vIdx + 7] = a; // a
+                    mVertexBuffer[vIdx + 4] = r;
+                    mVertexBuffer[vIdx + 5] = g;
+                    mVertexBuffer[vIdx + 6] = b;
+                    mVertexBuffer[vIdx + 7] = a;
                     somethingChanged = true;
                 }
 
                 // v2
                 if(child.invalidateMatrix) {
-                    mVertexBuffer[vIdx + 8] = v2.x * sx * cr - v2.y * sy * sr + child.x;
-                    mVertexBuffer[vIdx + 9] = v2.x * sx * sr + v2.y * sy * cr + child.y;
+                    mVertexBuffer[vIdx + 8] = v2.x * sx * cr - v2.y * sy * sr + child.x + atlasOffset.x;
+                    mVertexBuffer[vIdx + 9] = v2.x * sx * sr + v2.y * sy * cr + child.y + atlasOffset.y;
                 }
 
                 if(initUV) {
-                    mVertexBuffer[vIdx + 10] = uv2.u + offset.x; // u
-                    mVertexBuffer[vIdx + 11] = uv2.v + offset.y; // v
+                    mVertexBuffer[vIdx + 10] = uvOffsetAndScale.width * uv2.u + uvOffsetAndScale.x;
+                    mVertexBuffer[vIdx + 11] = uvOffsetAndScale.height * uv2.v + uvOffsetAndScale.y;
                 }
 
                 if(invalidateColors || child.invalidateColors || child.invalidateVisibility) {
-                    mVertexBuffer[vIdx + 12] = r; // r
-                    mVertexBuffer[vIdx + 13] = g; // g
-                    mVertexBuffer[vIdx + 14] = b; // b
-                    mVertexBuffer[vIdx + 15] = a; // a
+                    mVertexBuffer[vIdx + 12] = r;
+                    mVertexBuffer[vIdx + 13] = g;
+                    mVertexBuffer[vIdx + 14] = b;
+                    mVertexBuffer[vIdx + 15] = a;
                 }
 
                 // v3
                 if(child.invalidateMatrix) {
-                    mVertexBuffer[vIdx + 16] = v3.x * sx * cr - v3.y * sy * sr + child.x;
-                    mVertexBuffer[vIdx + 17] = v3.x * sx * sr + v3.y * sy * cr + child.y;
+                    mVertexBuffer[vIdx + 16] = v3.x * sx * cr - v3.y * sy * sr + child.x + atlasOffset.x;
+                    mVertexBuffer[vIdx + 17] = v3.x * sx * sr + v3.y * sy * cr + child.y + atlasOffset.y;
                 }
 
                 if(initUV) {
-                    mVertexBuffer[vIdx + 18] = uv3.u + offset.x; // u
-                    mVertexBuffer[vIdx + 19] = uv3.v + offset.y; // v
+                    mVertexBuffer[vIdx + 18] = uvOffsetAndScale.width * uv3.u + uvOffsetAndScale.x;
+                    mVertexBuffer[vIdx + 19] = uvOffsetAndScale.height * uv3.v + uvOffsetAndScale.y;
                 }
 
                 if(invalidateColors || child.invalidateColors || child.invalidateVisibility) {
-                    mVertexBuffer[vIdx + 20] = r; // r
-                    mVertexBuffer[vIdx + 21] = g; // g
-                    mVertexBuffer[vIdx + 22] = b; // b
-                    mVertexBuffer[vIdx + 23] = a; // a
+                    mVertexBuffer[vIdx + 20] = r;
+                    mVertexBuffer[vIdx + 21] = g;
+                    mVertexBuffer[vIdx + 22] = b;
+                    mVertexBuffer[vIdx + 23] = a;
                 }
 
                 // v4
                 if(child.invalidateMatrix) {
-                    mVertexBuffer[vIdx + 24] = v4.x * sx * cr - v4.y * sy * sr + child.x;
-                    mVertexBuffer[vIdx + 25] = v4.x * sx * sr + v4.y * sy * cr + child.y;
+                    mVertexBuffer[vIdx + 24] = v4.x * sx * cr - v4.y * sy * sr + child.x + atlasOffset.x;
+                    mVertexBuffer[vIdx + 25] = v4.x * sx * sr + v4.y * sy * cr + child.y + atlasOffset.y;
                 }
 
                 if(initUV) {
-                    mVertexBuffer[vIdx + 26] = uv4.u + offset.x; // u
-                    mVertexBuffer[vIdx + 27] = uv4.v + offset.y; // v
+                    mVertexBuffer[vIdx + 26] = uvOffsetAndScale.width * uv4.u + uvOffsetAndScale.x;
+                    mVertexBuffer[vIdx + 27] = uvOffsetAndScale.height * uv4.v + uvOffsetAndScale.y;
                 }
 
                 if(invalidateColors || child.invalidateColors || child.invalidateVisibility) {
-                    mVertexBuffer[vIdx + 28] = r; // r
-                    mVertexBuffer[vIdx + 29] = g; // g
-                    mVertexBuffer[vIdx + 30] = b; // b
-                    mVertexBuffer[vIdx + 31] = a; // a
+                    mVertexBuffer[vIdx + 28] = r;
+                    mVertexBuffer[vIdx + 29] = g;
+                    mVertexBuffer[vIdx + 30] = b;
+                    mVertexBuffer[vIdx + 31] = a;
                 }
 
                 vIdx += 32;
@@ -363,7 +382,7 @@ package de.nulldesign.nd2d.display {
                 vertexBuffer = context.createVertexBuffer(mVertexBuffer.length / 8, 8);
             }
 
-            // reupload changed vertexbuffer every frame...
+            // reupload changed vertexbuffer...
             if(somethingChanged) {
                 vertexBuffer.uploadFromVector(mVertexBuffer, 0, mVertexBuffer.length / 8);
             }
@@ -408,9 +427,9 @@ package de.nulldesign.nd2d.display {
 
             context.setTextureAt(0, null);
 
-            context.setVertexBufferAt(0, null); // vertex
-            context.setVertexBufferAt(1, null); // uv
-            context.setVertexBufferAt(2, null); // color
+            context.setVertexBufferAt(0, null);
+            context.setVertexBufferAt(1, null);
+            context.setVertexBufferAt(2, null);
         }
     }
 }

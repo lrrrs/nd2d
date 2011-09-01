@@ -186,7 +186,7 @@ package de.nulldesign.nd2d.display {
         }
 
         protected function timerEventHandler(e:Event):void {
-            var t:Number = getTimer() / 1000;
+            var t:Number = getTimer() / 1000.0;
             var elapsed:Number = t - lastFramesTime;
 
             if(scene) {

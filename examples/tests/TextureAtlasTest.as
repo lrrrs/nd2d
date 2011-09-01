@@ -30,9 +30,11 @@
  */
 package tests {
 
+    import de.nulldesign.nd2d.display.Node2D;
     import de.nulldesign.nd2d.display.Scene2D;
     import de.nulldesign.nd2d.display.Sprite2D;
     import de.nulldesign.nd2d.display.Sprite2DBatch;
+    import de.nulldesign.nd2d.display.Sprite2DCloud;
     import de.nulldesign.nd2d.materials.SpriteSheet;
     import de.nulldesign.nd2d.materials.TextureAtlas;
 
@@ -51,19 +53,19 @@ package tests {
         [Embed(source="/assets/spritechar1.png")]
         private var spriteTexture:Class;
 
-        private var s2:Sprite2DBatch;
+        private var s2:Node2D;
 
         public function TextureAtlasTest() {
 
             backGroundColor = 0xDDDDDD;
 
-            var tex:BitmapData = new textureAtlasBitmap().bitmapData;
+            var tex:BitmapData = new spriteTexture().bitmapData;
 
             var sheet:SpriteSheet = new SpriteSheet(tex, 24, 32, 5);
             sheet.addAnimation("blah", [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11], true);
             sheet.playAnimation("blah", 0, true);
 
-            var atlas:TextureAtlas = new TextureAtlas(tex, new XML(new textureAtlasXML()), 20);
+            var atlas:TextureAtlas = new TextureAtlas(new textureAtlasBitmap().bitmapData, new XML(new textureAtlasXML()), 20);
             s = addChild(new Sprite2D(atlas)) as Sprite2D;
 
             atlas.addAnimation("blah",
@@ -73,7 +75,13 @@ package tests {
 
             atlas.playAnimation("blah");
 
+            //s2 = new Sprite2DBatch(tex);
+            //s2 = new Sprite2DBatch(sheet);
             s2 = new Sprite2DBatch(atlas);
+
+            //s2 = new Sprite2DCloud(100, tex);
+            //s2 = new Sprite2DCloud(100, sheet);
+            //s2 = new Sprite2DCloud(100, atlas);
 
             for(var i:int = 0; i < 100; i++) {
                 var batchChild:Sprite2D = new Sprite2D();

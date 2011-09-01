@@ -40,7 +40,7 @@ package tests {
         [Embed(source="/assets/crate.jpg")]
         private var spriteImage:Class;
 
-        private var batch:Sprite2DBatch;
+        private var batch:Node2D;
 
         public function BatchTest() {
 
