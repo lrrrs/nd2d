@@ -86,6 +86,7 @@ package tests {
 
             sprite.x = camera.sceneWidth * 0.5;
             sprite.y = camera.sceneHeight * 0.5;
+            sprite.rotation += 2.0;
 
             mask.x = mouseX;
             mask.y = mouseY;

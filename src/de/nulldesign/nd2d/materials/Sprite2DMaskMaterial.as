@@ -47,8 +47,7 @@ package de.nulldesign.nd2d.materials {
 
     public class Sprite2DMaskMaterial extends Sprite2DMaterial {
 
-        protected const DEFAULT_VERTEX_SHADER:String =
-                "m44 vt0, va0, vc0              \n" + // vertex(va0) * clipspace
+        protected const DEFAULT_VERTEX_SHADER:String = "m44 vt0, va0, vc0              \n" + // vertex(va0) * clipspace
                 "m44 vt1, vt0, vc4              \n" + // clipsace to local pos in mask
                 "add vt1.xy, vt1.xy, vc8.xy     \n" + // add half masksize to local pos
                 "div vt1.xy, vt1.xy, vc8.zw     \n" + // local pos / masksize
@@ -57,8 +56,7 @@ package de.nulldesign.nd2d.materials {
                 "mov op, vt0                    \n";  // output position
 
 
-        protected const DEFAULT_FRAGMENT_SHADER:String =
-                "mov ft0, v0                                    \n" + // get interpolated uv coords
+        protected const DEFAULT_FRAGMENT_SHADER:String = "mov ft0, v0                                    \n" + // get interpolated uv coords
                 "tex ft1, ft0, fs0 <2d,clamp,linear,nomip>      \n" + // sample texture
                 "mul ft1, ft1, fc0                              \n" + // mult with color
                 "mov ft2, v1                                    \n" + // get interpolated uv coords for mask
@@ -108,9 +106,9 @@ package de.nulldesign.nd2d.materials {
             context.setProgramConstantsFromMatrix(Context3DProgramType.VERTEX, 4, maskClipSpaceMatrix, true);
             context.setProgramConstantsFromVector(Context3DProgramType.VERTEX, 8,
                                                   Vector.<Number>([ maskBitmap.width * 0.5,
-                                                                    maskBitmap.height * 0.5,
-                                                                    maskBitmap.width,
-                                                                    maskBitmap.height ]));
+                                                                      maskBitmap.height * 0.5,
+                                                                      maskBitmap.width,
+                                                                      maskBitmap.height ]));
 
             context.setProgramConstantsFromVector(Context3DProgramType.FRAGMENT, 0,
                                                   Vector.<Number>([ color.x, color.y, color.z, color.w ]));
