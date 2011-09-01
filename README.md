@@ -22,16 +22,19 @@ Useful links:
 # Features:
 
 - Flash-displaylist-like hierarchy for 2D elements
-- 2D sprites with spritesheets for animation, tinting, blendmodes, pivot points
+- 2D sprites with tinting, blendmodes, pivot points
+- Support for spritesheets and texture atlases
 - Scenes
 - 2D camera
-- SpriteClouds for massive sprite rendering (batch drawing)
+- SpriteCloud / Batch for massive sprite rendering
 - Powerful particlesystem that runs entirely on the GPU
 - Full mouseevent support for 2D sprites
 - Utils (Color mixing, random number generation, …)
 - Fast bitmap fonts
 - Distortable 2D grid for wave / ripple effects
-- Texturerenderer for displaylist elements
+- Texturerenderer for all display objects
+
+[Check out the WIKI for more details](https://github.com/nulldesign/nd2d/wiki)
 
 # Changelog:
 

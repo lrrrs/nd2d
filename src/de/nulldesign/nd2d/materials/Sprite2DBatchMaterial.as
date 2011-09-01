@@ -1,8 +1,33 @@
-/**
- * (c) 2010 by nulldesign
- * Created by lars
- * Date: 06.04.11 14:28
+/*
+ * ND2D - A Flash Molehill GPU accelerated 2D engine
+ *
+ * Author: Lars Gerckens
+ * Copyright (c) nulldesign 2011
+ * Repository URL: http://github.com/nulldesign/nd2d
+ * Getting started: https://github.com/nulldesign/nd2d/wiki
+ *
+ *
+ * Licence Agreement
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in
+ * all copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+ * THE SOFTWARE.
  */
+
 package de.nulldesign.nd2d.materials {
 
     import com.adobe.utils.AGALMiniAssembler;
@@ -22,8 +47,7 @@ package de.nulldesign.nd2d.materials {
 
     public class Sprite2DBatchMaterial extends Sprite2DMaterial {
 
-        protected const DEFAULT_VERTEX_SHADER:String =
-                "m44 op, va0, vc[va2.x]             \n" + // vertex * clipspace[idx]
+        protected const DEFAULT_VERTEX_SHADER:String = "m44 op, va0, vc[va2.x]             \n" + // vertex * clipspace[idx]
                 "mov vt0, va1                       \n" + // save uv in temp register
                 "mul vt0.xy, vt0.xy, vc[va2.z].zw   \n" + // mult with uv-scale
                 "add vt0.xy, vt0.xy, vc[va2.z].xy   \n" + // add uv offset
@@ -38,8 +62,7 @@ package de.nulldesign.nd2d.materials {
          "mov v1, vc[va2.y]	        \n"; // copy color[idx]
          */
 
-        protected const DEFAULT_FRAGMENT_SHADER:String =
-                "mov ft0, v0                                \n" + // get interpolated uv coords
+        protected const DEFAULT_FRAGMENT_SHADER:String = "mov ft0, v0                                \n" + // get interpolated uv coords
                 "tex ft1, ft0, fs0 <2d,clamp,linear,nomip>  \n" + // sample texture
                 "mul ft1, ft1, v1                           \n" + // mult with color
                 "mov oc, ft1                                \n";
