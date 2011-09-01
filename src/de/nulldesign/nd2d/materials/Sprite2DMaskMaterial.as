@@ -48,15 +48,22 @@ package de.nulldesign.nd2d.materials {
     public class Sprite2DMaskMaterial extends Sprite2DMaterial {
 
         protected const DEFAULT_VERTEX_SHADER:String =
-                "m44 op, va0, vc0   \n" + // vertex * clipspace
-                "mov v0, va1 \n"; // copy uv
+                "m44 vt0, va0, vc0              \n" + // vertex(va0) * clipspace
+                "m44 vt1, vt0, vc1              \n" + // calc local pos in mask
+                "add vt1, vt1, vc2.xy           \n" + // add half masksize to local pos
+                "div vt1, vt1, vc2.zw           \n" + // local pos / masksize
+                "mov v0, va1                    \n" + // copy uv(va1)
+                "mov v1, vt1                    \n" + // copy mask uv
+                "mov op, vt0                    \n";  // output position
+
 
         protected const DEFAULT_FRAGMENT_SHADER:String =
                 "mov ft0, v0                                    \n" + // get interpolated uv coords
                 "tex ft1, ft0, fs0 <2d,clamp,linear,nomip>      \n" + // sample texture
                 "mul ft1, ft1, fc0                              \n" + // mult with color
-                "tex ft2, ft0, fs1 <2d,clamp,linear,nomip>      \n" + // sample mask
-                "mul ft1, ft1, ft2                              \n" + // mult mask color with tex color
+                "mov ft2, v1                                    \n" + // get interpolated uv coords for mask
+                "tex ft3, ft2, fs1 <2d,clamp,linear,nomip>      \n" + // sample mask
+                "mul ft1, ft1, ft3                              \n" + // mult mask color with tex color
                 "mov oc, ft1                                    \n";  // output color
 
         public var maskModelMatrix:Matrix3D;
@@ -64,6 +71,7 @@ package de.nulldesign.nd2d.materials {
 
         protected var maskTexture:Texture;
         protected var maskDimensions:Point;
+        protected var maskClipSpaceMatrix:Matrix3D;
 
         protected static var maskProgramData:ProgramData;
 
@@ -91,7 +99,18 @@ package de.nulldesign.nd2d.materials {
 
             refreshClipspaceMatrix();
 
+            // TODO: TEST REPLACE LATER
+            maskClipSpaceMatrix = clipSpaceMatrix.clone();
+            maskClipSpaceMatrix.invert();
+
             context.setProgramConstantsFromMatrix(Context3DProgramType.VERTEX, 0, clipSpaceMatrix, true);
+            context.setProgramConstantsFromMatrix(Context3DProgramType.VERTEX, 4, maskClipSpaceMatrix, true);
+            context.setProgramConstantsFromVector(Context3DProgramType.VERTEX, 8,
+                                                  Vector.<Number>([ maskBitmap.width * 0.5,
+                                                                    maskBitmap.height * 0.5,
+                                                                    maskBitmap.width,
+                                                                    maskBitmap.height ]));
+
             context.setProgramConstantsFromVector(Context3DProgramType.FRAGMENT, 0,
                                                   Vector.<Number>([ color.x, color.y, color.z, color.w ]));
 

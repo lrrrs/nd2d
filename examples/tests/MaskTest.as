@@ -58,27 +58,26 @@ package tests {
             mask = new Sprite2D(new maskImage().bitmapData);
             sprite.setMask(mask);
 
-            /*
+            // AS3 test for upper left vertex
             var v:Vector3D = new Vector3D(-128, -128, 0, 1);
             var clipSpaceMatrix:Matrix3D = new Matrix3D();
             var maskClipSpaceMatrix:Matrix3D = new Matrix3D();
             var maskBitmap:Rectangle = new Rectangle(0, 0, 256, 256);
 
-            maskClipSpaceMatrix.appendTranslation(-100, 0, 0);
+            //maskClipSpaceMatrix.appendTranslation(-100, 0, 0);
             maskClipSpaceMatrix.invert();
 
             v = clipSpaceMatrix.transformVector(v);
-            trace("moved: " + v);
+            trace("moved to clipspace: " + v);
 
             // inverted matrix
             v = maskClipSpaceMatrix.transformVector(v);
-            trace("moved back: " + v);
+            trace("moved to local mask space: " + v);
 
-            v = new Vector3D((v.x + (maskBitmap.width * 0.5)) * (1.0 / maskBitmap.width),
-                             (v.y + (maskBitmap.height * 0.5)) * (1.0 / maskBitmap.height), 0.0, 1.0);
+            v = new Vector3D((v.x + (maskBitmap.width * 0.5)) / maskBitmap.width,
+                             (v.y + (maskBitmap.height * 0.5)) / maskBitmap.height, 0.0, 1.0);
 
-            trace("uv: " + v);
-            */
+            trace("cal local mask uv: " + v);
         }
 
         override protected function step(elapsed:Number):void {

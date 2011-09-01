@@ -51,6 +51,7 @@ package {
     import tests.CameraTest;
     import tests.Font2DTest;
     import tests.Grid2DTest;
+    import tests.MaskTest;
     import tests.MassiveSpriteCloudTest;
     import tests.MassiveSpritesTest;
     import tests.ParticleExplorer;
@@ -77,7 +78,7 @@ package {
 
             stage.scaleMode = StageScaleMode.NO_SCALE;
             stage.align = StageAlign.TOP_LEFT;
-            enableErrorChecking = false;
+            enableErrorChecking = true;
 
             super(Context3DRenderMode.AUTO, 60, true);
 
@@ -98,7 +99,7 @@ package {
             //scenes.push(new MaterialsTest());
             scenes.push(new CameraTest());
             scenes.push(new ParticleExplorer());
-            //scenes.push(new MaskTest());
+            scenes.push(new MaskTest());
             scenes.push(new TextureAtlasTest());
             scenes.push(new BatchTest());
 
@@ -113,7 +114,7 @@ package {
             stage.addEventListener(Event.RESIZE, stageResize);
             stageResize(null);
 
-            activeSceneIdx = 0;
+            activeSceneIdx = 14;
             nextBtnClick();
 
             stage.addEventListener(KeyboardEvent.KEY_UP, keyUp);
