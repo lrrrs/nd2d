@@ -164,8 +164,8 @@ package de.nulldesign.nd2d.materials {
 
                             clipSpaceMatrix.identity();
                             clipSpaceMatrix.appendScale(atlas.spriteWidth * 0.5, atlas.spriteHeight * 0.5, 1.0);
-                            clipSpaceMatrix.append(child.localModelMatrix);
                             clipSpaceMatrix.appendTranslation(atlasOffset.x, atlasOffset.y, 0.0);
+                            clipSpaceMatrix.append(child.localModelMatrix);
                             clipSpaceMatrix.append(modelMatrix);
                             clipSpaceMatrix.append(viewProjectionMatrix);
 

@@ -111,8 +111,8 @@ package de.nulldesign.nd2d.materials {
 
                     clipSpaceMatrix.identity();
                     clipSpaceMatrix.appendScale(spriteSheet.spriteWidth * 0.5, spriteSheet.spriteHeight * 0.5, 1.0);
-                    clipSpaceMatrix.append(modelMatrix);
                     clipSpaceMatrix.appendTranslation(offset.x, offset.y, 0.0);
+                    clipSpaceMatrix.append(modelMatrix);
                     clipSpaceMatrix.append(viewProjectionMatrix);
 
                 } else {

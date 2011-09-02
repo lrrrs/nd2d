@@ -32,13 +32,26 @@ package tests {
 
     import de.nulldesign.nd2d.display.Scene2D;
     import de.nulldesign.nd2d.display.Sprite2D;
+    import de.nulldesign.nd2d.materials.SpriteSheet;
+    import de.nulldesign.nd2d.materials.TextureAtlas;
+    import de.nulldesign.nd2d.utils.NumberUtil;
 
+    import flash.display.BitmapData;
     import flash.geom.Matrix3D;
     import flash.geom.Rectangle;
-
     import flash.geom.Vector3D;
+    import flash.utils.getTimer;
 
     public class MaskTest extends Scene2D {
+
+        [Embed(source="/assets/textureatlas_test.png")]
+        private var textureAtlasBitmap:Class;
+
+        [Embed(source="/assets/textureatlas_test.plist", mimeType="application/octet-stream")]
+        private var textureAtlasXML:Class;
+
+        [Embed(source="/assets/spritechar1.png")]
+        private var spriteTexture:Class;
 
         [Embed(source="/assets/crate.jpg")]
         private var spriteImage:Class;
@@ -47,15 +60,41 @@ package tests {
         private var maskImage:Class;
 
         private var sprite:Sprite2D;
+        private var sprite2:Sprite2D;
         private var mask:Sprite2D;
 
         public function MaskTest() {
 
-            sprite = new Sprite2D(new spriteImage().bitmapData);
+            // set up textures, sheets and atlas
+            var atlas:TextureAtlas = new TextureAtlas(new textureAtlasBitmap().bitmapData,
+                                                      new XML(new textureAtlasXML()), 20);
+
+            atlas.addAnimation("blah",
+                               ["c01", "c02", "c03", "c04", "c05", "c06", "c07", "c08", "c09", "c10", "c11", "c12",
+                                   "01", "02", "03", "04", "05", "06", "07", "08", "09", "10", "11", "12", "13", "14", "15"],
+                               true, true);
+
+            atlas.playAnimation("blah");
+
+            var sheet:SpriteSheet = new SpriteSheet(new spriteTexture().bitmapData, 24, 32, 5);
+            sheet.addAnimation("blah", [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11], true);
+            sheet.playAnimation("blah", 0, true);
+
+            var tex:BitmapData = new spriteImage().bitmapData;
+
+            // set up test sprite and mask
+
+            sprite = new Sprite2D(tex);
             addChild(sprite);
 
+            sprite2 = new Sprite2D(tex);
+            addChild(sprite2);
+
             mask = new Sprite2D(new maskImage().bitmapData);
+
+            // apply the mask
             sprite.setMask(mask);
+            sprite2.setMask(mask);
 
             // AS3 test for upper left vertex
             var v:Vector3D = new Vector3D(-128, -128, 0, 1);
@@ -82,14 +121,17 @@ package tests {
         override protected function step(elapsed:Number):void {
             super.step(elapsed);
 
-            statsRef.visible = false;
-
             sprite.x = camera.sceneWidth * 0.5;
             sprite.y = camera.sceneHeight * 0.5;
             sprite.rotation += 2.0;
 
+            sprite2.x = camera.sceneWidth * 0.5 + 256.0;
+            sprite2.y = camera.sceneHeight * 0.5;
+            sprite2.rotation += 2.5;
+
             mask.x = mouseX;
             mask.y = mouseY;
+            mask.alpha = NumberUtil.sin0_1(getTimer() / 500.0);
         }
     }
 }

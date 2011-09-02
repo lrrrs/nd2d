@@ -152,6 +152,7 @@ package de.nulldesign.nd2d.display {
                 var maskMat:Sprite2DMaskMaterial = Sprite2DMaskMaterial(material);
                 maskMat.maskBitmap = mask.spriteSheet.bitmapData;
                 maskMat.maskModelMatrix = mask.localModelMatrix;
+                maskMat.maskAlpha = mask.alpha;
             }
 
             material.render(context, faceList, 0, faceList.length);
