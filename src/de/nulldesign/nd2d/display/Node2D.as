@@ -493,11 +493,17 @@ package de.nulldesign.nd2d.display {
             }
         }
 
+        public function handleDeviceLoss():void {
+            for each(var child:Node2D in children) {
+                child.handleDeviceLoss();
+            }
+            // extend in extended classes
+        }
+
         /**
          * @private
          */
-        internal function drawNode(context:Context3D, camera:Camera2D, parentMatrixChanged:Boolean,
-                                   handleDeviceLoss:Boolean):void {
+        internal function drawNode(context:Context3D, camera:Camera2D, parentMatrixChanged:Boolean):void {
 
             var myMatrixChanged:Boolean = false;
 
@@ -523,10 +529,10 @@ package de.nulldesign.nd2d.display {
                 }
             }
 
-            draw(context, camera, handleDeviceLoss);
+            draw(context, camera);
 
             for each(var child:Node2D in children) {
-                child.drawNode(context, camera, myMatrixChanged, handleDeviceLoss);
+                child.drawNode(context, camera, myMatrixChanged);
             }
         }
 
@@ -535,7 +541,7 @@ package de.nulldesign.nd2d.display {
                                          false, (mouseEventType == MouseEvent.MOUSE_DOWN), 0));
         }
 
-        protected function draw(context:Context3D, camera:Camera2D, handleDeviceLoss:Boolean):void {
+        protected function draw(context:Context3D, camera:Camera2D):void {
             // overwrite in extended classes
         }
 

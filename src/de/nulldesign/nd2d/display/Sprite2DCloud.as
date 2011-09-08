@@ -193,8 +193,18 @@ package de.nulldesign.nd2d.display {
             Sprite2D(child2).spriteSheet.frameUpdated = true;
         }
 
-        override internal function drawNode(context:Context3D, camera:Camera2D, parentMatrixChanged:Boolean,
-                                            handleDeviceLoss:Boolean):void {
+
+        override public function handleDeviceLoss():void {
+            super.handleDeviceLoss();
+
+            texture = null;
+            program = null;
+            vertexBuffer = null;
+            indexBuffer = null;
+            uvInited = false;
+        }
+
+        override internal function drawNode(context:Context3D, camera:Camera2D, parentMatrixChanged:Boolean):void {
 
             if(!visible) {
                 return;
@@ -216,18 +226,10 @@ package de.nulldesign.nd2d.display {
                 }
             }
 
-            if(handleDeviceLoss) {
-                texture = null;
-                program = null;
-                vertexBuffer = null;
-                indexBuffer = null;
-                uvInited = false;
-            }
-
-            draw(context, camera, handleDeviceLoss);
+            draw(context, camera);
         }
 
-        override protected function draw(context:Context3D, camera:Camera2D, handleDeviceLoss:Boolean):void {
+        override protected function draw(context:Context3D, camera:Camera2D):void {
 
             if(!texture) {
                 texture = TextureHelper.generateTextureFromBitmap(context, spriteSheet.bitmapData, false);
@@ -299,7 +301,7 @@ package de.nulldesign.nd2d.display {
 
                 var initUV:Boolean = !uvInited;
 
-                if(spriteSheet.frameUpdated) {
+                if(spriteSheet.frameUpdated || initUV) {
                     spriteSheet.frameUpdated = false;
                     initUV = true;
                     uvOffsetAndScale = spriteSheet.getUVRectForFrame();

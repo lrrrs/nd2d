@@ -72,7 +72,6 @@ package de.nulldesign.nd2d.materials {
             drawCalls = 1;
         }
 
-
         override public function handleDeviceLoss():void {
             super.handleDeviceLoss();
             texture = null;
@@ -83,7 +82,7 @@ package de.nulldesign.nd2d.materials {
 
             super.prepareForRender(context);
 
-            if(!texture && spriteSheet.bitmapData) {
+            if(!texture && spriteSheet && spriteSheet.bitmapData) {
                 texture = TextureHelper.generateTextureFromBitmap(context, spriteSheet.bitmapData, true);
             }
 

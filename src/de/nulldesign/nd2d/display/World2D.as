@@ -34,6 +34,7 @@ package de.nulldesign.nd2d.display {
     import flash.display3D.Context3D;
     import flash.display3D.Context3DCompareMode;
     import flash.display3D.Context3DTriangleFace;
+    import flash.events.ErrorEvent;
     import flash.events.Event;
     import flash.events.MouseEvent;
     import flash.events.TimerEvent;
@@ -43,6 +44,12 @@ package de.nulldesign.nd2d.display {
     import flash.utils.getTimer;
 
     import net.hires.debug.Stats;
+
+    /**
+     * Dispatched when the World2D is initialized and the context3D is available. The flag 'isHardwareAccelerated' is available then
+     * @eventType flash.events.Event.INIT
+     */
+    [Event(name="init", type="flash.events.Event")]
 
     /**
      * <p>Baseclass for ND2D</p>
@@ -65,8 +72,7 @@ package de.nulldesign.nd2d.display {
      *
      * NOTICE: API change. You have to call start once to initialize the world
      *
-     */
-    public class World2D extends Sprite {
+     */ public class World2D extends Sprite {
 
         protected var camera:Camera2D = new Camera2D(1, 1);
         protected var context3D:Context3D;
@@ -92,6 +98,8 @@ package de.nulldesign.nd2d.display {
         private var _statsVisible:Boolean = true;
         private var initializeNodesAfterStartUp:Boolean = false;
 
+        public static var isHardwareAccelerated:Boolean;
+
         public function get statsVisible():Boolean {
             return _statsVisible;
         }
@@ -109,8 +117,7 @@ package de.nulldesign.nd2d.display {
          * @param bounds the worlds boundaries
          * @param stageID
          */
-        public function World2D(renderMode:String, frameRate:uint, frameBased:Boolean, bounds:Rectangle = null,
-                                stageID:uint = 0) {
+        public function World2D(renderMode:String, frameRate:uint, frameBased:Boolean, bounds:Rectangle = null, stageID:uint = 0) {
 
             this.renderMode = renderMode;
             this.frameRate = frameRate;
@@ -121,12 +128,13 @@ package de.nulldesign.nd2d.display {
             addEventListener(Event.ADDED_TO_STAGE, addedToStage);
         }
 
-        private function addedToStage(event:Event):void {
+        protected function addedToStage(event:Event):void {
 
             removeEventListener(Event.ADDED_TO_STAGE, addedToStage);
             stage.addEventListener(Event.RESIZE, resizeStage);
             stage.frameRate = frameRate;
             stage.stage3Ds[stageID].addEventListener(Event.CONTEXT3D_CREATE, context3DCreated);
+            stage.stage3Ds[stageID].addEventListener(ErrorEvent.ERROR, context3DError);
             stage.stage3Ds[stageID].requestContext3D(renderMode);
 
             stage.addEventListener(MouseEvent.CLICK, mouseEventHandler);
@@ -135,14 +143,17 @@ package de.nulldesign.nd2d.display {
             stage.addEventListener(MouseEvent.MOUSE_UP, mouseEventHandler);
         }
 
-        private function context3DCreated(e:Event):void {
+        protected function context3DError(e:ErrorEvent):void {
+            throw new Error("The SWF is not embedded properly. The 3D context can't be created. Wrong WMODE? Set it to 'direct'.");
+        }
 
-            //stage.stage3Ds[0].removeEventListener(Event.CONTEXT3D_CREATE, context3DCreated);
+        protected function context3DCreated(e:Event):void {
 
             context3D = stage.stage3Ds[stageID].context3D;
             context3D.enableErrorChecking = enableErrorChecking;
             context3D.setCulling(Context3DTriangleFace.NONE);
             context3D.setDepthTest(false, Context3DCompareMode.ALWAYS);
+            isHardwareAccelerated = context3D.driverInfo.toLowerCase().indexOf("software") == -1;
 
             resizeStage();
 
@@ -158,9 +169,11 @@ package de.nulldesign.nd2d.display {
             if(initializeNodesAfterStartUp) {
                 doInitializeNodes();
             }
+
+            dispatchEvent(new Event(Event.INIT));
         }
 
-        private function mouseEventHandler(event:MouseEvent):void {
+        protected function mouseEventHandler(event:MouseEvent):void {
             if(scene && scene.mouseEnabled && stage && camera) {
                 var mouseEventType:String = event.type;
 
@@ -196,11 +209,14 @@ package de.nulldesign.nd2d.display {
                     scene.stepNode(elapsed);
                 }
 
-                scene.drawNode(context3D, camera, false, deviceWasLost);
+                if(deviceWasLost) {
+                    scene.handleDeviceLoss();
+                    deviceWasLost = false;
+                }
+
+                scene.drawNode(context3D, camera, false);
 
                 context3D.present();
-
-                deviceWasLost = false;
             }
 
             lastFramesTime = t;

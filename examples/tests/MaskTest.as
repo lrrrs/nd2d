@@ -97,12 +97,15 @@ package tests {
             sprite2.setMask(mask);
 
             // AS3 test for upper left vertex
-            var v:Vector3D = new Vector3D(-128, -128, 0, 1);
+            var v:Vector3D = new Vector3D(128, -128, 0, 1);
             var clipSpaceMatrix:Matrix3D = new Matrix3D();
+            clipSpaceMatrix.appendTranslation(100, 0, 0);
+
             var maskClipSpaceMatrix:Matrix3D = new Matrix3D();
+            maskClipSpaceMatrix.appendTranslation(100, 0, 0);
+            
             var maskBitmap:Rectangle = new Rectangle(0, 0, 256, 256);
 
-            //maskClipSpaceMatrix.appendTranslation(-100, 0, 0);
             maskClipSpaceMatrix.invert();
 
             v = clipSpaceMatrix.transformVector(v);
@@ -131,7 +134,8 @@ package tests {
 
             mask.x = mouseX;
             mask.y = mouseY;
-            mask.alpha = NumberUtil.sin0_1(getTimer() / 500.0);
+            //mask.alpha = NumberUtil.sin0_1(getTimer() / 500.0);
+            //mask.rotation += 4.0;
         }
     }
 }

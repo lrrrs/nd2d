@@ -91,6 +91,12 @@ package de.nulldesign.nd2d.materials {
             super(textureObject);
         }
 
+        override public function handleDeviceLoss():void {
+            super.handleDeviceLoss();
+            maskTexture = null;
+            maskProgramData = null;
+        }
+
         override protected function prepareForRender(context:Context3D):Boolean {
 
             if(!texture) {

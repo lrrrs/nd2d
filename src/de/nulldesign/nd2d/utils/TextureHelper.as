@@ -51,25 +51,32 @@ package de.nulldesign.nd2d.utils {
 
         /**
          * Will return a point that contains the width and height of the smallest possible texture size in 2^n
-         * @param bmp
+         * @param w width
+         * @param h height
          * @return x = width, y = height of the texture
          */
-        public static function getTextureDimensionsFromBitmap(bmp:BitmapData):Point {
+        public static function getTextureDimensionsFromSize(w:Number, h:Number):Point {
             var textureWidth:Number = 2.0;
             var textureHeight:Number = 2.0;
 
-            var bmpWidth:Number = bmp.width;
-            var bmpHeight:Number = bmp.height;
-
-            while(textureWidth < bmpWidth) {
+            while(textureWidth < w) {
                 textureWidth <<= 1;
             }
 
-            while(textureHeight < bmpHeight) {
+            while(textureHeight < h) {
                 textureHeight <<= 1;
             }
 
             return new Point(textureWidth, textureHeight);
+        }
+
+        /**
+         * Will return a point that contains the width and height of the smallest possible texture size in 2^n
+         * @param bmp
+         * @return x = width, y = height of the texture
+         */
+        public static function getTextureDimensionsFromBitmap(bmp:BitmapData):Point {
+            return getTextureDimensionsFromSize(bmp.width, bmp.height);
         }
 
         /**
@@ -78,8 +85,7 @@ package de.nulldesign.nd2d.utils {
          * @param bmp
          * @return The generated texture
          */
-        public static function generateTextureFromBitmap(context:Context3D, bmp:BitmapData,
-                                                         useMipMaps:Boolean):Texture {
+        public static function generateTextureFromBitmap(context:Context3D, bmp:BitmapData, useMipMaps:Boolean):Texture {
 
             var textureDimensions:Point = getTextureDimensionsFromBitmap(bmp);
 
@@ -89,13 +95,11 @@ package de.nulldesign.nd2d.utils {
             var destPoint:Point;
 
             sourceRect = new Rectangle(0, 0, bmp.width, bmp.height);
-            destPoint = new Point(textureDimensions.x * 0.5 - bmp.width * 0.5,
-                                  textureDimensions.y * 0.5 - bmp.height / 2);
+            destPoint = new Point(textureDimensions.x * 0.5 - bmp.width * 0.5, textureDimensions.y * 0.5 - bmp.height / 2);
 
             newBmp.copyPixels(bmp, sourceRect, destPoint);
 
-            var texture:Texture = context.createTexture(textureDimensions.x, textureDimensions.y,
-                                                        Context3DTextureFormat.BGRA, false);
+            var texture:Texture = context.createTexture(textureDimensions.x, textureDimensions.y, Context3DTextureFormat.BGRA, false);
 
             if(useMipMaps) {
                 uploadTextureWithMipmaps(texture, newBmp);

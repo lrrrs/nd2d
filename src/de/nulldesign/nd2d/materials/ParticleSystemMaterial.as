@@ -70,6 +70,7 @@ package de.nulldesign.nd2d.materials {
         override public function handleDeviceLoss():void {
             super.handleDeviceLoss();
             texture = null;
+            particleSystemProgramData = null;
         }
 
         override protected function prepareForRender(context:Context3D):Boolean {

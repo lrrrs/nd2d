@@ -72,26 +72,27 @@ package de.nulldesign.nd2d.display {
             _width = width;
             _height = height;
 
-            if(texture) {
+            if(!material) {
                 material = new Sprite2DMaterial(null);
-                material.texture = texture;
-                faceList = TextureHelper.generateQuadFromDimensions(width, height);
             }
+
+            material.texture = texture;
+            faceList = TextureHelper.generateQuadFromDimensions(width, height);
         }
 
-        public function setMaterial(material:Sprite2DMaterial):void {
+        public function setMaterial(newMaterial:Sprite2DMaterial):void {
 
             if(material) {
                 material.cleanUp();
             }
 
-            _width = material.spriteSheet.spriteWidth;
-            _height = material.spriteSheet.spriteHeight;
+            _width = newMaterial.spriteSheet.spriteWidth;
+            _height = newMaterial.spriteSheet.spriteHeight;
 
-            this.spriteSheet = material.spriteSheet;
-            faceList = TextureHelper.generateQuadFromSpriteSheet(material.spriteSheet);
+            this.spriteSheet = newMaterial.spriteSheet;
+            faceList = TextureHelper.generateQuadFromSpriteSheet(newMaterial.spriteSheet);
 
-            this.material = material;
+            this.material = newMaterial;
         }
 
         public function setMask(mask:Sprite2D):void {
@@ -127,7 +128,14 @@ package de.nulldesign.nd2d.display {
             }
         }
 
-        override protected function draw(context:Context3D, camera:Camera2D, handleDeviceLoss:Boolean):void {
+        override public function handleDeviceLoss():void {
+            super.handleDeviceLoss();
+
+            if(material)
+                material.handleDeviceLoss();
+        }
+
+        override protected function draw(context:Context3D, camera:Camera2D):void {
 
             material.blendMode = blendMode;
             material.modelMatrix = worldModelMatrix;
@@ -138,10 +146,6 @@ package de.nulldesign.nd2d.display {
             material.color.y = g;
             material.color.z = b;
             material.color.w = a;
-
-            if(handleDeviceLoss) {
-                material.handleDeviceLoss();
-            }
 
             if(mask) {
 

@@ -47,46 +47,46 @@ package tests {
     public class SideScrollerTest extends Scene2D {
 
         [Embed(source="/assets/particle_small.png")]
-        private var particleTexture:Class;
+        protected var particleTexture:Class;
 
         [Embed(source="/assets/star_particle.png")]
-        private var particleTexture2:Class;
+        protected var particleTexture2:Class;
 
         [Embed(source="/assets/world_background.png")]
-        private var backgroundTexture:Class;
+        protected var backgroundTexture:Class;
 
         [Embed(source="/assets/world_background2.png")]
-        private var backgroundTexture2:Class;
+        protected var backgroundTexture2:Class;
 
         [Embed(source="/assets/ceiling_texture.png")]
-        private var ceilingTexture:Class;
+        protected var ceilingTexture:Class;
 
         [Embed(source="/assets/grass_ground.png")]
-        private var grassTexture:Class;
+        protected var grassTexture:Class;
 
         [Embed(source="/assets/blur_tree.png")]
-        private var treeTexture:Class;
+        protected var treeTexture:Class;
 
         [Embed(source="/assets/plantsheet.png")]
-        private var plantTexture:Class;
+        protected var plantTexture:Class;
 
-        private var grassSprites:Vector.<Sprite2D> = new Vector.<Sprite2D>();
-        private var ceilingSprites:Vector.<Sprite2D> = new Vector.<Sprite2D>();
-        private var backgroundSprites:Vector.<Sprite2D> = new Vector.<Sprite2D>();
-        private var backgroundSprites2:Vector.<Sprite2D> = new Vector.<Sprite2D>();
-        private var treeSprites:Vector.<Sprite2D> = new Vector.<Sprite2D>();
+        protected var grassSprites:Vector.<Sprite2D> = new Vector.<Sprite2D>();
+        protected var ceilingSprites:Vector.<Sprite2D> = new Vector.<Sprite2D>();
+        protected var backgroundSprites:Vector.<Sprite2D> = new Vector.<Sprite2D>();
+        protected var backgroundSprites2:Vector.<Sprite2D> = new Vector.<Sprite2D>();
+        protected var treeSprites:Vector.<Sprite2D> = new Vector.<Sprite2D>();
 
-        private var plasma:ParticleSystem2D;
-        private var wind:ParticleSystem2D;
+        protected var plasma:ParticleSystem2D;
+        protected var wind:ParticleSystem2D;
 
-        private var scrollX:Number = 0.0;
+        protected var scrollX:Number = 0.0;
 
         public function SideScrollerTest() {
 
             addEventListener(Event.ADDED_TO_STAGE, addedToStage);
         }
 
-        private function addedToStage(e:Event):void {
+        protected function addedToStage(e:Event):void {
 
             removeEventListener(Event.ADDED_TO_STAGE, addedToStage);
 
@@ -309,7 +309,7 @@ package tests {
             }
         }
 
-        private function manageInfiniteScroll(ar:Vector.<Sprite2D>):void {
+        protected function manageInfiniteScroll(ar:Vector.<Sprite2D>):void {
 
             var tmp:Sprite2D;
             var tmp2:Sprite2D;

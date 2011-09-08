@@ -84,8 +84,7 @@ package de.nulldesign.nd2d.display {
             // don't refresh own spritesheet
         }
 
-        override internal function drawNode(context:Context3D, camera:Camera2D, parentMatrixChanged:Boolean,
-                                            handleDeviceLoss:Boolean):void {
+        override internal function drawNode(context:Context3D, camera:Camera2D, parentMatrixChanged:Boolean):void {
 
             var myMatrixChanged:Boolean = false;
 
@@ -111,22 +110,22 @@ package de.nulldesign.nd2d.display {
                 }
             }
 
-            draw(context, camera, handleDeviceLoss);
+            draw(context, camera);
 
             // don't call draw on childs....
         }
 
-        override protected function draw(context:Context3D, camera:Camera2D, handleDeviceLoss:Boolean):void {
+        override public function handleDeviceLoss():void {
+            super.handleDeviceLoss();
+            material.handleDeviceLoss();
+        }
+
+        override protected function draw(context:Context3D, camera:Camera2D):void {
 
             material.blendMode = blendMode;
             material.modelMatrix = worldModelMatrix;
             material.projectionMatrix = camera.projectionMatrix;
             material.viewProjectionMatrix = camera.getViewProjectionMatrix();
-
-            if(handleDeviceLoss) {
-                material.handleDeviceLoss();
-            }
-
             material.renderBatch(context, faceList, children);
         }
     }

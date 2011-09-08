@@ -56,6 +56,7 @@ package {
     import tests.MassiveSpritesTest;
     import tests.ParticleExplorer;
     import tests.ParticleSystemTest;
+    import tests.PostProcessingTest;
     import tests.SideScrollerTest;
     import tests.SpriteAnimTest;
     import tests.SpriteHierarchyTest;
@@ -95,13 +96,14 @@ package {
             scenes.push(new SpriteAnimTest());
             scenes.push(new StarFieldTest());
             scenes.push(new ParticleSystemTest());
-            scenes.push(new TextureRendererTest());
             //scenes.push(new MaterialsTest());
             scenes.push(new CameraTest());
             scenes.push(new ParticleExplorer());
             scenes.push(new MaskTest());
             scenes.push(new TextureAtlasTest());
             scenes.push(new BatchTest());
+            scenes.push(new TextureRendererTest());
+            scenes.push(new PostProcessingTest());
 
             var tf:TextFormat = new TextFormat("Arial", 11, 0xFFFFFF, true);
 
@@ -114,7 +116,7 @@ package {
             stage.addEventListener(Event.RESIZE, stageResize);
             stageResize(null);
 
-            activeSceneIdx = 14;
+            activeSceneIdx = 17;
             nextBtnClick();
 
             stage.addEventListener(KeyboardEvent.KEY_UP, keyUp);
@@ -153,9 +155,9 @@ package {
             }
         }
 
-        // simulate device loss
         private function keyUp(e:KeyboardEvent):void {
             if(e.keyCode == Keyboard.D) {
+                // simulate device loss
                 context3D.dispose();
             } else if(e.keyCode == Keyboard.SPACE) {
                 nextBtnClick();

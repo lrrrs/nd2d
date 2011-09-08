@@ -31,10 +31,12 @@
 package de.nulldesign.nd2d.display {
 
     import de.nulldesign.nd2d.events.TextureEvent;
+    import de.nulldesign.nd2d.utils.TextureHelper;
 
     import flash.display3D.Context3D;
     import flash.display3D.Context3DTextureFormat;
     import flash.display3D.textures.Texture;
+    import flash.geom.Point;
 
     /**
      * Dispatched when the generated texture is created.
@@ -48,17 +50,31 @@ package de.nulldesign.nd2d.display {
         protected var texCamera:Camera2D = new Camera2D(1, 1);
 
         public var texture:Texture;
+        private var cameraOffsetX:Number;
+        private var cameraOffsetY:Number;
 
-        public function TextureRenderer(renderNode:Node2D, textureWidth:Number, textureHeight:Number) {
+        public function TextureRenderer(renderNode:Node2D, textureWidth:Number, textureHeight:Number, cameraOffsetX:Number = NaN,
+                                        cameraOffsetY:Number = NaN) {
+
+            var size:Point = TextureHelper.getTextureDimensionsFromSize(textureWidth, textureHeight);
+
             this.renderNode = renderNode;
-            _width = textureWidth;
-            _height = textureHeight;
+            _width = size.x;
+            _height = size.y;
+            this.cameraOffsetX = cameraOffsetX;
+            this.cameraOffsetY = cameraOffsetY;
+
+            texCamera.resizeCameraStage(width, height);
         }
 
-        override internal function drawNode(context:Context3D, camera:Camera2D, parentMatrixChanged:Boolean,
-                                            handleDeviceLoss:Boolean):void {
+        override public function handleDeviceLoss():void {
+            super.handleDeviceLoss();
+            texture = null;
+        }
 
-            if(!texture || handleDeviceLoss) {
+        override internal function drawNode(context:Context3D, camera:Camera2D, parentMatrixChanged:Boolean):void {
+
+            if(!texture) {
                 texture = context.createTexture(width, height, Context3DTextureFormat.BGRA, true);
 
                 dispatchEvent(new TextureEvent(TextureEvent.READY));
@@ -67,13 +83,17 @@ package de.nulldesign.nd2d.display {
             context.setRenderToTexture(texture, false, 2, 0);
             context.clear(0.0, 0.0, 0.0, 0.0);
 
-            texCamera.resizeCameraStage(width, height);
-            texCamera.x = -renderNode.x + width * 0.5;
-            texCamera.y = -renderNode.y + height * 0.5;
+            if(!isNaN(cameraOffsetX) && !isNaN(cameraOffsetY)) {
+                texCamera.x = cameraOffsetX;
+                texCamera.y = cameraOffsetY;
+            } else {
+                texCamera.x = -renderNode.x + width * 0.5;
+                texCamera.y = -renderNode.y + height * 0.5;
+            }
 
             var visibleState:Boolean = renderNode.visible;
             renderNode.visible = true;
-            renderNode.drawNode(context, texCamera, parentMatrixChanged, handleDeviceLoss);
+            renderNode.drawNode(context, texCamera, parentMatrixChanged);
             renderNode.visible = visibleState;
 
             context.setRenderToBackBuffer();
