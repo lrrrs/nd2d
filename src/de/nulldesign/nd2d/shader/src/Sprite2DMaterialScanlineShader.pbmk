@@ -78,9 +78,9 @@ material kernel texture
         float x = 3.0;
         float alphaValue = y - x * floor(y / x);
 
-        result = float4(texel.r * color.r / texel.a,
-                        texel.g * color.g / texel.a,
-                        texel.b * color.b / texel.a,
+        result = float4(texel.r * color.r,
+                        texel.g * color.g,
+                        texel.b * color.b,
                         texel.a * color.a * alphaValue);
     }
 }

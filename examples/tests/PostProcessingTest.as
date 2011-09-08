@@ -35,7 +35,12 @@ package tests {
     import de.nulldesign.nd2d.display.TextureRenderer;
     import de.nulldesign.nd2d.events.TextureEvent;
     import de.nulldesign.nd2d.materials.BlendModePresets;
+    import de.nulldesign.nd2d.materials.Sprite2DMaskMaterial;
+    import de.nulldesign.nd2d.materials.Sprite2DMaterial;
     import de.nulldesign.nd2d.materials.Sprite2DScanlineMaterial;
+    import de.nulldesign.nd2d.materials.Sprite2DDizzyMaterial;
+    import de.nulldesign.nd2d.materials.Texture2D;
+    import de.nulldesign.nd2d.materials.Texture2D;
 
     import flash.events.Event;
 
@@ -60,9 +65,9 @@ package tests {
             }
 
             addChild(sceneNode);
-            //sceneNode.visible = false;
+            sceneNode.visible = false;
 
-            textureRenderer = new TextureRenderer(sceneNode, stage.stageWidth * 0.5, stage.stageHeight, 0.0, 0.0);
+            textureRenderer = new TextureRenderer(sceneNode, stage.stageWidth, stage.stageHeight, 0.0, 0.0);
             textureRenderer.addEventListener(TextureEvent.READY, textureCreated);
             addChild(textureRenderer);
         }
@@ -77,16 +82,19 @@ package tests {
 
             //textureRenderer.removeEventListener(TextureEvent.READY, textureCreated);
 
+            var t2D:Texture2D = new Texture2D(textureRenderer.texture, textureRenderer.width, textureRenderer.height);
+
             postProcessedScene = new Sprite2D();
-            //postProcessedScene.setMaterial(new Sprite2DScanlineMaterial(null));
-            postProcessedScene.setTexture(textureRenderer.texture, textureRenderer.width, textureRenderer.height);
-            postProcessedScene.tint = 0x99ff00;
+            postProcessedScene.setMaterial(new Sprite2DDizzyMaterial(t2D));
+            //postProcessedScene.blendMode = BlendModePresets.ADD;
+            postProcessedScene.tint = 0xAA99FF;
             postProcessedScene.x = postProcessedScene.width * 0.5;
             postProcessedScene.y = postProcessedScene.height * 0.5;
             addChild(postProcessedScene);
         }
 
         override protected function step(elapsed:Number):void {
+
             super.step(elapsed);
         }
     }

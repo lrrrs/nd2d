@@ -54,10 +54,16 @@ package de.nulldesign.nd2d.materials {
         private static var sprite2DProgramData:ProgramData;
 
         public var texture:Texture;
+        public var textureWidth:Number;
+        public var textureHeight:Number;
 
         public var color:Vector3D = new Vector3D(1.0, 1.0, 1.0, 1.0);
         public var spriteSheet:ASpriteSheetBase;
 
+        /**
+         * Constructor of class Sprite2DMaterial
+         * @param textureObject can be a BitmapData, SpriteSheet, TextureAtlas or Texture2D
+         */
         public function Sprite2DMaterial(textureObject:Object) {
 
             if(textureObject is BitmapData) {
@@ -67,6 +73,11 @@ package de.nulldesign.nd2d.materials {
                 spriteSheet = textureObject as SpriteSheet;
             } else if(textureObject is TextureAtlas) {
                 spriteSheet = textureObject as TextureAtlas;
+            } else if(textureObject is Texture2D) {
+                var t2D:Texture2D = textureObject as Texture2D;
+                texture = t2D.texture;
+                textureWidth = t2D.textureWidth;
+                textureHeight = t2D.textureHeight;
             }
 
             drawCalls = 1;
@@ -125,8 +136,7 @@ package de.nulldesign.nd2d.materials {
                                                                        Vector.<Number>([ rect.x, rect.y, rect.width, rect.height ]));
 
 
-            programData.parameterBufferHelper.setMatrixParameterByName(Context3DProgramType.VERTEX,
-                                                                       "objectToClipSpaceTransform", clipSpaceMatrix,
+            programData.parameterBufferHelper.setMatrixParameterByName(Context3DProgramType.VERTEX, "objectToClipSpaceTransform", clipSpaceMatrix,
                                                                        true);
 
             programData.parameterBufferHelper.update();
@@ -145,8 +155,7 @@ package de.nulldesign.nd2d.materials {
 
             // program will be only created once and cached as static var in material
             if(!sprite2DProgramData) {
-                sprite2DProgramData = new ProgramData(context, VertexProgramClass, MaterialVertexProgramClass,
-                                                      MaterialFragmentProgramClass);
+                sprite2DProgramData = new ProgramData(context, VertexProgramClass, MaterialVertexProgramClass, MaterialFragmentProgramClass);
             }
 
             programData = sprite2DProgramData;

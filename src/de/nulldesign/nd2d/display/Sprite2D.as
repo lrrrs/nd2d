@@ -86,12 +86,17 @@ package de.nulldesign.nd2d.display {
                 material.cleanUp();
             }
 
-            _width = newMaterial.spriteSheet.spriteWidth;
-            _height = newMaterial.spriteSheet.spriteHeight;
+            if(newMaterial.spriteSheet) {
+                _width = newMaterial.spriteSheet.spriteWidth;
+                _height = newMaterial.spriteSheet.spriteHeight;
+                faceList = TextureHelper.generateQuadFromSpriteSheet(newMaterial.spriteSheet);
+            } else {
+                _width = newMaterial.textureWidth;
+                _height = newMaterial.textureHeight;
+                faceList = TextureHelper.generateQuadFromDimensions(_width, _height);
+            }
 
             this.spriteSheet = newMaterial.spriteSheet;
-            faceList = TextureHelper.generateQuadFromSpriteSheet(newMaterial.spriteSheet);
-
             this.material = newMaterial;
         }
 
@@ -130,7 +135,6 @@ package de.nulldesign.nd2d.display {
 
         override public function handleDeviceLoss():void {
             super.handleDeviceLoss();
-
             if(material)
                 material.handleDeviceLoss();
         }
