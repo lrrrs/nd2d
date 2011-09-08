@@ -34,6 +34,7 @@ package tests {
     import de.nulldesign.nd2d.display.Scene2D;
     import de.nulldesign.nd2d.display.Sprite2D;
     import de.nulldesign.nd2d.display.Sprite2DBatch;
+    import de.nulldesign.nd2d.display.Sprite2DCloud;
     import de.nulldesign.nd2d.materials.SpriteSheet;
     import de.nulldesign.nd2d.materials.TextureAtlas;
 
@@ -87,6 +88,8 @@ package tests {
                 var batchChild:Sprite2D = new Sprite2D();
                 batchChild.x = (i % 10) * 50.0;
                 batchChild.y = Math.floor(i / 10) * 50.0;
+                //batchChild.pivot.x = 10.0;
+                //batchChild.pivot.y = 10.0;
 
                 s2.addChild(batchChild);
                 addChild(s2);

@@ -116,7 +116,7 @@ package {
             stage.addEventListener(Event.RESIZE, stageResize);
             stageResize(null);
 
-            activeSceneIdx = 0;
+            activeSceneIdx = 14;
             nextBtnClick();
 
             stage.addEventListener(KeyboardEvent.KEY_UP, keyUp);
