@@ -38,6 +38,7 @@ Useful links:
 # Changelog:
 
 2011-09-08
+
 - Sprite2DCloud pivot points fixed
 - ADDED: Post process demo with TextureRenderer
 - FIXED: Device loss handling for all objects
