@@ -197,6 +197,7 @@ package de.nulldesign.nd2d.materials {
                         context.setProgramConstantsFromMatrix(Context3DProgramType.VERTEX,
                                                               batchLen * constantsPerSprite, clipSpaceMatrix, true);
 
+                        // TODO set in fragment instead?
                         context.setProgramConstantsFromVector(Context3DProgramType.VERTEX,
                                                               batchLen * constantsPerSprite + constantsPerMatrix,
                                                               color);

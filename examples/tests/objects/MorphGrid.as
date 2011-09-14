@@ -31,8 +31,10 @@
 package tests.objects {
 
     import de.nulldesign.nd2d.display.Grid2D;
+    import de.nulldesign.nd2d.geom.Vertex;
 
     import flash.display.BitmapData;
+    import flash.geom.Vector3D;
 
     public class MorphGrid extends Grid2D {
 
@@ -45,17 +47,27 @@ package tests.objects {
 
         override protected function step(elapsed:Number):void {
 
+            var yPos:uint;
+            var xPos:uint;
+
+            var newX:Number;
+            var newY:Number;
+
+            var v:Vertex;
+
             for(var i:int = 0; i < vertexList.length; i++) {
 
-                var yPos:uint = Math.floor(i / (stepsX + 1));
-                var xPos:uint = i % (stepsY + 1);
+                yPos= Math.floor(i / (stepsX + 1));
+                xPos = i % (stepsY + 1);
+
+                v = vertexList[i];
 
                 if(xPos > 0 && yPos > 0 && xPos < stepsX && yPos < stepsY) {
 
-                    var newX:Number = vertexList[i].x + vertexList[i].x * Math.sin(vertexList[i].length + timeSinceStartInSeconds * 2.0) * strength;
-                    var newY:Number = vertexList[i].y + vertexList[i].y * Math.cos(vertexList[i].length + timeSinceStartInSeconds * 2.0) * strength;
+                    newX = v.x + v.x * Math.sin(v.length + timeSinceStartInSeconds * 2.0) * strength;
+                    newY = v.y + v.y * Math.cos(v.length + timeSinceStartInSeconds * 2.0) * strength;
 
-                    material.modifyVertexInBuffer(vertexList[i].bufferIdx, newX, newY);
+                    material.modifyVertexInBuffer(v.bufferIdx, newX, newY);
                 }
             }
         }

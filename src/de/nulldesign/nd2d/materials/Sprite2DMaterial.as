@@ -170,3 +170,170 @@ package de.nulldesign.nd2d.materials {
         }
     }
 }
+
+/*
+package de.nulldesign.nd2d.materials {
+
+    import com.adobe.utils.AGALMiniAssembler;
+
+    import de.nulldesign.nd2d.geom.Face;
+    import de.nulldesign.nd2d.geom.UV;
+    import de.nulldesign.nd2d.geom.Vertex;
+    import de.nulldesign.nd2d.utils.TextureHelper;
+
+    import flash.display.BitmapData;
+    import flash.display3D.Context3D;
+    import flash.display3D.Context3DProgramType;
+    import flash.display3D.Context3DVertexBufferFormat;
+    import flash.display3D.textures.Texture;
+    import flash.geom.Point;
+    import flash.geom.Rectangle;
+    import flash.geom.Vector3D;
+
+    public class Sprite2DMaterial extends AMaterial {
+
+        private const VERTEX_SHADER:String =
+                "m44 op, va0, vc0   \n" + // vertex * clipspace
+                "mov vt0, va1                       \n" + // save uv in temp register
+                "mul vt0.xy, vt0.xy, vc4.zw   \n" + // mult with uv-scale
+                "add vt0.xy, vt0.xy, vc4.xy   \n" + // add uv offset
+                "mov v0, vt0                        \n"; // copy uv
+
+        private const FRAGMENT_SHADER:String = "mov ft0, v0\n" + // get interpolated uv coords
+                "tex ft1, ft0, fs0 <2d,clamp,linear,nomip>\n" + // sample texture
+                "mul ft1, ft1, fc0\n" + // mult with color
+                "mov oc, ft1\n";
+
+        private static var sprite2DProgramData:ProgramData;
+
+        public var texture:Texture;
+        public var textureWidth:Number;
+        public var textureHeight:Number;
+
+        public var color:Vector3D = new Vector3D(1.0, 1.0, 1.0, 1.0);
+        public var spriteSheet:ASpriteSheetBase;
+
+        public function Sprite2DMaterial(textureObject:Object) {
+
+            if(textureObject is BitmapData) {
+                var bmp:BitmapData = textureObject as BitmapData;
+                spriteSheet = new SpriteSheet(bmp, bmp.width, bmp.height, 0);
+            } else if(textureObject is SpriteSheet) {
+                spriteSheet = textureObject as SpriteSheet;
+            } else if(textureObject is TextureAtlas) {
+                spriteSheet = textureObject as TextureAtlas;
+            } else if(textureObject is Texture2D) {
+                var t2D:Texture2D = textureObject as Texture2D;
+                texture = t2D.texture;
+                textureWidth = t2D.textureWidth;
+                textureHeight = t2D.textureHeight;
+            }
+
+            drawCalls = 1;
+        }
+
+        override public function handleDeviceLoss():void {
+            super.handleDeviceLoss();
+            texture = null;
+            sprite2DProgramData = null;
+        }
+
+        override protected function prepareForRender(context:Context3D):Boolean {
+
+            //super.prepareForRender(context);
+
+            if(!texture && spriteSheet && spriteSheet.bitmapData) {
+                texture = TextureHelper.generateTextureFromBitmap(context, spriteSheet.bitmapData, true);
+            }
+
+            if(!texture) {
+                // can happen after a device loss
+                return false;
+            }
+
+            var rect:Rectangle = new Rectangle(0.0, 0.0, 1.0, 1.0);
+
+            if(spriteSheet) {
+
+                rect = spriteSheet.getUVRectForFrame();
+
+                var atlas:TextureAtlas = spriteSheet as TextureAtlas;
+
+                if(atlas) {
+
+                    var offset:Point = atlas.getOffsetForFrame();
+
+                    clipSpaceMatrix.identity();
+                    clipSpaceMatrix.appendScale(spriteSheet.spriteWidth * 0.5, spriteSheet.spriteHeight * 0.5, 1.0);
+                    clipSpaceMatrix.appendTranslation(offset.x, offset.y, 0.0);
+                    clipSpaceMatrix.append(modelMatrix);
+                    clipSpaceMatrix.append(viewProjectionMatrix);
+
+                } else {
+                    refreshClipspaceMatrix();
+                }
+            } else {
+                refreshClipspaceMatrix();
+            }
+// TODO!!! TEST; DOESNT WORK
+            context.setProgram(programData.program);
+            context.setBlendFactors(blendMode.src, blendMode.dst);
+            context.setTextureAt(0, texture);
+            context.setVertexBufferAt(0, vertexBuffer, 0, Context3DVertexBufferFormat.FLOAT_2); // vertex
+            context.setVertexBufferAt(1, vertexBuffer, 2, Context3DVertexBufferFormat.FLOAT_2); // uv
+
+            context.setProgramConstantsFromMatrix(Context3DProgramType.VERTEX, 0, clipSpaceMatrix, true);
+
+            context.setProgramConstantsFromVector(Context3DProgramType.VERTEX, 4, Vector.<Number>([ rect.x,
+                                                                                                      rect.y,
+                                                                                                      rect.width,
+                                                                                                      rect.height]));
+
+            context.setProgramConstantsFromVector(Context3DProgramType.FRAGMENT, 0, Vector.<Number>([ color.x, color.y, color.z, color.w ]));
+
+            return true;
+        }
+
+        override protected function clearAfterRender(context:Context3D):void {
+            context.setTextureAt(0, null);
+            context.setVertexBufferAt(0, null);
+            context.setVertexBufferAt(1, null);
+        }
+
+        override protected function addVertex(context:Context3D, buffer:Vector.<Number>, v:Vertex, uv:UV, face:Face):void {
+
+            fillBuffer(buffer, v, uv, face, "PB3D_POSITION", 2);
+            fillBuffer(buffer, v, uv, face, "PB3D_UV", 2);
+        }
+
+
+        override protected function initProgram(context:Context3D):void {
+
+            // program will be only created once and cached as static var in material
+            if(!sprite2DProgramData) {
+                //sprite2DProgramData = new ProgramData(context, VertexProgramClass, MaterialVertexProgramClass, MaterialFragmentProgramClass);
+                var vertexShaderAssembler:AGALMiniAssembler = new AGALMiniAssembler();
+                vertexShaderAssembler.assemble(Context3DProgramType.VERTEX, VERTEX_SHADER);
+
+                var colorFragmentShaderAssembler:AGALMiniAssembler = new AGALMiniAssembler();
+                colorFragmentShaderAssembler.assemble(Context3DProgramType.FRAGMENT, FRAGMENT_SHADER);
+
+                sprite2DProgramData = new ProgramData(null, null, null, null);
+                sprite2DProgramData.numFloatsPerVertex = 4;
+                sprite2DProgramData.program = context.createProgram();
+                sprite2DProgramData.program.upload(vertexShaderAssembler.agalcode, colorFragmentShaderAssembler.agalcode);
+            }
+
+            programData = sprite2DProgramData;
+        }
+
+        override public function cleanUp():void {
+            super.cleanUp();
+            if(texture) {
+                texture.dispose();
+                texture = null;
+            }
+        }
+    }
+}
+*/

@@ -77,16 +77,15 @@ package tests {
             if(panel) {
                 stage.removeChild(panel);
             }
-
-            statsRef.visible = true;
         }
 
         protected function addedToStage(event:Event):void {
 
-            statsRef.visible = false;
-
             if(!panel) {
                 panel = new Sprite();
+                panel.graphics.beginFill(0x000000, 1.0);
+                panel.graphics.drawRect(0, 0, 200, 450);
+                panel.graphics.endFill();
 
                 var s:HUISlider;
                 var c:ColorChooser;

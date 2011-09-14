@@ -32,8 +32,6 @@ package de.nulldesign.nd2d.display {
 
     import flash.display3D.Context3D;
 
-    import net.hires.debug.Stats;
-
     /**
      * A scene that can contain 2D nodes
      * Even if a scene has x,y, rotation etc. properties you can't modify a scene this way.
@@ -41,13 +39,23 @@ package de.nulldesign.nd2d.display {
      */
     public class Scene2D extends Node2D {
 
-        public var statsRef:Stats;
-
         protected var camera:Camera2D;
 
         public var br:Number = 0.0;
         public var bg:Number = 0.0;
         public var bb:Number = 0.0;
+
+        override public function get numTris():uint {
+
+            return totalTris;
+        }
+
+        override public function get drawCalls():uint {
+            return totalDrawCalls;
+        }
+
+        protected var totalTris:int = 0;
+        protected var totalDrawCalls:int = 0;
 
         private var _backGroundColor:Number = 0x000000;
 
@@ -73,17 +81,17 @@ package de.nulldesign.nd2d.display {
 
         override internal function drawNode(context:Context3D, camera:Camera2D, parentMatrixChanged:Boolean):void {
 
-            var totalTris:int = 0;
-            var drawCalls:int = 0;
+            totalTris = 0;
+            totalDrawCalls = 0;
 
             for each(var child:Node2D in children) {
                 child.drawNode(context, camera, false);
-                totalTris += child.numTris;
-                drawCalls += child.drawCalls;
-            }
 
-            if(statsRef)
-                statsRef.update(drawCalls, totalTris);
+                if(context.enableErrorChecking) {
+                    totalTris += child.numTris;
+                    totalDrawCalls += child.drawCalls;
+                }
+            }
         }
     }
 }

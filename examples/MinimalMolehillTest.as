@@ -1,8 +1,3 @@
-/**
- * (c) 2010 by nulldesign
- * Created by lars
- * Date: 13.09.11 15:16
- */
 package {
 
     import com.adobe.utils.AGALMiniAssembler;
@@ -13,6 +8,7 @@ package {
     import flash.display3D.Context3DProgramType;
     import flash.display3D.Context3DRenderMode;
     import flash.display3D.Context3DTriangleFace;
+    import flash.display3D.Context3DVertexBufferFormat;
     import flash.display3D.IndexBuffer3D;
     import flash.display3D.Program3D;
     import flash.display3D.VertexBuffer3D;
@@ -46,14 +42,12 @@ package {
 
             vector = new Vector.<Vector3D>();
 
+            // TEST
             for(var i:int = 0; i < 512; i++) {
                 vector.push(new Vector3D(10.0, 20.0, 30.0, 1.0));
             }
 
             removeEventListener(Event.ADDED_TO_STAGE, addedToStage);
-
-            addEventListener(Event.ENTER_FRAME, loop);
-            return;
 
             stage.frameRate = 60;
             stage.stage3Ds[0].addEventListener(Event.CONTEXT3D_CREATE, context3DCreated);
@@ -122,22 +116,25 @@ package {
         }
 
         protected function loop(e:Event):void {
-            /*
-             context3D.clear(0.2, 0.2, 0.2, 1.0);
 
-             context3D.setProgram(program);
-             context3D.setProgramConstantsFromMatrix(Context3DProgramType.VERTEX, 0, clipSpaceMatrix, true);
-             context3D.setVertexBufferAt(0, vertexBuffer, 0, Context3DVertexBufferFormat.FLOAT_2); //xy
-             context3D.setVertexBufferAt(1, vertexBuffer, 2, Context3DVertexBufferFormat.FLOAT_4); //color
+            context3D.clear(0.2, 0.2, 0.2, 1.0);
 
-             context3D.drawTriangles(indexBuffer, 0, 1);
+            context3D.setProgram(program);
+            context3D.setProgramConstantsFromMatrix(Context3DProgramType.VERTEX, 0, clipSpaceMatrix, true);
+            context3D.setVertexBufferAt(0, vertexBuffer, 0, Context3DVertexBufferFormat.FLOAT_2); //xy
+            context3D.setVertexBufferAt(1, vertexBuffer, 2, Context3DVertexBufferFormat.FLOAT_4); //color
 
-             context3D.present();
-             */
+            context3D.drawTriangles(indexBuffer, 0, 1);
+
+            context3D.present();
+
             var blah:Number;
 
             for(var i:int = 0; i < vector.length; i++) {
+                // LEAK TEST!
                 blah = vector[i].x * vector[i].length;
+                // OK
+                //blah = (vector[i] as Vector3D).x * (vector[i] as Vector3D).length;
             }
 
             debugText.text = String(System.totalMemory);

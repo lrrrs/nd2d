@@ -256,49 +256,56 @@ package tests {
 
             scrollX = -(mouseX - camera.sceneWidth * 0.5) * 0.05;
 
+            var s:Sprite2D;
+
             for(i = 0; i < backgroundSprites.length; i++) {
-                backgroundSprites[i].x += scrollX * 0.25;
-                backgroundSprites[i].height = camera.sceneHeight;
-                backgroundSprites[i].y = camera.sceneHeight * 0.5;
+                s = backgroundSprites[i];
+                s.x += scrollX * 0.25;
+                s.height = camera.sceneHeight;
+                s.y = camera.sceneHeight * 0.5;
             }
 
             manageInfiniteScroll(backgroundSprites);
 
             for(i = 0; i < backgroundSprites2.length; i++) {
-                backgroundSprites2[i].x += scrollX * 0.5;
-                backgroundSprites2[i].height = camera.sceneHeight;
-                backgroundSprites2[i].y = camera.sceneHeight * 0.5;
+                s = backgroundSprites2[i];
+                s.x += scrollX * 0.5;
+                s.height = camera.sceneHeight;
+                s.y = camera.sceneHeight * 0.5;
             }
 
             manageInfiniteScroll(backgroundSprites2);
 
             for(i = 0; i < grassSprites.length; i++) {
-                grassSprites[i].x += scrollX;
-                grassSprites[i].y = camera.sceneHeight - grassSprites[i].height * 0.5;
+                s = grassSprites[i];
+                s.x += scrollX;
+                s.y = camera.sceneHeight - s.height * 0.5;
             }
 
             manageInfiniteScroll(grassSprites);
 
             for(i = 0; i < ceilingSprites.length; i++) {
-                ceilingSprites[i].x += scrollX;
-                ceilingSprites[i].y = ceilingSprites[i].height * 0.5;
+                s = ceilingSprites[i];
+                s.x += scrollX;
+                s.y = s.height * 0.5;
             }
 
             manageInfiniteScroll(ceilingSprites);
 
             // scroll trees
             for(i = 0; i < treeSprites.length; i++) {
-                treeSprites[i].x += scrollX * 0.75;
-                treeSprites[i].y = camera.sceneHeight - 120 - treeSprites[i].height * 0.5;
+                s = treeSprites[i];
+                s.x += scrollX * 0.75;
+                s.y = camera.sceneHeight - 120 - s.height * 0.5;
 
                 // left out
-                if(treeSprites[i].x < -treeSprites[i].width * 0.5 && scrollX < 0) {
+                if(s.x < -s.width * 0.5 && scrollX < 0) {
 
-                    treeSprites[i].x = camera.sceneWidth + NumberUtil.rndMinMax(300, 800);
+                    s.x = camera.sceneWidth + NumberUtil.rndMinMax(300, 800);
 
-                } else if(treeSprites[i].x - treeSprites[i].width * 0.5 > camera.sceneWidth && scrollX > 0) {
+                } else if(s.x - treeSprites[i].width * 0.5 > camera.sceneWidth && scrollX > 0) {
 
-                    treeSprites[i].x = NumberUtil.rndMinMax(-300, -800);
+                    s.x = NumberUtil.rndMinMax(-300, -800);
                 }
             }
 

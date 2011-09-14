@@ -47,6 +47,8 @@ package {
     import flash.text.TextFormat;
     import flash.ui.Keyboard;
 
+    import net.hires.debug.Stats;
+
     import tests.BatchTest;
     import tests.CameraTest;
     import tests.Font2DTest;
@@ -72,6 +74,7 @@ package {
 
         private var scenes:Vector.<Scene2D> = new Vector.<Scene2D>();
         private var activeSceneIdx:uint = 0;
+        private var stats:Stats = new Stats();
 
         private var sceneText:TextField;
 
@@ -79,11 +82,9 @@ package {
 
             stage.scaleMode = StageScaleMode.NO_SCALE;
             stage.align = StageAlign.TOP_LEFT;
-            enableErrorChecking = false;
+            enableErrorChecking = true;
 
             super(Context3DRenderMode.AUTO, 60, true);
-
-            //statsVisible = false;
 
             scenes.push(new SideScrollerTest());
             scenes.push(new MassiveSpritesTest());
@@ -113,10 +114,12 @@ package {
 
             addChild(sceneText);
 
+            addChild(stats);
+
             stage.addEventListener(Event.RESIZE, stageResize);
             stageResize(null);
 
-            activeSceneIdx = 14;
+            activeSceneIdx = 0;
             nextBtnClick();
 
             stage.addEventListener(KeyboardEvent.KEY_UP, keyUp);
@@ -180,6 +183,11 @@ package {
         private function stageResize(e:Event):void {
             sceneText.x = 5;
             sceneText.y = stage.stageHeight - 20;
+        }
+
+        override protected function mainLoop(e:Event):void {
+            super.mainLoop(e);
+            stats.update(scene.drawCalls, scene.numTris);
         }
     }
 }

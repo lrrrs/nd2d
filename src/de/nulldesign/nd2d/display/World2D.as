@@ -76,38 +76,25 @@ package de.nulldesign.nd2d.display {
 
         protected var camera:Camera2D = new Camera2D(1, 1);
         protected var context3D:Context3D;
-
-        private var stageID:uint;
-        private var renderTimer:Timer;
-        private var renderMode:String;
-        private var scene:Scene2D;
-        private var frameRate:uint;
-        private var isPaused:Boolean = false;
-        private var mousePosition:Vector3D = new Vector3D(0.0, 0.0, 0.0);
-        private var antialiasing:uint = 2;
-        private var bounds:Rectangle;
-        private var frameBased:Boolean;
-
-        private var deviceInitialized:Boolean = false;
-        private var deviceWasLost:Boolean = false;
-
-        protected var stats:Stats;
+        protected var stageID:uint;
+        protected var scene:Scene2D;
+        protected var frameRate:uint;
+        protected var isPaused:Boolean = false;
+        protected var bounds:Rectangle;
+        protected var frameBased:Boolean;
         protected var lastFramesTime:Number = 0.0;
         protected var enableErrorChecking:Boolean = false;
 
-        private var _statsVisible:Boolean = true;
+        private var renderTimer:Timer;
+        private var renderMode:String;
+        private var mousePosition:Vector3D = new Vector3D(0.0, 0.0, 0.0);
+        private var antialiasing:uint = 2;
+        private var deviceInitialized:Boolean = false;
+        private var deviceWasLost:Boolean = false;
+
         private var initializeNodesAfterStartUp:Boolean = false;
 
         public static var isHardwareAccelerated:Boolean;
-
-        public function get statsVisible():Boolean {
-            return _statsVisible;
-        }
-
-        public function set statsVisible(value:Boolean):void {
-            _statsVisible = value;
-            stats.visible = statsVisible;
-        }
 
         /**
          * Constructor of class world
@@ -124,7 +111,6 @@ package de.nulldesign.nd2d.display {
             this.bounds = bounds;
             this.frameBased = frameBased;
             this.stageID = stageID;
-            this.stats = Stats(addChild(new Stats()));
             addEventListener(Event.ADDED_TO_STAGE, addedToStage);
         }
 
@@ -156,8 +142,6 @@ package de.nulldesign.nd2d.display {
             isHardwareAccelerated = context3D.driverInfo.toLowerCase().indexOf("software") == -1;
 
             resizeStage();
-
-            stats.driverInfo = context3D.driverInfo;
 
             // means we got the Event.CONTEXT3D_CREATE for the second time, the device was lost. reinit everything
             if(deviceInitialized) {
@@ -197,7 +181,7 @@ package de.nulldesign.nd2d.display {
             camera.resizeCameraStage(rect.width, rect.height);
         }
 
-        protected function timerEventHandler(e:Event):void {
+        protected function mainLoop(e:Event):void {
             var t:Number = getTimer() / 1000.0;
             var elapsed:Number = t - lastFramesTime;
 
@@ -227,13 +211,11 @@ package de.nulldesign.nd2d.display {
             if(scene) {
                 scene.setStageRef(null);
                 scene.setCameraRef(null);
-                scene.statsRef = null;
             }
 
             this.scene = value;
 
             if(scene) {
-                scene.statsRef = stats;
                 scene.setCameraRef(camera);
                 scene.setStageRef(stage);
             }
@@ -243,7 +225,7 @@ package de.nulldesign.nd2d.display {
 
             if(!renderTimer && !frameBased) {
                 renderTimer = new Timer(1000 / frameRate);
-                renderTimer.addEventListener(TimerEvent.TIMER, timerEventHandler);
+                renderTimer.addEventListener(TimerEvent.TIMER, mainLoop);
             }
 
             wakeUp();
@@ -268,7 +250,7 @@ package de.nulldesign.nd2d.display {
          */
         public function sleep():void {
             if(frameBased) {
-                removeEventListener(Event.ENTER_FRAME, timerEventHandler);
+                removeEventListener(Event.ENTER_FRAME, mainLoop);
             } else {
                 if(renderTimer.running)
                     renderTimer.stop();
@@ -285,8 +267,8 @@ package de.nulldesign.nd2d.display {
          */
         public function wakeUp():void {
             if(frameBased) {
-                removeEventListener(Event.ENTER_FRAME, timerEventHandler);
-                addEventListener(Event.ENTER_FRAME, timerEventHandler);
+                removeEventListener(Event.ENTER_FRAME, mainLoop);
+                addEventListener(Event.ENTER_FRAME, mainLoop);
             } else {
                 if(!renderTimer.running)
                     renderTimer.start();

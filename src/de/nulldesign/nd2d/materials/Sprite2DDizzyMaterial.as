@@ -44,11 +44,11 @@ package de.nulldesign.nd2d.materials {
 
     public class Sprite2DDizzyMaterial extends Sprite2DMaterial {
 
-        protected const VERTEX_SHADER:String =
+        private const VERTEX_SHADER:String =
                 "m44 op, va0, vc0   \n" + // vertex * clipspace
                 "mov v0, va1		\n"; // copy uv
 
-        protected const FRAGMENT_SHADER:String =
+        private const FRAGMENT_SHADER:String =
                 "mov ft0.xyzw, v0.xy                        \n" + // get interpolated uv coords
                 "mul ft1, ft0, fc0.y                        \n" +
                 "add ft1, ft1, fc0.x                        \n" +
