@@ -37,6 +37,9 @@ Useful links:
 
 # Changelog:
 
+2011-09-21
+- NEW: colorTransform property for all display objects. (See new example ColorTransformTest)
+
 2011-09-08
 
 - Sprite2DCloud pivot points fixed
