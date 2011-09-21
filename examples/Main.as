@@ -51,6 +51,7 @@ package {
 
     import tests.BatchTest;
     import tests.CameraTest;
+    import tests.ColorTransformTest;
     import tests.Font2DTest;
     import tests.Grid2DTest;
     import tests.MaskTest;
@@ -105,6 +106,7 @@ package {
             scenes.push(new BatchTest());
             scenes.push(new TextureRendererTest());
             scenes.push(new PostProcessingTest());
+            scenes.push(new ColorTransformTest());
 
             var tf:TextFormat = new TextFormat("Arial", 11, 0xFFFFFF, true);
 

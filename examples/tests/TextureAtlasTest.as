@@ -34,7 +34,6 @@ package tests {
     import de.nulldesign.nd2d.display.Scene2D;
     import de.nulldesign.nd2d.display.Sprite2D;
     import de.nulldesign.nd2d.display.Sprite2DBatch;
-    import de.nulldesign.nd2d.display.Sprite2DCloud;
     import de.nulldesign.nd2d.materials.SpriteSheet;
     import de.nulldesign.nd2d.materials.TextureAtlas;
 
@@ -43,20 +42,23 @@ package tests {
     public class TextureAtlasTest extends Scene2D {
 
         [Embed(source="/assets/textureatlas_test.png")]
-        private var textureAtlasBitmap:Class;
+        protected var textureAtlasBitmap:Class;
 
         [Embed(source="/assets/textureatlas_test.plist", mimeType="application/octet-stream")]
-        private var textureAtlasXML:Class;
+        protected var textureAtlasXML:Class;
 
-        private var s:Sprite2D;
+        protected var s:Sprite2D;
 
         [Embed(source="/assets/spritechar1.png")]
-        private var spriteTexture:Class;
+        protected var spriteTexture:Class;
 
-        private var s2:Node2D;
+        protected var s2:Node2D;
 
         public function TextureAtlasTest() {
+            init();
+        }
 
+        protected function init():void {
             backGroundColor = 0xDDDDDD;
 
             var tex:BitmapData = new spriteTexture().bitmapData;
@@ -65,14 +67,11 @@ package tests {
             sheet.addAnimation("blah", [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11], true);
             sheet.playAnimation("blah", 0, true);
 
-            var atlas:TextureAtlas = new TextureAtlas(new textureAtlasBitmap().bitmapData,
-                                                      new XML(new textureAtlasXML()), 20);
+            var atlas:TextureAtlas = new TextureAtlas(new textureAtlasBitmap().bitmapData, new XML(new textureAtlasXML()), 20);
             s = addChild(new Sprite2D(atlas)) as Sprite2D;
 
-            atlas.addAnimation("blah",
-                               ["c01", "c02", "c03", "c04", "c05", "c06", "c07", "c08", "c09", "c10", "c11", "c12",
-                                   "01", "02", "03", "04", "05", "06", "07", "08", "09", "10", "11", "12", "13", "14", "15"],
-                               true, true);
+            atlas.addAnimation("blah", ["c01", "c02", "c03", "c04", "c05", "c06", "c07", "c08", "c09", "c10", "c11", "c12",
+                "01", "02", "03", "04", "05", "06", "07", "08", "09", "10", "11", "12", "13", "14", "15"], true, true);
 
             atlas.playAnimation("blah");
 

@@ -56,7 +56,8 @@ material kernel texture
     }
 
     input image4 textureImage;
-    parameter float4 color;
+    parameter float4 colorMultiplier;
+    parameter float4 colorOffset;
 
     output float4 result;
 
@@ -81,9 +82,9 @@ material kernel texture
 
         float4 texel = sample(textureImage, float2(interpolatedUV.x, interpolatedUV.y), PB3D_2D | PB3D_MIPNEAREST /*PB3D_MIPDISABLE*/ | PB3D_CLAMP);
 
-        result = float4(texel.r * color.r,
-                        texel.g * color.g,
-                        texel.b * color.b,
-                        texel.a * color.a);
+        result = float4(texel.r * colorMultiplier.r + colorOffset.r,
+                        texel.g * colorMultiplier.g + colorOffset.g,
+                        texel.b * colorMultiplier.b + colorOffset.b,
+                        texel.a * colorMultiplier.a + colorOffset.a);
     }
 }

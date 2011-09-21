@@ -48,8 +48,7 @@ package de.nulldesign.nd2d.materials {
 
     public class Sprite2DMaskMaterial extends Sprite2DMaterial {
 
-        protected const DEFAULT_VERTEX_SHADER:String =
-                "m44 vt0, va0, vc0              \n" + // vertex(va0) * clipspace
+        protected const DEFAULT_VERTEX_SHADER:String = "m44 vt0, va0, vc0              \n" + // vertex(va0) * clipspace
                 "m44 vt1, vt0, vc4              \n" + // clipsace to local pos in mask
                 "add vt1.xy, vt1.xy, vc8.xy     \n" + // add half masksize to local pos
                 "div vt1.xy, vt1.xy, vc8.zw     \n" + // local pos / masksize
@@ -61,16 +60,16 @@ package de.nulldesign.nd2d.materials {
                 "mov op, vt0                    \n";  // output position
 
 
-        protected const DEFAULT_FRAGMENT_SHADER:String =
-                "mov ft0, v0                                    \n" + // get interpolated uv coords
+        protected const DEFAULT_FRAGMENT_SHADER:String = "mov ft0, v0                                    \n" + // get interpolated uv coords
                 "tex ft1, ft0, fs0 <2d,clamp,linear,nomip>      \n" + // sample texture
-                "mul ft1, ft1, fc0                              \n" + // mult with color
+                "mul ft1, ft1, fc0                              \n" + // mult with colorMultiplier
+                "add ft1, ft1, fc1                              \n" + // mult with colorOffset
                 "mov ft2, v1                                    \n" + // get interpolated uv coords for mask
                 "tex ft3, ft2, fs1 <2d,clamp,linear,nomip>      \n" + // sample mask
 
-                "sub ft4, fc1, ft3                              \n" + // (1 - maskcolor)
-                "mov ft5, fc2                                   \n" + // save maskalpha
-                "sub ft5, fc1, ft5                              \n" + // (1 - maskalpha)
+                "sub ft4, fc2, ft3                              \n" + // (1 - maskcolor)
+                "mov ft5, fc3                                   \n" + // save maskalpha
+                "sub ft5, fc2, ft5                              \n" + // (1 - maskalpha)
                 "mul ft5, ft4, ft5                              \n" + // (1 - maskcolor) * (1 - maskalpha)
                 "add ft5, ft3, ft5                              \n" + // finalmaskcolor = maskcolor + (1 - maskcolor) * (1 - maskalpha));
                 "mul ft1, ft1, ft5                              \n" + // mult mask color with tex color
@@ -150,10 +149,13 @@ package de.nulldesign.nd2d.materials {
                                                                                                       uvOffsetAndScale.width,
                                                                                                       uvOffsetAndScale.height]));
 
-            context.setProgramConstantsFromVector(Context3DProgramType.FRAGMENT, 0, Vector.<Number>([ color.x, color.y, color.z, color.w ]));
+            context.setProgramConstantsFromVector(Context3DProgramType.FRAGMENT, 0, Vector.<Number>([ colorTransform.redMultiplier, colorTransform.greenMultiplier, colorTransform.blueMultiplier, colorTransform.alphaMultiplier ]));
 
-            context.setProgramConstantsFromVector(Context3DProgramType.FRAGMENT, 1, Vector.<Number>([ 1.0, 1.0, 1.0, 1.0 ]));
-            context.setProgramConstantsFromVector(Context3DProgramType.FRAGMENT, 2, Vector.<Number>([ maskAlpha, maskAlpha, maskAlpha, maskAlpha]));
+            var offsetFactor:Number = 1.0 / 255.0;
+            context.setProgramConstantsFromVector(Context3DProgramType.FRAGMENT, 1, Vector.<Number>([ colorTransform.redOffset * offsetFactor, colorTransform.greenOffset * offsetFactor, colorTransform.blueOffset * offsetFactor, colorTransform.alphaOffset * offsetFactor ]));
+
+            context.setProgramConstantsFromVector(Context3DProgramType.FRAGMENT, 2, Vector.<Number>([ 1.0, 1.0, 1.0, 1.0 ]));
+            context.setProgramConstantsFromVector(Context3DProgramType.FRAGMENT, 3, Vector.<Number>([ maskAlpha, maskAlpha, maskAlpha, maskAlpha]));
 
             return true;
         }

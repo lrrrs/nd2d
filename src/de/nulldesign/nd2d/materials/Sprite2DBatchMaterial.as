@@ -49,10 +49,11 @@ package de.nulldesign.nd2d.materials {
 
         protected const DEFAULT_VERTEX_SHADER:String = "m44 op, va0, vc[va2.x]             \n" + // vertex * clipspace[idx]
                 "mov vt0, va1                       \n" + // save uv in temp register
-                "mul vt0.xy, vt0.xy, vc[va2.z].zw   \n" + // mult with uv-scale
-                "add vt0.xy, vt0.xy, vc[va2.z].xy   \n" + // add uv offset
+                "mul vt0.xy, vt0.xy, vc[va2.w].zw   \n" + // mult with uv-scale
+                "add vt0.xy, vt0.xy, vc[va2.w].xy   \n" + // add uv offset
                 "mov v0, vt0                        \n" + // copy uv
-                "mov v1, vc[va2.y]	                \n"; // copy color[idx]
+                "mov v1, vc[va2.y]	                \n" + // copy colorMultiplier[idx]
+                "mov v2, vc[va2.z]	                \n"; // copy colorOffset[idx]
 
         /*
          protected const DEFAULT_VERTEX_SHADER:String =
@@ -64,10 +65,11 @@ package de.nulldesign.nd2d.materials {
 
         protected const DEFAULT_FRAGMENT_SHADER:String = "mov ft0, v0                                \n" + // get interpolated uv coords
                 "tex ft1, ft0, fs0 <2d,clamp,linear,nomip>  \n" + // sample texture
-                "mul ft1, ft1, v1                           \n" + // mult with color
+                "mul ft1, ft1, v1                           \n" + // mult with colorMultiplier
+                "add ft1, ft1, v2                           \n" + // add with colorOffset
                 "mov oc, ft1                                \n";
 
-        protected var constantsPerSprite:uint = 6; // matrix, color, uvoffset
+        protected var constantsPerSprite:uint = 7; // matrix, colorMultiplier, colorOffset, uvoffset
         protected var constantsPerMatrix:uint = 4;
 
         protected static var cloudProgramData:ProgramData;
@@ -126,7 +128,7 @@ package de.nulldesign.nd2d.materials {
             context.setTextureAt(0, texture);
             context.setVertexBufferAt(0, vertexBuffer, 0, Context3DVertexBufferFormat.FLOAT_2); // vertex
             context.setVertexBufferAt(1, vertexBuffer, 2, Context3DVertexBufferFormat.FLOAT_2); // uv
-            context.setVertexBufferAt(2, vertexBuffer, 4, Context3DVertexBufferFormat.FLOAT_3); // idx
+            context.setVertexBufferAt(2, vertexBuffer, 4, Context3DVertexBufferFormat.FLOAT_4); // idx
 
             return true;
         }
@@ -144,13 +146,14 @@ package de.nulldesign.nd2d.materials {
 
                 var batchLen:uint = 0;
                 var child:Sprite2D;
-                var color:Vector.<Number> = new Vector.<Number>(4, true);
+                var colorMultiplierAndOffset:Vector.<Number> = new Vector.<Number>(8, true);
                 var uvoffset:Vector.<Number> = new Vector.<Number>(4, true);
                 var i:int = -1;
                 var n:int = childList.length;
                 var uvOffsetAndScale:Rectangle;
                 var atlasOffset:Point;
                 var atlas:TextureAtlas;
+                var offsetFactor:Number = 1.0 / 255.0;
 
                 while(++i < n) {
 
@@ -182,10 +185,14 @@ package de.nulldesign.nd2d.materials {
                             clipSpaceMatrix.append(viewProjectionMatrix);
                         }
 
-                        color[0] = child.r;
-                        color[1] = child.g;
-                        color[2] = child.b;
-                        color[3] = child.a;
+                        colorMultiplierAndOffset[0] = child.combinedColorTransform.redMultiplier;
+                        colorMultiplierAndOffset[1] = child.combinedColorTransform.greenMultiplier;
+                        colorMultiplierAndOffset[2] = child.combinedColorTransform.blueMultiplier;
+                        colorMultiplierAndOffset[3] = child.combinedColorTransform.alphaMultiplier;
+                        colorMultiplierAndOffset[4] = child.combinedColorTransform.redOffset * offsetFactor;
+                        colorMultiplierAndOffset[5] = child.combinedColorTransform.greenOffset * offsetFactor;
+                        colorMultiplierAndOffset[6] = child.combinedColorTransform.blueOffset * offsetFactor;
+                        colorMultiplierAndOffset[7] = child.combinedColorTransform.alphaOffset * offsetFactor;
 
                         uvOffsetAndScale = child.spriteSheet.getUVRectForFrame();
 
@@ -197,13 +204,12 @@ package de.nulldesign.nd2d.materials {
                         context.setProgramConstantsFromMatrix(Context3DProgramType.VERTEX,
                                                               batchLen * constantsPerSprite, clipSpaceMatrix, true);
 
-                        // TODO set in fragment instead?
                         context.setProgramConstantsFromVector(Context3DProgramType.VERTEX,
                                                               batchLen * constantsPerSprite + constantsPerMatrix,
-                                                              color);
+                                                              colorMultiplierAndOffset);
 
                         context.setProgramConstantsFromVector(Context3DProgramType.VERTEX,
-                                                              batchLen * constantsPerSprite + constantsPerMatrix + 1,
+                                                              batchLen * constantsPerSprite + constantsPerMatrix + 2,
                                                               uvoffset);
 
                         ++batchLen;
@@ -237,7 +243,7 @@ package de.nulldesign.nd2d.materials {
                 colorFragmentShaderAssembler.assemble(Context3DProgramType.FRAGMENT, DEFAULT_FRAGMENT_SHADER);
 
                 cloudProgramData = new ProgramData(null, null, null, null);
-                cloudProgramData.numFloatsPerVertex = 7;
+                cloudProgramData.numFloatsPerVertex = 8;
                 cloudProgramData.program = context.createProgram();
                 cloudProgramData.program.upload(vertexShaderAssembler.agalcode, colorFragmentShaderAssembler.agalcode);
             }
@@ -250,7 +256,7 @@ package de.nulldesign.nd2d.materials {
 
             fillBuffer(buffer, v, uv, face, "PB3D_POSITION", 2);
             fillBuffer(buffer, v, uv, face, "PB3D_UV", 2);
-            fillBuffer(buffer, v, uv, face, "PB3D_IDX", 3);
+            fillBuffer(buffer, v, uv, face, "PB3D_IDX", 4);
         }
 
         override protected function fillBuffer(buffer:Vector.<Number>, v:Vertex, uv:UV, face:Face, semanticsID:String,
@@ -259,10 +265,12 @@ package de.nulldesign.nd2d.materials {
             if(semanticsID == "PB3D_IDX") {
                 // first float will be used for matrix index
                 buffer.push(face.idx * constantsPerSprite);
-                // second, color idx
+                // second, colorMultiplier idx
                 buffer.push(face.idx * constantsPerSprite + constantsPerMatrix);
-                // third uv offset idx
+                // second, colorOffset idx
                 buffer.push(face.idx * constantsPerSprite + constantsPerMatrix + 1);
+                // third uv offset idx
+                buffer.push(face.idx * constantsPerSprite + constantsPerMatrix + 2);
 
             } else {
                 super.fillBuffer(buffer, v, uv, face, semanticsID, floatFormat);

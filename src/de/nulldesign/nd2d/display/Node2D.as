@@ -38,6 +38,7 @@ package de.nulldesign.nd2d.display {
     import flash.events.Event;
     import flash.events.EventDispatcher;
     import flash.events.MouseEvent;
+    import flash.geom.ColorTransform;
     import flash.geom.Matrix3D;
     import flash.geom.Point;
     import flash.geom.Vector3D;
@@ -200,50 +201,46 @@ package de.nulldesign.nd2d.display {
         /**
          * @private
          */
-        protected var _a:Number = 1.0;
+        public var combinedColorTransform:ColorTransform = new ColorTransform();
 
-        public function get a():Number {
-            return _a;
+        protected var _colorTransform:ColorTransform = new ColorTransform();
+
+        public function get colorTransform():ColorTransform {
+            return _colorTransform;
         }
 
-        /**
-         * @private
-         */
-        protected var _r:Number = 1.0;
-
-        public function get r():Number {
-            return _r;
-        }
-
-        /**
-         * @private
-         */
-        protected var _g:Number = 1.0;
-
-        public function get g():Number {
-            return _g;
-        }
-
-        /**
-         * @private
-         */
-        protected var _b:Number = 1.0;
-
-        public function get b():Number {
-            return _b;
-        }
-
-        protected var _tint:Number = 0xFFFFFF;
-
-        public function set tint(value:Number):void {
-            if(tint != value) {
-                _tint = value;
+        public function set colorTransform(value:ColorTransform):void {
+            if(_colorTransform != value) {
+                _colorTransform = value;
                 invalidateColors = true;
             }
         }
 
+        protected var _tint:Number = 0xFFFFFF;
+
         public function get tint():Number {
             return _tint;
+        }
+
+        public function set tint(value:Number):void {
+            if(_tint != value) {
+                _tint = value;
+
+                var r:Number = (_tint >> 16) / 255.0;
+                var g:Number = (_tint >> 8 & 255) / 255.0;
+                var b:Number = (_tint & 255) / 255.0;
+
+                colorTransform.redMultiplier = r;
+                colorTransform.greenMultiplier = g;
+                colorTransform.blueMultiplier = b;
+                colorTransform.alphaMultiplier = 1.0;
+                colorTransform.redOffset = 0;
+                colorTransform.greenOffset = 0;
+                colorTransform.blueOffset = 0;
+                colorTransform.alphaOffset = 0;
+
+                invalidateColors = true;
+            }
         }
 
         protected var _scaleX:Number = 1.0;
@@ -402,16 +399,17 @@ package de.nulldesign.nd2d.display {
 
             invalidateColors = false;
 
-            _r = (tint >> 16) / 255.0;
-            _g = (tint >> 8 & 255) / 255.0;
-            _b = (tint & 255) / 255.0;
-            _a = alpha;
+            combinedColorTransform.redMultiplier = colorTransform.redMultiplier;
+            combinedColorTransform.greenMultiplier = colorTransform.greenMultiplier;
+            combinedColorTransform.blueMultiplier = colorTransform.blueMultiplier;
+            combinedColorTransform.alphaMultiplier = colorTransform.alphaMultiplier;
+            combinedColorTransform.redOffset = colorTransform.redOffset;
+            combinedColorTransform.greenOffset = colorTransform.greenOffset;
+            combinedColorTransform.blueOffset = colorTransform.blueOffset;
+            combinedColorTransform.alphaOffset = colorTransform.alphaOffset;
 
             if(parent) {
-                _r *= parent.r;
-                _g *= parent.g;
-                _b *= parent.b;
-                _a *= parent.a;
+                combinedColorTransform.concat(parent.combinedColorTransform);
             }
 
             for(var i:int = 0; i < children.length; i++) {
@@ -422,8 +420,7 @@ package de.nulldesign.nd2d.display {
         /**
          * @private
          */
-        internal function processMouseEvents(mousePosition:Vector3D, mouseEventType:String,
-                                             projectionMatrix:Matrix3D):void {
+        internal function processMouseEvents(mousePosition:Vector3D, mouseEventType:String, projectionMatrix:Matrix3D):void {
 
             if(mouseEnabled && mouseEventType) {
                 // transform mousepos to local coordinate system
@@ -537,8 +534,8 @@ package de.nulldesign.nd2d.display {
         }
 
         private function dispatchMouseEvent(mouseEventType:String):void {
-            dispatchEvent(new MouseEvent(mouseEventType, true, false, localMouse.x, localMouse.y, null, false, false,
-                                         false, (mouseEventType == MouseEvent.MOUSE_DOWN), 0));
+            dispatchEvent(new MouseEvent(mouseEventType, true, false, localMouse.x, localMouse.y, null, false, false, false,
+                                         (mouseEventType == MouseEvent.MOUSE_DOWN), 0));
         }
 
         protected function draw(context:Context3D, camera:Camera2D):void {

@@ -36,6 +36,7 @@ package de.nulldesign.nd2d.materials {
     import flash.display3D.Context3D;
     import flash.display3D.Context3DProgramType;
     import flash.display3D.textures.Texture;
+    import flash.geom.ColorTransform;
     import flash.geom.Point;
     import flash.geom.Rectangle;
     import flash.geom.Vector3D;
@@ -57,7 +58,7 @@ package de.nulldesign.nd2d.materials {
         public var textureWidth:Number;
         public var textureHeight:Number;
 
-        public var color:Vector3D = new Vector3D(1.0, 1.0, 1.0, 1.0);
+        public var colorTransform:ColorTransform;
         public var spriteSheet:ASpriteSheetBase;
 
         /**
@@ -104,8 +105,14 @@ package de.nulldesign.nd2d.materials {
 
             programData.parameterBufferHelper.setTextureByName("textureImage", texture);
 
-            programData.parameterBufferHelper.setNumberParameterByName(Context3DProgramType.FRAGMENT, "color",
-                                                                       Vector.<Number>([ color.x, color.y, color.z, color.w ]));
+            programData.parameterBufferHelper.setNumberParameterByName(Context3DProgramType.FRAGMENT, "colorMultiplier",
+                                                                       Vector.<Number>([ colorTransform.redMultiplier, colorTransform.greenMultiplier, colorTransform.blueMultiplier, colorTransform.alphaMultiplier ]));
+
+            var offsetFactor:Number = 1.0 / 255.0;
+
+            programData.parameterBufferHelper.setNumberParameterByName(Context3DProgramType.FRAGMENT, "colorOffset",
+                                                                       Vector.<Number>([ colorTransform.redOffset * offsetFactor, colorTransform.greenOffset * offsetFactor, colorTransform.blueOffset * offsetFactor, colorTransform.alphaOffset * offsetFactor ]));
+
 
             var rect:Rectangle = new Rectangle(0.0, 0.0, 1.0, 1.0);
 

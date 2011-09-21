@@ -11,7 +11,8 @@ module_material_vertex_program texture
     end_transformations
     
     globals
-        global parameter float-4 color
+        global parameter float-4 colorMultiplier
+        global parameter float-4 colorOffset
         input image image-4 textureImage
         global parameter float-4 uvOffsetAndScale
         input vertex float-2 uvCoord

@@ -145,12 +145,8 @@ package de.nulldesign.nd2d.display {
             material.modelMatrix = worldModelMatrix;
             material.projectionMatrix = camera.projectionMatrix;
             material.viewProjectionMatrix = camera.getViewProjectionMatrix();
-
-            material.color.x = r;
-            material.color.y = g;
-            material.color.z = b;
-            material.color.w = a;
-
+            material.colorTransform = combinedColorTransform;
+            
             if(mask) {
 
                 if(mask.invalidateMatrix) {

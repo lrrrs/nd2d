@@ -57,7 +57,8 @@ package de.nulldesign.nd2d.materials {
                 "mul ft1.xy, ft1.xy, fc0.zw                 \n" +
                 "add ft0, ft0, ft1                          \n" +
                 "tex ft0, ft0, fs0 <2d,clamp,linear,nomip>  \n" + // sample texture
-                "mul ft0, ft0, fc1                          \n" + // mult with color
+                "mul ft0, ft0, fc1                          \n" + // mult with colorMultiplier
+                "add ft0, ft0, fc2                          \n" + // mult with colorOffset
                 "mov oc, ft0                                \n";
 
         private static var dizzyProgramData:ProgramData;
@@ -91,7 +92,11 @@ package de.nulldesign.nd2d.materials {
                                                                                                       0.01,
                                                                                                       0.02 ]));
 
-            context.setProgramConstantsFromVector(Context3DProgramType.FRAGMENT, 1, Vector.<Number>([ color.x, color.y, color.z, color.w  ]));
+            context.setProgramConstantsFromVector(Context3DProgramType.FRAGMENT, 1, Vector.<Number>([ colorTransform.redMultiplier, colorTransform.greenMultiplier, colorTransform.blueMultiplier, colorTransform.alphaMultiplier ]));
+
+            var offsetFactor:Number = 1.0 / 255.0;
+            context.setProgramConstantsFromVector(Context3DProgramType.FRAGMENT, 2, Vector.<Number>([ colorTransform.redOffset * offsetFactor, colorTransform.greenOffset * offsetFactor, colorTransform.blueOffset * offsetFactor, colorTransform.alphaOffset * offsetFactor ]));
+
 
             return true;
         }
