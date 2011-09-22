@@ -52,7 +52,7 @@ package de.nulldesign.nd2d.materials {
     import flash.geom.Point;
     import flash.utils.ByteArray;
 
-    public class ParticleSystemMaterial extends AMaterial {
+    public class ParticleSystemMaterial extends APB3DMaterial {
 
         [Embed (source="../shader/ParticleSystemVertexShader.pbasm", mimeType="application/octet-stream")]
         protected static const VertexProgramClass:Class;
@@ -68,8 +68,6 @@ package de.nulldesign.nd2d.materials {
         protected var texture:Texture;
         protected var particleTexture:BitmapData;
 
-        protected var vertexBufferHelper:VertexBufferHelper;
-
         public var gravity:Point;
         public var currentTime:Number;
 
@@ -78,21 +76,15 @@ package de.nulldesign.nd2d.materials {
             this.drawCalls = 1;
         }
 
-
         override public function handleDeviceLoss():void {
             super.handleDeviceLoss();
             texture = null;
             particleSystemProgramData = null;
-            vertexBufferHelper = null;
         }
 
         override protected function prepareForRender(context:Context3D):Boolean {
 
             super.prepareForRender(context);
-
-            if(!vertexBufferHelper) {
-                vertexBufferHelper = new VertexBufferHelper(context, programData.vertexRegisterMap.inputVertexRegisters, vertexBuffer);
-            }
 
             refreshClipspaceMatrix();
 
@@ -111,17 +103,7 @@ package de.nulldesign.nd2d.materials {
 
             programData.parameterBufferHelper.update();
 
-            vertexBufferHelper.setVertexBuffers();
-
             return true;
-        }
-
-        override protected function clearAfterRender(context:Context3D):void {
-
-            for(var i:int = 0; i < programData.vertexRegisterMap.inputVertexRegisters.length; ++i) {
-                context.setVertexBufferAt(i, null);
-            }
-            context.setTextureAt(0, null);
         }
 
         override protected function initProgram(context:Context3D):void {
@@ -150,29 +132,6 @@ package de.nulldesign.nd2d.materials {
             programData = particleSystemProgramData;
         }
 
-        override protected function addVertex(context:Context3D, buffer:Vector.<Number>, v:Vertex, uv:UV, face:Face):void {
-
-            var vertexRegisters:Vector.<VertexRegisterInfo> = programData.vertexRegisterMap.inputVertexRegisters;
-
-            var vertexBufferFormat:String = null;
-            if(context.enableErrorChecking && buffer.length == 0) {
-                vertexBufferFormat = "vertexBufferFormat: ";
-            }
-
-            for(var i:int = 0; i < programData.vertexRegisterMap.inputVertexRegisters.length; i += 1) {
-                var n:int = getFloatFormat(programData.vertexRegisterMap.inputVertexRegisters[i].format);
-                fillBuffer(buffer, v, uv, face, vertexRegisters[i].semantics.id, n);
-
-                if(context.enableErrorChecking && vertexBufferFormat) {
-                    vertexBufferFormat += vertexRegisters[i].semantics.id + " float" + n + ", ";
-                }
-            }
-
-            if(context.enableErrorChecking && vertexBufferFormat) {
-                trace(vertexBufferFormat);
-            }
-        }
-
         override protected function fillBuffer(buffer:Vector.<Number>, v:Vertex, uv:UV, face:Face, semanticsID:String, floatFormat:int):void {
 
             super.fillBuffer(buffer, v, uv, face, semanticsID, floatFormat);
@@ -194,12 +153,6 @@ package de.nulldesign.nd2d.materials {
             if(semanticsID == "PB3D_STARTCOLOR") {
                 buffer.push(pv.startColorR, pv.startColorG, pv.startColorB, pv.startAlpha);
             }
-        }
-
-        protected function readFile(f:Class):String {
-            var bytes:ByteArray;
-            bytes = new f();
-            return bytes.readUTFBytes(bytes.bytesAvailable);
         }
 
         override public function cleanUp():void {
