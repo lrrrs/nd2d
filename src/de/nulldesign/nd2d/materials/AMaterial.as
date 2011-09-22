@@ -30,9 +30,6 @@
 
 package de.nulldesign.nd2d.materials {
 
-    import com.adobe.pixelBender3D.VertexRegisterInfo;
-    import com.adobe.pixelBender3D.utils.VertexBufferHelper;
-
     import de.nulldesign.nd2d.geom.Face;
     import de.nulldesign.nd2d.geom.UV;
     import de.nulldesign.nd2d.geom.Vertex;
@@ -73,7 +70,9 @@ package de.nulldesign.nd2d.materials {
 
         protected var programData:ProgramData;
 
-        protected var vertexBufferHelper:VertexBufferHelper;
+        public static const VERTEX_POSITION:String = "PB3D_POSITION";
+        public static const VERTEX_UV:String = "PB3D_UV";
+        public static const VERTEX_COLOR:String = "PB3D_COLOR";
 
         public function AMaterial() {
 
@@ -155,10 +154,6 @@ package de.nulldesign.nd2d.materials {
                 indexBuffer.uploadFromVector(mIndexBuffer, 0, mIndexBuffer.length);
 
                 numTris = int(mIndexBuffer.length / 3);
-
-                if(context.enableErrorChecking) {
-                    trace("mIndexBuffer: " + mIndexBuffer);
-                }
             }
         }
 
@@ -167,18 +162,12 @@ package de.nulldesign.nd2d.materials {
             context.setProgram(programData.program);
             context.setBlendFactors(blendMode.src, blendMode.dst);
 
-            if(!vertexBufferHelper) {
-                vertexBufferHelper = new VertexBufferHelper(context, programData.vertexRegisterMap.inputVertexRegisters,
-                                                            vertexBuffer);
-            }
-
             if(needUploadVertexBuffer) {
                 needUploadVertexBuffer = false;
                 vertexBuffer.uploadFromVector(mVertexBuffer, 0, mVertexBuffer.length / programData.numFloatsPerVertex);
             }
 
             return true;
-            // overwrite and set parameter and vertexbuffers for program
         }
 
         public function handleDeviceLoss():void {
@@ -187,7 +176,6 @@ package de.nulldesign.nd2d.materials {
             mIndexBuffer = null;
             mVertexBuffer = null;
             programData = null;
-            vertexBufferHelper = null;
             needUploadVertexBuffer = true;
         }
 
@@ -200,13 +188,13 @@ package de.nulldesign.nd2d.materials {
         }
 
         protected function clearAfterRender(context:Context3D):void {
-            for(var i:int = 0; i < programData.vertexRegisterMap.inputVertexRegisters.length; ++i) {
-                context.setVertexBufferAt(i, null);
-            }
+            // implement in concrete material
+            throw new Error("You have to implement clearAfterRender for your material");
         }
 
         protected function initProgram(context:Context3D):void {
             // implement in concrete material
+            throw new Error("You have to implement initProgram for your material");
         }
 
         protected function refreshClipspaceMatrix():Matrix3D {
@@ -217,76 +205,13 @@ package de.nulldesign.nd2d.materials {
         }
 
         protected function addVertex(context:Context3D, buffer:Vector.<Number>, v:Vertex, uv:UV, face:Face):void {
-
-            var vertexRegisters:Vector.<VertexRegisterInfo> = programData.vertexRegisterMap.inputVertexRegisters;
-
-            var vertexBufferFormat:String = null;
-            if(context.enableErrorChecking && buffer.length == 0) {
-                vertexBufferFormat = "vertexBufferFormat: ";
-            }
-
-            for(var i:int = 0; i < programData.vertexRegisterMap.inputVertexRegisters.length; i += 1) {
-                var n:int = getFloatFormat(programData.vertexRegisterMap.inputVertexRegisters[i].format);
-                fillBuffer(buffer, v, uv, face, vertexRegisters[i].semantics.id, n);
-
-                if(context.enableErrorChecking && vertexBufferFormat) {
-                    vertexBufferFormat += vertexRegisters[i].semantics.id + " float" + n + ", ";
-                }
-            }
-
-            if(context.enableErrorChecking && vertexBufferFormat) {
-                trace(vertexBufferFormat);
-            }
+            // implement in concrete material
+            throw new Error("You have to implement addVertex for your material");
         }
 
-        public function modifyVertexInBuffer(bufferIdx:uint, x:Number, y:Number):void {
+        protected function fillBuffer(buffer:Vector.<Number>, v:Vertex, uv:UV, face:Face, semanticsID:String, floatFormat:int):void {
 
-            if(!mVertexBuffer || mVertexBuffer.length == 0) return;
-
-            var vertexRegisters:Vector.<VertexRegisterInfo> = programData.vertexRegisterMap.inputVertexRegisters;
-            var idx:uint = bufferIdx * programData.numFloatsPerVertex;
-
-            for(var i:int = 0; i < programData.vertexRegisterMap.inputVertexRegisters.length; i += 1) {
-                var semanticsID:String = vertexRegisters[i].semantics.id;
-                var floatFormat:int = getFloatFormat(programData.vertexRegisterMap.inputVertexRegisters[i].format);
-
-                if(semanticsID == "PB3D_POSITION") {
-
-                    mVertexBuffer[idx++] = x;
-                    mVertexBuffer[idx++] = y;
-
-                    if(floatFormat >= 3)
-                        idx++;
-
-                    if(floatFormat == 4)
-                        idx++;
-
-                } else {
-                    idx += floatFormat;
-                }
-            }
-
-            //TODO: implement partial vertex buffer uploads? performance? test...
-            needUploadVertexBuffer = true;
-        }
-
-        protected function fillBuffer(buffer:Vector.<Number>, v:Vertex, uv:UV, face:Face, semanticsID:String,
-                                      floatFormat:int):void {
-
-            if(semanticsID == "PB3D_IDX") {
-                buffer.push(face.idx);
-
-                if(floatFormat == 2)
-                    buffer.push(0.0);
-
-                if(floatFormat == 3)
-                    buffer.push(0.0, 0.0);
-
-                if(floatFormat == 4)
-                    buffer.push(0.0, 0.0, 0.0);
-            }
-
-            if(semanticsID == "PB3D_POSITION") {
+            if(semanticsID == VERTEX_POSITION) {
 
                 buffer.push(v.x, v.y);
 
@@ -297,7 +222,7 @@ package de.nulldesign.nd2d.materials {
                     buffer.push(v.w);
             }
 
-            if(semanticsID == "PB3D_COLOR") {
+            if(semanticsID == VERTEX_COLOR) {
 
                 buffer.push(v.r, v.g, v.b);
 
@@ -305,7 +230,7 @@ package de.nulldesign.nd2d.materials {
                     buffer.push(v.a);
             }
 
-            if(semanticsID == "PB3D_UV") {
+            if(semanticsID == VERTEX_UV) {
 
                 buffer.push(uv.u, uv.v);
 

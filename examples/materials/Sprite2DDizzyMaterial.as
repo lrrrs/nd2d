@@ -28,18 +28,21 @@
  * THE SOFTWARE.
  */
 
-package de.nulldesign.nd2d.materials {
+package materials {
 
     import com.adobe.utils.AGALMiniAssembler;
 
     import de.nulldesign.nd2d.geom.Face;
     import de.nulldesign.nd2d.geom.UV;
     import de.nulldesign.nd2d.geom.Vertex;
+    import de.nulldesign.nd2d.materials.ProgramData;
+    import de.nulldesign.nd2d.materials.Sprite2DMaterial;
     import de.nulldesign.nd2d.utils.TextureHelper;
 
     import flash.display3D.Context3D;
     import flash.display3D.Context3DProgramType;
     import flash.display3D.Context3DVertexBufferFormat;
+    import flash.display3D.Program3D;
     import flash.utils.getTimer;
 
     public class Sprite2DDizzyMaterial extends Sprite2DMaterial {
@@ -69,6 +72,8 @@ package de.nulldesign.nd2d.materials {
 
         override protected function prepareForRender(context:Context3D):Boolean {
 
+            super.prepareForRender(context);
+
             if(!texture && spriteSheet && spriteSheet.bitmapData) {
                 texture = TextureHelper.generateTextureFromBitmap(context, spriteSheet.bitmapData, false);
             }
@@ -78,8 +83,6 @@ package de.nulldesign.nd2d.materials {
                 return false;
             }
 
-            context.setProgram(programData.program);
-            context.setBlendFactors(blendMode.src, blendMode.dst);
             context.setTextureAt(0, texture);
             context.setVertexBufferAt(0, vertexBuffer, 0, Context3DVertexBufferFormat.FLOAT_2); // vertex
             context.setVertexBufferAt(1, vertexBuffer, 2, Context3DVertexBufferFormat.FLOAT_2); // uv
@@ -126,10 +129,10 @@ package de.nulldesign.nd2d.materials {
                 var colorFragmentShaderAssembler:AGALMiniAssembler = new AGALMiniAssembler();
                 colorFragmentShaderAssembler.assemble(Context3DProgramType.FRAGMENT, FRAGMENT_SHADER);
 
-                dizzyProgramData = new ProgramData(null, null, null, null);
-                dizzyProgramData.numFloatsPerVertex = 4;
-                dizzyProgramData.program = context.createProgram();
-                dizzyProgramData.program.upload(vertexShaderAssembler.agalcode, colorFragmentShaderAssembler.agalcode);
+                var program:Program3D = context.createProgram();
+                program.upload(vertexShaderAssembler.agalcode, colorFragmentShaderAssembler.agalcode);
+
+                dizzyProgramData = new ProgramData(program, 4);
             }
 
             programData = dizzyProgramData;

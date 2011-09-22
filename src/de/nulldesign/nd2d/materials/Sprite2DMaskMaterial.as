@@ -41,6 +41,7 @@ package de.nulldesign.nd2d.materials {
     import flash.display3D.Context3D;
     import flash.display3D.Context3DProgramType;
     import flash.display3D.Context3DVertexBufferFormat;
+    import flash.display3D.Program3D;
     import flash.display3D.textures.Texture;
     import flash.geom.Matrix3D;
     import flash.geom.Point;
@@ -98,6 +99,8 @@ package de.nulldesign.nd2d.materials {
 
         override protected function prepareForRender(context:Context3D):Boolean {
 
+            super.prepareForRender(context);
+
             if(!texture) {
                 texture = TextureHelper.generateTextureFromBitmap(context, spriteSheet.bitmapData, false);
             }
@@ -107,8 +110,6 @@ package de.nulldesign.nd2d.materials {
                 maskTexture = TextureHelper.generateTextureFromBitmap(context, maskBitmap, false);
             }
 
-            context.setProgram(programData.program);
-            context.setBlendFactors(blendMode.src, blendMode.dst);
             context.setTextureAt(0, texture);
             context.setTextureAt(1, maskTexture);
             context.setVertexBufferAt(0, vertexBuffer, 0, Context3DVertexBufferFormat.FLOAT_2); // vertex
@@ -170,8 +171,8 @@ package de.nulldesign.nd2d.materials {
 
         override protected function addVertex(context:Context3D, buffer:Vector.<Number>, v:Vertex, uv:UV, face:Face):void {
 
-            fillBuffer(buffer, v, uv, face, "PB3D_POSITION", 2);
-            fillBuffer(buffer, v, uv, face, "PB3D_UV", 2);
+            fillBuffer(buffer, v, uv, face, VERTEX_POSITION, 2);
+            fillBuffer(buffer, v, uv, face, VERTEX_UV, 2);
         }
 
         override protected function initProgram(context:Context3D):void {
@@ -182,10 +183,10 @@ package de.nulldesign.nd2d.materials {
                 var colorFragmentShaderAssembler:AGALMiniAssembler = new AGALMiniAssembler();
                 colorFragmentShaderAssembler.assemble(Context3DProgramType.FRAGMENT, DEFAULT_FRAGMENT_SHADER);
 
-                maskProgramData = new ProgramData(null, null, null, null);
-                maskProgramData.numFloatsPerVertex = 4;
-                maskProgramData.program = context.createProgram();
-                maskProgramData.program.upload(vertexShaderAssembler.agalcode, colorFragmentShaderAssembler.agalcode);
+                var program:Program3D = context.createProgram();
+                program.upload(vertexShaderAssembler.agalcode, colorFragmentShaderAssembler.agalcode);
+
+                maskProgramData = new ProgramData(program, 4);
             }
 
             programData = maskProgramData;

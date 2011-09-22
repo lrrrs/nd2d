@@ -30,6 +30,14 @@
 
 package de.nulldesign.nd2d.materials {
 
+    import com.adobe.pixelBender3D.AGALProgramPair;
+    import com.adobe.pixelBender3D.PBASMCompiler;
+    import com.adobe.pixelBender3D.PBASMProgram;
+    import com.adobe.pixelBender3D.RegisterMap;
+    import com.adobe.pixelBender3D.VertexRegisterInfo;
+    import com.adobe.pixelBender3D.utils.ProgramConstantsHelper;
+    import com.adobe.pixelBender3D.utils.VertexBufferHelper;
+
     import de.nulldesign.nd2d.geom.Face;
     import de.nulldesign.nd2d.geom.ParticleVertex;
     import de.nulldesign.nd2d.geom.UV;
@@ -39,8 +47,10 @@ package de.nulldesign.nd2d.materials {
     import flash.display.BitmapData;
     import flash.display3D.Context3D;
     import flash.display3D.Context3DProgramType;
+    import flash.display3D.Program3D;
     import flash.display3D.textures.Texture;
     import flash.geom.Point;
+    import flash.utils.ByteArray;
 
     public class ParticleSystemMaterial extends AMaterial {
 
@@ -58,6 +68,8 @@ package de.nulldesign.nd2d.materials {
         protected var texture:Texture;
         protected var particleTexture:BitmapData;
 
+        protected var vertexBufferHelper:VertexBufferHelper;
+
         public var gravity:Point;
         public var currentTime:Number;
 
@@ -71,11 +83,16 @@ package de.nulldesign.nd2d.materials {
             super.handleDeviceLoss();
             texture = null;
             particleSystemProgramData = null;
+            vertexBufferHelper = null;
         }
 
         override protected function prepareForRender(context:Context3D):Boolean {
 
             super.prepareForRender(context);
+
+            if(!vertexBufferHelper) {
+                vertexBufferHelper = new VertexBufferHelper(context, programData.vertexRegisterMap.inputVertexRegisters, vertexBuffer);
+            }
 
             refreshClipspaceMatrix();
 
@@ -85,15 +102,12 @@ package de.nulldesign.nd2d.materials {
 
             programData.parameterBufferHelper.setTextureByName("textureImage", texture);
 
-            programData.parameterBufferHelper.setMatrixParameterByName(Context3DProgramType.VERTEX,
-                                                                       "objectToClipSpaceTransform", clipSpaceMatrix,
-                                                                       true);
+            programData.parameterBufferHelper.setMatrixParameterByName(Context3DProgramType.VERTEX, "objectToClipSpaceTransform", clipSpaceMatrix, true);
 
-            programData.parameterBufferHelper.setNumberParameterByName(Context3DProgramType.VERTEX, "currentTime",
-                                                                       Vector.<Number>([ currentTime ]));
+            programData.parameterBufferHelper.setNumberParameterByName(Context3DProgramType.VERTEX, "currentTime", Vector.<Number>([ currentTime ]));
 
             programData.parameterBufferHelper.setNumberParameterByName(Context3DProgramType.VERTEX, "gravity",
-                                                                       Vector.<Number>([ gravity.x, gravity.y, 0.0, 1.0 ]));
+                                                           Vector.<Number>([ gravity.x, gravity.y, 0.0, 1.0 ]));
 
             programData.parameterBufferHelper.update();
 
@@ -103,21 +117,63 @@ package de.nulldesign.nd2d.materials {
         }
 
         override protected function clearAfterRender(context:Context3D):void {
-            super.clearAfterRender(context);
+
+            for(var i:int = 0; i < programData.vertexRegisterMap.inputVertexRegisters.length; ++i) {
+                context.setVertexBufferAt(i, null);
+            }
             context.setTextureAt(0, null);
         }
 
         override protected function initProgram(context:Context3D):void {
             if(!particleSystemProgramData) {
-                particleSystemProgramData = new ProgramData(context, VertexProgramClass, MaterialVertexProgramClass,
-                                                            MaterialFragmentProgramClass);
+
+                var inputVertexProgram:PBASMProgram = new PBASMProgram(readFile(VertexProgramClass));
+                var inputMaterialVertexProgram:PBASMProgram = new PBASMProgram(readFile(MaterialVertexProgramClass));
+                var inputFragmentProgram:PBASMProgram = new PBASMProgram(readFile(MaterialFragmentProgramClass));
+
+                var programs:AGALProgramPair = PBASMCompiler.compile(inputVertexProgram, inputMaterialVertexProgram, inputFragmentProgram);
+
+                var agalVertexBinary:ByteArray = programs.vertexProgram.byteCode;
+                var agalFragmentBinary:ByteArray = programs.fragmentProgram.byteCode;
+
+                var program:Program3D = context.createProgram();
+                program.upload(agalVertexBinary, agalFragmentBinary);
+
+                var numFloatsPerVertex:uint = VertexBufferHelper.numFloatsPerVertex(programs.vertexProgram.registers.inputVertexRegisters);
+                
+                particleSystemProgramData = new ProgramData(program, numFloatsPerVertex);
+                particleSystemProgramData.vertexRegisterMap = programs.vertexProgram.registers;
+                particleSystemProgramData.fragmentRegisterMap = programs.fragmentProgram.registers;
+                particleSystemProgramData.parameterBufferHelper = new ProgramConstantsHelper(context, particleSystemProgramData.vertexRegisterMap, particleSystemProgramData.fragmentRegisterMap);
             }
 
             programData = particleSystemProgramData;
         }
 
-        override protected function fillBuffer(buffer:Vector.<Number>, v:Vertex, uv:UV, face:Face, semanticsID:String,
-                                               floatFormat:int):void {
+        override protected function addVertex(context:Context3D, buffer:Vector.<Number>, v:Vertex, uv:UV, face:Face):void {
+
+            var vertexRegisters:Vector.<VertexRegisterInfo> = programData.vertexRegisterMap.inputVertexRegisters;
+
+            var vertexBufferFormat:String = null;
+            if(context.enableErrorChecking && buffer.length == 0) {
+                vertexBufferFormat = "vertexBufferFormat: ";
+            }
+
+            for(var i:int = 0; i < programData.vertexRegisterMap.inputVertexRegisters.length; i += 1) {
+                var n:int = getFloatFormat(programData.vertexRegisterMap.inputVertexRegisters[i].format);
+                fillBuffer(buffer, v, uv, face, vertexRegisters[i].semantics.id, n);
+
+                if(context.enableErrorChecking && vertexBufferFormat) {
+                    vertexBufferFormat += vertexRegisters[i].semantics.id + " float" + n + ", ";
+                }
+            }
+
+            if(context.enableErrorChecking && vertexBufferFormat) {
+                trace(vertexBufferFormat);
+            }
+        }
+
+        override protected function fillBuffer(buffer:Vector.<Number>, v:Vertex, uv:UV, face:Face, semanticsID:String, floatFormat:int):void {
 
             super.fillBuffer(buffer, v, uv, face, semanticsID, floatFormat);
 
@@ -138,24 +194,12 @@ package de.nulldesign.nd2d.materials {
             if(semanticsID == "PB3D_STARTCOLOR") {
                 buffer.push(pv.startColorR, pv.startColorG, pv.startColorB, pv.startAlpha);
             }
+        }
 
-            /*
-             if(semanticsID == "PB3D_BIRTH") {
-             buffer.push(pv.startTime);
-             }
-
-             if(semanticsID == "PB3D_LIFE") {
-             buffer.push(pv.life);
-             }
-
-             if(semanticsID == "PB3D_STARTSIZE") {
-             buffer.push(pv.startSize);
-             }
-
-             if(semanticsID == "PB3D_ENDSIZE") {
-             buffer.push(pv.endSize);
-             }
-             */
+        protected function readFile(f:Class):String {
+            var bytes:ByteArray;
+            bytes = new f();
+            return bytes.readUTFBytes(bytes.bytesAvailable);
         }
 
         override public function cleanUp():void {

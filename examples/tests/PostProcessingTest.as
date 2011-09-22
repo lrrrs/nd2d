@@ -34,12 +34,7 @@ package tests {
     import de.nulldesign.nd2d.display.Sprite2D;
     import de.nulldesign.nd2d.display.TextureRenderer;
     import de.nulldesign.nd2d.events.TextureEvent;
-    import de.nulldesign.nd2d.materials.BlendModePresets;
-    import de.nulldesign.nd2d.materials.Sprite2DMaskMaterial;
-    import de.nulldesign.nd2d.materials.Sprite2DMaterial;
-    import de.nulldesign.nd2d.materials.Sprite2DScanlineMaterial;
-    import de.nulldesign.nd2d.materials.Sprite2DDizzyMaterial;
-    import de.nulldesign.nd2d.materials.Texture2D;
+    import materials.Sprite2DDizzyMaterial;
     import de.nulldesign.nd2d.materials.Texture2D;
 
     import flash.events.Event;

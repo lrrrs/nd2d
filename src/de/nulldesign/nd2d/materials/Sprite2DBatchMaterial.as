@@ -42,6 +42,7 @@ package de.nulldesign.nd2d.materials {
     import flash.display3D.Context3D;
     import flash.display3D.Context3DProgramType;
     import flash.display3D.Context3DVertexBufferFormat;
+    import flash.display3D.Program3D;
     import flash.geom.Point;
     import flash.geom.Rectangle;
 
@@ -75,6 +76,8 @@ package de.nulldesign.nd2d.materials {
         protected static var cloudProgramData:ProgramData;
 
         protected const BATCH_SIZE:uint = 126 / constantsPerSprite;
+
+        public static const VERTEX_IDX:String = "PB3D_IDX";
 
         public function Sprite2DBatchMaterial(textureObject:Object) {
             super(textureObject);
@@ -131,10 +134,6 @@ package de.nulldesign.nd2d.materials {
             context.setVertexBufferAt(2, vertexBuffer, 4, Context3DVertexBufferFormat.FLOAT_4); // idx
 
             return true;
-        }
-
-        public function renderSingle(context:Context3D, faceList:Vector.<Face>, child:Node2D):void {
-            renderBatch(context, faceList, Vector.<Node2D>([child]));
         }
 
         public function renderBatch(context:Context3D, faceList:Vector.<Face>, childList:Vector.<Node2D>):void {
@@ -242,10 +241,10 @@ package de.nulldesign.nd2d.materials {
                 var colorFragmentShaderAssembler:AGALMiniAssembler = new AGALMiniAssembler();
                 colorFragmentShaderAssembler.assemble(Context3DProgramType.FRAGMENT, DEFAULT_FRAGMENT_SHADER);
 
-                cloudProgramData = new ProgramData(null, null, null, null);
-                cloudProgramData.numFloatsPerVertex = 8;
-                cloudProgramData.program = context.createProgram();
-                cloudProgramData.program.upload(vertexShaderAssembler.agalcode, colorFragmentShaderAssembler.agalcode);
+                var program:Program3D = context.createProgram();
+                program.upload(vertexShaderAssembler.agalcode, colorFragmentShaderAssembler.agalcode);
+
+                cloudProgramData = new ProgramData(program, 8);
             }
 
             programData = cloudProgramData;
@@ -254,15 +253,15 @@ package de.nulldesign.nd2d.materials {
         override protected function addVertex(context:Context3D, buffer:Vector.<Number>, v:Vertex, uv:UV,
                                               face:Face):void {
 
-            fillBuffer(buffer, v, uv, face, "PB3D_POSITION", 2);
-            fillBuffer(buffer, v, uv, face, "PB3D_UV", 2);
-            fillBuffer(buffer, v, uv, face, "PB3D_IDX", 4);
+            fillBuffer(buffer, v, uv, face, VERTEX_POSITION, 2);
+            fillBuffer(buffer, v, uv, face, VERTEX_UV, 2);
+            fillBuffer(buffer, v, uv, face, VERTEX_IDX, 4);
         }
 
         override protected function fillBuffer(buffer:Vector.<Number>, v:Vertex, uv:UV, face:Face, semanticsID:String,
                                                floatFormat:int):void {
 
-            if(semanticsID == "PB3D_IDX") {
+            if(semanticsID == VERTEX_IDX) {
                 // first float will be used for matrix index
                 buffer.push(face.idx * constantsPerSprite);
                 // second, colorMultiplier idx

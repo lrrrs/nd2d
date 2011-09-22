@@ -44,45 +44,18 @@ package de.nulldesign.nd2d.materials {
     public class ProgramData {
 
         public var program:Program3D;
-
         public var numFloatsPerVertex:int;
+
+        /*
+        * Only used for PB3D materials
+        */
         public var vertexRegisterMap:RegisterMap;
         public var fragmentRegisterMap:RegisterMap;
         public var parameterBufferHelper:ProgramConstantsHelper;
 
-        public function ProgramData(context:Context3D, vertexProgramClass:Class, materialVertexProgramClass:Class,
-                                    materialFragmentProgramClass:Class) {
-
-            if(!context) return;
-
-            var inputVertexProgram:PBASMProgram = new PBASMProgram(readFile(vertexProgramClass));
-            var inputMaterialVertexProgram:PBASMProgram = new PBASMProgram(readFile(materialVertexProgramClass));
-            var inputFragmentProgram:PBASMProgram = new PBASMProgram(readFile(materialFragmentProgramClass));
-
-            var programs:AGALProgramPair = PBASMCompiler.compile(inputVertexProgram, inputMaterialVertexProgram,
-                                                                 inputFragmentProgram);
-
-            var agalVertexBinary:ByteArray = programs.vertexProgram.byteCode;
-            var agalFragmentBinary:ByteArray = programs.fragmentProgram.byteCode;
-
-            vertexRegisterMap = programs.vertexProgram.registers;
-            fragmentRegisterMap = programs.fragmentProgram.registers;
-
-            parameterBufferHelper = new ProgramConstantsHelper(context, vertexRegisterMap, fragmentRegisterMap);
-
-            numFloatsPerVertex = VertexBufferHelper.numFloatsPerVertex(vertexRegisterMap.inputVertexRegisters);
-
-            program = context.createProgram();
-            program.upload(agalVertexBinary, agalFragmentBinary);
-
-            trace("new Program created: " + vertexProgramClass);
+        public function ProgramData(program:Program3D, numFloatsPerVertex:uint) {
+            this.program = program;
+            this.numFloatsPerVertex = numFloatsPerVertex;
         }
-
-        protected function readFile(f:Class):String {
-            var bytes:ByteArray;
-            bytes = new f();
-            return bytes.readUTFBytes(bytes.bytesAvailable);
-        }
-
     }
 }
