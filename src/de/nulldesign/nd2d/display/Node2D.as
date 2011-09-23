@@ -178,7 +178,7 @@ package de.nulldesign.nd2d.display {
         }
 
         public function set visible(value:Boolean):void {
-            if(visible != value) {
+            if(_visible != value) {
                 _visible = value;
                 invalidateVisibility = true;
             }
@@ -187,10 +187,10 @@ package de.nulldesign.nd2d.display {
         protected var _alpha:Number = 1.0;
 
         public function set alpha(value:Number):void {
-            if(alpha != value) {
+            if(_alpha != value) {
                 _alpha = value;
                 invalidateColors = true;
-                visible = alpha > 0.0;
+                visible = _alpha > 0.0;
             }
         }
 
@@ -246,7 +246,7 @@ package de.nulldesign.nd2d.display {
         protected var _scaleX:Number = 1.0;
 
         public function set scaleX(value:Number):void {
-            if(scaleX != value) {
+            if(_scaleX != value) {
                 _scaleX = value;
                 invalidateMatrix = true;
             }
@@ -259,7 +259,7 @@ package de.nulldesign.nd2d.display {
         protected var _scaleY:Number = 1.0;
 
         public function set scaleY(value:Number):void {
-            if(scaleY != value) {
+            if(_scaleY != value) {
                 _scaleY = value;
                 invalidateMatrix = true;
             }
@@ -272,9 +272,8 @@ package de.nulldesign.nd2d.display {
         protected var _x:Number = 0.0;
 
         public function set x(value:Number):void {
-            if(x != value) {
-                _x = value;
-                position.x = x;
+            if(_x != value) {
+                _position.x = _x = value;
                 invalidateMatrix = true;
             }
         }
@@ -286,9 +285,8 @@ package de.nulldesign.nd2d.display {
         protected var _y:Number = 0.0;
 
         public function set y(value:Number):void {
-            if(y != value) {
-                _y = value;
-                position.y = y;
+            if(_y != value) {
+                _position.y = _y = value;
                 invalidateMatrix = true;
             }
         }
@@ -304,11 +302,10 @@ package de.nulldesign.nd2d.display {
         }
 
         public function set position(value:Point):void {
-            if(x != value.x || y != value.y) {
-                _position.x = value.x;
-                _position.y = value.y;
-                x = _position.x;
-                y = _position.y;
+            if(_x != value.x || _y != value.y) {
+                _position.x = _x = value.x;
+                _position.y = _y = value.y;
+                invalidateMatrix = true;
             }
         }
 
@@ -319,7 +316,7 @@ package de.nulldesign.nd2d.display {
         }
 
         public function set pivot(value:Point):void {
-            if(pivot.x != value.x || pivot.y != value.y) {
+            if(_pivot.x != value.x || _pivot.y != value.y) {
                 _pivot.x = value.x;
                 _pivot.y = value.y;
                 invalidateMatrix = true;
@@ -329,7 +326,7 @@ package de.nulldesign.nd2d.display {
         protected var _rotation:Number = 0.0;
 
         public function set rotation(value:Number):void {
-            if(rotation != value) {
+            if(_rotation != value) {
                 _rotation = value;
                 invalidateMatrix = true;
             }
@@ -355,8 +352,8 @@ package de.nulldesign.nd2d.display {
 
             var tris:uint = 0;
 
-            for(var i:int = 0; i < children.length; i++) {
-                tris += children[i].numTris;
+            for each(var child:Node2D in children){
+                tris += child.numTris;
             }
 
             return tris;
@@ -366,8 +363,8 @@ package de.nulldesign.nd2d.display {
 
             var calls:uint = 0;
 
-            for(var i:int = 0; i < children.length; i++) {
-                calls += children[i].drawCalls;
+            for each(var child:Node2D in children){
+                calls += child.drawCalls;
             }
 
             return calls;
@@ -386,10 +383,10 @@ package de.nulldesign.nd2d.display {
         public function updateMatrix():void {
             invalidateMatrix = false;
             localModelMatrix.identity();
-            localModelMatrix.appendTranslation(-pivot.x, -pivot.y, 0);
-            localModelMatrix.appendScale(scaleX, scaleY, 1.0);
-            localModelMatrix.appendRotation(rotation, Vector3D.Z_AXIS);
-            localModelMatrix.appendTranslation(x, y, 0.0);
+            localModelMatrix.appendTranslation(-_pivot.x, -_pivot.y, 0);
+            localModelMatrix.appendScale(_scaleX, _scaleY, 1.0);
+            localModelMatrix.appendRotation(_rotation, Vector3D.Z_AXIS);
+            localModelMatrix.appendTranslation(_x, _y, 0.0);
         }
 
         /**
@@ -412,8 +409,8 @@ package de.nulldesign.nd2d.display {
                 combinedColorTransform.concat(parent.combinedColorTransform);
             }
 
-            for(var i:int = 0; i < children.length; i++) {
-                children[i].updateColors();
+            for each(var child:Node2D in children){
+                child.updateColors();
             }
         }
 
@@ -504,7 +501,7 @@ package de.nulldesign.nd2d.display {
 
             var myMatrixChanged:Boolean = false;
 
-            if(!visible) {
+            if(!_visible) {
                 return;
             }
 
