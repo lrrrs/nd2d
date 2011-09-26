@@ -30,28 +30,13 @@
 
 package de.nulldesign.nd2d.materials {
 
-    import com.adobe.pixelBender3D.AGALProgramPair;
-    import com.adobe.pixelBender3D.PBASMCompiler;
-    import com.adobe.pixelBender3D.PBASMProgram;
-    import com.adobe.pixelBender3D.RegisterMap;
-    import com.adobe.pixelBender3D.utils.ProgramConstantsHelper;
-    import com.adobe.pixelBender3D.utils.VertexBufferHelper;
-
-    import flash.display3D.Context3D;
     import flash.display3D.Program3D;
-    import flash.utils.ByteArray;
 
+    // TODO semi/automatic vertex attributes mapping?
     public class ProgramData {
 
         public var program:Program3D;
         public var numFloatsPerVertex:int;
-
-        /*
-        * Only used for PB3D materials
-        */
-        public var vertexRegisterMap:RegisterMap;
-        public var fragmentRegisterMap:RegisterMap;
-        public var parameterBufferHelper:ProgramConstantsHelper;
 
         public function ProgramData(program:Program3D, numFloatsPerVertex:uint) {
             this.program = program;

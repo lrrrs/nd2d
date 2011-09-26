@@ -48,8 +48,8 @@ package de.nulldesign.nd2d.display {
     public class Sprite2D extends Node2D {
 
         public var spriteSheet:ASpriteSheetBase;
+        public var material:Sprite2DMaterial;
 
-        protected var material:Sprite2DMaterial;
         protected var faceList:Vector.<Face>;
 
         protected var mask:Sprite2D;

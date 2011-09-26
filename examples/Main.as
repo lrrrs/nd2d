@@ -132,6 +132,7 @@ package {
             start();
 
             // test buttons
+            /*
             var b:PushButton;
             b = new PushButton(this, 0, 460, "pause", buttonClicked);
             b.tag = 0;
@@ -141,6 +142,7 @@ package {
             b.tag = 2;
             b = new PushButton(this, 0, 520, "wakeup", buttonClicked);
             b.tag = 3;
+            */
         }
 
         private function buttonClicked(e:MouseEvent):void {
@@ -180,6 +182,9 @@ package {
             if(activeSceneIdx > scenes.length - 1) {
                 activeSceneIdx = 0;
             }
+
+            if(context3D)
+                stats.driverInfo = context3D.driverInfo;
         }
 
         private function stageResize(e:Event):void {

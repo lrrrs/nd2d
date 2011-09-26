@@ -32,6 +32,7 @@ package de.nulldesign.nd2d.display {
 
     import de.nulldesign.nd2d.geom.Face;
     import de.nulldesign.nd2d.materials.ParticleSystemMaterial;
+    import de.nulldesign.nd2d.materials.ParticleSystemMaterial;
     import de.nulldesign.nd2d.utils.ColorUtil;
     import de.nulldesign.nd2d.utils.NumberUtil;
     import de.nulldesign.nd2d.utils.ParticleSystemPreset;

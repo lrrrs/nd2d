@@ -27,157 +27,6 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-/*
- package de.nulldesign.nd2d.materials {
-
- import de.nulldesign.nd2d.utils.TextureHelper;
-
- import flash.display.BitmapData;
- import flash.display3D.Context3D;
- import flash.display3D.Context3DProgramType;
- import flash.display3D.textures.Texture;
- import flash.geom.ColorTransform;
- import flash.geom.Point;
- import flash.geom.Rectangle;
- import flash.geom.Vector3D;
-
- public class Sprite2DMaterial extends AMaterial {
-
- [Embed (source="../shader/Sprite2DMaterialVertexShader.pbasm", mimeType="application/octet-stream")]
- private static const MaterialVertexProgramClass:Class;
-
- [Embed (source="../shader/Sprite2DMaterialFragmentShader.pbasm", mimeType="application/octet-stream")]
- private static const MaterialFragmentProgramClass:Class;
-
- [Embed (source="../shader/Sprite2DVertexShader.pbasm", mimeType="application/octet-stream")]
- private static const VertexProgramClass:Class;
-
- private static var sprite2DProgramData:ProgramData;
-
- public var texture:Texture;
- public var textureWidth:Number;
- public var textureHeight:Number;
-
- public var colorTransform:ColorTransform;
- public var spriteSheet:ASpriteSheetBase;
- */
-/**
- * Constructor of class Sprite2DMaterial
- * @param textureObject can be a BitmapData, SpriteSheet, TextureAtlas or Texture2D
- *//*
- public function Sprite2DMaterial(textureObject:Object) {
-
- if(textureObject is BitmapData) {
- var bmp:BitmapData = textureObject as BitmapData;
- spriteSheet = new SpriteSheet(bmp, bmp.width, bmp.height, 0);
- } else if(textureObject is SpriteSheet) {
- spriteSheet = textureObject as SpriteSheet;
- } else if(textureObject is TextureAtlas) {
- spriteSheet = textureObject as TextureAtlas;
- } else if(textureObject is Texture2D) {
- var t2D:Texture2D = textureObject as Texture2D;
- texture = t2D.texture;
- textureWidth = t2D.textureWidth;
- textureHeight = t2D.textureHeight;
- }
-
- drawCalls = 1;
- }
-
- override public function handleDeviceLoss():void {
- super.handleDeviceLoss();
- texture = null;
- sprite2DProgramData = null;
- }
-
- override protected function prepareForRender(context:Context3D):Boolean {
-
- super.prepareForRender(context);
-
- if(!texture && spriteSheet && spriteSheet.bitmapData) {
- texture = TextureHelper.generateTextureFromBitmap(context, spriteSheet.bitmapData, true);
- }
-
- if(!texture) {
- // can happen after a device loss
- return false;
- }
-
- programData.parameterBufferHelper.setTextureByName("textureImage", texture);
-
- programData.parameterBufferHelper.setNumberParameterByName(Context3DProgramType.FRAGMENT, "colorMultiplier",
- Vector.<Number>([ colorTransform.redMultiplier, colorTransform.greenMultiplier, colorTransform.blueMultiplier, colorTransform.alphaMultiplier ]));
-
- var offsetFactor:Number = 1.0 / 255.0;
-
- programData.parameterBufferHelper.setNumberParameterByName(Context3DProgramType.FRAGMENT, "colorOffset",
- Vector.<Number>([ colorTransform.redOffset * offsetFactor, colorTransform.greenOffset * offsetFactor, colorTransform.blueOffset * offsetFactor, colorTransform.alphaOffset * offsetFactor ]));
-
-
- var rect:Rectangle = new Rectangle(0.0, 0.0, 1.0, 1.0);
-
- if(spriteSheet) {
-
- rect = spriteSheet.getUVRectForFrame();
-
- var atlas:TextureAtlas = spriteSheet as TextureAtlas;
-
- if(atlas) {
-
- var offset:Point = atlas.getOffsetForFrame();
-
- clipSpaceMatrix.identity();
- clipSpaceMatrix.appendScale(spriteSheet.spriteWidth * 0.5, spriteSheet.spriteHeight * 0.5, 1.0);
- clipSpaceMatrix.appendTranslation(offset.x, offset.y, 0.0);
- clipSpaceMatrix.append(modelMatrix);
- clipSpaceMatrix.append(viewProjectionMatrix);
-
- } else {
- refreshClipspaceMatrix();
- }
- } else {
- refreshClipspaceMatrix();
- }
-
- programData.parameterBufferHelper.setNumberParameterByName(Context3DProgramType.VERTEX, "uvOffsetAndScale",
- Vector.<Number>([ rect.x, rect.y, rect.width, rect.height ]));
-
-
- programData.parameterBufferHelper.setMatrixParameterByName(Context3DProgramType.VERTEX, "objectToClipSpaceTransform", clipSpaceMatrix,
- true);
-
- programData.parameterBufferHelper.update();
-
- vertexBufferHelper.setVertexBuffers();
-
- return true;
- }
-
- override protected function clearAfterRender(context:Context3D):void {
- super.clearAfterRender(context);
- context.setTextureAt(0, null);
- }
-
- override protected function initProgram(context:Context3D):void {
-
- // program will be only created once and cached as static var in material
- if(!sprite2DProgramData) {
- sprite2DProgramData = new ProgramData(context, VertexProgramClass, MaterialVertexProgramClass, MaterialFragmentProgramClass);
- }
-
- programData = sprite2DProgramData;
- }
-
- override public function cleanUp():void {
- super.cleanUp();
- if(texture) {
- texture.dispose();
- texture = null;
- }
- }
- }
- }
- */
 
 package de.nulldesign.nd2d.materials {
 
@@ -207,7 +56,7 @@ package de.nulldesign.nd2d.materials {
                 "mov v0, vt0 \n"; // copy uv
 
         private const FRAGMENT_SHADER:String = "mov ft0, v0\n" + // get interpolated uv coords
-                "tex ft1, ft0, fs0 <2d,clamp,linear,nomip>\n" + // sample texture
+                "tex ft1, ft0, fs0 <2d,repeat,linear,nomip>\n" + // sample texture
                 "mul ft1, ft1, fc0\n" + // mult with colorMultiplier
                 "add ft1, ft1, fc1\n" + // mult with colorOffset
                 "mov oc, ft1\n";
@@ -220,6 +69,16 @@ package de.nulldesign.nd2d.materials {
 
         public var colorTransform:ColorTransform;
         public var spriteSheet:ASpriteSheetBase;
+
+        /**
+         * Use this property to animate a texture, infinite scroller, etc.
+         */
+        public var uvOffsetX:Number = 0.0;
+
+        /**
+         * Use this property to animate a texture, infinite scroller, etc.
+         */
+        public var uvOffsetY:Number = 0.0;
 
         public function Sprite2DMaterial(textureObject:Object) {
 
@@ -284,18 +143,16 @@ package de.nulldesign.nd2d.materials {
                 refreshClipspaceMatrix();
             }
 
-            context.setProgram(programData.program);
-            context.setBlendFactors(blendMode.src, blendMode.dst);
             context.setTextureAt(0, texture);
             context.setVertexBufferAt(0, vertexBuffer, 0, Context3DVertexBufferFormat.FLOAT_2); // vertex
             context.setVertexBufferAt(1, vertexBuffer, 2, Context3DVertexBufferFormat.FLOAT_2); // uv
 
             context.setProgramConstantsFromMatrix(Context3DProgramType.VERTEX, 0, clipSpaceMatrix, true);
 
-            context.setProgramConstantsFromVector(Context3DProgramType.VERTEX, 4, Vector.<Number>([ rect.x,
-                                                                                                      rect.y,
-                                                                                                      rect.width,
-                                                                                                      rect.height]));
+            context.setProgramConstantsFromVector(Context3DProgramType.VERTEX, 4, Vector.<Number>([ rect.x + uvOffsetX,
+                                                                                                    rect.y + uvOffsetY,
+                                                                                                    rect.width,
+                                                                                                    rect.height]));
 
             var offsetFactor:Number = 1.0 / 255.0;
             context.setProgramConstantsFromVector(Context3DProgramType.FRAGMENT, 0,
