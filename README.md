@@ -17,6 +17,8 @@ Useful links:
 
 (Click the image to see some demos. Be patient, no preloader!)
 
+[Detailed technical information, Tips, Tricks and deep dives into ND2D](http://www.nulldesign.de/category/experiments/nd2d/)
+
 # Features:
 
 - Flash-displaylist-like hierarchy for 2D elements
@@ -36,6 +38,10 @@ Useful links:
 [Check out the WIKI for more details](https://github.com/nulldesign/nd2d/wiki)
 
 # Changelog:
+
+2011-09-26
+- DELETED pb3dlib.swc. Dependency removed. ParticleSystem2DMaterial converted to AGAL
+- NEW: UV offsets are now animateable. See updated example StarFieldTest
 
 2011-09-21
 - NEW: colorTransform property for all display objects. (See new example ColorTransformTest)
