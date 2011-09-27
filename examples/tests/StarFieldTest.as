@@ -66,10 +66,12 @@ package tests {
             starfield1.width = stage.stageWidth;
             starfield1.scaleY = starfield1.scaleX;
             starfield1.x = stage.stageWidth / 2;
+            starfield1.y = stage.stageHeight / 2;
 
             starfield2.width = stage.stageWidth;
             starfield2.scaleY = starfield2.scaleX;
             starfield2.x = stage.stageWidth / 2;
+            starfield2.y = stage.stageHeight / 2;
         }
 
         override protected function step(elapsed:Number):void {
