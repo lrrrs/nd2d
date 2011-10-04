@@ -45,11 +45,20 @@ package de.nulldesign.nd2d.materials {
         protected var frameNameToIndex:Dictionary = new Dictionary();
         protected var xmlData:XML;
         protected var uvRects:Vector.<Rectangle>;
+        private var spritesPackedWithoutSpace:Boolean;
 
-        public function TextureAtlas(textureBitmap:BitmapData, cocos2DXML:XML, fps:uint) {
+        /**
+         *
+         * @param textureBitmap
+         * @param cocos2DXML
+         * @param fps
+         * @param spritesPackedWithoutSpace set to true to get rid of pixel bleeding for packed atlases without spaces: http://www.nulldesign.de/2011/08/30/nd2d-pixel-bleeding/
+         */
+        public function TextureAtlas(textureBitmap:BitmapData, cocos2DXML:XML, fps:uint, spritesPackedWithoutSpace:Boolean = false) {
             this.fps = fps;
             this.bitmapData = textureBitmap;
             this.xmlData = cocos2DXML;
+            this.spritesPackedWithoutSpace = spritesPackedWithoutSpace;
 
             var textureDimensions:Point = TextureHelper.getTextureDimensionsFromBitmap(bitmapData);
 
@@ -71,11 +80,13 @@ package de.nulldesign.nd2d.materials {
 
             var rect:Rectangle = frames[frame].clone();
 
-            rect.x += 0.5;
-            rect.y += 0.5;
+            if(spritesPackedWithoutSpace) {
+                rect.x += 0.5;
+                rect.y += 0.5;
 
-            rect.width -= 1.0;
-            rect.height -= 1.0;
+                rect.width -= 1.0;
+                rect.height -= 1.0;
+            }
 
             rect.x /= textureWidth;
             rect.y /= textureHeight;
@@ -93,8 +104,7 @@ package de.nulldesign.nd2d.materials {
             _spriteHeight = frames[frame].height;
         }
 
-        override public function addAnimation(name:String, keyFrames:Array, loop:Boolean,
-                                              keyIsString:Boolean = false):void {
+        override public function addAnimation(name:String, keyFrames:Array, loop:Boolean, keyIsString:Boolean = false):void {
 
             // make indices out of names
             var keyFramesIndices:Array = [];
@@ -216,7 +226,7 @@ package de.nulldesign.nd2d.materials {
 
         override public function clone():ASpriteSheetBase {
 
-            var t:TextureAtlas = new TextureAtlas(bitmapData, xmlData, fps);
+            var t:TextureAtlas = new TextureAtlas(bitmapData, xmlData, fps, spritesPackedWithoutSpace);
 
             for(var name:String in animationMap) {
                 var anim:SpriteSheetAnimation = animationMap[name];

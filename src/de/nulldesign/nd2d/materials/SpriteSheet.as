@@ -46,15 +46,26 @@ package de.nulldesign.nd2d.materials {
         public var pixelOffset:Point = new Point(0.0, 0.0);
         public var uvOffset:Point = new Point(0.0, 0.0);
         public var uvSize:Point = new Point(0.0, 0.0);
+        private var spritesPackedWithoutSpace:Boolean;
 
         public function get totalFrames():uint {
             return numSheets;
         }
 
-        public function SpriteSheet(bitmapData:BitmapData, spriteWidth:Number, spriteHeight:Number, fps:uint) {
+        /**
+         *
+         * @param bitmapData
+         * @param spriteWidth
+         * @param spriteHeight
+         * @param fps
+         * @param spritesPackedWithoutSpace set to true to get rid of pixel bleeding for packed sprites without spaces: http://www.nulldesign.de/2011/08/30/nd2d-pixel-bleeding/
+         */
+        public function SpriteSheet(bitmapData:BitmapData, spriteWidth:Number, spriteHeight:Number, fps:uint,
+                                    spritesPackedWithoutSpace:Boolean = false) {
             this.bitmapData = bitmapData;
             this._spriteWidth = spriteWidth;
             this._spriteHeight = spriteHeight;
+            this.spritesPackedWithoutSpace = spritesPackedWithoutSpace;
             this.fps = fps;
 
             init();
@@ -67,13 +78,16 @@ package de.nulldesign.nd2d.materials {
             _textureWidth = textureDimensions.x;
             _textureHeight = textureDimensions.y;
 
-            pixelOffset = new Point((_textureWidth - bitmapData.width) / 2.0,
-                                    (_textureHeight - bitmapData.height) / 2.0);
+            pixelOffset = new Point((_textureWidth - bitmapData.width) / 2.0, (_textureHeight - bitmapData.height) / 2.0);
 
             uvOffset.x = pixelOffset.x / _textureWidth;
             uvOffset.y = pixelOffset.y / _textureHeight;
 
-            uvSize = new Point((spriteWidth - 1.0) / _textureWidth, (spriteHeight - 1.0) / _textureHeight);
+            if(spritesPackedWithoutSpace) {
+                uvSize = new Point((spriteWidth - 1.0) / _textureWidth, (spriteHeight - 1.0) / _textureHeight);
+            } else {
+                uvSize = new Point(spriteWidth / _textureWidth, spriteHeight / _textureHeight);
+            }
 
             numSheetsPerRow = Math.round(bitmapData.width / spriteWidth);
             numRows = Math.round(bitmapData.height / spriteHeight);
@@ -90,9 +104,15 @@ package de.nulldesign.nd2d.materials {
 
             var rowIdx:uint = frame % numSheetsPerRow;
             var colIdx:uint = Math.floor(frame / numSheetsPerRow);
+            var rect:Rectangle;
 
-            var rect:Rectangle = new Rectangle((0.5 + pixelOffset.x + spriteWidth * rowIdx) / textureWidth,
-                                               (0.5 + pixelOffset.y + spriteHeight * colIdx) / textureHeight, 1.0, 1.0);
+            if(spritesPackedWithoutSpace) {
+                rect = new Rectangle((0.5 + pixelOffset.x + spriteWidth * rowIdx) / textureWidth,
+                                     (0.5 + pixelOffset.y + spriteHeight * colIdx) / textureHeight, 1.0, 1.0);
+            } else {
+                rect = new Rectangle((pixelOffset.x + spriteWidth * rowIdx) / textureWidth,
+                                     (pixelOffset.y + spriteHeight * colIdx) / textureHeight, 1.0, 1.0);
+            }
 
             uvRects[frame] = rect;
 
@@ -100,7 +120,7 @@ package de.nulldesign.nd2d.materials {
         }
 
         override public function clone():ASpriteSheetBase {
-            var s:SpriteSheet = new SpriteSheet(bitmapData, _spriteWidth, _spriteHeight, fps);
+            var s:SpriteSheet = new SpriteSheet(bitmapData, _spriteWidth, _spriteHeight, fps, spritesPackedWithoutSpace);
             s.frame = frame;
 
             for(var name:String in animationMap) {

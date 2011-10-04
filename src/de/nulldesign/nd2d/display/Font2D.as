@@ -68,11 +68,11 @@ package de.nulldesign.nd2d.display {
         }
 
         public function Font2D(fontBitmap:BitmapData, charWidth:Number, charHeight:Number, charString:String,
-                               charSpacing:Number, maxTextLen:uint) {
+                               charSpacing:Number, maxTextLen:uint, spritesPackedWithoutSpaces:Boolean = false) {
 
             this.charString = charString;
             this.charSpacing = charSpacing;
-            spriteSheet = new SpriteSheet(fontBitmap, charWidth, charHeight, 1);
+            spriteSheet = new SpriteSheet(fontBitmap, charWidth, charHeight, 1, spritesPackedWithoutSpaces);
 
             super(maxTextLen, spriteSheet);
         }

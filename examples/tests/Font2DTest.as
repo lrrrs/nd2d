@@ -64,13 +64,13 @@ package tests {
 
             var fontBmp:BitmapData = new fontTexture().bitmapData;
 
-            font = new Font2D(fontBmp, 16, 16, fontChars, 20, 100);
+            font = new Font2D(fontBmp, 16, 16, fontChars, 20, 100, true);
             font.text = "HELLO FOLKS!         ND2D JUST GOT NICE BITMAP FONTS.      DON'T YOU JUST ♥ IT? :)";
             font.x = stage.stageWidth;
             font.scaleX = font.scaleY = 2.0;
             addChild(font);
 
-            counter = new Font2D(fontBmp, 16, 16, fontChars, 16, 10);
+            counter = new Font2D(fontBmp, 16, 16, fontChars, 16, 10, true);
             counter.textAlign = TextAlign.CENTER;
             addChild(counter);
         }

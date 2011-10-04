@@ -67,7 +67,7 @@ package tests {
             sheet.addAnimation("blah", [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11], true);
             sheet.playAnimation("blah", 0, true);
 
-            var atlas:TextureAtlas = new TextureAtlas(new textureAtlasBitmap().bitmapData, new XML(new textureAtlasXML()), 20);
+            var atlas:TextureAtlas = new TextureAtlas(new textureAtlasBitmap().bitmapData, new XML(new textureAtlasXML()), 20, true);
             s = addChild(new Sprite2D(atlas)) as Sprite2D;
 
             atlas.addAnimation("blah", ["c01", "c02", "c03", "c04", "c05", "c06", "c07", "c08", "c09", "c10", "c11", "c12",

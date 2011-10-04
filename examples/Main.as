@@ -32,8 +32,6 @@ package {
 
     import avmplus.getQualifiedClassName;
 
-    import com.bit101.components.PushButton;
-
     import de.nulldesign.nd2d.display.Scene2D;
     import de.nulldesign.nd2d.display.World2D;
 
@@ -98,7 +96,6 @@ package {
             scenes.push(new SpriteAnimTest());
             scenes.push(new StarFieldTest());
             scenes.push(new ParticleSystemTest());
-            //scenes.push(new MaterialsTest());
             scenes.push(new CameraTest());
             scenes.push(new ParticleExplorer());
             scenes.push(new MaskTest());
@@ -121,7 +118,7 @@ package {
             stage.addEventListener(Event.RESIZE, stageResize);
             stageResize(null);
 
-            activeSceneIdx = 2;
+            activeSceneIdx = 0;
             nextBtnClick();
 
             stage.addEventListener(KeyboardEvent.KEY_UP, keyUp);
