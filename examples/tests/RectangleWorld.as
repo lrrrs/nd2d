@@ -42,27 +42,25 @@ package tests {
         [Embed(source="/assets/crate.jpg")]
         private var texture:Class;
 
-        private var scene:Scene2D;
+        private var _scene:Scene2D;
         private var s1:Sprite2D;
         private var s2:Sprite2D;
 
         public function RectangleWorld(renderMode:String, frameRate:uint, bounds:Rectangle = null) {
             super(renderMode, frameRate, false, bounds);
 
-            statsVisible = false;
-
-            scene = new Scene2D();
-            scene.backGroundColor = 0xDDDDDD;
+            _scene = new Scene2D();
+            _scene.backGroundColor = 0xDDDDDD;
 
             s1 = new Sprite2D(new texture().bitmapData);
-            scene.addChild(s1);
+            _scene.addChild(s1);
 
             s2 = new Sprite2D(new texture().bitmapData);
             s2.x = bounds.width;
             s2.y = bounds.height;
-            scene.addChild(s2);
+            _scene.addChild(s2);
 
-            setActiveScene(scene);
+            setActiveScene(_scene);
             addEventListener(Event.ENTER_FRAME, loop);
         }
 

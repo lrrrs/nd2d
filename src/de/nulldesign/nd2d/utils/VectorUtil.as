@@ -35,37 +35,50 @@ package de.nulldesign.nd2d.utils {
     import flash.geom.Point;
 
     public class VectorUtil {
+		
+		public static const RAD_2_DEG:Number = 180 / Math.PI;
+		public static const DEG_2_RAD:Number = Math.PI / 180;
 
         /**
-         * Converts radian to degrees
-         * @param rad
-         * @return
+         * Converts radians to degrees
+         * @param rad radians
+         * @return degrees
          */
         public static function rad2deg(rad:Number):Number {
-            return rad * (180 / Math.PI);
+            return rad * RAD_2_DEG;
         }
 
         /**
-         * Converts degree to radian
-         * @param deg
-         * @return
+         * Converts degrees to radians
+         * @param deg degrees
+         * @return radians
          */
         public static function deg2rad(deg:Number):Number {
-            return deg * (Math.PI / 180);
+            return deg * DEG_2_RAD;
         }
 
         /**
-         * calculates the angle from a vector
+         * Calculates the angle from a vector
          * @param x
          * @param y
-         * @return
+         * @return angle in degrees
          */
         public static function rotationFromVector(x:Number, y:Number):Number {
-            return Math.atan2(y, x) / Math.PI * 180;
+            return Math.atan2(y, x) * RAD_2_DEG;
         }
-
+		
+		/**
+		 * Calculates the distance between two Node2D
+		 * @param n1 first Node2D
+		 * @param n2 second Node2D
+		 * @return distance between two Node2D
+		 */
         public static function distance(n1:Node2D, n2:Node2D):Number {
-            return Point.distance(n1.position, n2.position);
+			const p1:Point = n1.position;
+			const p2:Point = n2.position;
+			const dx:Number = p1.x - p2.x;
+			const dy:Number = p1.y - p2.y;
+			return Math.sqrt(dx*dx + dy*dy);
         }
     }
 }

@@ -8,3 +8,11 @@ pb3d_compile.sh
 nd2d.iml
 .idea
 src/de/nulldesign/nd2d/shader/src/compile_shader.sh
+
+# Flash Builder
+bin-debug
+.actionScriptProperties
+.flexLibProperties
+.project
+.settings
+html-template
