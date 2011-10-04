@@ -39,11 +39,17 @@ Useful links:
 
 # Changelog:
 
+2011-10-04
+- Fixed issues: #17, #14
+- Uploaded v0.1.0 SWC
+
 2011-09-26
+
 - DELETED pb3dlib.swc. Dependency removed. ParticleSystem2DMaterial converted to AGAL
 - NEW: UV offsets are now animateable. See updated example StarFieldTest
 
 2011-09-21
+
 - NEW: colorTransform property for all display objects. (See new example ColorTransformTest)
 
 2011-09-08
