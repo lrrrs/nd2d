@@ -83,7 +83,7 @@ package {
 
             stage.scaleMode = StageScaleMode.NO_SCALE;
             stage.align = StageAlign.TOP_LEFT;
-            enableErrorChecking = false;
+            enableErrorChecking = true;
 
             super(Context3DRenderMode.AUTO, 60, true);
 
@@ -121,7 +121,7 @@ package {
             stage.addEventListener(Event.RESIZE, stageResize);
             stageResize(null);
 
-            activeSceneIdx = 0;
+            activeSceneIdx = 2;
             nextBtnClick();
 
             stage.addEventListener(KeyboardEvent.KEY_UP, keyUp);
@@ -183,8 +183,9 @@ package {
                 activeSceneIdx = 0;
             }
 
-            if(context3D)
+            if(context3D) {
                 stats.driverInfo = context3D.driverInfo;
+            }
         }
 
         private function stageResize(e:Event):void {

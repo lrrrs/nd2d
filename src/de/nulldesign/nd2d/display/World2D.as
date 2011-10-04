@@ -85,14 +85,14 @@ package de.nulldesign.nd2d.display {
         protected var lastFramesTime:Number = 0.0;
         protected var enableErrorChecking:Boolean = false;
 
-        private var renderTimer:Timer;
-        private var renderMode:String;
-        private var mousePosition:Vector3D = new Vector3D(0.0, 0.0, 0.0);
-        private var antialiasing:uint = 2;
-        private var deviceInitialized:Boolean = false;
-        private var deviceWasLost:Boolean = false;
+        protected var renderTimer:Timer;
+        protected var renderMode:String;
+        protected var mousePosition:Vector3D = new Vector3D(0.0, 0.0, 0.0);
+        protected var antialiasing:uint = 2;
+        protected var deviceInitialized:Boolean = false;
+        protected var deviceWasLost:Boolean = false;
 
-        private var initializeNodesAfterStartUp:Boolean = false;
+        protected var initializeNodesAfterStartUp:Boolean = false;
 
         public static var isHardwareAccelerated:Boolean;
 

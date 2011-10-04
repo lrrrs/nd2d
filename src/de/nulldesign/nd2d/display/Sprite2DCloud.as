@@ -334,8 +334,8 @@ package de.nulldesign.nd2d.display {
 
                 // v1
                 if(child.invalidateMatrix) {
-                    mVertexBuffer[vIdx] = (v1.x + pivot.x) * sx * cr - (v1.y + pivot.y) * sy * sr + child.x + atlasOffset.x;
-                    mVertexBuffer[vIdx + 1] = (v1.x + pivot.x) * sx * sr + (v1.y + pivot.y) * sy * cr + child.y + atlasOffset.y;
+                    mVertexBuffer[vIdx] =     (v1.x - pivot.x) * sx * cr - (v1.y - pivot.y) * sy * sr + child.x + atlasOffset.x;
+                    mVertexBuffer[vIdx + 1] = (v1.x - pivot.x) * sx * sr + (v1.y - pivot.y) * sy * cr + child.y + atlasOffset.y;
                     somethingChanged = true;
                 }
 
@@ -359,8 +359,8 @@ package de.nulldesign.nd2d.display {
 
                 // v2
                 if(child.invalidateMatrix) {
-                    mVertexBuffer[vIdx + 12] = (v2.x + pivot.x) * sx * cr - (v2.y + pivot.y) * sy * sr + child.x + atlasOffset.x;
-                    mVertexBuffer[vIdx + 13] = (v2.x + pivot.x) * sx * sr + (v2.y + pivot.y) * sy * cr + child.y + atlasOffset.y;
+                    mVertexBuffer[vIdx + 12] = (v2.x - pivot.x) * sx * cr - (v2.y - pivot.y) * sy * sr + child.x + atlasOffset.x;
+                    mVertexBuffer[vIdx + 13] = (v2.x - pivot.x) * sx * sr + (v2.y - pivot.y) * sy * cr + child.y + atlasOffset.y;
                 }
 
                 if(initUV) {
@@ -381,8 +381,8 @@ package de.nulldesign.nd2d.display {
 
                 // v3
                 if(child.invalidateMatrix) {
-                    mVertexBuffer[vIdx + 24] = (v3.x + pivot.x) * sx * cr - (v3.y + pivot.y) * sy * sr + child.x + atlasOffset.x;
-                    mVertexBuffer[vIdx + 25] = (v3.x + pivot.x) * sx * sr + (v3.y + pivot.y) * sy * cr + child.y + atlasOffset.y;
+                    mVertexBuffer[vIdx + 24] = (v3.x - pivot.x) * sx * cr - (v3.y - pivot.y) * sy * sr + child.x + atlasOffset.x;
+                    mVertexBuffer[vIdx + 25] = (v3.x - pivot.x) * sx * sr + (v3.y - pivot.y) * sy * cr + child.y + atlasOffset.y;
                 }
 
                 if(initUV) {
@@ -403,8 +403,8 @@ package de.nulldesign.nd2d.display {
 
                 // v4
                 if(child.invalidateMatrix) {
-                    mVertexBuffer[vIdx + 36] = (v4.x + pivot.x) * sx * cr - (v4.y + pivot.y) * sy * sr + child.x + atlasOffset.x;
-                    mVertexBuffer[vIdx + 37] = (v4.x + pivot.x) * sx * sr + (v4.y + pivot.y) * sy * cr + child.y + atlasOffset.y;
+                    mVertexBuffer[vIdx + 36] = (v4.x - pivot.x) * sx * cr - (v4.y - pivot.y) * sy * sr + child.x + atlasOffset.x;
+                    mVertexBuffer[vIdx + 37] = (v4.x - pivot.x) * sx * sr + (v4.y - pivot.y) * sy * cr + child.y + atlasOffset.y;
                 }
 
                 if(initUV) {

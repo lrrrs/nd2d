@@ -46,7 +46,6 @@ package de.nulldesign.nd2d.display {
         public var bb:Number = 0.0;
 
         override public function get numTris():uint {
-
             return totalTris;
         }
 

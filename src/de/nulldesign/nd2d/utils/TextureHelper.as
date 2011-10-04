@@ -95,7 +95,7 @@ package de.nulldesign.nd2d.utils {
             var destPoint:Point;
 
             sourceRect = new Rectangle(0, 0, bmp.width, bmp.height);
-            destPoint = new Point(textureDimensions.x * 0.5 - bmp.width * 0.5, textureDimensions.y * 0.5 - bmp.height / 2);
+            destPoint = new Point(textureDimensions.x * 0.5 - bmp.width * 0.5, textureDimensions.y * 0.5 - bmp.height * 0.5);
 
             newBmp.copyPixels(bmp, sourceRect, destPoint);
 

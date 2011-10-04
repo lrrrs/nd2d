@@ -35,12 +35,14 @@ package tests {
     import de.nulldesign.nd2d.display.Node2D;
     import de.nulldesign.nd2d.display.Scene2D;
     import de.nulldesign.nd2d.display.Sprite2D;
+    import de.nulldesign.nd2d.display.Sprite2DBatch;
     import de.nulldesign.nd2d.display.Sprite2DCloud;
     import de.nulldesign.nd2d.materials.SpriteSheet;
 
     import flash.display.BitmapData;
     import flash.events.Event;
     import flash.events.MouseEvent;
+    import flash.geom.Point;
 
     public class MassiveSpriteCloudTest extends Scene2D {
 
@@ -89,6 +91,7 @@ package tests {
                 s.y = Math.round(Math.random() * 1000);
                 s.vx = (Math.random() - Math.random()) * 3;
                 s.vy = (Math.random() - Math.random()) * 3;
+                s.pivot = new Point(0, -15);
 
                 if(spriteCloud.addChild(s)) {
                     sprites.push(s);
@@ -166,11 +169,9 @@ package tests {
                 } else if(s.vy < 0 && vyabs > vxabs) { // up
                     s.spriteSheet.playAnimation("up");
                 }
-            }
 
-            //camera.x = Math.sin(getTimer() / 1000.0) * 100.0;
-            //camera.y = Math.cos(getTimer() / 1000.0) * 100.0;
-            //camera.zoom = 1.0 + 0.5 + 0.5 * Math.sin(getTimer() / 5000);
+                s.rotation += 5.0;
+            }
         }
     }
 }

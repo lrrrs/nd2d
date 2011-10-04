@@ -110,7 +110,7 @@ package de.nulldesign.nd2d.materials {
             super.prepareForRender(context);
 
             if(!texture && spriteSheet && spriteSheet.bitmapData) {
-                texture = TextureHelper.generateTextureFromBitmap(context, spriteSheet.bitmapData, true);
+                texture = TextureHelper.generateTextureFromBitmap(context, spriteSheet.bitmapData, false);
             }
 
             if(!texture) {
