@@ -48,7 +48,8 @@ package de.nulldesign.nd2d.materials {
 
     public class Sprite2DBatchMaterial extends Sprite2DMaterial {
 
-        protected const DEFAULT_VERTEX_SHADER:String = "m44 op, va0, vc[va2.x]             \n" + // vertex * clipspace[idx]
+        protected const DEFAULT_VERTEX_SHADER:String =
+                "m44 op, va0, vc[va2.x]             \n" + // vertex * clipspace[idx]
                 "mov vt0, va1                       \n" + // save uv in temp register
                 "mul vt0.xy, vt0.xy, vc[va2.w].zw   \n" + // mult with uv-scale
                 "add vt0.xy, vt0.xy, vc[va2.w].xy   \n" + // add uv offset
@@ -64,11 +65,10 @@ package de.nulldesign.nd2d.materials {
          "mov v1, vc[va2.y]	        \n"; // copy color[idx]
          */
 
-        protected const DEFAULT_FRAGMENT_SHADER:String = "mov ft0, v0                                \n" + // get interpolated uv coords
-                "tex ft1, ft0, fs0 <2d,clamp,linear,nomip>  \n" + // sample texture
-                "mul ft1, ft1, v1                           \n" + // mult with colorMultiplier
-                "add ft1, ft1, v2                           \n" + // add with colorOffset
-                "mov oc, ft1                                \n";
+        protected const DEFAULT_FRAGMENT_SHADER:String =
+                "tex ft0, v0, fs0 <2d,clamp,linear,mipnearest>  \n" + // sample texture from interpolated uv coords
+                "mul ft0, ft0, v1                               \n" + // mult with colorMultiplier
+                "add oc, ft0, v2                               \n"; // add with colorOffset
 
         protected var constantsPerSprite:uint = 7; // matrix, colorMultiplier, colorOffset, uvoffset
         protected var constantsPerMatrix:uint = 4;
@@ -123,7 +123,7 @@ package de.nulldesign.nd2d.materials {
         override protected function prepareForRender(context:Context3D):Boolean {
 
             if(!texture) {
-                texture = TextureHelper.generateTextureFromBitmap(context, spriteSheet.bitmapData, false);
+                texture = TextureHelper.generateTextureFromBitmap(context, spriteSheet.bitmapData, true);
             }
 
             context.setProgram(programData.program);

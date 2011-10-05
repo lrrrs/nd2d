@@ -61,21 +61,20 @@ package de.nulldesign.nd2d.materials {
                 "mov op, vt0                    \n";  // output position
 
 
-        protected const DEFAULT_FRAGMENT_SHADER:String = "mov ft0, v0                                    \n" + // get interpolated uv coords
-                "tex ft1, ft0, fs0 <2d,clamp,linear,nomip>      \n" + // sample texture
-                "mul ft1, ft1, fc0                              \n" + // mult with colorMultiplier
-                "add ft1, ft1, fc1                              \n" + // mult with colorOffset
-                "mov ft2, v1                                    \n" + // get interpolated uv coords for mask
-                "tex ft3, ft2, fs1 <2d,clamp,linear,nomip>      \n" + // sample mask
+        protected const DEFAULT_FRAGMENT_SHADER:String =
+                "tex ft0, v0, fs0 <2d,clamp,linear,mipnearest>  \n" + // sample texture
+                "mul ft0, ft0, fc0                              \n" + // mult with colorMultiplier
+                "add ft0, ft0, fc1                              \n" + // mult with colorOffset
+                "tex ft1, v1, fs1 <2d,clamp,linear,mipnearest>  \n" + // sample mask
 
-                "sub ft4, fc2, ft3                              \n" + // (1 - maskcolor)
-                "mov ft5, fc3                                   \n" + // save maskalpha
-                "sub ft5, fc2, ft5                              \n" + // (1 - maskalpha)
-                "mul ft5, ft4, ft5                              \n" + // (1 - maskcolor) * (1 - maskalpha)
-                "add ft5, ft3, ft5                              \n" + // finalmaskcolor = maskcolor + (1 - maskcolor) * (1 - maskalpha));
-                "mul ft1, ft1, ft5                              \n" + // mult mask color with tex color
-//                "mul ft1, ft1, ft3                              \n" + // mult mask color with tex color
-                "mov oc, ft1                                    \n";  // output color
+                "sub ft2, fc2, ft1                              \n" + // (1 - maskcolor)
+                "mov ft3, fc3                                   \n" + // save maskalpha
+                "sub ft3, fc2, ft3                              \n" + // (1 - maskalpha)
+                "mul ft3, ft2, ft3                              \n" + // (1 - maskcolor) * (1 - maskalpha)
+                "add ft3, ft1, ft3                              \n" + // finalmaskcolor = maskcolor + (1 - maskcolor) * (1 - maskalpha));
+                "mul ft0, ft0, ft3                              \n" + // mult mask color with tex color
+//                "mul ft0, ft0, ft1                              \n" + // mult mask color with tex color
+                "mov oc, ft0                                    \n";  // output color
 
         public var maskModelMatrix:Matrix3D;
         public var maskBitmap:BitmapData;
@@ -102,12 +101,12 @@ package de.nulldesign.nd2d.materials {
             super.prepareForRender(context);
 
             if(!texture) {
-                texture = TextureHelper.generateTextureFromBitmap(context, spriteSheet.bitmapData, false);
+                texture = TextureHelper.generateTextureFromBitmap(context, spriteSheet.bitmapData, true);
             }
 
             if(!maskTexture) {
                 maskDimensions = TextureHelper.getTextureDimensionsFromBitmap(maskBitmap);
-                maskTexture = TextureHelper.generateTextureFromBitmap(context, maskBitmap, false);
+                maskTexture = TextureHelper.generateTextureFromBitmap(context, maskBitmap, true);
             }
 
             context.setTextureAt(0, texture);

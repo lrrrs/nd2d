@@ -55,11 +55,10 @@ package de.nulldesign.nd2d.materials {
                 "add vt0.xy, vt0.xy, vc4.xy   \n" + // add uv offset
                 "mov v0, vt0 \n"; // copy uv
 
-        private const FRAGMENT_SHADER:String = "mov ft0, v0\n" + // get interpolated uv coords
-                "tex ft1, ft0, fs0 <2d,repeat,linear,nomip>\n" + // sample texture
-                "mul ft1, ft1, fc0\n" + // mult with colorMultiplier
-                "add ft1, ft1, fc1\n" + // mult with colorOffset
-                "mov oc, ft1\n";
+        private const FRAGMENT_SHADER:String =
+                "tex ft0, v0, fs0 <2d,repeat,linear,mipnearest>\n" + // sample texture from interpolated uv coords
+                "mul ft0, ft0, fc0\n" + // mult with colorMultiplier
+                "add oc, ft0, fc1\n"; // mult with colorOffset
 
         private static var sprite2DProgramData:ProgramData;
 
@@ -110,7 +109,7 @@ package de.nulldesign.nd2d.materials {
             super.prepareForRender(context);
 
             if(!texture && spriteSheet && spriteSheet.bitmapData) {
-                texture = TextureHelper.generateTextureFromBitmap(context, spriteSheet.bitmapData, false);
+                texture = TextureHelper.generateTextureFromBitmap(context, spriteSheet.bitmapData, true);
             }
 
             if(!texture) {

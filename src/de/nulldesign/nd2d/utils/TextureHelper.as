@@ -117,7 +117,9 @@ package de.nulldesign.nd2d.utils {
             var tmp:BitmapData = new BitmapData(src.width, src.height, true, 0x00000000);
             var transform:Matrix = new Matrix();
 
-            while(ws >= 1 && hs >= 1) {
+            while(ws >= 1 || hs >= 1) {
+
+                tmp.fillRect(tmp.rect, 0x00000000);
                 tmp.draw(src, transform, null, null, null, true);
                 dest.uploadFromBitmapData(tmp, level);
                 transform.scale(0.5, 0.5);
@@ -125,6 +127,7 @@ package de.nulldesign.nd2d.utils {
                 ws >>= 1;
                 hs >>= 1;
             }
+
             tmp.dispose();
         }
 

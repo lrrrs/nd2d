@@ -99,10 +99,8 @@ package de.nulldesign.nd2d.materials {
                 "add v1, vt3, vt4           \n"; // save color
 
         private const FRAGMENT_SHADER:String =
-                "mov ft0, v0                                    \n" + // get interpolated uv coords
-                "tex ft1, ft0, fs0 <2d,clamp,linear,mipnone>    \n" + // sample texture
-                "mul ft1, ft1, v1                               \n" + // mult with color
-                "mov oc, ft1                                    \n";
+                "tex ft0, v0, fs0 <2d,clamp,linear,mipnearest>  \n" + // sample texture from interpolated uv coords
+                "mul oc, ft0, v1                               \n";  // mult with color
 
         private static var particleSystemProgramData:ProgramData;
 
@@ -130,7 +128,7 @@ package de.nulldesign.nd2d.materials {
             refreshClipspaceMatrix();
 
             if(!texture) {
-                texture = TextureHelper.generateTextureFromBitmap(context, particleTexture, false);
+                texture = TextureHelper.generateTextureFromBitmap(context, particleTexture, true);
             }
 
             context.setTextureAt(0, texture);

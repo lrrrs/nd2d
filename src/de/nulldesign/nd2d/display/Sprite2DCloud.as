@@ -87,11 +87,10 @@ package de.nulldesign.nd2d.display {
                 "mov v1, va2		\n" + // copy colorMultiplier
                 "mov v2, va3		\n"; // copy colorOffset
 
-        protected const DEFAULT_FRAGMENT_SHADER:String = "mov ft0, v0\n" + // get interpolated uv coords
-                "tex ft1, ft0, fs0 <2d,clamp,linear,nomip>\n" + // sample texture
-                "mul ft1, ft1, v1\n" + // mult with colorMultiplier
-                "add ft1, ft1, v2\n" + // add with colorOffset
-                "mov oc, ft1\n";
+        protected const DEFAULT_FRAGMENT_SHADER:String =
+                "tex ft0, v0, fs0 <2d,clamp,linear,mipnearest>\n" + // sample texture from interpolated uv coords
+                "mul ft0, ft0, v1\n" + // mult with colorMultiplier
+                "add oc, ft0, v2\n";  // add with colorOffset
 
         protected var program:Program3D;
         protected var indexBuffer:IndexBuffer3D;
@@ -239,7 +238,7 @@ package de.nulldesign.nd2d.display {
             if(children.length == 0) return;
 
             if(!texture) {
-                texture = TextureHelper.generateTextureFromBitmap(context, spriteSheet.bitmapData, false);
+                texture = TextureHelper.generateTextureFromBitmap(context, spriteSheet.bitmapData, true);
             }
 
             if(!program) {
