@@ -150,10 +150,12 @@ package de.nulldesign.nd2d.materials {
                                                                                                       uvOffsetAndScale.width,
                                                                                                       uvOffsetAndScale.height]));
 
-            context.setProgramConstantsFromVector(Context3DProgramType.FRAGMENT, 0, Vector.<Number>([ colorTransform.redMultiplier, colorTransform.greenMultiplier, colorTransform.blueMultiplier, colorTransform.alphaMultiplier ]));
+            context.setProgramConstantsFromVector(Context3DProgramType.FRAGMENT, 0,
+                                                  Vector.<Number>([ colorTransform.redMultiplier, colorTransform.greenMultiplier, colorTransform.blueMultiplier, colorTransform.alphaMultiplier ]));
 
             var offsetFactor:Number = 1.0 / 255.0;
-            context.setProgramConstantsFromVector(Context3DProgramType.FRAGMENT, 1, Vector.<Number>([ colorTransform.redOffset * offsetFactor, colorTransform.greenOffset * offsetFactor, colorTransform.blueOffset * offsetFactor, colorTransform.alphaOffset * offsetFactor ]));
+            context.setProgramConstantsFromVector(Context3DProgramType.FRAGMENT, 1,
+                                                  Vector.<Number>([ colorTransform.redOffset * offsetFactor, colorTransform.greenOffset * offsetFactor, colorTransform.blueOffset * offsetFactor, colorTransform.alphaOffset * offsetFactor ]));
 
             context.setProgramConstantsFromVector(Context3DProgramType.FRAGMENT, 2, Vector.<Number>([ 1.0, 1.0, 1.0, 1.0 ]));
             context.setProgramConstantsFromVector(Context3DProgramType.FRAGMENT, 3, Vector.<Number>([ maskAlpha, maskAlpha, maskAlpha, maskAlpha]));
@@ -193,7 +195,12 @@ package de.nulldesign.nd2d.materials {
         }
 
         override public function cleanUp():void {
-
+            super.cleanUp();
+            maskProgramData = null;
+            if(maskTexture) {
+                maskTexture.dispose();
+                maskTexture = null;
+            }
         }
     }
 }

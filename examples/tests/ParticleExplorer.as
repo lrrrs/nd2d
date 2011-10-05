@@ -137,9 +137,11 @@ package tests {
 
                 c = new ColorChooser(panel, 0, nextY, preset.startColor, changeHandler);
                 c.tag = 0;
+                c.usePopup = true;
                 nextY += 20;
 
                 c = new ColorChooser(panel, 0, nextY, preset.startColorVariance, changeHandler);
+                c.usePopup = true;
                 c.tag = 1;
                 nextY += 20;
 
@@ -150,10 +152,12 @@ package tests {
                 nextY += 20;
 
                 c = new ColorChooser(panel, 0, nextY, preset.endColor, changeHandler);
+                c.usePopup = true;
                 c.tag = 2;
                 nextY += 20;
 
                 c = new ColorChooser(panel, 0, nextY, preset.endColorVariance, changeHandler);
+                c.usePopup = true;
                 c.tag = 3;
                 nextY += 20;
 
@@ -165,7 +169,7 @@ package tests {
 
                 s = new HUISlider(panel, 0, nextY, "spawnDelay", changeHandler);
                 s.minimum = 0;
-                s.maximum = 100;
+                s.maximum = 10;
                 s.value = preset.spawnDelay;
                 nextY += 20;
 
@@ -304,6 +308,7 @@ package tests {
         private function updateSystem(e:TimerEvent):void {
 
             removeChild(particles);
+            particles.cleanUp();
 
             particles = new ParticleSystem2D(bmp, maxParticles, preset);
             particles.blendMode = BlendModePresets.ADD;

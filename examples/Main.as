@@ -59,6 +59,7 @@ package {
     import tests.ParticleSystemTest;
     import tests.PostProcessingTest;
     import tests.SideScrollerTest;
+    import tests.Sprite2DCloudParticles;
     import tests.SpriteAnimTest;
     import tests.SpriteHierarchyTest;
     import tests.SpriteHierarchyTest2;
@@ -104,6 +105,7 @@ package {
             scenes.push(new TextureRendererTest());
             scenes.push(new PostProcessingTest());
             scenes.push(new ColorTransformTest());
+            scenes.push(new Sprite2DCloudParticles());
 
             var tf:TextFormat = new TextFormat("Arial", 11, 0xFFFFFF, true);
 

@@ -265,7 +265,8 @@ package de.nulldesign.nd2d.materials {
                 vertexBuffer = null;
             }
             if(programData) {
-                programData.program.dispose();
+                // dont' kill program... it's cached
+                //programData.program.dispose();
                 programData = null;
             }
         }
