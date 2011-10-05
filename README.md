@@ -40,6 +40,10 @@ Useful links:
 # Changelog:
 
 2011-10-04
+- ADDED: mipmapgeneration for all textures. Rotated and scaled nodes look a lot smoother now
+- OPTIMIZED: fragment shaders (thanks kutu)
+
+2011-10-04
 - Fixed issues: #17, #14
 - Uploaded v0.1.0 SWC
 
