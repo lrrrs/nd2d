@@ -31,10 +31,12 @@
 package {
 
     import avmplus.getQualifiedClassName;
-
+    
+    import com.bit101.components.PushButton;
+    
     import de.nulldesign.nd2d.display.Scene2D;
     import de.nulldesign.nd2d.display.World2D;
-
+    
     import flash.display.StageAlign;
     import flash.display.StageScaleMode;
     import flash.display3D.Context3DRenderMode;
@@ -44,9 +46,9 @@ package {
     import flash.text.TextField;
     import flash.text.TextFormat;
     import flash.ui.Keyboard;
-
+    
     import net.hires.debug.Stats;
-
+    
     import tests.BatchTest;
     import tests.CameraTest;
     import tests.ColorTransformTest;
@@ -112,6 +114,7 @@ package {
             sceneText = new TextField();
             sceneText.width = 300;
             sceneText.defaultTextFormat = tf;
+			sceneText.autoSize = "left";
 
             addChild(sceneText);
 
@@ -121,7 +124,7 @@ package {
             stageResize(null);
 
             activeSceneIdx = scenes.length - 1;
-            nextBtnClick();
+            nextDemo();
 
             stage.addEventListener(KeyboardEvent.KEY_UP, keyUp);
 
@@ -142,8 +145,14 @@ package {
             b = new PushButton(this, 0, 520, "wakeup", buttonClicked);
             b.tag = 3;
             */
+			
+			addChild(new PushButton(this, stage.stageWidth-100, stage.stageHeight-20, "next", nextButtonClick));
         }
 
+        private function nextButtonClick(e:MouseEvent):void {
+			nextDemo();
+		}
+		
         private function buttonClicked(e:MouseEvent):void {
             switch(e.target.tag) {
                 case 0:
@@ -166,26 +175,29 @@ package {
                 // simulate device loss
                 context3D.dispose();
             } else if(e.keyCode == Keyboard.SPACE) {
-                nextBtnClick();
+                nextDemo();
             }
         }
 
-        private function nextBtnClick():void {
+        private function nextDemo():void {
 
             camera.reset();
 
-            sceneText.text = "(" + (activeSceneIdx + 1) + "/" + scenes.length + ") " + getQualifiedClassName(scenes[activeSceneIdx]) + " // hit space for next test.";
+            sceneText.text = "(" + (activeSceneIdx + 1) + "/" + scenes.length + ") " + getQualifiedClassName(scenes[activeSceneIdx]);
 
             setActiveScene(scenes[activeSceneIdx++]);
 
             if(activeSceneIdx > scenes.length - 1) {
                 activeSceneIdx = 0;
             }
-
-            if(context3D) {
-                stats.driverInfo = context3D.driverInfo;
-            }
         }
+		
+		override protected function context3DCreated(e:Event):void {
+			super.context3DCreated(e);
+			
+			if(context3D)
+				stats.driverInfo = context3D.driverInfo;
+		}
 
         private function stageResize(e:Event):void {
             sceneText.x = 5;
