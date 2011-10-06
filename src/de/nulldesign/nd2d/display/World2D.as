@@ -37,13 +37,9 @@ package de.nulldesign.nd2d.display {
     import flash.events.ErrorEvent;
     import flash.events.Event;
     import flash.events.MouseEvent;
-    import flash.events.TimerEvent;
     import flash.geom.Rectangle;
     import flash.geom.Vector3D;
-    import flash.utils.Timer;
     import flash.utils.getTimer;
-
-    import net.hires.debug.Stats;
 
     /**
      * Dispatched when the World2D is initialized and the context3D is available. The flag 'isHardwareAccelerated' is available then
@@ -81,11 +77,9 @@ package de.nulldesign.nd2d.display {
         protected var frameRate:uint;
         protected var isPaused:Boolean = false;
         protected var bounds:Rectangle;
-        protected var frameBased:Boolean;
         protected var lastFramesTime:Number = 0.0;
         protected var enableErrorChecking:Boolean = false;
 
-        protected var renderTimer:Timer;
         protected var renderMode:String;
         protected var mousePosition:Vector3D = new Vector3D(0.0, 0.0, 0.0);
         protected var antialiasing:uint = 2;
@@ -104,12 +98,11 @@ package de.nulldesign.nd2d.display {
          * @param bounds the worlds boundaries
          * @param stageID
          */
-        public function World2D(renderMode:String, frameRate:uint, frameBased:Boolean, bounds:Rectangle = null, stageID:uint = 0) {
+        public function World2D(renderMode:String, frameRate:uint = 60, bounds:Rectangle = null, stageID:uint = 0) {
 
             this.renderMode = renderMode;
             this.frameRate = frameRate;
             this.bounds = bounds;
-            this.frameBased = frameBased;
             this.stageID = stageID;
             addEventListener(Event.ADDED_TO_STAGE, addedToStage);
         }
@@ -182,6 +175,7 @@ package de.nulldesign.nd2d.display {
         }
 
         protected function mainLoop(e:Event):void {
+
             var t:Number = getTimer() / 1000.0;
             var elapsed:Number = t - lastFramesTime;
 
@@ -222,12 +216,6 @@ package de.nulldesign.nd2d.display {
         }
 
         public function start():void {
-
-            if(!renderTimer && !frameBased) {
-                renderTimer = new Timer(1000 / frameRate);
-                renderTimer.addEventListener(TimerEvent.TIMER, mainLoop);
-            }
-
             wakeUp();
         }
 
@@ -249,12 +237,8 @@ package de.nulldesign.nd2d.display {
          * Put everything to sleep, no drawing and step loop will be fired
          */
         public function sleep():void {
-            if(frameBased) {
-                removeEventListener(Event.ENTER_FRAME, mainLoop);
-            } else {
-                if(renderTimer.running)
-                    renderTimer.stop();
-            }
+
+            removeEventListener(Event.ENTER_FRAME, mainLoop);
 
             if(context3D) {
                 context3D.clear(scene.br, scene.bg, scene.bb, 1.0);
@@ -266,13 +250,8 @@ package de.nulldesign.nd2d.display {
          * wake up from sleep. draw / step loops will start to fire again
          */
         public function wakeUp():void {
-            if(frameBased) {
-                removeEventListener(Event.ENTER_FRAME, mainLoop);
-                addEventListener(Event.ENTER_FRAME, mainLoop);
-            } else {
-                if(!renderTimer.running)
-                    renderTimer.start();
-            }
+            removeEventListener(Event.ENTER_FRAME, mainLoop);
+            addEventListener(Event.ENTER_FRAME, mainLoop);
         }
 
         /**

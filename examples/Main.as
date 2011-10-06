@@ -84,7 +84,7 @@ package {
             stage.align = StageAlign.TOP_LEFT;
             enableErrorChecking = true;
 
-            super(Context3DRenderMode.AUTO, 60, true);
+            super(Context3DRenderMode.AUTO, 60);
 
             scenes.push(new SideScrollerTest());
             scenes.push(new MassiveSpritesTest());

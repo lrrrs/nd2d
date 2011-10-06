@@ -39,11 +39,17 @@ Useful links:
 
 # Changelog:
 
-2011-10-04
+2011-10-06
+
+- REMOVED: timer based loop option in World2D. You should never use that, it's just not the way to render.
+
+2011-10-05
+
 - ADDED: mipmapgeneration for all textures. Rotated and scaled nodes look a lot smoother now
 - OPTIMIZED: fragment shaders (thanks kutu)
 
 2011-10-04
+
 - Fixed issues: #17, #14
 - Uploaded v0.1.0 SWC
 

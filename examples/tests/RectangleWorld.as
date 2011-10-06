@@ -47,7 +47,7 @@ package tests {
         private var s2:Sprite2D;
 
         public function RectangleWorld(renderMode:String, frameRate:uint, bounds:Rectangle = null) {
-            super(renderMode, frameRate, false, bounds);
+            super(renderMode, frameRate, bounds);
 
             _scene = new Scene2D();
             _scene.backGroundColor = 0xDDDDDD;

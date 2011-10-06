@@ -1,5 +1,4 @@
 - PVTR support
-- UV manipulations Sprite2D: scrollX / Y -> PB3D_REPEAT broken in current release
 - ParticleSystem2D: add support for bursts!
 - Multitouch events!!!
 - init method for world -> async buffer & texture creation w/ event before launching the world. (no startup lag anymore, "preloadable")
