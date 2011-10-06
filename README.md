@@ -41,6 +41,7 @@ Useful links:
 
 2011-10-06
 
+- FIXED: Node2D.alpha property was ignored
 - REMOVED: timer based loop option in World2D. You should never use that, it's just not the way to render.
 
 2011-10-05

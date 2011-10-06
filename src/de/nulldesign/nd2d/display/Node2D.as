@@ -230,14 +230,14 @@ package de.nulldesign.nd2d.display {
                 var g:Number = (_tint >> 8 & 255) / 255.0;
                 var b:Number = (_tint & 255) / 255.0;
 
-                colorTransform.redMultiplier = r;
-                colorTransform.greenMultiplier = g;
-                colorTransform.blueMultiplier = b;
-                colorTransform.alphaMultiplier = 1.0;
-                colorTransform.redOffset = 0;
-                colorTransform.greenOffset = 0;
-                colorTransform.blueOffset = 0;
-                colorTransform.alphaOffset = 0;
+                _colorTransform.redMultiplier = r;
+                _colorTransform.greenMultiplier = g;
+                _colorTransform.blueMultiplier = b;
+                _colorTransform.alphaMultiplier = 1.0;
+                _colorTransform.redOffset = 0;
+                _colorTransform.greenOffset = 0;
+                _colorTransform.blueOffset = 0;
+                _colorTransform.alphaOffset = 0;
 
                 invalidateColors = true;
             }
@@ -396,14 +396,14 @@ package de.nulldesign.nd2d.display {
 
             invalidateColors = false;
 
-            combinedColorTransform.redMultiplier = colorTransform.redMultiplier;
-            combinedColorTransform.greenMultiplier = colorTransform.greenMultiplier;
-            combinedColorTransform.blueMultiplier = colorTransform.blueMultiplier;
-            combinedColorTransform.alphaMultiplier = colorTransform.alphaMultiplier;
-            combinedColorTransform.redOffset = colorTransform.redOffset;
-            combinedColorTransform.greenOffset = colorTransform.greenOffset;
-            combinedColorTransform.blueOffset = colorTransform.blueOffset;
-            combinedColorTransform.alphaOffset = colorTransform.alphaOffset;
+            combinedColorTransform.redMultiplier = _colorTransform.redMultiplier * _alpha;
+            combinedColorTransform.greenMultiplier = _colorTransform.greenMultiplier * _alpha;
+            combinedColorTransform.blueMultiplier = _colorTransform.blueMultiplier * _alpha;
+            combinedColorTransform.alphaMultiplier = _colorTransform.alphaMultiplier * _alpha;
+            combinedColorTransform.redOffset = _colorTransform.redOffset;
+            combinedColorTransform.greenOffset = _colorTransform.greenOffset;
+            combinedColorTransform.blueOffset = _colorTransform.blueOffset;
+            combinedColorTransform.alphaOffset = _colorTransform.alphaOffset;
 
             if(parent) {
                 combinedColorTransform.concat(parent.combinedColorTransform);
