@@ -2,7 +2,7 @@
 
 ND2D is a 2D sprite engine using the new GPU hardware features of flash currently available in a beta build. To run this engine you must download and install the latest flash player:
 
-[Flash Player 11 Beta & playerglobal.swc](http://labs.adobe.com/downloads/flashplayer11.html)
+[Flash Player 11 & playerglobal.swc](http://get.adobe.com/de/flashplayer/)
 
 You have to compile ND2D with the FP11 beta playerglobal.swc to get it to work.
 
@@ -10,8 +10,13 @@ ND2D was built to make an ease use of hardware accelerated 2D content in the Fla
 
 If you want to contribute, make bugfixes or extend the engine, feel free to fork it or email me: lars[at]nulldesign.de
 
-Useful links:
-[ND2D API Documentation](http://www.nulldesign.de/nd2d/docs/) | [Setting up FP11 for IntelliJ](http://www.lidev.com.ar/?p=422)
+Important links:
+
+[ND2D Forum](http://www.nulldesign.de/nd2d/forum/)
+
+[ND2D API Documentation](http://www.nulldesign.de/nd2d/docs/)
+
+[Setting up FP11 for IntelliJ](http://www.lidev.com.ar/?p=422)
 
 [![Launch Examples](http://nulldesign.de/nd2d/nd2d_examples.jpg)](http://nulldesign.de/nd2d/tests/)
 
