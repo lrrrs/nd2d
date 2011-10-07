@@ -31,10 +31,18 @@
 package de.nulldesign.nd2d.materials {
 
     import flash.display.BitmapData;
+    import flash.geom.Point;
     import flash.geom.Rectangle;
     import flash.utils.Dictionary;
 
     public class ASpriteSheetBase {
+
+        protected var frames:Vector.<Rectangle> = new Vector.<Rectangle>();
+        protected var offsets:Vector.<Point> = new Vector.<Point>();
+        protected var sourceSizes:Vector.<Point> = new Vector.<Point>();
+        protected var frameNameToIndex:Dictionary = new Dictionary();
+        protected var uvRects:Vector.<Rectangle>;
+        protected var spritesPackedWithoutSpace:Boolean;
 
         protected var ctime:Number = 0.0;
         protected var otime:Number = 0.0;
@@ -82,6 +90,11 @@ package de.nulldesign.nd2d.materials {
             if(frame != value) {
                 _frame = value;
                 frameUpdated = true;
+
+                if(frames.length - 1 >= _frame) {
+                    _spriteWidth = frames[_frame].width;
+                    _spriteHeight = frames[_frame].height;
+                }
             }
         }
 
@@ -127,8 +140,34 @@ package de.nulldesign.nd2d.materials {
             return null;
         }
 
+        public function getOffsetForFrame():Point {
+            return offsets[frame];
+        }
+
         public function getUVRectForFrame():Rectangle {
-            return null;
+
+            if(uvRects[frame]) {
+                return uvRects[frame];
+            }
+
+            var rect:Rectangle = frames[frame].clone();
+
+            if(spritesPackedWithoutSpace) {
+                rect.x += 0.5;
+                rect.y += 0.5;
+
+                rect.width -= 1.0;
+                rect.height -= 1.0;
+            }
+
+            rect.x /= textureWidth;
+            rect.y /= textureHeight;
+            rect.width /= textureWidth;
+            rect.height /= textureHeight;
+
+            uvRects[frame] = rect;
+
+            return rect;
         }
     }
 }

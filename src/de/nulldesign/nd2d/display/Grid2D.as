@@ -81,14 +81,14 @@ package de.nulldesign.nd2d.display {
                 ar.push([]);
                 uv.push([]);
                 for(j = 0; j <= stepsY; j++) {
-                    var x:Number = i * (width / stepsX) - width / 2;
-                    var y:Number = j * (height / stepsY) - height / 2;
+                    var x:Number = i * (2 / stepsX) - 2 / 2;
+                    var y:Number = j * (2 / stepsY) - 2 / 2;
 
                     v = new Vertex(x, y, 0.0);
                     vertexList.push(v);
                     ar[i].push(v);
 
-                    u = new UV((x + width * 0.5) / width, (y + height * 0.5) / height);
+                    u = new UV((x + 2 * 0.5) / 2, (y + 2 * 0.5) / 2);
                     //uvList.push(u);
                     uv[i].push(u);
                 }

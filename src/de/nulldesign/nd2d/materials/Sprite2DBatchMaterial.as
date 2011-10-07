@@ -50,12 +50,12 @@ package de.nulldesign.nd2d.materials {
 
         protected const DEFAULT_VERTEX_SHADER:String =
                 "m44 op, va0, vc[va2.x]             \n" + // vertex * clipspace[idx]
-                "mov vt0, va1                       \n" + // save uv in temp register
-                "mul vt0.xy, vt0.xy, vc[va2.w].zw   \n" + // mult with uv-scale
-                "add vt0.xy, vt0.xy, vc[va2.w].xy   \n" + // add uv offset
-                "mov v0, vt0                        \n" + // copy uv
-                "mov v1, vc[va2.y]	                \n" + // copy colorMultiplier[idx]
-                "mov v2, vc[va2.z]	                \n"; // copy colorOffset[idx]
+                        "mov vt0, va1                       \n" + // save uv in temp register
+                        "mul vt0.xy, vt0.xy, vc[va2.w].zw   \n" + // mult with uv-scale
+                        "add vt0.xy, vt0.xy, vc[va2.w].xy   \n" + // add uv offset
+                        "mov v0, vt0                        \n" + // copy uv
+                        "mov v1, vc[va2.y]	                \n" + // copy colorMultiplier[idx]
+                        "mov v2, vc[va2.z]	                \n"; // copy colorOffset[idx]
 
         /*
          protected const DEFAULT_VERTEX_SHADER:String =
@@ -67,8 +67,8 @@ package de.nulldesign.nd2d.materials {
 
         protected const DEFAULT_FRAGMENT_SHADER:String =
                 "tex ft0, v0, fs0 <2d,clamp,linear,mipnearest>  \n" + // sample texture from interpolated uv coords
-                "mul ft0, ft0, v1                               \n" + // mult with colorMultiplier
-                "add oc, ft0, v2                               \n"; // add with colorOffset
+                        "mul ft0, ft0, v1                               \n" + // mult with colorMultiplier
+                        "add oc, ft0, v2                               \n"; // add with colorOffset
 
         protected var constantsPerSprite:uint = 7; // matrix, colorMultiplier, colorOffset, uvoffset
         protected var constantsPerMatrix:uint = 4;
@@ -150,9 +150,6 @@ package de.nulldesign.nd2d.materials {
                 var uvoffset:Vector.<Number> = new Vector.<Number>(4, true);
                 var i:int = -1;
                 var n:int = childList.length;
-                var uvOffsetAndScale:Rectangle;
-                var atlasOffset:Point;
-                var atlas:TextureAtlas;
                 var offsetFactor:Number = 1.0 / 255.0;
 
                 while(++i < n) {
@@ -164,23 +161,24 @@ package de.nulldesign.nd2d.materials {
                         if(child.invalidateColors) child.updateColors();
                         if(child.invalidateMatrix) child.updateMatrix();
 
-                        atlas = child.spriteSheet as TextureAtlas;
+                        uvOffsetAndScale = new Rectangle(0.0, 0.0, 1.0, 1.0);
 
-                        if(atlas) {
+                        if(spriteSheet) {
 
-                            atlasOffset = atlas.getOffsetForFrame();
+                            uvOffsetAndScale = child.spriteSheet.getUVRectForFrame();
+
+                            var offset:Point = child.spriteSheet.getOffsetForFrame();
 
                             clipSpaceMatrix.identity();
-                            clipSpaceMatrix.appendScale(atlas.spriteWidth * 0.5, atlas.spriteHeight * 0.5, 1.0);
-                            clipSpaceMatrix.appendTranslation(atlasOffset.x, atlasOffset.y, 0.0);
+                            clipSpaceMatrix.appendScale(child.spriteSheet.spriteWidth * 0.5, child.spriteSheet.spriteHeight * 0.5, 1.0);
+                            clipSpaceMatrix.appendTranslation(offset.x, offset.y, 0.0);
                             clipSpaceMatrix.append(child.localModelMatrix);
                             clipSpaceMatrix.append(modelMatrix);
                             clipSpaceMatrix.append(viewProjectionMatrix);
 
                         } else {
-
                             clipSpaceMatrix.identity();
-                            clipSpaceMatrix.append(child.localModelMatrix);
+                            clipSpaceMatrix.appendScale(textureWidth * 0.5, textureHeight * 0.5, 1.0);
                             clipSpaceMatrix.append(modelMatrix);
                             clipSpaceMatrix.append(viewProjectionMatrix);
                         }
@@ -194,23 +192,21 @@ package de.nulldesign.nd2d.materials {
                         colorMultiplierAndOffset[6] = child.combinedColorTransform.blueOffset * offsetFactor;
                         colorMultiplierAndOffset[7] = child.combinedColorTransform.alphaOffset * offsetFactor;
 
-                        uvOffsetAndScale = child.spriteSheet.getUVRectForFrame();
-
                         uvoffset[0] = uvOffsetAndScale.x;
                         uvoffset[1] = uvOffsetAndScale.y;
                         uvoffset[2] = uvOffsetAndScale.width;
                         uvoffset[3] = uvOffsetAndScale.height;
 
                         context.setProgramConstantsFromMatrix(Context3DProgramType.VERTEX,
-                                                              batchLen * constantsPerSprite, clipSpaceMatrix, true);
+                                batchLen * constantsPerSprite, clipSpaceMatrix, true);
 
                         context.setProgramConstantsFromVector(Context3DProgramType.VERTEX,
-                                                              batchLen * constantsPerSprite + constantsPerMatrix,
-                                                              colorMultiplierAndOffset);
+                                batchLen * constantsPerSprite + constantsPerMatrix,
+                                colorMultiplierAndOffset);
 
                         context.setProgramConstantsFromVector(Context3DProgramType.VERTEX,
-                                                              batchLen * constantsPerSprite + constantsPerMatrix + 2,
-                                                              uvoffset);
+                                batchLen * constantsPerSprite + constantsPerMatrix + 2,
+                                uvoffset);
 
                         ++batchLen;
 
@@ -253,8 +249,7 @@ package de.nulldesign.nd2d.materials {
             programData = cloudProgramData;
         }
 
-        override protected function addVertex(context:Context3D, buffer:Vector.<Number>, v:Vertex, uv:UV,
-                                              face:Face):void {
+        override protected function addVertex(context:Context3D, buffer:Vector.<Number>, v:Vertex, uv:UV, face:Face):void {
 
             fillBuffer(buffer, v, uv, face, VERTEX_POSITION, 2);
             fillBuffer(buffer, v, uv, face, VERTEX_UV, 2);

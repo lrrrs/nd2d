@@ -40,6 +40,7 @@ package de.nulldesign.nd2d.materials {
     import flash.display3D.IndexBuffer3D;
     import flash.display3D.VertexBuffer3D;
     import flash.geom.Matrix3D;
+    import flash.geom.Rectangle;
     import flash.utils.Dictionary;
 
     public class AMaterial {
@@ -69,6 +70,8 @@ package de.nulldesign.nd2d.materials {
         protected var mVertexBuffer:Vector.<Number>;
 
         protected var programData:ProgramData;
+
+        protected var uvOffsetAndScale:Rectangle;
 
         public static const VERTEX_POSITION:String = "PB3D_POSITION";
         public static const VERTEX_UV:String = "PB3D_UV";

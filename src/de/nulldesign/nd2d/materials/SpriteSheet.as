@@ -38,19 +38,7 @@ package de.nulldesign.nd2d.materials {
 
     public class SpriteSheet extends ASpriteSheetBase {
 
-        protected var numSheetsPerRow:uint;
-        protected var numRows:uint;
-        protected var numSheets:uint;
-        protected var uvRects:Vector.<Rectangle>;
-
-        public var pixelOffset:Point = new Point(0.0, 0.0);
-        public var uvOffset:Point = new Point(0.0, 0.0);
-        public var uvSize:Point = new Point(0.0, 0.0);
-        private var spritesPackedWithoutSpace:Boolean;
-
-        public function get totalFrames():uint {
-            return numSheets;
-        }
+        private var nullOffset:Point = new Point();
 
         /**
          *
@@ -62,71 +50,55 @@ package de.nulldesign.nd2d.materials {
          */
         public function SpriteSheet(bitmapData:BitmapData, spriteWidth:Number, spriteHeight:Number, fps:uint,
                                     spritesPackedWithoutSpace:Boolean = false) {
-            this.bitmapData = bitmapData;
-            this._spriteWidth = spriteWidth;
-            this._spriteHeight = spriteHeight;
-            this.spritesPackedWithoutSpace = spritesPackedWithoutSpace;
             this.fps = fps;
-
-            init();
-        }
-
-        private function init():void {
+            this.bitmapData = bitmapData;
+            this.spritesPackedWithoutSpace = spritesPackedWithoutSpace;
 
             var textureDimensions:Point = TextureHelper.getTextureDimensionsFromBitmap(bitmapData);
 
             _textureWidth = textureDimensions.x;
             _textureHeight = textureDimensions.y;
 
-            pixelOffset = new Point((_textureWidth - bitmapData.width) / 2.0, (_textureHeight - bitmapData.height) / 2.0);
+            _spriteWidth = spriteWidth;
+            _spriteHeight = spriteHeight;
 
-            uvOffset.x = pixelOffset.x / _textureWidth;
-            uvOffset.y = pixelOffset.y / _textureHeight;
-
-            if(spritesPackedWithoutSpace) {
-                uvSize = new Point((spriteWidth - 1.0) / _textureWidth, (spriteHeight - 1.0) / _textureHeight);
-            } else {
-                uvSize = new Point(spriteWidth / _textureWidth, spriteHeight / _textureHeight);
-            }
-
-            numSheetsPerRow = Math.round(bitmapData.width / spriteWidth);
-            numRows = Math.round(bitmapData.height / spriteHeight);
-            numSheets = numSheetsPerRow * numRows;
-
-            uvRects = new Vector.<Rectangle>(numSheets, true)
+            generateSheet();
         }
 
-        override public function getUVRectForFrame():Rectangle {
+        private function generateSheet():void {
+            var pixelOffset:Point = new Point((_textureWidth - bitmapData.width) / 2.0, (_textureHeight - bitmapData.height) / 2.0);
+            var numSheetsPerRow:int = Math.round(bitmapData.width / spriteWidth);
+            var numRows:int = Math.round(bitmapData.height / spriteHeight);
+            var numSheets:int = numSheetsPerRow * numRows;
+            var rowIdx:uint;
+            var colIdx:uint;
 
-            if(uvRects[frame]) {
-                return uvRects[frame];
+            uvRects = new Vector.<Rectangle>(numSheets, true);
+
+            for(var i:int = 0; i < numSheets; i++) {
+                rowIdx = i % numSheetsPerRow;
+                colIdx = Math.floor(i / numSheetsPerRow);
+
+                frames.push(new Rectangle((pixelOffset.x + spriteWidth * rowIdx),
+                        (pixelOffset.y + spriteHeight * colIdx),
+                        _spriteWidth, _spriteHeight));
             }
+        }
 
-            var rowIdx:uint = frame % numSheetsPerRow;
-            var colIdx:uint = Math.floor(frame / numSheetsPerRow);
-            var rect:Rectangle;
-
-            if(spritesPackedWithoutSpace) {
-                rect = new Rectangle((0.5 + pixelOffset.x + spriteWidth * rowIdx) / textureWidth,
-                                     (0.5 + pixelOffset.y + spriteHeight * colIdx) / textureHeight, 1.0, 1.0);
-            } else {
-                rect = new Rectangle((pixelOffset.x + spriteWidth * rowIdx) / textureWidth,
-                                     (pixelOffset.y + spriteHeight * colIdx) / textureHeight, 1.0, 1.0);
-            }
-
-            uvRects[frame] = rect;
-
-            return rect;
+        override public function getOffsetForFrame():Point {
+            return nullOffset;
         }
 
         override public function clone():ASpriteSheetBase {
+
             var s:SpriteSheet = new SpriteSheet(bitmapData, _spriteWidth, _spriteHeight, fps, spritesPackedWithoutSpace);
-            s.frame = frame;
 
             for(var name:String in animationMap) {
                 var anim:SpriteSheetAnimation = animationMap[name];
-                s.addAnimation(name, anim.frames.concat(), anim.loop);
+                s.addAnimation(name, anim.frames.concat(), anim.loop, false);
             }
+
+            s.frame = frame;
 
             return s;
         }

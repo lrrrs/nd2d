@@ -57,8 +57,8 @@ package de.nulldesign.nd2d.materials {
 
         private const FRAGMENT_SHADER:String =
                 "tex ft0, v0, fs0 <2d,repeat,linear,mipnearest>\n" + // sample texture from interpolated uv coords
-                "mul ft0, ft0, fc0\n" + // mult with colorMultiplier
-                "add oc, ft0, fc1\n"; // mult with colorOffset
+                        "mul ft0, ft0, fc0\n" + // mult with colorMultiplier
+                        "add oc, ft0, fc1\n"; // mult with colorOffset
 
         private static var sprite2DProgramData:ProgramData;
 
@@ -117,29 +117,25 @@ package de.nulldesign.nd2d.materials {
                 return false;
             }
 
-            var rect:Rectangle = new Rectangle(0.0, 0.0, 1.0, 1.0);
+            uvOffsetAndScale = new Rectangle(0.0, 0.0, 1.0, 1.0);
 
             if(spriteSheet) {
 
-                rect = spriteSheet.getUVRectForFrame();
+                uvOffsetAndScale = spriteSheet.getUVRectForFrame();
 
-                var atlas:TextureAtlas = spriteSheet as TextureAtlas;
+                var offset:Point = spriteSheet.getOffsetForFrame();
 
-                if(atlas) {
+                clipSpaceMatrix.identity();
+                clipSpaceMatrix.appendScale(spriteSheet.spriteWidth * 0.5, spriteSheet.spriteHeight * 0.5, 1.0);
+                clipSpaceMatrix.appendTranslation(offset.x, offset.y, 0.0);
+                clipSpaceMatrix.append(modelMatrix);
+                clipSpaceMatrix.append(viewProjectionMatrix);
 
-                    var offset:Point = atlas.getOffsetForFrame();
-
-                    clipSpaceMatrix.identity();
-                    clipSpaceMatrix.appendScale(spriteSheet.spriteWidth * 0.5, spriteSheet.spriteHeight * 0.5, 1.0);
-                    clipSpaceMatrix.appendTranslation(offset.x, offset.y, 0.0);
-                    clipSpaceMatrix.append(modelMatrix);
-                    clipSpaceMatrix.append(viewProjectionMatrix);
-
-                } else {
-                    refreshClipspaceMatrix();
-                }
             } else {
-                refreshClipspaceMatrix();
+                clipSpaceMatrix.identity();
+                clipSpaceMatrix.appendScale(textureWidth * 0.5, textureHeight * 0.5, 1.0);
+                clipSpaceMatrix.append(modelMatrix);
+                clipSpaceMatrix.append(viewProjectionMatrix);
             }
 
             context.setTextureAt(0, texture);
@@ -148,16 +144,24 @@ package de.nulldesign.nd2d.materials {
 
             context.setProgramConstantsFromMatrix(Context3DProgramType.VERTEX, 0, clipSpaceMatrix, true);
 
-            context.setProgramConstantsFromVector(Context3DProgramType.VERTEX, 4, Vector.<Number>([ rect.x + uvOffsetX,
-                                                                                                    rect.y + uvOffsetY,
-                                                                                                    rect.width,
-                                                                                                    rect.height]));
+            context.setProgramConstantsFromVector(Context3DProgramType.VERTEX, 4, Vector.<Number>([   uvOffsetAndScale.x + uvOffsetX,
+                uvOffsetAndScale.y + uvOffsetY,
+                uvOffsetAndScale.width,
+                uvOffsetAndScale.height]));
 
             var offsetFactor:Number = 1.0 / 255.0;
+
             context.setProgramConstantsFromVector(Context3DProgramType.FRAGMENT, 0,
-                                                  Vector.<Number>([ colorTransform.redMultiplier, colorTransform.greenMultiplier, colorTransform.blueMultiplier, colorTransform.alphaMultiplier ]));
+                    Vector.<Number>([ colorTransform.redMultiplier,
+                        colorTransform.greenMultiplier,
+                        colorTransform.blueMultiplier,
+                        colorTransform.alphaMultiplier ]));
+
             context.setProgramConstantsFromVector(Context3DProgramType.FRAGMENT, 1,
-                                                  Vector.<Number>([ colorTransform.redOffset * offsetFactor, colorTransform.greenOffset * offsetFactor, colorTransform.blueOffset * offsetFactor, colorTransform.alphaOffset * offsetFactor ]));
+                    Vector.<Number>([ colorTransform.redOffset * offsetFactor,
+                        colorTransform.greenOffset * offsetFactor,
+                        colorTransform.blueOffset * offsetFactor,
+                        colorTransform.alphaOffset * offsetFactor ]));
 
             return true;
         }

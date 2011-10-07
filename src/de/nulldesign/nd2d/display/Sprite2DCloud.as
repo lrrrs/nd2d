@@ -43,6 +43,7 @@ package de.nulldesign.nd2d.display {
     import de.nulldesign.nd2d.utils.VectorUtil;
 
     import flash.display.BitmapData;
+    import flash.display.Sprite;
     import flash.display3D.Context3D;
     import flash.display3D.Context3DProgramType;
     import flash.display3D.Context3DVertexBufferFormat;
@@ -114,7 +115,7 @@ package de.nulldesign.nd2d.display {
                 spriteSheet = textureObject as TextureAtlas;
             }
 
-            faceList = TextureHelper.generateQuadFromSpriteSheet(spriteSheet);
+            faceList = TextureHelper.generateQuadFromDimensions(2, 2);
 
             _width = spriteSheet.spriteWidth;
             _height = spriteSheet.spriteWidth;
@@ -279,7 +280,6 @@ package de.nulldesign.nd2d.display {
             var sy:Number;
             var somethingChanged:Boolean = false;
             var atlasOffset:Point = new Point();
-            var atlas:TextureAtlas;
             var pivot:Point;
             var offsetFactor:Number = 1.0 / 255.0;
 
@@ -311,12 +311,10 @@ package de.nulldesign.nd2d.display {
                 sx = child.scaleX;
                 sy = child.scaleY;
 
-                atlas = child.spriteSheet as TextureAtlas;
-
-                if(atlas) {
-                    sx *= atlas.spriteWidth * 0.5;
-                    sy *= atlas.spriteHeight * 0.5;
-                    atlasOffset = atlas.getOffsetForFrame();
+                if(spriteSheet) {
+                    sx *= spriteSheet.spriteWidth * 0.5;
+                    sy *= spriteSheet.spriteHeight * 0.5;
+                    atlasOffset = spriteSheet.getOffsetForFrame();
                 } else {
                     atlasOffset.x = 0.0;
                     atlasOffset.y = 0.0;
@@ -340,8 +338,8 @@ package de.nulldesign.nd2d.display {
 
                 // v1
                 if(child.invalidateMatrix) {
-                    mVertexBuffer[vIdx] = (v1.x - pivot.x) * sx * cr - (v1.y - pivot.y) * sy * sr + child.x + atlasOffset.x;
-                    mVertexBuffer[vIdx + 1] = (v1.x - pivot.x) * sx * sr + (v1.y - pivot.y) * sy * cr + child.y + atlasOffset.y;
+                    mVertexBuffer[vIdx] = (v1.x * sx - pivot.x) * cr - (v1.y * sy - pivot.y) * sr + child.x + atlasOffset.x;
+                    mVertexBuffer[vIdx + 1] = (v1.x * sx - pivot.x) * sr + (v1.y * sy - pivot.y) * cr + child.y + atlasOffset.y;
                     somethingChanged = true;
                 }
 
@@ -365,8 +363,8 @@ package de.nulldesign.nd2d.display {
 
                 // v2
                 if(child.invalidateMatrix) {
-                    mVertexBuffer[vIdx + 12] = (v2.x - pivot.x) * sx * cr - (v2.y - pivot.y) * sy * sr + child.x + atlasOffset.x;
-                    mVertexBuffer[vIdx + 13] = (v2.x - pivot.x) * sx * sr + (v2.y - pivot.y) * sy * cr + child.y + atlasOffset.y;
+                    mVertexBuffer[vIdx + 12] = (v2.x * sx - pivot.x) * cr - (v2.y * sy - pivot.y)* sr + child.x + atlasOffset.x;
+                    mVertexBuffer[vIdx + 13] = (v2.x * sx - pivot.x) * sr + (v2.y * sy - pivot.y) * cr + child.y + atlasOffset.y;
                 }
 
                 if(initUV) {
@@ -387,8 +385,8 @@ package de.nulldesign.nd2d.display {
 
                 // v3
                 if(child.invalidateMatrix) {
-                    mVertexBuffer[vIdx + 24] = (v3.x - pivot.x) * sx * cr - (v3.y - pivot.y) * sy * sr + child.x + atlasOffset.x;
-                    mVertexBuffer[vIdx + 25] = (v3.x - pivot.x) * sx * sr + (v3.y - pivot.y) * sy * cr + child.y + atlasOffset.y;
+                    mVertexBuffer[vIdx + 24] = (v3.x * sx - pivot.x) * cr - (v3.y * sy - pivot.y) * sr + child.x + atlasOffset.x;
+                    mVertexBuffer[vIdx + 25] = (v3.x * sx - pivot.x) * sr + (v3.y * sy - pivot.y) * cr + child.y + atlasOffset.y;
                 }
 
                 if(initUV) {
@@ -409,8 +407,8 @@ package de.nulldesign.nd2d.display {
 
                 // v4
                 if(child.invalidateMatrix) {
-                    mVertexBuffer[vIdx + 36] = (v4.x - pivot.x) * sx * cr - (v4.y - pivot.y) * sy * sr + child.x + atlasOffset.x;
-                    mVertexBuffer[vIdx + 37] = (v4.x - pivot.x) * sx * sr + (v4.y - pivot.y) * sy * cr + child.y + atlasOffset.y;
+                    mVertexBuffer[vIdx + 36] = (v4.x * sx - pivot.x) * cr - (v4.y * sy - pivot.y) * sr + child.x + atlasOffset.x;
+                    mVertexBuffer[vIdx + 37] = (v4.x * sx - pivot.x) * sr + (v4.y * sy - pivot.y) * cr + child.y + atlasOffset.y;
                 }
 
                 if(initUV) {

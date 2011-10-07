@@ -80,6 +80,8 @@ package de.nulldesign.nd2d.display {
 
             if(texture) {
                 material.texture = texture;
+                material.textureWidth = width;
+                material.textureHeight = height;
                 faceList = TextureHelper.generateQuadFromDimensions(width, height);
             }
         }
@@ -93,7 +95,7 @@ package de.nulldesign.nd2d.display {
             if(newMaterial.spriteSheet) {
                 _width = newMaterial.spriteSheet.spriteWidth;
                 _height = newMaterial.spriteSheet.spriteHeight;
-                faceList = TextureHelper.generateQuadFromSpriteSheet(newMaterial.spriteSheet);
+                faceList = TextureHelper.generateQuadFromDimensions(2, 2);
                 spriteSheet = newMaterial.spriteSheet;
             } else {
                 _width = newMaterial.textureWidth;

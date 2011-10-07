@@ -39,13 +39,7 @@ package de.nulldesign.nd2d.materials {
 
     public class TextureAtlas extends ASpriteSheetBase {
 
-        protected var frames:Vector.<Rectangle> = new Vector.<Rectangle>();
-        protected var offsets:Vector.<Point> = new Vector.<Point>();
-        protected var sourceSizes:Vector.<Point> = new Vector.<Point>();
-        protected var frameNameToIndex:Dictionary = new Dictionary();
         protected var xmlData:XML;
-        protected var uvRects:Vector.<Rectangle>;
-        private var spritesPackedWithoutSpace:Boolean;
 
         /**
          *
@@ -65,44 +59,11 @@ package de.nulldesign.nd2d.materials {
             _textureWidth = textureDimensions.x;
             _textureHeight = textureDimensions.y;
 
-            parseCocos2DXML(xmlData);
-        }
-
-        public function getOffsetForFrame():Point {
-            return offsets[frame];
-        }
-
-        override public function getUVRectForFrame():Rectangle {
-
-            if(uvRects[frame]) {
-                return uvRects[frame];
+            if(xmlData) {
+                parseCocos2DXML(xmlData);
             }
-
-            var rect:Rectangle = frames[frame].clone();
-
-            if(spritesPackedWithoutSpace) {
-                rect.x += 0.5;
-                rect.y += 0.5;
-
-                rect.width -= 1.0;
-                rect.height -= 1.0;
-            }
-
-            rect.x /= textureWidth;
-            rect.y /= textureHeight;
-            rect.width /= textureWidth;
-            rect.height /= textureHeight;
-
-            uvRects[frame] = rect;
-
-            return rect;
         }
 
-        override public function set frame(value:uint):void {
-            super.frame = value;
-            _spriteWidth = frames[frame].width;
-            _spriteHeight = frames[frame].height;
-        }
 
         override public function addAnimation(name:String, keyFrames:Array, loop:Boolean, keyIsString:Boolean = false):void {
 

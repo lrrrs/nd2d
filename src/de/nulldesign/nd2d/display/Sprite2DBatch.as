@@ -50,7 +50,7 @@ package de.nulldesign.nd2d.display {
 
         public function Sprite2DBatch(textureObject:Object) {
             material = new Sprite2DBatchMaterial(textureObject);
-            faceList = TextureHelper.generateQuadFromSpriteSheet(material.spriteSheet);
+            faceList = TextureHelper.generateQuadFromDimensions(2, 2);
         }
 
         override public function get numTris():uint {

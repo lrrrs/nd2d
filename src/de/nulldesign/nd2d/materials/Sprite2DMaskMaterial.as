@@ -63,16 +63,16 @@ package de.nulldesign.nd2d.materials {
 
         protected const DEFAULT_FRAGMENT_SHADER:String =
                 "tex ft0, v0, fs0 <2d,clamp,linear,mipnearest>  \n" + // sample texture
-                "mul ft0, ft0, fc0                              \n" + // mult with colorMultiplier
-                "add ft0, ft0, fc1                              \n" + // mult with colorOffset
-                "tex ft1, v1, fs1 <2d,clamp,linear,mipnearest>  \n" + // sample mask
+                        "mul ft0, ft0, fc0                              \n" + // mult with colorMultiplier
+                        "add ft0, ft0, fc1                              \n" + // mult with colorOffset
+                        "tex ft1, v1, fs1 <2d,clamp,linear,mipnearest>  \n" + // sample mask
 
-                "sub ft2, fc2, ft1                              \n" + // (1 - maskcolor)
-                "mov ft3, fc3                                   \n" + // save maskalpha
-                "sub ft3, fc2, ft3                              \n" + // (1 - maskalpha)
-                "mul ft3, ft2, ft3                              \n" + // (1 - maskcolor) * (1 - maskalpha)
-                "add ft3, ft1, ft3                              \n" + // finalmaskcolor = maskcolor + (1 - maskcolor) * (1 - maskalpha));
-                "mul ft0, ft0, ft3                              \n" + // mult mask color with tex color
+                        "sub ft2, fc2, ft1                              \n" + // (1 - maskcolor)
+                        "mov ft3, fc3                                   \n" + // save maskalpha
+                        "sub ft3, fc2, ft3                              \n" + // (1 - maskalpha)
+                        "mul ft3, ft2, ft3                              \n" + // (1 - maskcolor) * (1 - maskalpha)
+                        "add ft3, ft1, ft3                              \n" + // finalmaskcolor = maskcolor + (1 - maskcolor) * (1 - maskalpha));
+                        "mul ft0, ft0, ft3                              \n" + // mult mask color with tex color
 //                "mul ft0, ft0, ft1                              \n" + // mult mask color with tex color
                 "mov oc, ft0                                    \n";  // output color
 
@@ -114,20 +114,25 @@ package de.nulldesign.nd2d.materials {
             context.setVertexBufferAt(0, vertexBuffer, 0, Context3DVertexBufferFormat.FLOAT_2); // vertex
             context.setVertexBufferAt(1, vertexBuffer, 2, Context3DVertexBufferFormat.FLOAT_2); // uv
 
-            var atlas:TextureAtlas = spriteSheet as TextureAtlas;
+            uvOffsetAndScale = new Rectangle(0.0, 0.0, 1.0, 1.0);
 
-            if(atlas) {
+            if(spriteSheet) {
 
-                var atlasOffset:Point = atlas.getOffsetForFrame();
+                uvOffsetAndScale = spriteSheet.getUVRectForFrame();
+
+                var offset:Point = spriteSheet.getOffsetForFrame();
 
                 clipSpaceMatrix.identity();
-                clipSpaceMatrix.appendScale(atlas.spriteWidth * 0.5, atlas.spriteHeight * 0.5, 1.0);
-                clipSpaceMatrix.appendTranslation(atlasOffset.x, atlasOffset.y, 0.0);
+                clipSpaceMatrix.appendScale(spriteSheet.spriteWidth * 0.5, spriteSheet.spriteHeight * 0.5, 1.0);
+                clipSpaceMatrix.appendTranslation(offset.x, offset.y, 0.0);
                 clipSpaceMatrix.append(modelMatrix);
                 clipSpaceMatrix.append(viewProjectionMatrix);
 
             } else {
-                refreshClipspaceMatrix();
+                clipSpaceMatrix.identity();
+                clipSpaceMatrix.appendScale(textureWidth * 0.5, textureHeight * 0.5, 1.0);
+                clipSpaceMatrix.append(modelMatrix);
+                clipSpaceMatrix.append(viewProjectionMatrix);
             }
 
             maskClipSpaceMatrix.identity();
@@ -138,26 +143,27 @@ package de.nulldesign.nd2d.materials {
             context.setProgramConstantsFromMatrix(Context3DProgramType.VERTEX, 0, clipSpaceMatrix, true);
             context.setProgramConstantsFromMatrix(Context3DProgramType.VERTEX, 4, maskClipSpaceMatrix, true);
             context.setProgramConstantsFromVector(Context3DProgramType.VERTEX, 8, Vector.<Number>([ maskBitmap.width * 0.5,
-                                                                                                      maskBitmap.height * 0.5,
-                                                                                                      maskBitmap.width,
-                                                                                                      maskBitmap.height ]));
-
-            var uvOffsetAndScale:Rectangle = spriteSheet.getUVRectForFrame();
+                maskBitmap.height * 0.5,
+                maskBitmap.width,
+                maskBitmap.height ]));
 
             context.setProgramConstantsFromVector(Context3DProgramType.VERTEX, 9, Vector.<Number>([ uvOffsetAndScale.x,
-                                                                                                      uvOffsetAndScale.y,
-                                                                                                      uvOffsetAndScale.width,
-                                                                                                      uvOffsetAndScale.height]));
+                uvOffsetAndScale.y,
+                uvOffsetAndScale.width,
+                uvOffsetAndScale.height]));
 
             context.setProgramConstantsFromVector(Context3DProgramType.FRAGMENT, 0,
-                                                  Vector.<Number>([ colorTransform.redMultiplier, colorTransform.greenMultiplier, colorTransform.blueMultiplier, colorTransform.alphaMultiplier ]));
+                    Vector.<Number>([ colorTransform.redMultiplier, colorTransform.greenMultiplier, colorTransform
+                            .blueMultiplier, colorTransform.alphaMultiplier ]));
 
             var offsetFactor:Number = 1.0 / 255.0;
             context.setProgramConstantsFromVector(Context3DProgramType.FRAGMENT, 1,
-                                                  Vector.<Number>([ colorTransform.redOffset * offsetFactor, colorTransform.greenOffset * offsetFactor, colorTransform.blueOffset * offsetFactor, colorTransform.alphaOffset * offsetFactor ]));
+                    Vector.<Number>([ colorTransform.redOffset * offsetFactor, colorTransform.greenOffset * offsetFactor, colorTransform
+                            .blueOffset * offsetFactor, colorTransform.alphaOffset * offsetFactor ]));
 
             context.setProgramConstantsFromVector(Context3DProgramType.FRAGMENT, 2, Vector.<Number>([ 1.0, 1.0, 1.0, 1.0 ]));
-            context.setProgramConstantsFromVector(Context3DProgramType.FRAGMENT, 3, Vector.<Number>([ maskAlpha, maskAlpha, maskAlpha, maskAlpha]));
+            context.setProgramConstantsFromVector(Context3DProgramType.FRAGMENT, 3,
+                    Vector.<Number>([ maskAlpha, maskAlpha, maskAlpha, maskAlpha]));
 
             return true;
         }
