@@ -77,8 +77,7 @@ package tests {
                 texturedGrid = null;
             }
 
-            texturedGrid = new MorphGrid(12, 12, null, 0.05);
-            texturedGrid.setTexture(texRenderer.texture);
+            texturedGrid = new MorphGrid(12, 12, texRenderer.texture, 0.05);
             texturedGrid.tint = 0x99ff00;
             addChild(texturedGrid);
         }
