@@ -95,7 +95,7 @@ package de.nulldesign.nd2d.materials {
             maskProgramData = null;
         }
 
-        override protected function prepareForRender(context:Context3D):Boolean {
+        override protected function prepareForRender(context:Context3D):void {
 
             super.prepareForRender(context);
 
@@ -155,8 +155,6 @@ package de.nulldesign.nd2d.materials {
             context.setProgramConstantsFromVector(Context3DProgramType.FRAGMENT, 2, Vector.<Number>([ 1.0, 1.0, 1.0, 1.0 ]));
             context.setProgramConstantsFromVector(Context3DProgramType.FRAGMENT, 3,
                     Vector.<Number>([ maskAlpha, maskAlpha, maskAlpha, maskAlpha]));
-
-            return true;
         }
 
         override protected function clearAfterRender(context:Context3D):void {

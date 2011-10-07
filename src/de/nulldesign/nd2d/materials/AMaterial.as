@@ -157,7 +157,7 @@ package de.nulldesign.nd2d.materials {
             }
         }
 
-        protected function prepareForRender(context:Context3D):Boolean {
+        protected function prepareForRender(context:Context3D):void {
 
             context.setProgram(programData.program);
             context.setBlendFactors(blendMode.src, blendMode.dst);
@@ -166,8 +166,6 @@ package de.nulldesign.nd2d.materials {
                 needUploadVertexBuffer = false;
                 vertexBuffer.uploadFromVector(mVertexBuffer, 0, mVertexBuffer.length / programData.numFloatsPerVertex);
             }
-
-            return true;
         }
 
         public function handleDeviceLoss():void {
@@ -181,9 +179,8 @@ package de.nulldesign.nd2d.materials {
 
         public function render(context:Context3D, faceList:Vector.<Face>, startTri:uint, numTris:uint):void {
             generateBufferData(context, faceList);
-            if(prepareForRender(context)) {
-                context.drawTriangles(indexBuffer, startTri * 3, numTris);
-            }
+            prepareForRender(context)
+            context.drawTriangles(indexBuffer, startTri * 3, numTris);
             clearAfterRender(context);
         }
 

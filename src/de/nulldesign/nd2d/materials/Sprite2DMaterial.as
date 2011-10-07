@@ -86,7 +86,7 @@ package de.nulldesign.nd2d.materials {
             sprite2DProgramData = null;
         }
 
-        override protected function prepareForRender(context:Context3D):Boolean {
+        override protected function prepareForRender(context:Context3D):void {
 
             super.prepareForRender(context);
 
@@ -136,8 +136,6 @@ package de.nulldesign.nd2d.materials {
                         colorTransform.greenOffset * offsetFactor,
                         colorTransform.blueOffset * offsetFactor,
                         colorTransform.alphaOffset * offsetFactor ]));
-
-            return true;
         }
 
         override protected function clearAfterRender(context:Context3D):void {

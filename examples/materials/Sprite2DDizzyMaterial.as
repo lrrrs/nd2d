@@ -70,7 +70,7 @@ package materials {
             super();
         }
 
-        override protected function prepareForRender(context:Context3D):Boolean {
+        override protected function prepareForRender(context:Context3D):void {
 
             super.prepareForRender(context);
 
@@ -78,8 +78,6 @@ package materials {
                                                                                                       8 * Math.PI,
                                                                                                       0.01,
                                                                                                       0.02 ]));
-
-            return true;
         }
 
         override public function handleDeviceLoss():void {

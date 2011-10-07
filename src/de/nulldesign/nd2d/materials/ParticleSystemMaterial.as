@@ -120,7 +120,7 @@ package de.nulldesign.nd2d.materials {
             particleSystemProgramData = null;
         }
 
-        override protected function prepareForRender(context:Context3D):Boolean {
+        override protected function prepareForRender(context:Context3D):void {
 
             super.prepareForRender(context);
 
@@ -137,8 +137,6 @@ package de.nulldesign.nd2d.materials {
             context.setProgramConstantsFromMatrix(Context3DProgramType.VERTEX, 0, clipSpaceMatrix, true);
             context.setProgramConstantsFromVector(Context3DProgramType.VERTEX, 4, Vector.<Number>([ currentTime, currentTime, currentTime, currentTime ]));
             context.setProgramConstantsFromVector(Context3DProgramType.VERTEX, 5, Vector.<Number>([ gravity.x, gravity.y, 0.0, 1.0 ]));
-
-            return true;
         }
 
         override protected function clearAfterRender(context:Context3D):void {

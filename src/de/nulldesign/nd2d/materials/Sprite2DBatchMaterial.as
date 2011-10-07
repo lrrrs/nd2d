@@ -120,7 +120,7 @@ package de.nulldesign.nd2d.materials {
             throw new Error("please call renderBatch for this material");
         }
 
-        override protected function prepareForRender(context:Context3D):Boolean {
+        override protected function prepareForRender(context:Context3D):void {
 
             context.setProgram(programData.program);
             context.setBlendFactors(blendMode.src, blendMode.dst);
@@ -128,8 +128,6 @@ package de.nulldesign.nd2d.materials {
             context.setVertexBufferAt(0, vertexBuffer, 0, Context3DVertexBufferFormat.FLOAT_2); // vertex
             context.setVertexBufferAt(1, vertexBuffer, 2, Context3DVertexBufferFormat.FLOAT_2); // uv
             context.setVertexBufferAt(2, vertexBuffer, 4, Context3DVertexBufferFormat.FLOAT_4); // idx
-
-            return true;
         }
 
         public function renderBatch(context:Context3D, faceList:Vector.<Face>, childList:Vector.<Node2D>):void {
