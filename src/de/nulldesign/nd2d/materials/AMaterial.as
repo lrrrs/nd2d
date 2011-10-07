@@ -71,8 +71,6 @@ package de.nulldesign.nd2d.materials {
 
         protected var programData:ProgramData;
 
-        protected var uvOffsetAndScale:Rectangle;
-
         public static const VERTEX_POSITION:String = "PB3D_POSITION";
         public static const VERTEX_UV:String = "PB3D_UV";
 

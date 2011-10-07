@@ -33,6 +33,7 @@ package de.nulldesign.nd2d.display {
     import de.nulldesign.nd2d.geom.Face;
     import de.nulldesign.nd2d.materials.ParticleSystemMaterial;
     import de.nulldesign.nd2d.materials.ParticleSystemMaterial;
+    import de.nulldesign.nd2d.materials.Texture2D;
     import de.nulldesign.nd2d.utils.ColorUtil;
     import de.nulldesign.nd2d.utils.NumberUtil;
     import de.nulldesign.nd2d.utils.ParticleSystemPreset;
@@ -69,10 +70,10 @@ package de.nulldesign.nd2d.display {
             return material.drawCalls;
         }
 
-        public function ParticleSystem2D(particleBitmap:BitmapData, maxCapacity:uint, preset:ParticleSystemPreset) {
+        public function ParticleSystem2D(textureObject:Object, maxCapacity:uint, preset:ParticleSystemPreset) {
             super();
             this.preset = preset;
-            init(particleBitmap, maxCapacity);
+            init(textureObject, maxCapacity);
         }
 
         public function reset():void {
@@ -81,17 +82,21 @@ package de.nulldesign.nd2d.display {
             activeParticles = 1;
         }
 
-        protected function init(particleBitmap:BitmapData, maxCapacity:uint):void {
+        protected function init(textureObject:Object, maxCapacity:uint):void {
 
             this.maxCapacity = maxCapacity;
-            this.particleBitmap = particleBitmap;
 
-            var textureDimensions:Point = TextureHelper.getTextureDimensionsFromBitmap(particleBitmap);
+            var tex:Texture2D;
+            if(textureObject is BitmapData) {
+                tex = new Texture2D(textureObject as BitmapData);
+            } else {
+                tex = textureObject as Texture2D;
+            }
 
-            material = new ParticleSystemMaterial(particleBitmap);
+            material = new ParticleSystemMaterial(tex);
 
-            texW = textureDimensions.x / 2.0;
-            texH = textureDimensions.y / 2.0;
+            texW = tex.textureWidth / 2.0;
+            texH = tex.textureHeight / 2.0;
 
             particles = new Vector.<Particle>(maxCapacity, true);
             faceList = new Vector.<Face>(maxCapacity * 2, true);

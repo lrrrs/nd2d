@@ -50,7 +50,7 @@ package tests {
         private var cubeTexture:Class;
 
         private var sprites:Vector.<Sprite2D>;
-        private var spriteCloud:Node2D;
+        private var spriteCloud:Sprite2DCloud;
 
         private var numSprites:uint = 1600;
 
@@ -64,13 +64,14 @@ package tests {
             var tex:BitmapData = new cubeTexture().bitmapData;
             var s:Sprite2D;
 
-            var sheet:SpriteSheet = new SpriteSheet(tex, 24, 32, 10);
+            var sheet:SpriteSheet = new SpriteSheet(tex.width, tex.height, 24, 32, 10);
             sheet.addAnimation("up", [0, 1, 2], true);
             sheet.addAnimation("right", [3, 4, 5], true);
             sheet.addAnimation("down", [6, 7, 8], true);
             sheet.addAnimation("left", [9, 10, 11], true);
 
-            spriteCloud = new Sprite2DCloud(numSprites, sheet);
+            spriteCloud = new Sprite2DCloud(numSprites, tex);
+            spriteCloud.setSpriteSheet(sheet);
             //spriteCloud = new Sprite2DBatch(sheet);
 
             addSpritesClick();

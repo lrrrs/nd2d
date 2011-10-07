@@ -52,7 +52,7 @@ package tests {
         [Embed(source="/assets/spritechar1.png")]
         protected var spriteTexture:Class;
 
-        protected var s2:Node2D;
+        protected var s2:Sprite2DBatch;
 
         public function TextureAtlasTest() {
             init();
@@ -63,12 +63,14 @@ package tests {
 
             var tex:BitmapData = new spriteTexture().bitmapData;
 
-            var sheet:SpriteSheet = new SpriteSheet(tex, 24, 32, 5);
+            var sheet:SpriteSheet = new SpriteSheet(tex.width, tex.height, 24, 32, 5);
             sheet.addAnimation("blah", [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11], true);
             sheet.playAnimation("blah", 0, true);
 
-            var atlas:TextureAtlas = new TextureAtlas(new textureAtlasBitmap().bitmapData, new XML(new textureAtlasXML()), 20, true);
-            s = addChild(new Sprite2D(atlas)) as Sprite2D;
+            var atlasBmp:BitmapData = new textureAtlasBitmap().bitmapData;
+            var atlas:TextureAtlas = new TextureAtlas(atlasBmp.width, atlasBmp.height, new XML(new textureAtlasXML()), 20, true);
+            s = addChild(new Sprite2D(atlasBmp)) as Sprite2D;
+            s.setSpriteSheet(atlas);
 
             atlas.addAnimation("blah", ["c01", "c02", "c03", "c04", "c05", "c06", "c07", "c08", "c09", "c10", "c11", "c12",
                 "01", "02", "03", "04", "05", "06", "07", "08", "09", "10", "11", "12", "13", "14", "15"], true, true);
@@ -77,7 +79,8 @@ package tests {
 
             //s2 = new Sprite2DBatch(tex);
             //s2 = new Sprite2DBatch(sheet);
-            s2 = new Sprite2DBatch(atlas);
+            s2 = new Sprite2DBatch(atlasBmp);
+            s2.setSpriteSheet(atlas);
 
             //s2 = new Sprite2DCloud(100, tex);
             //s2 = new Sprite2DCloud(100, sheet);

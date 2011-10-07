@@ -72,9 +72,9 @@ package de.nulldesign.nd2d.display {
 
             this.charString = charString;
             this.charSpacing = charSpacing;
-            spriteSheet = new SpriteSheet(fontBitmap, charWidth, charHeight, 1, spritesPackedWithoutSpaces);
 
-            super(maxTextLen, spriteSheet);
+            super(maxTextLen, fontBitmap);
+            setSpriteSheet(new SpriteSheet(fontBitmap.width, fontBitmap.height, charWidth, charHeight, 1, spritesPackedWithoutSpaces));
         }
 
         override protected function step(elapsed:Number):void {

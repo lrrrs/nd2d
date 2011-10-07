@@ -62,12 +62,9 @@ package de.nulldesign.nd2d.materials {
 
         private static var sprite2DProgramData:ProgramData;
 
-        public var texture:Texture;
-        public var textureWidth:Number;
-        public var textureHeight:Number;
-
-        public var colorTransform:ColorTransform;
+        public var texture:Texture2D;
         public var spriteSheet:ASpriteSheetBase;
+        public var colorTransform:ColorTransform;
 
         /**
          * Use this property to animate a texture, infinite scroller, etc.
@@ -79,28 +76,13 @@ package de.nulldesign.nd2d.materials {
          */
         public var uvOffsetY:Number = 0.0;
 
-        public function Sprite2DMaterial(textureObject:Object) {
-
-            if(textureObject is BitmapData) {
-                var bmp:BitmapData = textureObject as BitmapData;
-                spriteSheet = new SpriteSheet(bmp, bmp.width, bmp.height, 0);
-            } else if(textureObject is SpriteSheet) {
-                spriteSheet = textureObject as SpriteSheet;
-            } else if(textureObject is TextureAtlas) {
-                spriteSheet = textureObject as TextureAtlas;
-            } else if(textureObject is Texture2D) {
-                var t2D:Texture2D = textureObject as Texture2D;
-                texture = t2D.texture;
-                textureWidth = t2D.textureWidth;
-                textureHeight = t2D.textureHeight;
-            }
-
+        public function Sprite2DMaterial() {
             drawCalls = 1;
         }
 
         override public function handleDeviceLoss():void {
             super.handleDeviceLoss();
-            texture = null;
+            texture.texture = null;
             sprite2DProgramData = null;
         }
 
@@ -108,20 +90,12 @@ package de.nulldesign.nd2d.materials {
 
             super.prepareForRender(context);
 
-            if(!texture && spriteSheet && spriteSheet.bitmapData) {
-                texture = TextureHelper.generateTextureFromBitmap(context, spriteSheet.bitmapData, true);
-            }
-
-            if(!texture) {
-                // can happen after a device loss
-                return false;
-            }
-
-            uvOffsetAndScale = new Rectangle(0.0, 0.0, 1.0, 1.0);
+            var uvOffsetAndScale:Rectangle = new Rectangle(0.0, 0.0, 1.0, 1.0);
+            var textureObj:Texture = texture.getTexture(context, true);
 
             if(spriteSheet) {
 
-                uvOffsetAndScale = spriteSheet.getUVRectForFrame();
+                uvOffsetAndScale = spriteSheet.getUVRectForFrame(texture.textureWidth, texture.textureHeight);
 
                 var offset:Point = spriteSheet.getOffsetForFrame();
 
@@ -133,12 +107,12 @@ package de.nulldesign.nd2d.materials {
 
             } else {
                 clipSpaceMatrix.identity();
-                clipSpaceMatrix.appendScale(textureWidth * 0.5, textureHeight * 0.5, 1.0);
+                clipSpaceMatrix.appendScale(texture.textureWidth * 0.5, texture.textureHeight * 0.5, 1.0);
                 clipSpaceMatrix.append(modelMatrix);
                 clipSpaceMatrix.append(viewProjectionMatrix);
             }
 
-            context.setTextureAt(0, texture);
+            context.setTextureAt(0, textureObj);
             context.setVertexBufferAt(0, vertexBuffer, 0, Context3DVertexBufferFormat.FLOAT_2); // vertex
             context.setVertexBufferAt(1, vertexBuffer, 2, Context3DVertexBufferFormat.FLOAT_2); // uv
 
@@ -200,7 +174,7 @@ package de.nulldesign.nd2d.materials {
         override public function cleanUp():void {
             super.cleanUp();
             if(texture) {
-                texture.dispose();
+                texture.cleanUp();
                 texture = null;
             }
         }

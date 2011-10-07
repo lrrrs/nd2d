@@ -37,6 +37,7 @@ package de.nulldesign.nd2d.display {
     import de.nulldesign.nd2d.geom.Vertex;
     import de.nulldesign.nd2d.materials.ASpriteSheetBase;
     import de.nulldesign.nd2d.materials.SpriteSheet;
+    import de.nulldesign.nd2d.materials.Texture2D;
     import de.nulldesign.nd2d.materials.TextureAtlas;
     import de.nulldesign.nd2d.utils.StatsObject;
     import de.nulldesign.nd2d.utils.TextureHelper;
@@ -69,7 +70,7 @@ package de.nulldesign.nd2d.display {
 
         protected var faceList:Vector.<Face>;
         protected var spriteSheet:ASpriteSheetBase;
-        protected var texture:Texture;
+        protected var texture:Texture2D;
 
         protected var v1:Vertex;
         protected var v2:Vertex;
@@ -107,18 +108,14 @@ package de.nulldesign.nd2d.display {
         public function Sprite2DCloud(maxCapacity:uint, textureObject:Object) {
 
             if(textureObject is BitmapData) {
-                var bmp:BitmapData = textureObject as BitmapData;
-                spriteSheet = new SpriteSheet(bmp, bmp.width, bmp.height, 0);
-            } else if(textureObject is SpriteSheet) {
-                spriteSheet = textureObject as SpriteSheet;
-            } else if(textureObject is TextureAtlas) {
-                spriteSheet = textureObject as TextureAtlas;
+                texture = new Texture2D(textureObject as BitmapData);
+            } else if(textureObject is Texture2D) {
+                texture = textureObject as Texture2D;
+            } else if(textureObject != null) {
+                throw new Error("textureObject has to be a BitmapData or a Texture2D");
             }
 
             faceList = TextureHelper.generateQuadFromDimensions(2, 2);
-
-            _width = spriteSheet.spriteWidth;
-            _height = spriteSheet.spriteWidth;
 
             v1 = faceList[0].v1;
             v2 = faceList[0].v2;
@@ -134,6 +131,10 @@ package de.nulldesign.nd2d.display {
 
             mVertexBuffer = new Vector.<Number>(maxCapacity * numFloatsPerVertex * 4, true);
             mIndexBuffer = new Vector.<uint>(maxCapacity * 6, true);
+        }
+
+        public function setSpriteSheet(value:ASpriteSheetBase):void {
+            this.spriteSheet = value;
         }
 
         override public function get numTris():uint {
@@ -155,19 +156,20 @@ package de.nulldesign.nd2d.display {
                 super.addChildAt(child, idx);
 
                 var c:Sprite2D = child as Sprite2D;
-                // set w/h of sprite
-                c.setTexture(null, _width, _height);
 
                 // distribute spritesheets to sprites
-                if(c && spriteSheet && !c.spriteSheet) {
+                if(spriteSheet && !c.spriteSheet) {
                     c.spriteSheet = spriteSheet.clone();
+                } else {
+                    c.setTexture(texture);
                 }
 
                 for(var i:int = 0; i < children.length; i++) {
-                    children[i].invalidateColors = true;
-                    children[i].invalidateMatrix = true;
-                    Sprite2D(children[i]).spriteSheet.frameUpdated = true;
+                    c = children[i] as Sprite2D;
+                    c.invalidateColors = true;
+                    c.invalidateMatrix = true;
                 }
+                uvInited = false;
 
                 return child;
             }
@@ -180,11 +182,14 @@ package de.nulldesign.nd2d.display {
             if(idx < children.length) {
                 super.removeChildAt(idx);
 
+                var c:Sprite2D;
                 for(var i:int = 0; i < children.length; i++) {
-                    children[i].invalidateColors = true;
-                    children[i].invalidateMatrix = true;
-                    Sprite2D(children[i]).spriteSheet.frameUpdated = true;
+                    c = children[i] as Sprite2D;
+                    c.invalidateColors = true;
+                    c.invalidateMatrix = true;
                 }
+
+                uvInited = false;
             }
         }
 
@@ -192,22 +197,33 @@ package de.nulldesign.nd2d.display {
             super.swapChildren(child1, child2);
             child1.invalidateColors = true;
             child1.invalidateMatrix = true;
-            Sprite2D(child1).spriteSheet.frameUpdated = true;
+            if(Sprite2D(child1).spriteSheet) {
+                Sprite2D(child1).spriteSheet.frameUpdated = true;
+            }
 
             child2.invalidateColors = true;
             child2.invalidateMatrix = true;
-            Sprite2D(child2).spriteSheet.frameUpdated = true;
+            if(Sprite2D(child2).spriteSheet) {
+                Sprite2D(child2).spriteSheet.frameUpdated = true;
+            }
         }
 
 
         override public function handleDeviceLoss():void {
             super.handleDeviceLoss();
 
-            texture = null;
+            texture.texture = null;
             program = null;
             vertexBuffer = null;
             indexBuffer = null;
             uvInited = false;
+
+            var c:Sprite2D;
+            for(var i:int = 0; i < children.length; i++) {
+                c = children[i] as Sprite2D;
+                c.invalidateColors = true;
+                c.invalidateMatrix = true;
+            }
         }
 
         override internal function drawNode(context:Context3D, camera:Camera2D, parentMatrixChanged:Boolean, statsObject:StatsObject):void {
@@ -233,8 +249,8 @@ package de.nulldesign.nd2d.display {
             }
 
             draw(context, camera);
-            statsObject.totalDrawCalls = drawCalls;
-            statsObject.totalTris = numTris;
+            statsObject.totalDrawCalls += drawCalls;
+            statsObject.totalTris += numTris;
         }
 
         override protected function draw(context:Context3D, camera:Camera2D):void {
@@ -244,10 +260,6 @@ package de.nulldesign.nd2d.display {
             clipSpaceMatrix.identity();
             clipSpaceMatrix.append(worldModelMatrix);
             clipSpaceMatrix.append(camera.getViewProjectionMatrix());
-
-            if(!texture) {
-                texture = TextureHelper.generateTextureFromBitmap(context, spriteSheet.bitmapData, true);
-            }
 
             if(!program) {
                 var vertexShaderAssembler:AGALMiniAssembler = new AGALMiniAssembler();
@@ -269,7 +281,7 @@ package de.nulldesign.nd2d.display {
             var gOffset:Number;
             var bOffset:Number;
             var aOffset:Number;
-            var uvOffsetAndScale:Rectangle;
+            var uvOffsetAndScale:Rectangle = new Rectangle(0.0, 0.0, 1.0, 1.0);
             var rot:Number;
             var cr:Number;
             var sr:Number;
@@ -316,16 +328,18 @@ package de.nulldesign.nd2d.display {
                     sy *= spriteSheet.spriteHeight * 0.5;
                     atlasOffset = spriteSheet.getOffsetForFrame();
                 } else {
+                    sx *= texture.textureWidth * 0.5;
+                    sy *= texture.textureHeight * 0.5;
                     atlasOffset.x = 0.0;
                     atlasOffset.y = 0.0;
                 }
 
                 var initUV:Boolean = !uvInited;
 
-                if(spriteSheet.frameUpdated || initUV) {
+                if(spriteSheet && spriteSheet.frameUpdated) {
                     spriteSheet.frameUpdated = false;
                     initUV = true;
-                    uvOffsetAndScale = spriteSheet.getUVRectForFrame();
+                    uvOffsetAndScale = spriteSheet.getUVRectForFrame(texture.textureWidth, texture.textureHeight);
                 }
 
                 if(child.invalidateMatrix) {
@@ -363,7 +377,7 @@ package de.nulldesign.nd2d.display {
 
                 // v2
                 if(child.invalidateMatrix) {
-                    mVertexBuffer[vIdx + 12] = (v2.x * sx - pivot.x) * cr - (v2.y * sy - pivot.y)* sr + child.x + atlasOffset.x;
+                    mVertexBuffer[vIdx + 12] = (v2.x * sx - pivot.x) * cr - (v2.y * sy - pivot.y) * sr + child.x + atlasOffset.x;
                     mVertexBuffer[vIdx + 13] = (v2.x * sx - pivot.x) * sr + (v2.y * sy - pivot.y) * cr + child.y + atlasOffset.y;
                 }
 
@@ -466,7 +480,7 @@ package de.nulldesign.nd2d.display {
                 indexBuffer.uploadFromVector(mIndexBuffer, 0, mIndexBuffer.length);
             }
 
-            context.setTextureAt(0, texture);
+            context.setTextureAt(0, texture.getTexture(context, true));
             context.setProgram(program);
             context.setVertexBufferAt(0, vertexBuffer, 0, Context3DVertexBufferFormat.FLOAT_2); // vertex
             context.setVertexBufferAt(1, vertexBuffer, 2, Context3DVertexBufferFormat.FLOAT_2); // uv

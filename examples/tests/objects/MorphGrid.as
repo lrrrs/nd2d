@@ -40,9 +40,9 @@ package tests.objects {
 
         private var strength:Number;
 
-        public function MorphGrid(stepsX:uint, stepsY:uint, bitmapTexture:BitmapData = null, strength:Number = 0.07) {
+        public function MorphGrid(stepsX:uint, stepsY:uint, textureObject:Object = null, strength:Number = 0.07) {
             this.strength = strength;
-            super(stepsX, stepsY, bitmapTexture);
+            super(stepsX, stepsY, textureObject);
         }
 
         override protected function step(elapsed:Number):void {

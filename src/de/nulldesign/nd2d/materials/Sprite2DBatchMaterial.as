@@ -79,8 +79,8 @@ package de.nulldesign.nd2d.materials {
 
         public static const VERTEX_IDX:String = "PB3D_IDX";
 
-        public function Sprite2DBatchMaterial(textureObject:Object) {
-            super(textureObject);
+        public function Sprite2DBatchMaterial() {
+            super();
         }
 
         override public function handleDeviceLoss():void {
@@ -122,13 +122,9 @@ package de.nulldesign.nd2d.materials {
 
         override protected function prepareForRender(context:Context3D):Boolean {
 
-            if(!texture) {
-                texture = TextureHelper.generateTextureFromBitmap(context, spriteSheet.bitmapData, true);
-            }
-
             context.setProgram(programData.program);
             context.setBlendFactors(blendMode.src, blendMode.dst);
-            context.setTextureAt(0, texture);
+            context.setTextureAt(0, texture.getTexture(context, true));
             context.setVertexBufferAt(0, vertexBuffer, 0, Context3DVertexBufferFormat.FLOAT_2); // vertex
             context.setVertexBufferAt(1, vertexBuffer, 2, Context3DVertexBufferFormat.FLOAT_2); // uv
             context.setVertexBufferAt(2, vertexBuffer, 4, Context3DVertexBufferFormat.FLOAT_4); // idx
@@ -161,11 +157,11 @@ package de.nulldesign.nd2d.materials {
                         if(child.invalidateColors) child.updateColors();
                         if(child.invalidateMatrix) child.updateMatrix();
 
-                        uvOffsetAndScale = new Rectangle(0.0, 0.0, 1.0, 1.0);
+                        var uvOffsetAndScale:Rectangle = new Rectangle(0.0, 0.0, 1.0, 1.0);
 
                         if(spriteSheet) {
 
-                            uvOffsetAndScale = child.spriteSheet.getUVRectForFrame();
+                            uvOffsetAndScale = child.spriteSheet.getUVRectForFrame(texture.textureWidth, texture.textureHeight);
 
                             var offset:Point = child.spriteSheet.getOffsetForFrame();
 
@@ -178,8 +174,8 @@ package de.nulldesign.nd2d.materials {
 
                         } else {
                             clipSpaceMatrix.identity();
-                            clipSpaceMatrix.appendScale(textureWidth * 0.5, textureHeight * 0.5, 1.0);
-                            clipSpaceMatrix.append(modelMatrix);
+                            clipSpaceMatrix.appendScale(texture.textureWidth * 0.5, texture.textureHeight * 0.5, 1.0);
+                            clipSpaceMatrix.append(child.localModelMatrix);
                             clipSpaceMatrix.append(viewProjectionMatrix);
                         }
 

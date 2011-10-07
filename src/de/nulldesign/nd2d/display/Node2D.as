@@ -140,13 +140,13 @@ package de.nulldesign.nd2d.display {
 
         public var timeSinceStartInSeconds:Number = 0.0;
 
+        public var boundingSphereRadius:Number;
+
         protected var stage:Stage;
 
         private var localMouse:Vector3D;
         private var mouseInNode:Boolean = false;
         private var localMouseMatrix:Matrix3D = new Matrix3D();
-
-        public var boundingSphereRadius:Number;
 
         /**
          * @private

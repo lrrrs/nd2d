@@ -53,61 +53,33 @@ package materials {
 
         private const FRAGMENT_SHADER:String =
                 "mov ft0.xyzw, v0.xy                        \n" + // get interpolated uv coords
-                "mul ft1, ft0, fc0.y                        \n" +
-                "add ft1, ft1, fc0.x                        \n" +
+                "mul ft1, ft0, fc2.y                        \n" +
+                "add ft1, ft1, fc2.x                        \n" +
                 "cos ft1.y, ft1.w                           \n" +
                 "sin ft1.x, ft1.z                           \n" +
-                "mul ft1.xy, ft1.xy, fc0.zw                 \n" +
+                "mul ft1.xy, ft1.xy, fc2.zw                 \n" +
                 "add ft0, ft0, ft1                          \n" +
                 "tex ft0, ft0, fs0 <2d,clamp,linear,nomip>  \n" + // sample texture
-                "mul ft0, ft0, fc1                          \n" + // mult with colorMultiplier
-                "add ft0, ft0, fc2                          \n" + // mult with colorOffset
+                "mul ft0, ft0, fc0                          \n" + // mult with colorMultiplier
+                "add ft0, ft0, fc1                          \n" + // mult with colorOffset
                 "mov oc, ft0                                \n";
 
         private static var dizzyProgramData:ProgramData;
 
-        public function Sprite2DDizzyMaterial(textureObject:Object) {
-            super(textureObject);
+        public function Sprite2DDizzyMaterial() {
+            super();
         }
 
         override protected function prepareForRender(context:Context3D):Boolean {
 
             super.prepareForRender(context);
 
-            if(!texture && spriteSheet && spriteSheet.bitmapData) {
-                texture = TextureHelper.generateTextureFromBitmap(context, spriteSheet.bitmapData, false);
-            }
-
-            if(!texture) {
-                // can happen after a device loss
-                return false;
-            }
-
-            context.setTextureAt(0, texture);
-            context.setVertexBufferAt(0, vertexBuffer, 0, Context3DVertexBufferFormat.FLOAT_2); // vertex
-            context.setVertexBufferAt(1, vertexBuffer, 2, Context3DVertexBufferFormat.FLOAT_2); // uv
-
-            refreshClipspaceMatrix();
-
-            context.setProgramConstantsFromMatrix(Context3DProgramType.VERTEX, 0, clipSpaceMatrix, true);
-            context.setProgramConstantsFromVector(Context3DProgramType.FRAGMENT, 0, Vector.<Number>([ getTimer() * 0.002,
+            context.setProgramConstantsFromVector(Context3DProgramType.FRAGMENT, 2, Vector.<Number>([ getTimer() * 0.002,
                                                                                                       8 * Math.PI,
                                                                                                       0.01,
                                                                                                       0.02 ]));
 
-            context.setProgramConstantsFromVector(Context3DProgramType.FRAGMENT, 1, Vector.<Number>([ colorTransform.redMultiplier, colorTransform.greenMultiplier, colorTransform.blueMultiplier, colorTransform.alphaMultiplier ]));
-
-            var offsetFactor:Number = 1.0 / 255.0;
-            context.setProgramConstantsFromVector(Context3DProgramType.FRAGMENT, 2, Vector.<Number>([ colorTransform.redOffset * offsetFactor, colorTransform.greenOffset * offsetFactor, colorTransform.blueOffset * offsetFactor, colorTransform.alphaOffset * offsetFactor ]));
-
-
             return true;
-        }
-
-        override protected function clearAfterRender(context:Context3D):void {
-            context.setTextureAt(0, null);
-            context.setVertexBufferAt(0, null);
-            context.setVertexBufferAt(1, null);
         }
 
         override public function handleDeviceLoss():void {

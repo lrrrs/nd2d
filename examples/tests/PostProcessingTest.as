@@ -77,14 +77,12 @@ package tests {
 
             //textureRenderer.removeEventListener(TextureEvent.READY, textureCreated);
 
-            var t2D:Texture2D = new Texture2D(textureRenderer.texture, textureRenderer.width, textureRenderer.height);
-
-            postProcessedScene = new Sprite2D();
-            postProcessedScene.setMaterial(new Sprite2DDizzyMaterial(t2D));
+            postProcessedScene = new Sprite2D(textureRenderer.texture);
+            postProcessedScene.setMaterial(new Sprite2DDizzyMaterial());
             //postProcessedScene.blendMode = BlendModePresets.ADD;
             postProcessedScene.tint = 0xAA99FF;
-            postProcessedScene.x = postProcessedScene.width * 0.5;
-            postProcessedScene.y = postProcessedScene.height * 0.5;
+            postProcessedScene.x = textureRenderer.width * 0.5;
+            postProcessedScene.y = textureRenderer.height * 0.5;
             addChild(postProcessedScene);
         }
 

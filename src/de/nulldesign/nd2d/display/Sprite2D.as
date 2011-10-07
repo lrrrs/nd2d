@@ -38,6 +38,8 @@ package de.nulldesign.nd2d.display {
     import de.nulldesign.nd2d.materials.Texture2D;
     import de.nulldesign.nd2d.utils.TextureHelper;
 
+    import flash.display.BitmapData;
+
     import flash.display3D.Context3D;
     import flash.display3D.textures.Texture;
 
@@ -48,62 +50,65 @@ package de.nulldesign.nd2d.display {
      */
     public class Sprite2D extends Node2D {
 
+        protected var faceList:Vector.<Face>;
+        protected var mask:Sprite2D;
+
+        public var texture:Texture2D;
         public var spriteSheet:ASpriteSheetBase;
         public var material:Sprite2DMaterial;
 
-        protected var faceList:Vector.<Face>;
-
-        protected var mask:Sprite2D;
-
         /**
          * Constructor of class Sprite2D
-         * @param textureObject can be a BitmapData, SpriteSheet or TextureAtlas
+         * @param textureObject can be a BitmapData or Texture2D
          */
         public function Sprite2D(textureObject:Object = null) {
+            faceList = TextureHelper.generateQuadFromDimensions(2, 2);
+
+            var tex:Texture2D;
+            if(textureObject is BitmapData) {
+                tex = new Texture2D(textureObject as BitmapData);
+            } else if(textureObject is Texture2D) {
+                tex = textureObject as Texture2D;
+            } else if(textureObject != null) {
+                throw new Error("textureObject has to be a BitmapData or a Texture2D");
+            }
 
             if(textureObject) {
-                setMaterial(new Sprite2DMaterial(textureObject));
+                setMaterial(new Sprite2DMaterial());
+                setTexture(tex);
             }
         }
 
-        public function setSpriteSheet(spriteSheet:SpriteSheet):void {
-            setMaterial(new Sprite2DMaterial(spriteSheet));
+        public function setSpriteSheet(value:ASpriteSheetBase):void {
+            this.spriteSheet = value;
+
+            if(spriteSheet) {
+                _width = spriteSheet.spriteWidth;
+                _height = spriteSheet.spriteHeight;
+            }
         }
 
-        public function setTexture(texture:Texture, width:Number, height:Number):void {
-            _width = width;
-            _height = height;
-
-            if(!material) {
-                material = new Sprite2DMaterial(null);
-            }
+        public function setTexture(value:Texture2D):void {
 
             if(texture) {
-                material.texture = texture;
-                material.textureWidth = width;
-                material.textureHeight = height;
-                faceList = TextureHelper.generateQuadFromDimensions(width, height);
+                texture.cleanUp();
+            }
+
+            this.texture = value;
+
+            if(texture && !spriteSheet) {
+                _width = texture.originalTextureWidth;
+                _height = texture.originalTextureHeight;
             }
         }
 
-        public function setMaterial(newMaterial:Sprite2DMaterial):void {
+        public function setMaterial(value:Sprite2DMaterial):void {
 
             if(material) {
                 material.cleanUp();
             }
 
-            if(newMaterial.spriteSheet) {
-                _width = newMaterial.spriteSheet.spriteWidth;
-                _height = newMaterial.spriteSheet.spriteHeight;
-                faceList = TextureHelper.generateQuadFromDimensions(2, 2);
-                spriteSheet = newMaterial.spriteSheet;
-            } else {
-                _width = newMaterial.textureWidth;
-                _height = newMaterial.textureHeight;
-                faceList = TextureHelper.generateQuadFromDimensions(_width, _height);
-            }
-
-            this.material = newMaterial;
+            this.material = value;
         }
 
         public function setMask(mask:Sprite2D):void {
@@ -111,9 +116,9 @@ package de.nulldesign.nd2d.display {
             this.mask = mask;
 
             if(mask) {
-                setMaterial(new Sprite2DMaskMaterial(spriteSheet));
+                setMaterial(new Sprite2DMaskMaterial());
             } else {
-                setMaterial(new Sprite2DMaterial(spriteSheet));
+                setMaterial(new Sprite2DMaterial());
             }
         }
 
@@ -152,6 +157,8 @@ package de.nulldesign.nd2d.display {
             material.projectionMatrix = camera.projectionMatrix;
             material.viewProjectionMatrix = camera.getViewProjectionMatrix();
             material.colorTransform = combinedColorTransform;
+            material.spriteSheet = spriteSheet;
+            material.texture = texture;
 
             if(mask) {
 
@@ -160,7 +167,7 @@ package de.nulldesign.nd2d.display {
                 }
 
                 var maskMat:Sprite2DMaskMaterial = Sprite2DMaskMaterial(material);
-                maskMat.maskBitmap = mask.spriteSheet.bitmapData;
+                maskMat.maskTexture = mask.texture;
                 maskMat.maskModelMatrix = mask.localModelMatrix;
                 maskMat.maskAlpha = mask.alpha;
             }
@@ -171,6 +178,12 @@ package de.nulldesign.nd2d.display {
         override public function cleanUp():void {
             if(material) {
                 material.cleanUp();
+                material = null;
+            }
+
+            if(texture) {
+                texture.cleanUp();
+                texture = null;
             }
 
             super.cleanUp();

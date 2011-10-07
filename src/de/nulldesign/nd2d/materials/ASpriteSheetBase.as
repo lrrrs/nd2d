@@ -53,24 +53,14 @@ package de.nulldesign.nd2d.materials {
         protected var activeAnimation:SpriteSheetAnimation;
         protected var animationMap:Dictionary = new Dictionary();
 
-        public var bitmapData:BitmapData;
         public var frameUpdated:Boolean = true;
 
         protected var fps:uint;
 
-        protected var _textureWidth:Number;
-        protected var _textureHeight:Number;
-
-        public function get textureWidth():Number {
-            return _textureWidth;
-        }
-
-        public function get textureHeight():Number {
-            return _textureHeight;
-        }
-
         protected var _spriteWidth:Number;
         protected var _spriteHeight:Number;
+        protected var _sheetWidth:Number;
+        protected var _sheetHeight:Number;
 
         public function get spriteWidth():Number {
             return _spriteWidth;
@@ -144,13 +134,17 @@ package de.nulldesign.nd2d.materials {
             return offsets[frame];
         }
 
-        public function getUVRectForFrame():Rectangle {
+        public function getUVRectForFrame(textureWidth:Number, textureHeight:Number):Rectangle {
 
             if(uvRects[frame]) {
                 return uvRects[frame];
             }
 
             var rect:Rectangle = frames[frame].clone();
+            var texturePixelOffset:Point = new Point((textureWidth - _sheetWidth) / 2.0, (textureHeight - _sheetHeight) / 2.0);
+
+            rect.x += texturePixelOffset.x;
+            rect.y += texturePixelOffset.y;
 
             if(spritesPackedWithoutSpace) {
                 rect.x += 0.5;

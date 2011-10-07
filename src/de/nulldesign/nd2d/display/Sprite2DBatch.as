@@ -31,9 +31,13 @@
 package de.nulldesign.nd2d.display {
 
     import de.nulldesign.nd2d.geom.Face;
+    import de.nulldesign.nd2d.materials.ASpriteSheetBase;
     import de.nulldesign.nd2d.materials.Sprite2DBatchMaterial;
+    import de.nulldesign.nd2d.materials.Texture2D;
     import de.nulldesign.nd2d.utils.StatsObject;
     import de.nulldesign.nd2d.utils.TextureHelper;
+
+    import flash.display.BitmapData;
 
     import flash.display3D.Context3D;
 
@@ -46,11 +50,22 @@ package de.nulldesign.nd2d.display {
     public class Sprite2DBatch extends Node2D {
 
         private var material:Sprite2DBatchMaterial;
+        private var texture:Texture2D;
+        private var spriteSheet:ASpriteSheetBase;
+
         private var faceList:Vector.<Face>;
 
         public function Sprite2DBatch(textureObject:Object) {
-            material = new Sprite2DBatchMaterial(textureObject);
+            material = new Sprite2DBatchMaterial();
             faceList = TextureHelper.generateQuadFromDimensions(2, 2);
+
+            if(textureObject is BitmapData) {
+                texture = new Texture2D(textureObject as BitmapData);
+            } else if(textureObject is Texture2D) {
+                texture = textureObject as Texture2D;
+            } else {
+                throw new Error("textureObject has to be a BitmapData or a Texture2D");
+            }
         }
 
         override public function get numTris():uint {
@@ -59,6 +74,10 @@ package de.nulldesign.nd2d.display {
 
         override public function get drawCalls():uint {
             return material.drawCalls;
+        }
+
+        public function setSpriteSheet(value:ASpriteSheetBase):void {
+            this.spriteSheet = value;
         }
 
         override public function addChildAt(child:Node2D, idx:uint):Node2D {
@@ -70,10 +89,10 @@ package de.nulldesign.nd2d.display {
             var c:Sprite2D = child as Sprite2D;
 
             // distribute spritesheets to sprites
-            if(c && material.spriteSheet) {
-                c.spriteSheet = material.spriteSheet.clone();
-                // set width / height of sprite
-                c.setTexture(null, c.spriteSheet.spriteWidth, c.spriteSheet.spriteHeight);
+            if(spriteSheet && !c.spriteSheet) {
+                c.spriteSheet = spriteSheet.clone();
+            } else {
+                c.setTexture(texture);
             }
 
             return super.addChildAt(child, idx);
@@ -135,6 +154,8 @@ package de.nulldesign.nd2d.display {
             material.modelMatrix = worldModelMatrix;
             material.projectionMatrix = camera.projectionMatrix;
             material.viewProjectionMatrix = camera.getViewProjectionMatrix();
+            material.texture = texture;
+            material.spriteSheet = spriteSheet;
             material.renderBatch(context, faceList, children);
         }
     }

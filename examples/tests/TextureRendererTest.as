@@ -35,6 +35,7 @@ package tests {
     import de.nulldesign.nd2d.display.Sprite2D;
     import de.nulldesign.nd2d.display.TextureRenderer;
     import de.nulldesign.nd2d.events.TextureEvent;
+    import de.nulldesign.nd2d.materials.Texture2D;
 
     import flash.display.BitmapData;
 
@@ -77,7 +78,7 @@ package tests {
             }
 
             texturedGrid = new MorphGrid(12, 12, null, 0.05);
-            texturedGrid.setTexture(texRenderer.texture, texRenderer.width, texRenderer.height);
+            texturedGrid.setTexture(texRenderer.texture);
             texturedGrid.tint = 0x99ff00;
             addChild(texturedGrid);
         }

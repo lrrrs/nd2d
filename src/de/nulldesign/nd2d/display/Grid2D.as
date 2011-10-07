@@ -44,19 +44,10 @@ package de.nulldesign.nd2d.display {
         protected var stepsY:uint;
         protected var vertexList:Vector.<Vertex>;
 
-        public function Grid2D(stepsX:uint, stepsY:uint, bitmapTexture:BitmapData = null) {
+        public function Grid2D(stepsX:uint, stepsY:uint, textureObject:Object = null) {
             this.stepsX = stepsX;
             this.stepsY = stepsY;
-            super(bitmapTexture);
-        }
-
-        override public function setTexture(texture:Texture, width:Number, height:Number):void {
-            super.setTexture(texture, width, height);
-            generateGrid();
-        }
-
-        override public function setMaterial(material:Sprite2DMaterial):void {
-            super.setMaterial(material);
+            super(textureObject);
             generateGrid();
         }
 

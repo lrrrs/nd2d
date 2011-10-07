@@ -42,46 +42,45 @@ package de.nulldesign.nd2d.materials {
 
         /**
          *
-         * @param bitmapData
+         * @param sheetWidth
+         * @param sheetHeight
          * @param spriteWidth
          * @param spriteHeight
          * @param fps
          * @param spritesPackedWithoutSpace set to true to get rid of pixel bleeding for packed sprites without spaces: http://www.nulldesign.de/2011/08/30/nd2d-pixel-bleeding/
          */
-        public function SpriteSheet(bitmapData:BitmapData, spriteWidth:Number, spriteHeight:Number, fps:uint,
+        public function SpriteSheet(sheetWidth:Number, sheetHeight:Number, spriteWidth:Number, spriteHeight:Number, fps:uint,
                                     spritesPackedWithoutSpace:Boolean = false) {
             this.fps = fps;
-            this.bitmapData = bitmapData;
             this.spritesPackedWithoutSpace = spritesPackedWithoutSpace;
-
-            var textureDimensions:Point = TextureHelper.getTextureDimensionsFromBitmap(bitmapData);
-
-            _textureWidth = textureDimensions.x;
-            _textureHeight = textureDimensions.y;
 
             _spriteWidth = spriteWidth;
             _spriteHeight = spriteHeight;
+            _sheetWidth = sheetWidth;
+            _sheetHeight = sheetHeight;
 
             generateSheet();
         }
 
         private function generateSheet():void {
-            var pixelOffset:Point = new Point((_textureWidth - bitmapData.width) / 2.0, (_textureHeight - bitmapData.height) / 2.0);
-            var numSheetsPerRow:int = Math.round(bitmapData.width / spriteWidth);
-            var numRows:int = Math.round(bitmapData.height / spriteHeight);
+            var numSheetsPerRow:int = Math.round(_sheetWidth / spriteWidth);
+            var numRows:int = Math.round(_sheetHeight / spriteHeight);
             var numSheets:int = numSheetsPerRow * numRows;
             var rowIdx:uint;
             var colIdx:uint;
 
+            uvRects = new Vector.<Rectangle>(numSheets, true);
+            frames = new Vector.<Rectangle>();
             uvRects = new Vector.<Rectangle>(numSheets, true);
 
             for(var i:int = 0; i < numSheets; i++) {
                 rowIdx = i % numSheetsPerRow;
                 colIdx = Math.floor(i / numSheetsPerRow);
 
-                frames.push(new Rectangle((pixelOffset.x + spriteWidth * rowIdx),
-                        (pixelOffset.y + spriteHeight * colIdx),
-                        _spriteWidth, _spriteHeight));
+                frames.push(new Rectangle((spriteWidth * rowIdx),
+                                          (spriteHeight * colIdx),
+                                           _spriteWidth,
+                                           _spriteHeight));
             }
         }
 
@@ -91,7 +90,7 @@ package de.nulldesign.nd2d.materials {
 
         override public function clone():ASpriteSheetBase {
 
-            var s:SpriteSheet = new SpriteSheet(bitmapData, _spriteWidth, _spriteHeight, fps, spritesPackedWithoutSpace);
+            var s:SpriteSheet = new SpriteSheet(_sheetWidth, _sheetHeight, _spriteWidth, _spriteHeight, fps, spritesPackedWithoutSpace);
 
             for(var name:String in animationMap) {
                 var anim:SpriteSheetAnimation = animationMap[name];

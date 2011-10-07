@@ -43,21 +43,19 @@ package de.nulldesign.nd2d.materials {
 
         /**
          *
-         * @param textureBitmap
+         * @param sheetWidth
+         * @param sheetHeight
          * @param cocos2DXML
          * @param fps
          * @param spritesPackedWithoutSpace set to true to get rid of pixel bleeding for packed atlases without spaces: http://www.nulldesign.de/2011/08/30/nd2d-pixel-bleeding/
          */
-        public function TextureAtlas(textureBitmap:BitmapData, cocos2DXML:XML, fps:uint, spritesPackedWithoutSpace:Boolean = false) {
+        public function TextureAtlas(sheetWidth:Number, sheetHeight:Number, cocos2DXML:XML, fps:uint,
+                                     spritesPackedWithoutSpace:Boolean = false) {
             this.fps = fps;
-            this.bitmapData = textureBitmap;
             this.xmlData = cocos2DXML;
             this.spritesPackedWithoutSpace = spritesPackedWithoutSpace;
-
-            var textureDimensions:Point = TextureHelper.getTextureDimensionsFromBitmap(bitmapData);
-
-            _textureWidth = textureDimensions.x;
-            _textureHeight = textureDimensions.y;
+            this._sheetWidth = sheetWidth;
+            this._sheetHeight = sheetHeight;
 
             if(xmlData) {
                 parseCocos2DXML(xmlData);
@@ -166,6 +164,7 @@ package de.nulldesign.nd2d.materials {
             }
 
             uvRects = new Vector.<Rectangle>(frames.length, true);
+            frame = 0;
 
             /*
              Frame:
@@ -187,7 +186,7 @@ package de.nulldesign.nd2d.materials {
 
         override public function clone():ASpriteSheetBase {
 
-            var t:TextureAtlas = new TextureAtlas(bitmapData, xmlData, fps, spritesPackedWithoutSpace);
+            var t:TextureAtlas = new TextureAtlas(_sheetWidth, _sheetHeight, xmlData, fps, spritesPackedWithoutSpace);
 
             for(var name:String in animationMap) {
                 var anim:SpriteSheetAnimation = animationMap[name];

@@ -71,11 +71,12 @@ package tests {
 
             var bmp:BitmapData = new spriteTexture2().bitmapData;
 
-            var sheet:SpriteSheet = new SpriteSheet(bmp, 24, 32, 5);
+            var sheet:SpriteSheet = new SpriteSheet(bmp.width, bmp.height, 24, 32, 5);
             sheet.addAnimation("up", [6, 7, 8], true);
             sheet.playAnimation("up", 0, true);
 
-            s3 = new Sprite2D(sheet);
+            s3 = new Sprite2D(bmp);
+            s3.setSpriteSheet(sheet);
             s3.mouseEnabled = true;
             s3.addEventListener(MouseEvent.MOUSE_OVER, mouseOver);
             s3.addEventListener(MouseEvent.MOUSE_OUT, mouseOut);

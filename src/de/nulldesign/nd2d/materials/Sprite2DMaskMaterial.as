@@ -77,22 +77,21 @@ package de.nulldesign.nd2d.materials {
                 "mov oc, ft0                                    \n";  // output color
 
         public var maskModelMatrix:Matrix3D;
-        public var maskBitmap:BitmapData;
+        public var maskTexture:Texture2D;
         public var maskAlpha:Number;
 
-        protected var maskTexture:Texture;
         protected var maskDimensions:Point;
         protected var maskClipSpaceMatrix:Matrix3D = new Matrix3D();
 
         protected static var maskProgramData:ProgramData;
 
-        public function Sprite2DMaskMaterial(textureObject:Object) {
-            super(textureObject);
+        public function Sprite2DMaskMaterial() {
+            super();
         }
 
         override public function handleDeviceLoss():void {
             super.handleDeviceLoss();
-            maskTexture = null;
+            maskTexture.texture = null;
             maskProgramData = null;
         }
 
@@ -100,25 +99,16 @@ package de.nulldesign.nd2d.materials {
 
             super.prepareForRender(context);
 
-            if(!texture) {
-                texture = TextureHelper.generateTextureFromBitmap(context, spriteSheet.bitmapData, true);
-            }
-
-            if(!maskTexture) {
-                maskDimensions = TextureHelper.getTextureDimensionsFromBitmap(maskBitmap);
-                maskTexture = TextureHelper.generateTextureFromBitmap(context, maskBitmap, true);
-            }
-
-            context.setTextureAt(0, texture);
-            context.setTextureAt(1, maskTexture);
+            context.setTextureAt(0, texture.getTexture(context, true));
+            context.setTextureAt(1, maskTexture.getTexture(context, true));
             context.setVertexBufferAt(0, vertexBuffer, 0, Context3DVertexBufferFormat.FLOAT_2); // vertex
             context.setVertexBufferAt(1, vertexBuffer, 2, Context3DVertexBufferFormat.FLOAT_2); // uv
 
-            uvOffsetAndScale = new Rectangle(0.0, 0.0, 1.0, 1.0);
+            var uvOffsetAndScale:Rectangle = new Rectangle(0.0, 0.0, 1.0, 1.0);
 
             if(spriteSheet) {
 
-                uvOffsetAndScale = spriteSheet.getUVRectForFrame();
+                uvOffsetAndScale = spriteSheet.getUVRectForFrame(texture.textureWidth, texture.textureHeight);
 
                 var offset:Point = spriteSheet.getOffsetForFrame();
 
@@ -130,7 +120,7 @@ package de.nulldesign.nd2d.materials {
 
             } else {
                 clipSpaceMatrix.identity();
-                clipSpaceMatrix.appendScale(textureWidth * 0.5, textureHeight * 0.5, 1.0);
+                clipSpaceMatrix.appendScale(texture.textureWidth * 0.5, texture.textureHeight * 0.5, 1.0);
                 clipSpaceMatrix.append(modelMatrix);
                 clipSpaceMatrix.append(viewProjectionMatrix);
             }
@@ -142,10 +132,11 @@ package de.nulldesign.nd2d.materials {
 
             context.setProgramConstantsFromMatrix(Context3DProgramType.VERTEX, 0, clipSpaceMatrix, true);
             context.setProgramConstantsFromMatrix(Context3DProgramType.VERTEX, 4, maskClipSpaceMatrix, true);
-            context.setProgramConstantsFromVector(Context3DProgramType.VERTEX, 8, Vector.<Number>([ maskBitmap.width * 0.5,
-                maskBitmap.height * 0.5,
-                maskBitmap.width,
-                maskBitmap.height ]));
+            context.setProgramConstantsFromVector(Context3DProgramType.VERTEX, 8, Vector.<Number>([
+                maskTexture.originalTextureWidth * 0.5,
+                maskTexture.originalTextureHeight * 0.5,
+                maskTexture.originalTextureWidth,
+                maskTexture.originalTextureHeight ]));
 
             context.setProgramConstantsFromVector(Context3DProgramType.VERTEX, 9, Vector.<Number>([ uvOffsetAndScale.x,
                 uvOffsetAndScale.y,
@@ -201,9 +192,9 @@ package de.nulldesign.nd2d.materials {
 
         override public function cleanUp():void {
             super.cleanUp();
-            maskProgramData = null;
+
             if(maskTexture) {
-                maskTexture.dispose();
+                maskTexture.cleanUp();
                 maskTexture = null;
             }
         }

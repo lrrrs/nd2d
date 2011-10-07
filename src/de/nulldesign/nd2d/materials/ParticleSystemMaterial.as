@@ -104,20 +104,19 @@ package de.nulldesign.nd2d.materials {
 
         private static var particleSystemProgramData:ProgramData;
 
-        protected var texture:Texture;
-        protected var particleTexture:BitmapData;
+        protected var texture:Texture2D;
 
         public var gravity:Point;
         public var currentTime:Number;
 
-        public function ParticleSystemMaterial(particleTexture:BitmapData) {
-            this.particleTexture = particleTexture;
+        public function ParticleSystemMaterial(texture:Texture2D) {
+            this.texture = texture;
             this.drawCalls = 1;
         }
 
         override public function handleDeviceLoss():void {
             super.handleDeviceLoss();
-            texture = null;
+            texture.texture = null;
             particleSystemProgramData = null;
         }
 
@@ -127,11 +126,7 @@ package de.nulldesign.nd2d.materials {
 
             refreshClipspaceMatrix();
 
-            if(!texture) {
-                texture = TextureHelper.generateTextureFromBitmap(context, particleTexture, true);
-            }
-
-            context.setTextureAt(0, texture);
+            context.setTextureAt(0, texture.getTexture(context, true));
             context.setVertexBufferAt(0, vertexBuffer, 0, Context3DVertexBufferFormat.FLOAT_2); // vertex
             context.setVertexBufferAt(1, vertexBuffer, 2, Context3DVertexBufferFormat.FLOAT_2); // uv
             context.setVertexBufferAt(2, vertexBuffer, 4, Context3DVertexBufferFormat.FLOAT_4); // misc (starttime, life, startsize, endsize
@@ -192,7 +187,7 @@ package de.nulldesign.nd2d.materials {
         override public function cleanUp():void {
             super.cleanUp();
             if(texture) {
-                texture.dispose();
+                texture.cleanUp();
                 texture = null;
             }
         }

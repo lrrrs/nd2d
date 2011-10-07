@@ -37,6 +37,10 @@ package tests {
     import de.nulldesign.nd2d.utils.NumberUtil;
 
     import flash.display.BitmapData;
+
+    import flash.display.BitmapData;
+
+    import flash.display.BitmapData;
     import flash.geom.Matrix3D;
     import flash.geom.Rectangle;
     import flash.geom.Vector3D;
@@ -66,7 +70,9 @@ package tests {
         public function MaskTest() {
 
             // set up textures, sheets and atlas
-            var atlas:TextureAtlas = new TextureAtlas(new textureAtlasBitmap().bitmapData,
+            var texAtlasBmp:BitmapData = new textureAtlasBitmap().bitmapData;
+
+            var atlas:TextureAtlas = new TextureAtlas(texAtlasBmp.width, texAtlasBmp.height,
                                                       new XML(new textureAtlasXML()), 20);
 
             atlas.addAnimation("blah",
@@ -76,7 +82,8 @@ package tests {
 
             atlas.playAnimation("blah");
 
-            var sheet:SpriteSheet = new SpriteSheet(new spriteTexture().bitmapData, 24, 32, 5);
+            var spriteSheetBmp:BitmapData = new spriteTexture().bitmapData;
+            var sheet:SpriteSheet = new SpriteSheet(spriteSheetBmp.width, spriteSheetBmp.height, 24, 32, 5);
             sheet.addAnimation("blah", [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11], true);
             sheet.playAnimation("blah", 0, true);
 
@@ -85,9 +92,11 @@ package tests {
             // set up test sprite and mask
 
             sprite = new Sprite2D(tex);
+            //sprite.setSpriteSheet(atlas);
             addChild(sprite);
 
             sprite2 = new Sprite2D(tex);
+            //sprite2.setSpriteSheet(atlas);
             addChild(sprite2);
 
             mask = new Sprite2D(new maskImage().bitmapData);

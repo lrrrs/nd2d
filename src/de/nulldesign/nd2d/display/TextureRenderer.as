@@ -31,6 +31,7 @@
 package de.nulldesign.nd2d.display {
 
     import de.nulldesign.nd2d.events.TextureEvent;
+    import de.nulldesign.nd2d.materials.Texture2D;
     import de.nulldesign.nd2d.utils.StatsObject;
     import de.nulldesign.nd2d.utils.TextureHelper;
 
@@ -50,7 +51,8 @@ package de.nulldesign.nd2d.display {
         protected var renderNode:Node2D;
         protected var texCamera:Camera2D = new Camera2D(1, 1);
 
-        public var texture:Texture;
+        public var texture:Texture2D;
+
         private var cameraOffsetX:Number;
         private var cameraOffsetY:Number;
 
@@ -58,6 +60,12 @@ package de.nulldesign.nd2d.display {
                                         cameraOffsetY:Number = NaN) {
 
             var size:Point = TextureHelper.getTextureDimensionsFromSize(textureWidth, textureHeight);
+
+            texture = new Texture2D(null);
+            texture.textureWidth = size.x;
+            texture.textureHeight = size.y;
+            texture.originalTextureWidth = size.x;
+            texture.originalTextureHeight = size.y;
 
             this.renderNode = renderNode;
             _width = size.x;
@@ -70,17 +78,17 @@ package de.nulldesign.nd2d.display {
 
         override public function handleDeviceLoss():void {
             super.handleDeviceLoss();
-            texture = null;
+            texture.texture = null;
         }
 
         override internal function drawNode(context:Context3D, camera:Camera2D, parentMatrixChanged:Boolean, statsObject:StatsObject):void {
 
-            if(!texture) {
-                texture = context.createTexture(width, height, Context3DTextureFormat.BGRA, true);
+            if(!texture.texture) {
+                texture.texture = context.createTexture(width, height, Context3DTextureFormat.BGRA, true);
                 dispatchEvent(new TextureEvent(TextureEvent.READY));
             }
 
-            context.setRenderToTexture(texture, false, 2, 0);
+            context.setRenderToTexture(texture.texture, false, 2, 0);
             context.clear(0.0, 0.0, 0.0, 0.0);
 
             if(!isNaN(cameraOffsetX) && !isNaN(cameraOffsetY)) {

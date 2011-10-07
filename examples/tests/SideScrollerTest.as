@@ -164,7 +164,7 @@ package tests {
             var plantTex:BitmapData = new plantTexture().bitmapData;
 
             // TODO add reverse loop option to spritesheet
-            var sheet:SpriteSheet = new SpriteSheet(plantTex, 200, 147, 20);
+            var sheet:SpriteSheet = new SpriteSheet(plantTex.width, plantTex.height, 200, 147, 20);
             var ar:Array = [];
             for(i = 2; i < 35; ++i) {
                 ar.push(i);
@@ -176,7 +176,8 @@ package tests {
 
             sheet.addAnimation("wave", ar, true);
 
-            cloud = new Sprite2DCloud(100, sheet);
+            cloud = new Sprite2DCloud(100, plantTex);
+            cloud.setSpriteSheet(sheet);
 
             grassSprites[0].addChild(cloud);
 
