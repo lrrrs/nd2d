@@ -72,7 +72,6 @@ package de.nulldesign.nd2d.materials {
 
         public static const VERTEX_POSITION:String = "PB3D_POSITION";
         public static const VERTEX_UV:String = "PB3D_UV";
-        public static const VERTEX_COLOR:String = "PB3D_COLOR";
 
         public function AMaterial() {
 
@@ -220,14 +219,6 @@ package de.nulldesign.nd2d.materials {
 
                 if(floatFormat == 4)
                     buffer.push(v.w);
-            }
-
-            if(semanticsID == VERTEX_COLOR) {
-
-                buffer.push(v.r, v.g, v.b);
-
-                if(floatFormat == 4)
-                    buffer.push(v.a);
             }
 
             if(semanticsID == VERTEX_UV) {

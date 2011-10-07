@@ -32,6 +32,7 @@ package de.nulldesign.nd2d.display {
 
     import de.nulldesign.nd2d.materials.BlendModePresets;
     import de.nulldesign.nd2d.utils.NodeBlendMode;
+    import de.nulldesign.nd2d.utils.StatsObject;
 
     import flash.display.Stage;
     import flash.display3D.Context3D;
@@ -144,6 +145,8 @@ package de.nulldesign.nd2d.display {
         private var localMouse:Vector3D;
         private var mouseInNode:Boolean = false;
         private var localMouseMatrix:Matrix3D = new Matrix3D();
+
+        public var boundingSphereRadius:Number;
 
         /**
          * @private
@@ -349,25 +352,11 @@ package de.nulldesign.nd2d.display {
         }
 
         public function get numTris():uint {
-
-            var tris:uint = 0;
-
-            for each(var child:Node2D in children){
-                tris += child.numTris;
-            }
-
-            return tris;
+            return 0;
         }
 
         public function get drawCalls():uint {
-
-            var calls:uint = 0;
-
-            for each(var child:Node2D in children){
-                calls += child.drawCalls;
-            }
-
-            return calls;
+            return 0;
         }
 
         public function get numChildren():uint {
@@ -497,7 +486,7 @@ package de.nulldesign.nd2d.display {
         /**
          * @private
          */
-        internal function drawNode(context:Context3D, camera:Camera2D, parentMatrixChanged:Boolean):void {
+        internal function drawNode(context:Context3D, camera:Camera2D, parentMatrixChanged:Boolean, statsObject:StatsObject):void {
 
             var myMatrixChanged:Boolean = false;
 
@@ -524,9 +513,11 @@ package de.nulldesign.nd2d.display {
             }
 
             draw(context, camera);
+            statsObject.totalDrawCalls += drawCalls;
+            statsObject.totalTris += numTris;
 
             for each(var child:Node2D in children) {
-                child.drawNode(context, camera, myMatrixChanged);
+                child.drawNode(context, camera, myMatrixChanged, statsObject);
             }
         }
 

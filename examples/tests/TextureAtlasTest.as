@@ -83,6 +83,8 @@ package tests {
             //s2 = new Sprite2DCloud(100, sheet);
             //s2 = new Sprite2DCloud(100, atlas);
 
+            addChild(s2);
+
             for(var i:int = 0; i < 100; i++) {
                 var batchChild:Sprite2D = new Sprite2D();
                 batchChild.x = (i % 10) * 50.0;
@@ -91,7 +93,6 @@ package tests {
                 //batchChild.pivot.y = 10.0;
 
                 s2.addChild(batchChild);
-                addChild(s2);
                 batchChild.spriteSheet.playAnimation("blah", i, true);
             }
 

@@ -35,6 +35,7 @@ package de.nulldesign.nd2d.display {
     import de.nulldesign.nd2d.materials.Sprite2DMaskMaterial;
     import de.nulldesign.nd2d.materials.Sprite2DMaterial;
     import de.nulldesign.nd2d.materials.SpriteSheet;
+    import de.nulldesign.nd2d.materials.Texture2D;
     import de.nulldesign.nd2d.utils.TextureHelper;
 
     import flash.display3D.Context3D;
@@ -59,6 +60,7 @@ package de.nulldesign.nd2d.display {
          * @param textureObject can be a BitmapData, SpriteSheet or TextureAtlas
          */
         public function Sprite2D(textureObject:Object = null) {
+
             if(textureObject) {
                 setMaterial(new Sprite2DMaterial(textureObject));
             }
@@ -76,8 +78,10 @@ package de.nulldesign.nd2d.display {
                 material = new Sprite2DMaterial(null);
             }
 
-            material.texture = texture;
-            faceList = TextureHelper.generateQuadFromDimensions(width, height);
+            if(texture) {
+                material.texture = texture;
+                faceList = TextureHelper.generateQuadFromDimensions(width, height);
+            }
         }
 
         public function setMaterial(newMaterial:Sprite2DMaterial):void {
@@ -90,13 +94,13 @@ package de.nulldesign.nd2d.display {
                 _width = newMaterial.spriteSheet.spriteWidth;
                 _height = newMaterial.spriteSheet.spriteHeight;
                 faceList = TextureHelper.generateQuadFromSpriteSheet(newMaterial.spriteSheet);
+                spriteSheet = newMaterial.spriteSheet;
             } else {
                 _width = newMaterial.textureWidth;
                 _height = newMaterial.textureHeight;
                 faceList = TextureHelper.generateQuadFromDimensions(_width, _height);
             }
 
-            this.spriteSheet = newMaterial.spriteSheet;
             this.material = newMaterial;
         }
 
@@ -112,11 +116,11 @@ package de.nulldesign.nd2d.display {
         }
 
         override public function get numTris():uint {
-            return 2 + super.numTris;
+            return 2;
         }
 
         override public function get drawCalls():uint {
-            return material ? (material.drawCalls + super.drawCalls) : 0;
+            return material ? material.drawCalls : 0;
         }
 
         /**
@@ -146,7 +150,7 @@ package de.nulldesign.nd2d.display {
             material.projectionMatrix = camera.projectionMatrix;
             material.viewProjectionMatrix = camera.getViewProjectionMatrix();
             material.colorTransform = combinedColorTransform;
-            
+
             if(mask) {
 
                 if(mask.invalidateMatrix) {

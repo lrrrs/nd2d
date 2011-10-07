@@ -30,6 +30,8 @@
 
 package de.nulldesign.nd2d.display {
 
+    import de.nulldesign.nd2d.utils.StatsObject;
+
     import flash.display3D.Context3D;
 
     /**
@@ -44,17 +46,6 @@ package de.nulldesign.nd2d.display {
         public var br:Number = 0.0;
         public var bg:Number = 0.0;
         public var bb:Number = 0.0;
-
-        override public function get numTris():uint {
-            return totalTris;
-        }
-
-        override public function get drawCalls():uint {
-            return totalDrawCalls;
-        }
-
-        protected var totalTris:int = 0;
-        protected var totalDrawCalls:int = 0;
 
         private var _backGroundColor:Number = 0x000000;
 
@@ -78,18 +69,10 @@ package de.nulldesign.nd2d.display {
             camera = value;
         }
 
-        override internal function drawNode(context:Context3D, camera:Camera2D, parentMatrixChanged:Boolean):void {
-
-            totalTris = 0;
-            totalDrawCalls = 0;
+        override internal function drawNode(context:Context3D, camera:Camera2D, parentMatrixChanged:Boolean, statsObject:StatsObject):void {
 
             for each(var child:Node2D in children) {
-                child.drawNode(context, camera, false);
-
-                if(context.enableErrorChecking) {
-                    totalTris += child.numTris;
-                    totalDrawCalls += child.drawCalls;
-                }
+                child.drawNode(context, camera, false, statsObject);
             }
         }
     }

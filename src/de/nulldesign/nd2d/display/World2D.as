@@ -30,6 +30,8 @@
 
 package de.nulldesign.nd2d.display {
 
+    import de.nulldesign.nd2d.utils.StatsObject;
+
     import flash.display.Sprite;
     import flash.display3D.Context3D;
     import flash.display3D.Context3DCompareMode;
@@ -85,6 +87,8 @@ package de.nulldesign.nd2d.display {
         protected var antialiasing:uint = 2;
         protected var deviceInitialized:Boolean = false;
         protected var deviceWasLost:Boolean = false;
+
+        protected var statsObject:StatsObject = new StatsObject();
 
         protected var initializeNodesAfterStartUp:Boolean = false;
 
@@ -192,7 +196,10 @@ package de.nulldesign.nd2d.display {
                     deviceWasLost = false;
                 }
 
-                scene.drawNode(context3D, camera, false);
+                statsObject.totalDrawCalls = 0;
+                statsObject.totalTris = 0;
+
+                scene.drawNode(context3D, camera, false, statsObject);
 
                 context3D.present();
             }

@@ -31,6 +31,7 @@
 package de.nulldesign.nd2d.display {
 
     import de.nulldesign.nd2d.events.TextureEvent;
+    import de.nulldesign.nd2d.utils.StatsObject;
     import de.nulldesign.nd2d.utils.TextureHelper;
 
     import flash.display3D.Context3D;
@@ -72,7 +73,7 @@ package de.nulldesign.nd2d.display {
             texture = null;
         }
 
-        override internal function drawNode(context:Context3D, camera:Camera2D, parentMatrixChanged:Boolean):void {
+        override internal function drawNode(context:Context3D, camera:Camera2D, parentMatrixChanged:Boolean, statsObject:StatsObject):void {
 
             if(!texture) {
                 texture = context.createTexture(width, height, Context3DTextureFormat.BGRA, true);
@@ -92,7 +93,7 @@ package de.nulldesign.nd2d.display {
 
             var visibleState:Boolean = renderNode.visible;
             renderNode.visible = true;
-            renderNode.drawNode(context, texCamera, parentMatrixChanged);
+            renderNode.drawNode(context, texCamera, parentMatrixChanged, statsObject);
             renderNode.visible = visibleState;
 
             context.setRenderToBackBuffer();

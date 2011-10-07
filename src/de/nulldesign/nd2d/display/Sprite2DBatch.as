@@ -32,6 +32,7 @@ package de.nulldesign.nd2d.display {
 
     import de.nulldesign.nd2d.geom.Face;
     import de.nulldesign.nd2d.materials.Sprite2DBatchMaterial;
+    import de.nulldesign.nd2d.utils.StatsObject;
     import de.nulldesign.nd2d.utils.TextureHelper;
 
     import flash.display3D.Context3D;
@@ -52,6 +53,10 @@ package de.nulldesign.nd2d.display {
             faceList = TextureHelper.generateQuadFromSpriteSheet(material.spriteSheet);
         }
 
+        override public function get numTris():uint {
+            return material.numTris;
+        }
+
         override public function get drawCalls():uint {
             return material.drawCalls;
         }
@@ -67,6 +72,8 @@ package de.nulldesign.nd2d.display {
             // distribute spritesheets to sprites
             if(c && material.spriteSheet) {
                 c.spriteSheet = material.spriteSheet.clone();
+                // set width / height of sprite
+                c.setTexture(null, c.spriteSheet.spriteWidth, c.spriteSheet.spriteHeight);
             }
 
             return super.addChildAt(child, idx);
@@ -84,7 +91,7 @@ package de.nulldesign.nd2d.display {
             // don't refresh own spritesheet
         }
 
-        override internal function drawNode(context:Context3D, camera:Camera2D, parentMatrixChanged:Boolean):void {
+        override internal function drawNode(context:Context3D, camera:Camera2D, parentMatrixChanged:Boolean, statsObject:StatsObject):void {
 
             var myMatrixChanged:Boolean = false;
 
@@ -111,6 +118,8 @@ package de.nulldesign.nd2d.display {
             }
 
             draw(context, camera);
+            statsObject.totalDrawCalls += drawCalls;
+            statsObject.totalTris += numTris;
 
             // don't call draw on childs....
         }

@@ -139,6 +139,7 @@ package de.nulldesign.nd2d.materials {
         public function renderBatch(context:Context3D, faceList:Vector.<Face>, childList:Vector.<Node2D>):void {
 
             drawCalls = 0;
+            numTris = 0;
             generateBufferData(context, faceList);
 
             if(prepareForRender(context)) {
@@ -212,6 +213,8 @@ package de.nulldesign.nd2d.materials {
                                                               uvoffset);
 
                         ++batchLen;
+
+                        numTris += 2;
 
                         if(batchLen == BATCH_SIZE || i == n - 1) {
                             context.drawTriangles(indexBuffer, 0, batchLen * 2);

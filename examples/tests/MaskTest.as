@@ -97,6 +97,7 @@ package tests {
             sprite2.setMask(mask);
 
             // AS3 test for upper left vertex
+            /*
             var v:Vector3D = new Vector3D(128, -128, 0, 1);
             var clipSpaceMatrix:Matrix3D = new Matrix3D();
             clipSpaceMatrix.appendTranslation(100, 0, 0);
@@ -119,6 +120,7 @@ package tests {
                              (v.y + (maskBitmap.height * 0.5)) / maskBitmap.height, 0.0, 1.0);
 
             trace("cal local mask uv: " + v);
+            */
         }
 
         override protected function step(elapsed:Number):void {

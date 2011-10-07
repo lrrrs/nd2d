@@ -38,6 +38,7 @@ package de.nulldesign.nd2d.display {
     import de.nulldesign.nd2d.materials.ASpriteSheetBase;
     import de.nulldesign.nd2d.materials.SpriteSheet;
     import de.nulldesign.nd2d.materials.TextureAtlas;
+    import de.nulldesign.nd2d.utils.StatsObject;
     import de.nulldesign.nd2d.utils.TextureHelper;
     import de.nulldesign.nd2d.utils.VectorUtil;
 
@@ -83,14 +84,14 @@ package de.nulldesign.nd2d.display {
 
         protected const DEFAULT_VERTEX_SHADER:String =
                 "m44 op, va0, vc0   \n" + // vertex * clipspace
-                "mov v0, va1		\n" + // copy uv
-                "mov v1, va2		\n" + // copy colorMultiplier
-                "mov v2, va3		\n"; // copy colorOffset
+                        "mov v0, va1		\n" + // copy uv
+                        "mov v1, va2		\n" + // copy colorMultiplier
+                        "mov v2, va3		\n"; // copy colorOffset
 
         protected const DEFAULT_FRAGMENT_SHADER:String =
                 "tex ft0, v0, fs0 <2d,clamp,linear,mipnearest>\n" + // sample texture from interpolated uv coords
-                "mul ft0, ft0, v1\n" + // mult with colorMultiplier
-                "add oc, ft0, v2\n";  // add with colorOffset
+                        "mul ft0, ft0, v1\n" + // mult with colorMultiplier
+                        "add oc, ft0, v2\n";  // add with colorOffset
 
         protected var program:Program3D;
         protected var indexBuffer:IndexBuffer3D;
@@ -154,7 +155,7 @@ package de.nulldesign.nd2d.display {
 
                 var c:Sprite2D = child as Sprite2D;
                 // set w/h of sprite
-                c.setTexture(null, width, height);
+                c.setTexture(null, _width, _height);
 
                 // distribute spritesheets to sprites
                 if(c && spriteSheet && !c.spriteSheet) {
@@ -208,7 +209,7 @@ package de.nulldesign.nd2d.display {
             uvInited = false;
         }
 
-        override internal function drawNode(context:Context3D, camera:Camera2D, parentMatrixChanged:Boolean):void {
+        override internal function drawNode(context:Context3D, camera:Camera2D, parentMatrixChanged:Boolean, statsObject:StatsObject):void {
 
             if(!visible) {
                 return;
@@ -231,11 +232,17 @@ package de.nulldesign.nd2d.display {
             }
 
             draw(context, camera);
+            statsObject.totalDrawCalls = drawCalls;
+            statsObject.totalTris = numTris;
         }
 
         override protected function draw(context:Context3D, camera:Camera2D):void {
 
             if(children.length == 0) return;
+
+            clipSpaceMatrix.identity();
+            clipSpaceMatrix.append(worldModelMatrix);
+            clipSpaceMatrix.append(camera.getViewProjectionMatrix());
 
             if(!texture) {
                 texture = TextureHelper.generateTextureFromBitmap(context, spriteSheet.bitmapData, true);
@@ -333,7 +340,7 @@ package de.nulldesign.nd2d.display {
 
                 // v1
                 if(child.invalidateMatrix) {
-                    mVertexBuffer[vIdx] =     (v1.x - pivot.x) * sx * cr - (v1.y - pivot.y) * sy * sr + child.x + atlasOffset.x;
+                    mVertexBuffer[vIdx] = (v1.x - pivot.x) * sx * cr - (v1.y - pivot.y) * sy * sr + child.x + atlasOffset.x;
                     mVertexBuffer[vIdx + 1] = (v1.x - pivot.x) * sx * sr + (v1.y - pivot.y) * sy * cr + child.y + atlasOffset.y;
                     somethingChanged = true;
                 }
@@ -469,10 +476,6 @@ package de.nulldesign.nd2d.display {
             context.setVertexBufferAt(3, vertexBuffer, 8, Context3DVertexBufferFormat.FLOAT_4); // colorOffset
 
             context.setBlendFactors(blendMode.src, blendMode.dst);
-
-            clipSpaceMatrix.identity();
-            clipSpaceMatrix.append(worldModelMatrix);
-            clipSpaceMatrix.append(camera.getViewProjectionMatrix());
 
             context.setProgramConstantsFromMatrix(Context3DProgramType.VERTEX, 0, clipSpaceMatrix, true);
 

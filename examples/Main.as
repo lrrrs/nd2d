@@ -69,7 +69,6 @@ package {
     import tests.TextureRendererTest;
 
     //[SWF(width="1000", height="550", frameRate="60", backgroundColor="#000000")]
-
     public class Main extends World2D {
 
         private var scenes:Vector.<Scene2D> = new Vector.<Scene2D>();
@@ -132,16 +131,16 @@ package {
 
             // test buttons
             /*
-            var b:PushButton;
-            b = new PushButton(this, 0, 460, "pause", buttonClicked);
-            b.tag = 0;
-            b = new PushButton(this, 0, 480, "resume", buttonClicked);
-            b.tag = 1;
-            b = new PushButton(this, 0, 500, "sleep", buttonClicked);
-            b.tag = 2;
-            b = new PushButton(this, 0, 520, "wakeup", buttonClicked);
-            b.tag = 3;
-            */
+             var b:PushButton;
+             b = new PushButton(this, 0, 460, "pause", buttonClicked);
+             b.tag = 0;
+             b = new PushButton(this, 0, 480, "resume", buttonClicked);
+             b.tag = 1;
+             b = new PushButton(this, 0, 500, "sleep", buttonClicked);
+             b.tag = 2;
+             b = new PushButton(this, 0, 520, "wakeup", buttonClicked);
+             b.tag = 3;
+             */
         }
 
         private function buttonClicked(e:MouseEvent):void {
@@ -181,10 +180,6 @@ package {
             if(activeSceneIdx > scenes.length - 1) {
                 activeSceneIdx = 0;
             }
-
-            if(context3D) {
-                stats.driverInfo = context3D.driverInfo;
-            }
         }
 
         private function stageResize(e:Event):void {
@@ -194,7 +189,16 @@ package {
 
         override protected function mainLoop(e:Event):void {
             super.mainLoop(e);
-            stats.update(scene.drawCalls, scene.numTris);
+            stats.update(statsObject.totalDrawCalls, statsObject.totalTris);
+        }
+
+        override protected function context3DCreated(e:Event):void {
+
+            super.context3DCreated(e);
+
+            if(context3D) {
+                stats.driverInfo = context3D.driverInfo;
+            }
         }
     }
 }

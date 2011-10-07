@@ -39,29 +39,14 @@ package de.nulldesign.nd2d.geom {
 
         public var bufferIdx:int = -1;
 
-        public var color:Number = 0xFFFFFF;
-
         public function Vertex(x:Number = 0.0, y:Number = 0.0, z:Number = 0.0) {
             super(x, y, z, 1.0);
-        }
-
-        public function get r():Number {
-            return (color >> 16) / 0xFF;
-        }
-
-        public function get g():Number {
-            return (color >> 8 & 0xFF) / 0xFF;
-        }
-
-        public function get b():Number {
-            return (color & 0xFF) / 0xFF;
         }
 
         public var a:Number = 1.0;
 
         override public function clone():Vector3D {
             var v:Vertex = new Vertex(x, y, z);
-            v.color = color;
             return v;
         }
     }
