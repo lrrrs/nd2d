@@ -71,7 +71,7 @@ package tests {
 
             if(postProcessedScene) {
                 removeChild(postProcessedScene);
-                postProcessedScene.cleanUp();
+                postProcessedScene.dispose();
                 postProcessedScene = null;
             }
 

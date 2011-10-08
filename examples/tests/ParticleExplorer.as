@@ -308,7 +308,7 @@ package tests {
         private function updateSystem(e:TimerEvent):void {
 
             removeChild(particles);
-            particles.cleanUp();
+            particles.dispose();
 
             particles = new ParticleSystem2D(bmp, maxParticles, preset);
             particles.blendMode = BlendModePresets.ADD;

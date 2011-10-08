@@ -135,87 +135,85 @@ package de.nulldesign.nd2d.materials {
             drawCalls = 0;
             numTris = 0;
             generateBufferData(context, faceList);
+            prepareForRender(context);
 
-            if(prepareForRender(context)) {
+            var batchLen:uint = 0;
+            var child:Sprite2D;
+            var colorMultiplierAndOffset:Vector.<Number> = new Vector.<Number>(8, true);
+            var uvoffset:Vector.<Number> = new Vector.<Number>(4, true);
+            var i:int = -1;
+            var n:int = childList.length;
+            var offsetFactor:Number = 1.0 / 255.0;
 
-                var batchLen:uint = 0;
-                var child:Sprite2D;
-                var colorMultiplierAndOffset:Vector.<Number> = new Vector.<Number>(8, true);
-                var uvoffset:Vector.<Number> = new Vector.<Number>(4, true);
-                var i:int = -1;
-                var n:int = childList.length;
-                var offsetFactor:Number = 1.0 / 255.0;
+            while(++i < n) {
 
-                while(++i < n) {
+                child = Sprite2D(childList[i]);
 
-                    child = Sprite2D(childList[i]);
+                if(child.visible) {
 
-                    if(child.visible) {
+                    if(child.invalidateColors) child.updateColors();
+                    if(child.invalidateMatrix) child.updateMatrix();
 
-                        if(child.invalidateColors) child.updateColors();
-                        if(child.invalidateMatrix) child.updateMatrix();
+                    var uvOffsetAndScale:Rectangle = new Rectangle(0.0, 0.0, 1.0, 1.0);
 
-                        var uvOffsetAndScale:Rectangle = new Rectangle(0.0, 0.0, 1.0, 1.0);
+                    if(spriteSheet) {
 
-                        if(spriteSheet) {
+                        uvOffsetAndScale = child.spriteSheet.getUVRectForFrame(texture.textureWidth, texture.textureHeight);
 
-                            uvOffsetAndScale = child.spriteSheet.getUVRectForFrame(texture.textureWidth, texture.textureHeight);
+                        var offset:Point = child.spriteSheet.getOffsetForFrame();
 
-                            var offset:Point = child.spriteSheet.getOffsetForFrame();
+                        clipSpaceMatrix.identity();
+                        clipSpaceMatrix.appendScale(child.spriteSheet.spriteWidth * 0.5, child.spriteSheet.spriteHeight * 0.5, 1.0);
+                        clipSpaceMatrix.appendTranslation(offset.x, offset.y, 0.0);
+                        clipSpaceMatrix.append(child.localModelMatrix);
+                        clipSpaceMatrix.append(modelMatrix);
+                        clipSpaceMatrix.append(viewProjectionMatrix);
 
-                            clipSpaceMatrix.identity();
-                            clipSpaceMatrix.appendScale(child.spriteSheet.spriteWidth * 0.5, child.spriteSheet.spriteHeight * 0.5, 1.0);
-                            clipSpaceMatrix.appendTranslation(offset.x, offset.y, 0.0);
-                            clipSpaceMatrix.append(child.localModelMatrix);
-                            clipSpaceMatrix.append(modelMatrix);
-                            clipSpaceMatrix.append(viewProjectionMatrix);
+                    } else {
+                        clipSpaceMatrix.identity();
+                        clipSpaceMatrix.appendScale(texture.textureWidth * 0.5, texture.textureHeight * 0.5, 1.0);
+                        clipSpaceMatrix.append(child.localModelMatrix);
+                        clipSpaceMatrix.append(viewProjectionMatrix);
+                    }
 
-                        } else {
-                            clipSpaceMatrix.identity();
-                            clipSpaceMatrix.appendScale(texture.textureWidth * 0.5, texture.textureHeight * 0.5, 1.0);
-                            clipSpaceMatrix.append(child.localModelMatrix);
-                            clipSpaceMatrix.append(viewProjectionMatrix);
-                        }
+                    colorMultiplierAndOffset[0] = child.combinedColorTransform.redMultiplier;
+                    colorMultiplierAndOffset[1] = child.combinedColorTransform.greenMultiplier;
+                    colorMultiplierAndOffset[2] = child.combinedColorTransform.blueMultiplier;
+                    colorMultiplierAndOffset[3] = child.combinedColorTransform.alphaMultiplier;
+                    colorMultiplierAndOffset[4] = child.combinedColorTransform.redOffset * offsetFactor;
+                    colorMultiplierAndOffset[5] = child.combinedColorTransform.greenOffset * offsetFactor;
+                    colorMultiplierAndOffset[6] = child.combinedColorTransform.blueOffset * offsetFactor;
+                    colorMultiplierAndOffset[7] = child.combinedColorTransform.alphaOffset * offsetFactor;
 
-                        colorMultiplierAndOffset[0] = child.combinedColorTransform.redMultiplier;
-                        colorMultiplierAndOffset[1] = child.combinedColorTransform.greenMultiplier;
-                        colorMultiplierAndOffset[2] = child.combinedColorTransform.blueMultiplier;
-                        colorMultiplierAndOffset[3] = child.combinedColorTransform.alphaMultiplier;
-                        colorMultiplierAndOffset[4] = child.combinedColorTransform.redOffset * offsetFactor;
-                        colorMultiplierAndOffset[5] = child.combinedColorTransform.greenOffset * offsetFactor;
-                        colorMultiplierAndOffset[6] = child.combinedColorTransform.blueOffset * offsetFactor;
-                        colorMultiplierAndOffset[7] = child.combinedColorTransform.alphaOffset * offsetFactor;
+                    uvoffset[0] = uvOffsetAndScale.x;
+                    uvoffset[1] = uvOffsetAndScale.y;
+                    uvoffset[2] = uvOffsetAndScale.width;
+                    uvoffset[3] = uvOffsetAndScale.height;
 
-                        uvoffset[0] = uvOffsetAndScale.x;
-                        uvoffset[1] = uvOffsetAndScale.y;
-                        uvoffset[2] = uvOffsetAndScale.width;
-                        uvoffset[3] = uvOffsetAndScale.height;
+                    context.setProgramConstantsFromMatrix(Context3DProgramType.VERTEX,
+                            batchLen * constantsPerSprite, clipSpaceMatrix, true);
 
-                        context.setProgramConstantsFromMatrix(Context3DProgramType.VERTEX,
-                                batchLen * constantsPerSprite, clipSpaceMatrix, true);
+                    context.setProgramConstantsFromVector(Context3DProgramType.VERTEX,
+                            batchLen * constantsPerSprite + constantsPerMatrix,
+                            colorMultiplierAndOffset);
 
-                        context.setProgramConstantsFromVector(Context3DProgramType.VERTEX,
-                                batchLen * constantsPerSprite + constantsPerMatrix,
-                                colorMultiplierAndOffset);
+                    context.setProgramConstantsFromVector(Context3DProgramType.VERTEX,
+                            batchLen * constantsPerSprite + constantsPerMatrix + 2,
+                            uvoffset);
 
-                        context.setProgramConstantsFromVector(Context3DProgramType.VERTEX,
-                                batchLen * constantsPerSprite + constantsPerMatrix + 2,
-                                uvoffset);
+                    ++batchLen;
 
-                        ++batchLen;
+                    numTris += 2;
 
-                        numTris += 2;
-
-                        if(batchLen == BATCH_SIZE || i == n - 1) {
-                            context.drawTriangles(indexBuffer, 0, batchLen * 2);
-                            batchLen = 0;
-                            ++drawCalls;
-                        }
+                    if(batchLen == BATCH_SIZE || i == n - 1) {
+                        context.drawTriangles(indexBuffer, 0, batchLen * 2);
+                        batchLen = 0;
+                        ++drawCalls;
                     }
                 }
-
-                clearAfterRender(context);
             }
+
+            clearAfterRender(context);
         }
 
         override protected function clearAfterRender(context:Context3D):void {
@@ -268,8 +266,8 @@ package de.nulldesign.nd2d.materials {
             }
         }
 
-        override public function cleanUp():void {
-            super.cleanUp();
+        override public function dispose():void {
+            super.dispose();
         }
     }
 }

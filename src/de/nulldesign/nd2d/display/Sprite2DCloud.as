@@ -95,7 +95,7 @@ package de.nulldesign.nd2d.display {
                         "mul ft0, ft0, v1\n" + // mult with colorMultiplier
                         "add oc, ft0, v2\n";  // add with colorOffset
 
-        protected var program:Program3D;
+        protected static var program:Program3D;
         protected var indexBuffer:IndexBuffer3D;
         protected var vertexBuffer:VertexBuffer3D;
         protected var mVertexBuffer:Vector.<Number>;
@@ -226,6 +226,22 @@ package de.nulldesign.nd2d.display {
             }
         }
 
+        override public function dispose():void {
+            super.dispose();
+            if(program) {
+                program.dispose();
+                program = null;
+            }
+            if(vertexBuffer) {
+                vertexBuffer.dispose();
+                vertexBuffer = null;
+            }
+            if(indexBuffer) {
+                indexBuffer.dispose();
+                indexBuffer = null;
+            }
+        }
+
         override internal function drawNode(context:Context3D, camera:Camera2D, parentMatrixChanged:Boolean, statsObject:StatsObject):void {
 
             if(!visible) {
@@ -336,7 +352,7 @@ package de.nulldesign.nd2d.display {
 
                 var initUV:Boolean = !uvInited;
 
-                if(spriteSheet && spriteSheet.frameUpdated) {
+                if(spriteSheet && (spriteSheet.frameUpdated || initUV)) {
                     spriteSheet.frameUpdated = false;
                     initUV = true;
                     uvOffsetAndScale = spriteSheet.getUVRectForFrame(texture.textureWidth, texture.textureHeight);

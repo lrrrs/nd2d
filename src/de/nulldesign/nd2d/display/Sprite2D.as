@@ -105,7 +105,7 @@ package de.nulldesign.nd2d.display {
         public function setMaterial(value:Sprite2DMaterial):void {
 
             if(material) {
-                material.cleanUp();
+                material.dispose();
             }
 
             this.material = value;
@@ -175,9 +175,9 @@ package de.nulldesign.nd2d.display {
             material.render(context, faceList, 0, faceList.length);
         }
 
-        override public function cleanUp():void {
+        override public function dispose():void {
             if(material) {
-                material.cleanUp();
+                material.dispose();
                 material = null;
             }
 
@@ -186,7 +186,7 @@ package de.nulldesign.nd2d.display {
                 texture = null;
             }
 
-            super.cleanUp();
+            super.dispose();
         }
     }
 }

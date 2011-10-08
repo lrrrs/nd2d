@@ -200,11 +200,11 @@ package de.nulldesign.nd2d.display {
             material.render(context, faceList, 0, activeParticles * 2);
         }
 
-        override public function cleanUp():void {
+        override public function dispose():void {
             if(material) {
-                material.cleanUp();
+                material.dispose();
             }
-            super.cleanUp();
+            super.dispose();
         }
     }
 }

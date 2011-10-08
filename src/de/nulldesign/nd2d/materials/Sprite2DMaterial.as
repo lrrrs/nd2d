@@ -169,8 +169,8 @@ package de.nulldesign.nd2d.materials {
             programData = sprite2DProgramData;
         }
 
-        override public function cleanUp():void {
-            super.cleanUp();
+        override public function dispose():void {
+            super.dispose();
             if(texture) {
                 texture.cleanUp();
                 texture = null;

@@ -244,7 +244,7 @@ package de.nulldesign.nd2d.materials {
             throw new Error("bad format");
         }
 
-        public function cleanUp():void {
+        public function dispose():void {
             if(indexBuffer) {
                 indexBuffer.dispose();
                 indexBuffer = null;

@@ -1,6 +1,6 @@
 # ND2D - A Flash Molehill (Stage3D) GPU accelerated 2D engine.
 
-ND2D is a 2D sprite engine using the new GPU hardware features of flash currently available in a beta build. To run this engine you must download and install the latest flash player:
+ND2D is a 2D framework using the new GPU hardware features of flash. To run this engine you must download and install the latest flash player:
 
 [Flash Player 11 & playerglobal.swc](http://get.adobe.com/de/flashplayer/)
 
@@ -39,10 +39,19 @@ Important links:
 - Distortable 2D grid for wave / ripple effects
 - Texturerenderer for post process effects
 - Extendable material system that makes it easy to write own effects and shaders with PixelBender3D or AGAL
+- Device loss is handled by the framework automatically, you don't have to care about this.
 
 [Check out the WIKI for more details](https://github.com/nulldesign/nd2d/wiki)
 
 # Changelog:
+
+2011-10-08
+
+- API Changes:
+    All nodes (Sprite2D, Sprite2DCloud, etc.) take only a BitmapData or a Texture2D as constructor argument now.
+    You have to set the material or spritesheet via setMaterial or setSpriteSheet now.
+    Constructor of TextureAtlas and SpriteSheet slightly different.
+- Bugfix in Sprite2DBatch
 
 2011-10-06
 

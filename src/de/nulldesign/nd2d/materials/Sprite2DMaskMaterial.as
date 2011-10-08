@@ -188,8 +188,8 @@ package de.nulldesign.nd2d.materials {
             programData = maskProgramData;
         }
 
-        override public function cleanUp():void {
-            super.cleanUp();
+        override public function dispose():void {
+            super.dispose();
 
             if(maskTexture) {
                 maskTexture.cleanUp();
