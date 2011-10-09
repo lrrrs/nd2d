@@ -114,7 +114,7 @@ package {
             sceneText = new TextField();
             sceneText.width = 300;
             sceneText.defaultTextFormat = tf;
-			sceneText.autoSize = "left";
+            sceneText.autoSize = "left";
 
             addChild(sceneText);
 
@@ -145,10 +145,10 @@ package {
             b = new PushButton(this, 0, 520, "wakeup", buttonClicked);
             b.tag = 3;
             */
-			
+            
             addChild(new PushButton(this, stage.stageWidth-100, stage.stageHeight-20, "next", function nextButtonClick(e:MouseEvent):void {
                 nextDemo();
-			}));
+            }));
         }
 
         private function buttonClicked(e:MouseEvent):void {
@@ -189,13 +189,13 @@ package {
                 activeSceneIdx = 0;
             }
         }
-		
+        
         override protected function context3DCreated(e:Event):void {
             super.context3DCreated(e);
-			
+            
             if(context3D)
                 stats.driverInfo = context3D.driverInfo;
-		}
+        }
 
         private function stageResize(e:Event):void {
             sceneText.x = 5;
