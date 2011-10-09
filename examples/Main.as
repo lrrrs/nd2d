@@ -146,13 +146,11 @@ package {
             b.tag = 3;
             */
 			
-			addChild(new PushButton(this, stage.stageWidth-100, stage.stageHeight-20, "next", nextButtonClick));
+            addChild(new PushButton(this, stage.stageWidth-100, stage.stageHeight-20, "next", function nextButtonClick(e:MouseEvent):void {
+                nextDemo();
+			}));
         }
 
-        private function nextButtonClick(e:MouseEvent):void {
-			nextDemo();
-		}
-		
         private function buttonClicked(e:MouseEvent):void {
             switch(e.target.tag) {
                 case 0:
@@ -192,11 +190,11 @@ package {
             }
         }
 		
-		override protected function context3DCreated(e:Event):void {
-			super.context3DCreated(e);
+        override protected function context3DCreated(e:Event):void {
+            super.context3DCreated(e);
 			
-			if(context3D)
-				stats.driverInfo = context3D.driverInfo;
+            if(context3D)
+                stats.driverInfo = context3D.driverInfo;
 		}
 
         private function stageResize(e:Event):void {
