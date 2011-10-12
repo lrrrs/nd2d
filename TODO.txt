@@ -5,5 +5,14 @@
 - option in world2d: auto dispose of textures, etc. cleanUp / destroy
 - Filtering options:  nearest neighbor / linear filtering, etc...
 - Tilemaps?
+- texture smoothing mipmap, nearest, linear, etc. customize per object or per ND2D instance?
+- premultiplied / non premultiplied alpha check for textures!
+- TextureCache
+- Sprite2DBatch recursive rendering (done!. need to text)
+- Depricate bitmapData as constructor argument. Only Texture2D allowed! Static creation methods?
+- updateFromPreset method for particlesystem to update the buffer on the fly?!
+- blurmaterial
+- texturerenderer -> clear optional.
+
 
 

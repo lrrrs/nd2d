@@ -33,8 +33,9 @@ package tests {
     import de.nulldesign.nd2d.display.Scene2D;
     import de.nulldesign.nd2d.display.Sprite2D;
     import de.nulldesign.nd2d.display.World2D;
+	import de.nulldesign.nd2d.materials.Texture2D;
 
-    import flash.events.Event;
+	import flash.events.Event;
     import flash.geom.Rectangle;
 
     public class RectangleWorld extends World2D {
@@ -52,10 +53,12 @@ package tests {
             _scene = new Scene2D();
             _scene.backGroundColor = 0xDDDDDD;
 
-            s1 = new Sprite2D(new texture().bitmapData);
+			var tex:Texture2D = Texture2D.textureFromBitmapData(new texture().bitmapData);
+
+            s1 = new Sprite2D(tex);
             _scene.addChild(s1);
 
-            s2 = new Sprite2D(new texture().bitmapData);
+            s2 = new Sprite2D(tex);
             s2.x = bounds.width;
             s2.y = bounds.height;
             _scene.addChild(s2);

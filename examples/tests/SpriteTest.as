@@ -33,7 +33,8 @@ package tests {
     import de.nulldesign.nd2d.display.Scene2D;
     import de.nulldesign.nd2d.display.Sprite2D;
     import de.nulldesign.nd2d.materials.BlendModePresets;
-    import de.nulldesign.nd2d.utils.ColorUtil;
+	import de.nulldesign.nd2d.materials.Texture2D;
+	import de.nulldesign.nd2d.utils.ColorUtil;
 
     import flash.utils.getTimer;
 
@@ -48,13 +49,15 @@ package tests {
 
         public function SpriteTest() {
 
-            s = new Sprite2D(new spriteTexture().bitmapData);
+			var tex:Texture2D = Texture2D.textureFromBitmapData(new spriteTexture().bitmapData);
+
+            s = new Sprite2D(tex);
             addChild(s);
 
-            s2 = new Sprite2D(new spriteTexture().bitmapData);
+            s2 = new Sprite2D(tex);
             addChild(s2);
 
-            s3 = new Sprite2D(new spriteTexture().bitmapData);
+            s3 = new Sprite2D(tex);
             addChild(s3);
         }
 

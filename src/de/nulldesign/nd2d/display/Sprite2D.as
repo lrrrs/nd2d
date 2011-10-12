@@ -66,7 +66,8 @@ package de.nulldesign.nd2d.display {
 
             var tex:Texture2D;
             if(textureObject is BitmapData) {
-                tex = new Texture2D(textureObject as BitmapData);
+                tex = Texture2D.textureFromBitmapData(textureObject as BitmapData);
+				trace("Setting constructor argument in a Sprite2D as a BitmapData is depricated. Please pass a Texture2D object to the constructor. Create Texture2D object from a BitmapData by using the static method: Texture2D.textureFromBitmapData()");
             } else if(textureObject is Texture2D) {
                 tex = textureObject as Texture2D;
             } else if(textureObject != null) {
@@ -97,8 +98,8 @@ package de.nulldesign.nd2d.display {
             this.texture = value;
 
             if(texture && !spriteSheet) {
-                _width = texture.originalTextureWidth;
-                _height = texture.originalTextureHeight;
+                _width = texture.bitmapWidth;
+                _height = texture.bitmapHeight;
             }
         }
 
@@ -163,7 +164,7 @@ package de.nulldesign.nd2d.display {
             if(mask) {
 
                 if(mask.invalidateMatrix) {
-                    mask.updateMatrix();
+                    mask.updateLocalMatrix();
                 }
 
                 var maskMat:Sprite2DMaskMaterial = Sprite2DMaskMaterial(material);

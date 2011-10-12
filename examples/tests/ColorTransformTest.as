@@ -37,7 +37,9 @@ package tests {
     import de.nulldesign.nd2d.display.Sprite2DCloud;
     import de.nulldesign.nd2d.materials.BlendModePresets;
     import de.nulldesign.nd2d.materials.SpriteSheet;
-    import de.nulldesign.nd2d.materials.TextureAtlas;
+	import de.nulldesign.nd2d.materials.Texture2D;
+	import de.nulldesign.nd2d.materials.Texture2D;
+	import de.nulldesign.nd2d.materials.TextureAtlas;
 
     import flash.display.BitmapData;
     import flash.display.Sprite;
@@ -71,14 +73,14 @@ package tests {
 
             backGroundColor = 0x666666;
 
-            var tex:BitmapData = new spriteTexture().bitmapData;
+            var tex:Texture2D = Texture2D.textureFromBitmapData(new spriteTexture().bitmapData);
 
-            var sheet:SpriteSheet = new SpriteSheet(tex.width, tex.height, 24, 32, 10);
+            var sheet:SpriteSheet = new SpriteSheet(tex.bitmapWidth, tex.bitmapHeight, 24, 32, 10);
             sheet.addAnimation("blah", [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11], true);
             sheet.playAnimation("blah", 0, true);
 
-            var atlasBmp:BitmapData = new textureAtlasBitmap().bitmapData;
-            var atlas:TextureAtlas = new TextureAtlas(atlasBmp.width, atlasBmp.height, new XML(new textureAtlasXML()), 10, true);
+            var atlasTex:Texture2D = Texture2D.textureFromBitmapData(new textureAtlasBitmap().bitmapData);
+            var atlas:TextureAtlas = new TextureAtlas(atlasTex.bitmapWidth, atlasTex.bitmapHeight, new XML(new textureAtlasXML()), 10, true);
 
             atlas.addAnimation("blah", ["c01", "c02", "c03", "c04", "c05", "c06", "c07", "c08", "c09", "c10", "c11", "c12",
                 "01", "02", "03", "04", "05", "06", "07", "08", "09", "10", "11", "12", "13", "14", "15"], true, true);
@@ -101,7 +103,7 @@ package tests {
             spriteCloud.blendMode = BlendModePresets.BLEND;
             Sprite2D(spriteCloud.getChildAt(0)).spriteSheet.playAnimation("blah");
 
-            spriteBatch = addChild(new Sprite2DBatch(atlasBmp)) as Sprite2DBatch;
+            spriteBatch = addChild(new Sprite2DBatch(atlasTex)) as Sprite2DBatch;
             spriteBatch.setSpriteSheet(atlas);
             spriteBatch.x = 600.0;
             spriteBatch.y = 200.0;
@@ -117,7 +119,7 @@ package tests {
             spriteWithMask.blendMode = BlendModePresets.BLEND;
             spriteWithMask.scaleX = spriteWithMask.scaleY = 1.0;
 
-            maskSprite = new Sprite2D(new maskBitmap().bitmapData);
+            maskSprite = new Sprite2D(Texture2D.textureFromBitmapData(new maskBitmap().bitmapData));
             maskSprite.x = 800.0;
             maskSprite.y = 200.0;
             maskSprite.scaleY = 0.2;

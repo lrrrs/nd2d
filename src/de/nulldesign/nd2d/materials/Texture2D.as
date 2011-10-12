@@ -31,46 +31,86 @@ package de.nulldesign.nd2d.materials {
 
     import de.nulldesign.nd2d.utils.TextureHelper;
 
+    import flash.display.Bitmap;
+
     import flash.display.BitmapData;
     import flash.display3D.Context3D;
     import flash.display3D.textures.Texture;
     import flash.geom.Point;
+    import flash.utils.ByteArray;
 
     public class Texture2D {
 
         public var texture:Texture;
         public var bitmap:BitmapData;
+        public var compressedBitmap:ByteArray;
 
         /*
-         * These sizes are needed to calculate the UV offset in a texture,
+         * These sizes are needed to calculate the UV offset in a texture.
          * because the GPU texturesize can differ from the provided bitmap (not a 2^n size)
+         * This is the BitmapData's or the ATF textures original size
          */
-        public var originalTextureWidth:Number;
-        public var originalTextureHeight:Number;
+        public var bitmapWidth:Number;
+        public var bitmapHeight:Number;
 
         public var textureWidth:Number;
         public var textureHeight:Number;
 
-        protected var autoCleanUpResource:Boolean;
+        protected var autoCleanUpResources:Boolean;
 
-        public function Texture2D(bitmap:BitmapData /* ADD ATF FORMAT LATER */, autoCleanUpResource:Boolean = false) {
+        /**
+         * Texture2D object
+         * @param autoCleanUpResources if you set it to true, the bitmap or the ATF texture will be disposed after creating the texture. This will save memory, but ND2D is not able to recover from a device loss then (Which is unlikely on a mobile device, but not on a desktop machine)
+         */
+        public function Texture2D(autoCleanUpResources:Boolean = false) {
+            this.autoCleanUpResources = autoCleanUpResources;
+        }
 
-            this.autoCleanUpResource = autoCleanUpResource;
+        public static function textureFromBitmapData(bitmap:BitmapData, autoCleanUpResources:Boolean = false):Texture2D {
+
+            var t:Texture2D = new Texture2D(autoCleanUpResources);
 
             if(bitmap) {
-                this.bitmap = bitmap;
-                this.originalTextureWidth = bitmap.width;
-                this.originalTextureHeight = bitmap.height;
+                t.bitmap = bitmap;
+                t.bitmapWidth = bitmap.width;
+                t.bitmapHeight = bitmap.height;
 
                 var dimensions:Point = TextureHelper.getTextureDimensionsFromBitmap(bitmap);
-                textureWidth = dimensions.x;
-                textureHeight = dimensions.y;
+                t.textureWidth = dimensions.x;
+                t.textureHeight = dimensions.y;
             }
+
+            return t;
+        }
+
+        public static function textureFromATF(atf:ByteArray, bitmapWidth:Number, bitmapHeight:Number, autoCleanUpResources:Boolean = false):Texture2D {
+
+			throw new Error("Not yet fully implemented... No rush, the ATF isn't public yet ;)");
+
+			var t:Texture2D = new Texture2D(autoCleanUpResources);
+
+            if(atf) {
+                t.compressedBitmap = atf;
+                t.bitmapWidth = bitmapWidth;
+                t.bitmapHeight = bitmapHeight;
+
+                var dimensions:Point = TextureHelper.getTextureDimensionsFromSize(bitmapWidth, bitmapHeight);
+                t.textureWidth = dimensions.x;
+                t.textureHeight = dimensions.y;
+            }
+
+            return t;
         }
 
         public function getTexture(context:Context3D, useMipMapping:Boolean):Texture {
             if(!texture) {
+                // TODO generate from ATF
                 texture = TextureHelper.generateTextureFromBitmap(context, bitmap, useMipMapping);
+
+                if(autoCleanUpResources) {
+                    bitmap.dispose();
+                    bitmap = null;
+                }
             }
 
             return texture;

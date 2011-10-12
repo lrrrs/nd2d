@@ -36,7 +36,8 @@ package tests {
     import de.nulldesign.nd2d.display.ParticleSystem2D;
     import de.nulldesign.nd2d.display.Scene2D;
     import de.nulldesign.nd2d.materials.BlendModePresets;
-    import de.nulldesign.nd2d.utils.ParticleSystemPreset;
+	import de.nulldesign.nd2d.materials.Texture2D;
+	import de.nulldesign.nd2d.utils.ParticleSystemPreset;
 
     import flash.display.BitmapData;
     import flash.display.Sprite;
@@ -49,7 +50,7 @@ package tests {
         [Embed(source="/assets/particle_small.png")]
         private var particleClass:Class;
 
-        private var bmp:BitmapData;
+        private var tex:Texture2D;
 
         private var maxParticles:uint = 2000;
 
@@ -62,8 +63,8 @@ package tests {
 
         public function ParticleExplorer() {
 
-            bmp = new particleClass().bitmapData;
-            particles = new ParticleSystem2D(bmp, maxParticles, preset);
+            tex = Texture2D.textureFromBitmapData(new particleClass().bitmapData);
+            particles = new ParticleSystem2D(tex, maxParticles, preset);
             particles.blendMode = BlendModePresets.ADD;
 
             timer.addEventListener(TimerEvent.TIMER, updateSystem);
@@ -310,7 +311,7 @@ package tests {
             removeChild(particles);
             particles.dispose();
 
-            particles = new ParticleSystem2D(bmp, maxParticles, preset);
+            particles = new ParticleSystem2D(tex, maxParticles, preset);
             particles.blendMode = BlendModePresets.ADD;
 
             addChild(particles);

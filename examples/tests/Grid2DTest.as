@@ -32,8 +32,9 @@ package tests {
 
     import de.nulldesign.nd2d.display.Grid2D;
     import de.nulldesign.nd2d.display.Scene2D;
+	import de.nulldesign.nd2d.materials.Texture2D;
 
-    import tests.objects.MorphGrid;
+	import tests.objects.MorphGrid;
 
     public class Grid2DTest extends Scene2D {
 
@@ -44,7 +45,7 @@ package tests {
 
         public function Grid2DTest() {
 
-            grid = new MorphGrid(16, 16, new spriteTexture().bitmapData);
+            grid = new MorphGrid(16, 16, Texture2D.textureFromBitmapData(new spriteTexture().bitmapData));
             addChild(grid);
         }
 

@@ -33,7 +33,8 @@ package tests {
     import de.nulldesign.nd2d.display.Node2D;
     import de.nulldesign.nd2d.display.Scene2D;
     import de.nulldesign.nd2d.display.Sprite2D;
-    import de.nulldesign.nd2d.utils.NumberUtil;
+	import de.nulldesign.nd2d.materials.Texture2D;
+	import de.nulldesign.nd2d.utils.NumberUtil;
 
     import flash.events.Event;
     import flash.events.MouseEvent;
@@ -51,7 +52,7 @@ package tests {
 
         public function CameraTest() {
 
-            back = new Sprite2D(new backgroundTexture().bitmapData);
+            back = new Sprite2D(Texture2D.textureFromBitmapData(new backgroundTexture().bitmapData));
             back.alpha = 0.5;
             addChild(back);
 
@@ -61,8 +62,10 @@ package tests {
         private function addedToStage(e:Event):void {
             removeEventListener(Event.ADDED_TO_STAGE, addedToStage);
 
+			var tex:Texture2D = Texture2D.textureFromBitmapData(new spriteTexture().bitmapData);
+
             for(var i:int = 0; i < 5; i++) {
-                var s:Sprite2D = new Sprite2D(new spriteTexture().bitmapData);
+                var s:Sprite2D = new Sprite2D(tex);
                 s.x = NumberUtil.rndMinMax(100.0, stage.stageWidth - 100.0);
                 s.y = NumberUtil.rndMinMax(100.0, stage.stageHeight - 100.0);
                 s.rotation = NumberUtil.rndMinMax(0.0, 360.0);

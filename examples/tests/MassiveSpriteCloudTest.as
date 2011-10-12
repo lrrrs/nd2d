@@ -38,8 +38,9 @@ package tests {
     import de.nulldesign.nd2d.display.Sprite2DBatch;
     import de.nulldesign.nd2d.display.Sprite2DCloud;
     import de.nulldesign.nd2d.materials.SpriteSheet;
+	import de.nulldesign.nd2d.materials.Texture2D;
 
-    import flash.display.BitmapData;
+	import flash.display.BitmapData;
     import flash.events.Event;
     import flash.events.MouseEvent;
     import flash.geom.Point;
@@ -61,10 +62,10 @@ package tests {
             backGroundColor = 0x666666;
 
             sprites = new Vector.<Sprite2D>();
-            var tex:BitmapData = new cubeTexture().bitmapData;
+            var tex:Texture2D = Texture2D.textureFromBitmapData(new cubeTexture().bitmapData);
             var s:Sprite2D;
 
-            var sheet:SpriteSheet = new SpriteSheet(tex.width, tex.height, 24, 32, 10);
+            var sheet:SpriteSheet = new SpriteSheet(tex.bitmapWidth, tex.bitmapHeight, 24, 32, 10);
             sheet.addAnimation("up", [0, 1, 2], true);
             sheet.addAnimation("right", [3, 4, 5], true);
             sheet.addAnimation("down", [6, 7, 8], true);

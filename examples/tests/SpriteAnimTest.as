@@ -33,8 +33,9 @@ package tests {
     import de.nulldesign.nd2d.display.Scene2D;
     import de.nulldesign.nd2d.display.Sprite2D;
     import de.nulldesign.nd2d.materials.SpriteSheet;
+	import de.nulldesign.nd2d.materials.Texture2D;
 
-    import flash.display.BitmapData;
+	import flash.display.BitmapData;
 
     public class SpriteAnimTest extends Scene2D {
 
@@ -45,16 +46,16 @@ package tests {
 
         public function SpriteAnimTest() {
 
-            var bmp:BitmapData = new spriteTexture().bitmapData;
+            var tex:Texture2D = Texture2D.textureFromBitmapData(new spriteTexture().bitmapData);
 
-            var sheet:SpriteSheet = new SpriteSheet(bmp.width, bmp.height, 24, 32, 5);
+            var sheet:SpriteSheet = new SpriteSheet(tex.bitmapWidth, tex.bitmapHeight, 24, 32, 5);
             sheet.addAnimation("up", [0, 1, 2], true);
             sheet.addAnimation("right", [3, 4, 5], true);
             sheet.addAnimation("down", [6, 7, 8], true);
             sheet.addAnimation("left", [9, 10, 11], true);
             sheet.playAnimation("up", 0, true);
 
-            s = new Sprite2D(bmp);
+            s = new Sprite2D(tex);
             s.setSpriteSheet(sheet);
             addChild(s);
         }

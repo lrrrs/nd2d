@@ -61,11 +61,11 @@ package de.nulldesign.nd2d.display {
 
             var size:Point = TextureHelper.getTextureDimensionsFromSize(textureWidth, textureHeight);
 
-            texture = new Texture2D(null);
+            texture = new Texture2D();
             texture.textureWidth = size.x;
             texture.textureHeight = size.y;
-            texture.originalTextureWidth = size.x;
-            texture.originalTextureHeight = size.y;
+            texture.bitmapWidth = size.x;
+            texture.bitmapHeight = size.y;
 
             this.renderNode = renderNode;
             _width = size.x;

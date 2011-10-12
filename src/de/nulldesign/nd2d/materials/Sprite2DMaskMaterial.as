@@ -133,10 +133,10 @@ package de.nulldesign.nd2d.materials {
             context.setProgramConstantsFromMatrix(Context3DProgramType.VERTEX, 0, clipSpaceMatrix, true);
             context.setProgramConstantsFromMatrix(Context3DProgramType.VERTEX, 4, maskClipSpaceMatrix, true);
             context.setProgramConstantsFromVector(Context3DProgramType.VERTEX, 8, Vector.<Number>([
-                maskTexture.originalTextureWidth * 0.5,
-                maskTexture.originalTextureHeight * 0.5,
-                maskTexture.originalTextureWidth,
-                maskTexture.originalTextureHeight ]));
+                maskTexture.bitmapWidth * 0.5,
+                maskTexture.bitmapHeight * 0.5,
+                maskTexture.bitmapWidth,
+                maskTexture.bitmapHeight ]));
 
             context.setProgramConstantsFromVector(Context3DProgramType.VERTEX, 9, Vector.<Number>([ uvOffsetAndScale.x,
                 uvOffsetAndScale.y,

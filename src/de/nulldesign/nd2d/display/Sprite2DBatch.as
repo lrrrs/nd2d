@@ -43,7 +43,8 @@ package de.nulldesign.nd2d.display {
 
     /**
      * Sprite2DBatch
-     * Similar to a Sprite2DCloud. In general it's a bit slower than the cloud, but it supports mouseevents for
+     * Similar to a Sprite2DCloud, the main difference it that the Batch supports nested nodes, while the cloud just draws it's own children and not the subchilds.
+	 * In general it's a bit slower than the cloud, but it supports mouseevents for
      * childs and adding or removing childs doesn't slow down the rendering, it's free.
      * So in particular cases it could be faster.
      */
@@ -60,7 +61,8 @@ package de.nulldesign.nd2d.display {
             faceList = TextureHelper.generateQuadFromDimensions(2, 2);
 
             if(textureObject is BitmapData) {
-                texture = new Texture2D(textureObject as BitmapData);
+                texture = Texture2D.textureFromBitmapData(textureObject as BitmapData);
+				trace("Setting constructor argument in a Sprite2DBatch as a BitmapData is depricated. Please pass a Texture2D object to the constructor. Create Texture2D object from a BitmapData by using the static method: Texture2D.textureFromBitmapData()");
             } else if(textureObject is Texture2D) {
                 texture = textureObject as Texture2D;
             } else {
@@ -123,17 +125,12 @@ package de.nulldesign.nd2d.display {
             }
 
             if(invalidateMatrix) {
-                updateMatrix();
+                updateLocalMatrix();
                 myMatrixChanged = true;
             }
 
             if(parentMatrixChanged || myMatrixChanged) {
-                worldModelMatrix.identity();
-                worldModelMatrix.append(localModelMatrix);
-
-                if(parent) {
-                    worldModelMatrix.append(parent.worldModelMatrix);
-                }
+                updateWorldMatrix();
             }
 
             draw(context, camera);

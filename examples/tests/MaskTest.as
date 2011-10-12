@@ -33,7 +33,8 @@ package tests {
     import de.nulldesign.nd2d.display.Scene2D;
     import de.nulldesign.nd2d.display.Sprite2D;
     import de.nulldesign.nd2d.materials.SpriteSheet;
-    import de.nulldesign.nd2d.materials.TextureAtlas;
+	import de.nulldesign.nd2d.materials.Texture2D;
+	import de.nulldesign.nd2d.materials.TextureAtlas;
     import de.nulldesign.nd2d.utils.NumberUtil;
 
     import flash.display.BitmapData;
@@ -70,9 +71,9 @@ package tests {
         public function MaskTest() {
 
             // set up textures, sheets and atlas
-            var texAtlasBmp:BitmapData = new textureAtlasBitmap().bitmapData;
+            var texAtlasTex:Texture2D = Texture2D.textureFromBitmapData(new textureAtlasBitmap().bitmapData);
 
-            var atlas:TextureAtlas = new TextureAtlas(texAtlasBmp.width, texAtlasBmp.height,
+            var atlas:TextureAtlas = new TextureAtlas(texAtlasTex.bitmapWidth, texAtlasTex.bitmapHeight,
                                                       new XML(new textureAtlasXML()), 20);
 
             atlas.addAnimation("blah",
@@ -82,12 +83,12 @@ package tests {
 
             atlas.playAnimation("blah");
 
-            var spriteSheetBmp:BitmapData = new spriteTexture().bitmapData;
-            var sheet:SpriteSheet = new SpriteSheet(spriteSheetBmp.width, spriteSheetBmp.height, 24, 32, 5);
+            var spriteSheetTex:Texture2D = Texture2D.textureFromBitmapData(new spriteTexture().bitmapData);
+            var sheet:SpriteSheet = new SpriteSheet(spriteSheetTex.bitmapWidth, spriteSheetTex.bitmapHeight, 24, 32, 5);
             sheet.addAnimation("blah", [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11], true);
             sheet.playAnimation("blah", 0, true);
 
-            var tex:BitmapData = new spriteImage().bitmapData;
+            var tex:Texture2D = Texture2D.textureFromBitmapData(new spriteImage().bitmapData);
 
             // set up test sprite and mask
 
@@ -99,7 +100,7 @@ package tests {
             //sprite2.setSpriteSheet(atlas);
             addChild(sprite2);
 
-            mask = new Sprite2D(new maskImage().bitmapData);
+            mask = new Sprite2D(Texture2D.textureFromBitmapData(new maskImage().bitmapData));
 
             // apply the mask
             sprite.setMask(mask);

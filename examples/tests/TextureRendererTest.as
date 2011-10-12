@@ -54,7 +54,7 @@ package tests {
 
         public function TextureRendererTest() {
 
-            var b:BitmapData = new spriteTexture().bitmapData;
+            var b:Texture2D = Texture2D.textureFromBitmapData(new spriteTexture().bitmapData);
 
             s = new Sprite2D(b);
             s2 = new Sprite2D(b);
