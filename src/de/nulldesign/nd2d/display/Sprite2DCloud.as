@@ -61,7 +61,7 @@ package de.nulldesign.nd2d.display {
      * Limitations:
      * - Mouseevents are disabled and won't work for childs
      * - Reordering childs (add, remove) is very expensive. Try to avoid it! A Sprite2DBatch might work better in this case
-     * - Pivot points are not supported for childs
+	 * - Subchilds are not rendered. The cloud will only render it's own childs, you can't nest nodes deeper with a cloud.
      */
     public class Sprite2DCloud extends Node2D {
 
@@ -105,12 +105,21 @@ package de.nulldesign.nd2d.display {
         public function Sprite2DCloud(maxCapacity:uint, textureObject:Object) {
 
             if(textureObject is BitmapData) {
+<<<<<<< HEAD
                 var bmp:BitmapData = textureObject as BitmapData;
                 spriteSheet = new SpriteSheet(bmp, bmp.width, bmp.height, 0);
             } else if(textureObject is SpriteSheet) {
                 spriteSheet = textureObject as SpriteSheet;
             } else if(textureObject is TextureAtlas) {
                 spriteSheet = textureObject as TextureAtlas;
+=======
+                texture = Texture2D.textureFromBitmapData(textureObject as BitmapData);
+				trace("Setting constructor argument in a Sprite2DCloud as a BitmapData is depricated. Please pass a Texture2D object to the constructor. Create Texture2D object from a BitmapData by using the static method: Texture2D.textureFromBitmapData()");
+            } else if(textureObject is Texture2D) {
+                texture = textureObject as Texture2D;
+            } else if(textureObject != null) {
+                throw new Error("textureObject has to be a BitmapData or a Texture2D");
+>>>>>>> 8a56cc990a05cac58f6831cd856041787f9b139f
             }
 
             faceList = TextureHelper.generateQuadFromSpriteSheet(spriteSheet);
@@ -217,17 +226,12 @@ package de.nulldesign.nd2d.display {
             var myMatrixChanged:Boolean = false;
 
             if(invalidateMatrix) {
-                updateMatrix();
+                updateLocalMatrix();
                 myMatrixChanged = true;
             }
 
             if(parentMatrixChanged || myMatrixChanged) {
-                worldModelMatrix.identity();
-                worldModelMatrix.append(localModelMatrix);
-
-                if(parent) {
-                    worldModelMatrix.append(parent.worldModelMatrix);
-                }
+                updateWorldMatrix();
             }
 
             draw(context, camera);

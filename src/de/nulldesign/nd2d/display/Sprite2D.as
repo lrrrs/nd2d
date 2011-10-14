@@ -59,6 +59,21 @@ package de.nulldesign.nd2d.display {
          * @param textureObject can be a BitmapData, SpriteSheet or TextureAtlas
          */
         public function Sprite2D(textureObject:Object = null) {
+<<<<<<< HEAD
+=======
+            faceList = TextureHelper.generateQuadFromDimensions(2, 2);
+
+            var tex:Texture2D;
+            if(textureObject is BitmapData) {
+                tex = Texture2D.textureFromBitmapData(textureObject as BitmapData);
+				trace("Setting constructor argument in a Sprite2D as a BitmapData is depricated. Please pass a Texture2D object to the constructor. Create Texture2D object from a BitmapData by using the static method: Texture2D.textureFromBitmapData()");
+            } else if(textureObject is Texture2D) {
+                tex = textureObject as Texture2D;
+            } else if(textureObject != null) {
+                throw new Error("textureObject has to be a BitmapData or a Texture2D");
+            }
+
+>>>>>>> 8a56cc990a05cac58f6831cd856041787f9b139f
             if(textureObject) {
                 setMaterial(new Sprite2DMaterial(textureObject));
             }
@@ -76,8 +91,17 @@ package de.nulldesign.nd2d.display {
                 material = new Sprite2DMaterial(null);
             }
 
+<<<<<<< HEAD
             material.texture = texture;
             faceList = TextureHelper.generateQuadFromDimensions(width, height);
+=======
+            this.texture = value;
+
+            if(texture && !spriteSheet) {
+                _width = texture.bitmapWidth;
+                _height = texture.bitmapHeight;
+            }
+>>>>>>> 8a56cc990a05cac58f6831cd856041787f9b139f
         }
 
         public function setMaterial(newMaterial:Sprite2DMaterial):void {
@@ -150,7 +174,7 @@ package de.nulldesign.nd2d.display {
             if(mask) {
 
                 if(mask.invalidateMatrix) {
-                    mask.updateMatrix();
+                    mask.updateLocalMatrix();
                 }
 
                 var maskMat:Sprite2DMaskMaterial = Sprite2DMaskMaterial(material);

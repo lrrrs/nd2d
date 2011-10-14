@@ -33,8 +33,9 @@ package tests {
     import de.nulldesign.nd2d.display.Scene2D;
     import de.nulldesign.nd2d.display.Sprite2D;
     import de.nulldesign.nd2d.materials.BlendModePresets;
+	import de.nulldesign.nd2d.materials.Texture2D;
 
-    import flash.events.Event;
+	import flash.events.Event;
 
     public class StarFieldTest extends Scene2D {
 
@@ -52,10 +53,10 @@ package tests {
 
             addEventListener(Event.ADDED_TO_STAGE, addedToStage);
 
-            starfield1 = new Sprite2D(new starFieldTexture().bitmapData);
+            starfield1 = new Sprite2D(Texture2D.textureFromBitmapData(new starFieldTexture().bitmapData));
             addChild(starfield1);
 
-            starfield2 = new Sprite2D(new starFieldTexture2().bitmapData);
+            starfield2 = new Sprite2D(Texture2D.textureFromBitmapData(new starFieldTexture2().bitmapData));
             starfield2.blendMode = BlendModePresets.ADD;
             addChild(starfield2);
         }

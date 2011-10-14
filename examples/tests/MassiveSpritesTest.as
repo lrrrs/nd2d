@@ -35,8 +35,9 @@ package tests {
     import de.nulldesign.nd2d.display.Sprite2D;
     import de.nulldesign.nd2d.display.Sprite2DCloud;
     import de.nulldesign.nd2d.materials.BlendModePresets;
+	import de.nulldesign.nd2d.materials.Texture2D;
 
-    import flash.display.BitmapData;
+	import flash.display.BitmapData;
     import flash.display.BitmapDataChannel;
     import flash.events.Event;
     import flash.geom.Point;
@@ -70,7 +71,7 @@ package tests {
             removeEventListener(Event.ADDED_TO_STAGE, addedToStage);
 
             sprites = new Vector.<Sprite2D>();
-            var tex:BitmapData = new cubeTexture().bitmapData;
+            var tex:Texture2D = Texture2D.textureFromBitmapData(new cubeTexture().bitmapData);
             var s:Sprite2D;
 
             // CPU 95%, FPS 60

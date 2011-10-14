@@ -5,7 +5,8 @@ package tests {
     import de.nulldesign.nd2d.display.Sprite2D;
     import de.nulldesign.nd2d.display.Sprite2DCloud;
     import de.nulldesign.nd2d.materials.BlendModePresets;
-    import de.nulldesign.nd2d.utils.ColorUtil;
+	import de.nulldesign.nd2d.materials.Texture2D;
+	import de.nulldesign.nd2d.utils.ColorUtil;
     import de.nulldesign.nd2d.utils.NumberUtil;
 
     import flash.display.Sprite;
@@ -35,7 +36,7 @@ package tests {
             var maxParticles:uint = 1000;
             var s:Sprite2D;
 
-            spriteCloud = new Sprite2DCloud(maxParticles, new twirlBmp().bitmapData);
+            spriteCloud = new Sprite2DCloud(maxParticles, Texture2D.textureFromBitmapData(new twirlBmp().bitmapData));
             spriteCloud.blendMode = BlendModePresets.ADD;
 
             for(var i:int = 0; i < maxParticles; i++) {

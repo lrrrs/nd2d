@@ -34,8 +34,9 @@ package tests {
     import de.nulldesign.nd2d.display.Sprite2D;
     import de.nulldesign.nd2d.materials.BlendModePresets;
     import de.nulldesign.nd2d.materials.SpriteSheet;
+	import de.nulldesign.nd2d.materials.Texture2D;
 
-    import flash.display.BitmapData;
+	import flash.display.BitmapData;
     import flash.events.MouseEvent;
     import flash.geom.Point;
 
@@ -53,13 +54,15 @@ package tests {
 
         public function SpriteHierarchyTest() {
 
-            s = new Sprite2D(new spriteTexture().bitmapData);
+			var tex:Texture2D = Texture2D.textureFromBitmapData(new spriteTexture().bitmapData);
+
+            s = new Sprite2D(tex);
             s.mouseEnabled = true;
             s.addEventListener(MouseEvent.MOUSE_OVER, mouseOver);
             s.addEventListener(MouseEvent.MOUSE_OUT, mouseOut);
             addChild(s);
 
-            s2 = new Sprite2D(new spriteTexture().bitmapData);
+            s2 = new Sprite2D(tex);
             s2.mouseEnabled = true;
             s2.addEventListener(MouseEvent.MOUSE_OVER, mouseOver);
             s2.addEventListener(MouseEvent.MOUSE_OUT, mouseOut);
@@ -69,13 +72,22 @@ package tests {
             s2.scaleY = 0.5;
             s.addChild(s2);
 
-            var bmp:BitmapData = new spriteTexture2().bitmapData;
+            var tex2:Texture2D = Texture2D.textureFromBitmapData(new spriteTexture2().bitmapData);
 
+<<<<<<< HEAD
             var sheet:SpriteSheet = new SpriteSheet(bmp, 24, 32, 5);
             sheet.addAnimation("up", [6, 7, 8], true);
             sheet.playAnimation("up", 0, true);
 
             s3 = new Sprite2D(sheet);
+=======
+            var sheet:SpriteSheet = new SpriteSheet(tex2.bitmapWidth, tex2.bitmapHeight, 24, 32, 5);
+            sheet.addAnimation("up", [6, 7, 8], true);
+            sheet.playAnimation("up", 0, true);
+
+            s3 = new Sprite2D(tex2);
+            s3.setSpriteSheet(sheet);
+>>>>>>> 8a56cc990a05cac58f6831cd856041787f9b139f
             s3.mouseEnabled = true;
             s3.addEventListener(MouseEvent.MOUSE_OVER, mouseOver);
             s3.addEventListener(MouseEvent.MOUSE_OUT, mouseOut);

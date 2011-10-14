@@ -105,6 +105,7 @@ package de.nulldesign.nd2d.utils {
                 uploadTextureWithMipmaps(texture, newBmp);
             } else {
                 texture.uploadFromBitmapData(newBmp);
+                //texture.uploadFromByteArray(data, 0);
             }
 
             return texture;
@@ -121,7 +122,11 @@ package de.nulldesign.nd2d.utils {
 
                 tmp.fillRect(tmp.rect, 0x00000000);
                 tmp.draw(src, transform, null, null, null, true);
+
                 dest.uploadFromBitmapData(tmp, level);
+
+                //dest.uploadFromByteArray(data, 0, mip);
+
                 transform.scale(0.5, 0.5);
                 level++;
                 ws >>= 1;

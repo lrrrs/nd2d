@@ -86,7 +86,17 @@ package de.nulldesign.nd2d.display {
             this.maxCapacity = maxCapacity;
             this.particleBitmap = particleBitmap;
 
+<<<<<<< HEAD
             var textureDimensions:Point = TextureHelper.getTextureDimensionsFromBitmap(particleBitmap);
+=======
+            var tex:Texture2D;
+            if(textureObject is BitmapData) {
+                tex = Texture2D.textureFromBitmapData(textureObject as BitmapData);
+				trace("Setting constructor argument in a ParticleSystem2D as a BitmapData is depricated. Please pass a Texture2D object to the constructor. Create Texture2D object from a BitmapData by using the static method: Texture2D.textureFromBitmapData()");
+            } else {
+                tex = textureObject as Texture2D;
+            }
+>>>>>>> 8a56cc990a05cac58f6831cd856041787f9b139f
 
             material = new ParticleSystemMaterial(particleBitmap);
 

@@ -33,7 +33,8 @@ package tests {
     import de.nulldesign.nd2d.display.ParticleSystem2D;
     import de.nulldesign.nd2d.display.Scene2D;
     import de.nulldesign.nd2d.materials.BlendModePresets;
-    import de.nulldesign.nd2d.utils.ParticleSystemPreset;
+	import de.nulldesign.nd2d.materials.Texture2D;
+	import de.nulldesign.nd2d.utils.ParticleSystemPreset;
 
     import flash.display.Sprite;
     import flash.events.Event;
@@ -64,7 +65,7 @@ package tests {
             psp.maxEndSize = 0.0;
             psp.spawnDelay = 5.0;
 
-            particles = new ParticleSystem2D(new particleClass().bitmapData, 1000, psp);
+            particles = new ParticleSystem2D(Texture2D.textureFromBitmapData(new particleClass().bitmapData), 1000, psp);
             particles.gravity = new Point(0.0, -1500.0);
             //particles.scaleX = particles.scaleY = 4.0;
             particles.blendMode = BlendModePresets.ADD;

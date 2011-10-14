@@ -137,12 +137,20 @@ package de.nulldesign.nd2d.materials {
 
             context.setProgramConstantsFromMatrix(Context3DProgramType.VERTEX, 0, clipSpaceMatrix, true);
             context.setProgramConstantsFromMatrix(Context3DProgramType.VERTEX, 4, maskClipSpaceMatrix, true);
+<<<<<<< HEAD
             context.setProgramConstantsFromVector(Context3DProgramType.VERTEX, 8, Vector.<Number>([ maskBitmap.width * 0.5,
                                                                                                       maskBitmap.height * 0.5,
                                                                                                       maskBitmap.width,
                                                                                                       maskBitmap.height ]));
 
             var uvOffsetAndScale:Rectangle = spriteSheet.getUVRectForFrame();
+=======
+            context.setProgramConstantsFromVector(Context3DProgramType.VERTEX, 8, Vector.<Number>([
+                maskTexture.bitmapWidth * 0.5,
+                maskTexture.bitmapHeight * 0.5,
+                maskTexture.bitmapWidth,
+                maskTexture.bitmapHeight ]));
+>>>>>>> 8a56cc990a05cac58f6831cd856041787f9b139f
 
             context.setProgramConstantsFromVector(Context3DProgramType.VERTEX, 9, Vector.<Number>([ uvOffsetAndScale.x,
                                                                                                       uvOffsetAndScale.y,

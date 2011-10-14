@@ -36,7 +36,8 @@ package tests {
     import de.nulldesign.nd2d.display.Sprite2DCloud;
     import de.nulldesign.nd2d.materials.BlendModePresets;
     import de.nulldesign.nd2d.materials.SpriteSheet;
-    import de.nulldesign.nd2d.utils.NumberUtil;
+	import de.nulldesign.nd2d.materials.Texture2D;
+	import de.nulldesign.nd2d.utils.NumberUtil;
     import de.nulldesign.nd2d.utils.ParticleSystemPreset;
 
     import flash.display.BitmapData;
@@ -90,7 +91,7 @@ package tests {
 
             removeEventListener(Event.ADDED_TO_STAGE, addedToStage);
 
-            var backgroundTex:BitmapData = new backgroundTexture().bitmapData;
+            var backgroundTex:Texture2D = Texture2D.textureFromBitmapData(new backgroundTexture().bitmapData);
             var cloud:Sprite2DCloud = new Sprite2DCloud(3, backgroundTex);
             addChild(cloud);
 
@@ -104,7 +105,7 @@ package tests {
                 backgroundSprites[i].x = i * backgroundSprites[i].width + backgroundSprites[i].width * 0.5;
             }
 
-            var backgroundTex2:BitmapData = new backgroundTexture2().bitmapData;
+            var backgroundTex2:Texture2D = Texture2D.textureFromBitmapData(new backgroundTexture2().bitmapData);
             //cloud = new Sprite2DCloud(3, backgroundTex2);
             //addChild(cloud);
 
@@ -134,12 +135,12 @@ package tests {
             plasmaPreset.maxStartPosition.y = stage.stageHeight * 0.5;
             plasmaPreset.spawnDelay = 0.0;
 
-            wind = new ParticleSystem2D(new particleTexture2().bitmapData, 400, plasmaPreset);
+            wind = new ParticleSystem2D(Texture2D.textureFromBitmapData(new particleTexture2().bitmapData), 400, plasmaPreset);
             wind.blendMode = BlendModePresets.ADD;
             addChild(wind);
 
             // trees
-            var treeTex:BitmapData = new treeTexture().bitmapData;
+            var treeTex:Texture2D = Texture2D.textureFromBitmapData(new treeTexture().bitmapData);
             treeSprites.push(addChild(new Sprite2D(treeTex)));
             treeSprites.push(addChild(new Sprite2D(treeTex)));
             treeSprites.push(addChild(new Sprite2D(treeTex)));
@@ -151,7 +152,7 @@ package tests {
             }
 
             // grass
-            var grassTex:BitmapData = new grassTexture().bitmapData;
+            var grassTex:Texture2D = Texture2D.textureFromBitmapData(new grassTexture().bitmapData);
             grassSprites.push(addChild(new Sprite2D(grassTex)));
             grassSprites.push(addChild(new Sprite2D(grassTex)));
             grassSprites.push(addChild(new Sprite2D(grassTex)));
@@ -161,10 +162,14 @@ package tests {
             }
 
             // plants
-            var plantTex:BitmapData = new plantTexture().bitmapData;
+            var plantTex:Texture2D = Texture2D.textureFromBitmapData(new plantTexture().bitmapData);
 
             // TODO add reverse loop option to spritesheet
+<<<<<<< HEAD
             var sheet:SpriteSheet = new SpriteSheet(plantTex, 200, 147, 20);
+=======
+            var sheet:SpriteSheet = new SpriteSheet(plantTex.bitmapWidth, plantTex.bitmapHeight, 200, 147, 20);
+>>>>>>> 8a56cc990a05cac58f6831cd856041787f9b139f
             var ar:Array = [];
             for(i = 2; i < 35; ++i) {
                 ar.push(i);
@@ -216,7 +221,7 @@ package tests {
             plant.spriteSheet.playAnimation("wave", 10, true);
 
             // ceiling
-            var ceilingTex:BitmapData = new ceilingTexture().bitmapData;
+            var ceilingTex:Texture2D = Texture2D.textureFromBitmapData(new ceilingTexture().bitmapData);
             cloud = new Sprite2DCloud(3, ceilingTex);
             addChild(cloud);
 
@@ -242,7 +247,7 @@ package tests {
             plasmaPreset.maxEmitAngle = 190.0;
             plasmaPreset.spawnDelay = 2.0;
 
-            plasma = new ParticleSystem2D(new particleTexture().bitmapData, 200, plasmaPreset);
+            plasma = new ParticleSystem2D(Texture2D.textureFromBitmapData(new particleTexture().bitmapData), 200, plasmaPreset);
             plasma.x = 225;
             plasma.y = -55;
             plasma.blendMode = BlendModePresets.ADD;
