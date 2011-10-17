@@ -208,15 +208,13 @@ package de.nulldesign.nd2d.display {
         protected function setActiveScene(value:Scene2D):void {
 
             if(scene) {
-                scene.setStageRef(null);
-                scene.setCameraRef(null);
+                scene.setStageAndCamRef(null, null);
             }
 
             this.scene = value;
 
             if(scene) {
-                scene.setCameraRef(camera);
-                scene.setStageRef(stage);
+                scene.setStageAndCamRef(stage, camera);
             }
         }
 

@@ -30,7 +30,8 @@
 
 package tests {
 
-    import de.nulldesign.nd2d.display.Scene2D;
+	import de.nulldesign.nd2d.display.Node2D;
+	import de.nulldesign.nd2d.display.Scene2D;
     import de.nulldesign.nd2d.display.Sprite2D;
     import de.nulldesign.nd2d.materials.BlendModePresets;
     import de.nulldesign.nd2d.materials.SpriteSheet;
@@ -38,7 +39,9 @@ package tests {
 
 	import flash.display.BitmapData;
     import flash.events.MouseEvent;
-    import flash.geom.Point;
+	import flash.geom.Point;
+	import flash.geom.Point;
+	import flash.geom.Point;
 	import flash.geom.Vector3D;
 
 	public class SpriteHierarchyTest extends Scene2D {
@@ -96,6 +99,12 @@ package tests {
 
         private function mouseOver(event:MouseEvent):void {
             event.target.tint = Math.random() * 0xffffff;
+
+			var n:Node2D = event.target as Node2D;
+			var p:Point = n.localToGlobal(new Point(n.mouseX, n.mouseY));
+			trace("localToGlobal: " + p + " stage: " + stage.mouseX + " // " + stage.mouseY);
+			p = n.globalToLocal(new Point(stage.mouseX, stage.mouseY));
+			trace("globalToLocal: " + p + " stage: " + stage.mouseX + " // " + stage.mouseY);
         }
 
         override protected function step(elapsed:Number):void {

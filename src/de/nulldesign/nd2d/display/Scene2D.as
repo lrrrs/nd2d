@@ -41,8 +41,6 @@ package de.nulldesign.nd2d.display {
      */
     public class Scene2D extends Node2D {
 
-        protected var camera:Camera2D;
-
         internal var br:Number = 0.0;
         internal var bg:Number = 0.0;
         internal var bb:Number = 0.0;
@@ -63,10 +61,6 @@ package de.nulldesign.nd2d.display {
         public function Scene2D() {
             super();
             mouseEnabled = true;
-        }
-
-        internal function setCameraRef(value:Camera2D):void {
-            camera = value;
         }
 
         override internal function drawNode(context:Context3D, camera:Camera2D, parentMatrixChanged:Boolean, statsObject:StatsObject):void {

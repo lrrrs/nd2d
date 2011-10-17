@@ -30,6 +30,7 @@
 
 package de.nulldesign.nd2d.display {
 
+	import de.nulldesign.nd2d.geom.Vertex;
 	import de.nulldesign.nd2d.materials.BlendModePresets;
 	import de.nulldesign.nd2d.utils.NodeBlendMode;
 	import de.nulldesign.nd2d.utils.StatsObject;
@@ -42,6 +43,7 @@ package de.nulldesign.nd2d.display {
 	import flash.geom.ColorTransform;
 	import flash.geom.Matrix3D;
 	import flash.geom.Point;
+	import flash.geom.Vector3D;
 	import flash.geom.Vector3D;
 
 	/**
@@ -143,6 +145,7 @@ package de.nulldesign.nd2d.display {
 		protected var timeSinceStartInSeconds:Number = 0.0;
 
 		protected var stage:Stage;
+		protected var camera:Camera2D;
 
 		private var localMouse:Vector3D;
 		private var mouseInNode:Boolean = false;
@@ -458,9 +461,11 @@ package de.nulldesign.nd2d.display {
 			}
 		}
 
-		internal function setStageRef(value:Stage):void {
+		internal function setStageAndCamRef(value:Stage, cameraValue:Camera2D):void {
 
 			if(stage != value) {
+
+				camera = cameraValue;
 
 				if(value) {
 					stage = value;
@@ -471,7 +476,7 @@ package de.nulldesign.nd2d.display {
 				}
 
 				for each(var child:Node2D in children) {
-					child.setStageRef(value);
+					child.setStageAndCamRef(value, cameraValue);
 				}
 			}
 		}
@@ -554,7 +559,7 @@ package de.nulldesign.nd2d.display {
 			}
 
 			child.parent = this;
-			child.setStageRef(stage);
+			child.setStageAndCamRef(stage, camera);
 			children.splice(idx, 0, child);
 			return child;
 		}
@@ -571,7 +576,7 @@ package de.nulldesign.nd2d.display {
 		public function removeChildAt(idx:uint):void {
 			if(idx < children.length) {
 				children[idx].parent = null;
-				children[idx].setStageRef(null);
+				children[idx].setStageAndCamRef(null, null);
 				children.splice(idx, 1);
 			}
 		}
@@ -599,6 +604,37 @@ package de.nulldesign.nd2d.display {
 			while(children.length > 0) {
 				removeChildAt(0);
 			}
+		}
+
+		public function localToGlobal(p:Point):Point {
+			var clipSpaceMat:Matrix3D = new Matrix3D();
+			clipSpaceMat.append(worldModelMatrix);
+			clipSpaceMat.append(camera.getViewProjectionMatrix());
+
+			var v:Vector3D = clipSpaceMat.transformVector(new Vector3D(p.x, p.y, 0.0));
+			var p:Point = new Point((v.x + 1.0) * 0.5 * camera.sceneWidth, (-v.y + 1.0) * 0.5 * camera.sceneHeight);
+
+			return p;
+		}
+
+		public function globalToLocal(p:Point):Point {
+			var clipSpaceMat:Matrix3D = new Matrix3D();
+			clipSpaceMat.append(worldModelMatrix);
+			clipSpaceMat.append(camera.getViewProjectionMatrix());
+			clipSpaceMat.invert();
+
+			var from:Vector3D = new Vector3D(p.x / camera.sceneWidth * 2.0 - 1.0,
+											-(p.y / camera.sceneHeight * 2.0 - 1.0),
+											 0.0, 1.0);
+
+			var v:Vector3D = clipSpaceMat.transformVector(from);
+			v.w = 1.0 / v.w;
+			v.x /= v.w;
+			v.y /= v.w;
+			//v.z /= v.w;
+
+			var p:Point = new Point(v.x, v.y);
+			return p;
 		}
 
 		public function dispose():void {

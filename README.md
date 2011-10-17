@@ -47,6 +47,7 @@ Important links:
 
 2011-10-17
 
+- NEW: globalToLocal / localToGlobal methods in Node2D
 - set some properties to internal
 - getIndexForFrame added for TextureAtlas
 
