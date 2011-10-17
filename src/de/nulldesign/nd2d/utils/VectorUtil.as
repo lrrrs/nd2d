@@ -33,8 +33,9 @@ package de.nulldesign.nd2d.utils {
     import de.nulldesign.nd2d.display.Node2D;
 
     import flash.geom.Point;
+	import flash.geom.Vector3D;
 
-    public class VectorUtil {
+	public class VectorUtil {
 		
 		public static const RAD_2_DEG:Number = 180 / Math.PI;
 		public static const DEG_2_RAD:Number = Math.PI / 180;
@@ -78,7 +79,7 @@ package de.nulldesign.nd2d.utils {
 			const p2:Point = n2.position;
 			const dx:Number = p1.x - p2.x;
 			const dy:Number = p1.y - p2.y;
-			return Math.sqrt(dx*dx + dy*dy);
+			return Math.sqrt(dx * dx + dy * dy);
         }
     }
 }

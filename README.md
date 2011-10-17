@@ -45,6 +45,11 @@ Important links:
 
 # Changelog:
 
+2011-10-17
+
+- set some properties to internal
+- getIndexForFrame added for TextureAtlas
+
 2011-10-08
 
 - API Changes:

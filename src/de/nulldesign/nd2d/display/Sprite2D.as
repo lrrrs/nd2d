@@ -134,9 +134,9 @@ package de.nulldesign.nd2d.display {
         /**
          * @private
          */
-        override internal function stepNode(elapsed:Number):void {
+        override internal function stepNode(elapsed:Number, timeSinceStartInSeconds:Number):void {
 
-            super.stepNode(elapsed);
+            super.stepNode(elapsed, timeSinceStartInSeconds);
 
             if(spriteSheet) {
                 spriteSheet.update(timeSinceStartInSeconds);

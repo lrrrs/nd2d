@@ -39,8 +39,9 @@ package tests {
 	import flash.display.BitmapData;
     import flash.events.MouseEvent;
     import flash.geom.Point;
+	import flash.geom.Vector3D;
 
-    public class SpriteHierarchyTest extends Scene2D {
+	public class SpriteHierarchyTest extends Scene2D {
 
         [Embed(source="/assets/crate.jpg")]
         private var spriteTexture:Class;

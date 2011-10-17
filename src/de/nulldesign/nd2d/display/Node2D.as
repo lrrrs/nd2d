@@ -138,9 +138,9 @@ package de.nulldesign.nd2d.display {
 
 		public var mouseEnabled:Boolean = false;
 
-		public var timeSinceStartInSeconds:Number = 0.0;
-
 		public var boundingSphereRadius:Number;
+
+		protected var timeSinceStartInSeconds:Number = 0.0;
 
 		protected var stage:Stage;
 
@@ -419,13 +419,13 @@ package de.nulldesign.nd2d.display {
 		/**
 		 * @private
 		 */
-		internal function processMouseEvents(mousePosition:Vector3D, mouseEventType:String, projectionMatrix:Matrix3D):void {
+		internal function processMouseEvents(mousePosition:Vector3D, mouseEventType:String, cameraViewProjectionMatrix:Matrix3D):void {
 
 			if(mouseEnabled && mouseEventType) {
 				// transform mousepos to local coordinate system
 				localMouseMatrix.identity();
 				localMouseMatrix.append(worldModelMatrix);
-				localMouseMatrix.append(projectionMatrix);
+				localMouseMatrix.append(cameraViewProjectionMatrix);
 				localMouseMatrix.invert();
 
 				localMouse = localMouseMatrix.transformVector(mousePosition);
@@ -454,7 +454,7 @@ package de.nulldesign.nd2d.display {
 			}
 
 			for each(var child:Node2D in children) {
-				child.processMouseEvents(mousePosition, mouseEventType, projectionMatrix);
+				child.processMouseEvents(mousePosition, mouseEventType, cameraViewProjectionMatrix);
 			}
 		}
 
@@ -479,13 +479,14 @@ package de.nulldesign.nd2d.display {
 		/**
 		 * @private
 		 */
-		internal function stepNode(elapsed:Number):void {
+		internal function stepNode(elapsed:Number, timeSinceStartInSeconds:Number):void {
+
+			this.timeSinceStartInSeconds = timeSinceStartInSeconds;
 
 			step(elapsed);
 
 			for each(var child:Node2D in children) {
-				child.timeSinceStartInSeconds = timeSinceStartInSeconds;
-				child.stepNode(elapsed);
+				child.stepNode(elapsed, timeSinceStartInSeconds);
 			}
 		}
 
@@ -530,8 +531,7 @@ package de.nulldesign.nd2d.display {
 		}
 
 		private function dispatchMouseEvent(mouseEventType:String):void {
-			dispatchEvent(new MouseEvent(mouseEventType, true, false, localMouse.x, localMouse.y, null, false, false, false,
-					(mouseEventType == MouseEvent.MOUSE_DOWN), 0));
+			dispatchEvent(new MouseEvent(mouseEventType, true, false, localMouse.x, localMouse.y, null, false, false, false, (mouseEventType == MouseEvent.MOUSE_DOWN), 0));
 		}
 
 		protected function draw(context:Context3D, camera:Camera2D):void {

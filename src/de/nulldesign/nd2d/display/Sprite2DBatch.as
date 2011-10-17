@@ -100,13 +100,14 @@ package de.nulldesign.nd2d.display {
             return super.addChildAt(child, idx);
         }
 
-        override internal function stepNode(elapsed:Number):void {
+        override internal function stepNode(elapsed:Number, timeSinceStartInSeconds:Number):void {
+
+			this.timeSinceStartInSeconds = timeSinceStartInSeconds;
 
             step(elapsed);
 
             for each(var child:Node2D in children) {
-                child.timeSinceStartInSeconds = timeSinceStartInSeconds;
-                child.stepNode(elapsed);
+                child.stepNode(elapsed, timeSinceStartInSeconds);
             }
 
             // don't refresh own spritesheet

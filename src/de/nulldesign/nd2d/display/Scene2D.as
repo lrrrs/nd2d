@@ -43,9 +43,9 @@ package de.nulldesign.nd2d.display {
 
         protected var camera:Camera2D;
 
-        public var br:Number = 0.0;
-        public var bg:Number = 0.0;
-        public var bb:Number = 0.0;
+        internal var br:Number = 0.0;
+        internal var bg:Number = 0.0;
+        internal var bb:Number = 0.0;
 
         private var _backGroundColor:Number = 0x000000;
 

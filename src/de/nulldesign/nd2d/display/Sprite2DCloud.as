@@ -55,8 +55,9 @@ package de.nulldesign.nd2d.display {
     import flash.geom.Matrix3D;
     import flash.geom.Point;
     import flash.geom.Rectangle;
+	import flash.geom.Vector3D;
 
-    /**
+	/**
      * Sprite2DCloud
      * Use a sprite cloud to batch sprites with the same Texture, SpriteSheet or TextureAtlas.
      * all sprites will be rendered in one single draw call. It will be fast ;)

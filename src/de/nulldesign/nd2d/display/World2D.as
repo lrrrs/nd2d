@@ -68,7 +68,6 @@ package de.nulldesign.nd2d.display {
      * You can switch between scenes with the setActiveScene method of World2D.
      * There can be only one active scene.
      *
-     * NOTICE: API change. You have to call start once to initialize the world
      *
      */ public class World2D extends Sprite {
 
@@ -187,8 +186,7 @@ package de.nulldesign.nd2d.display {
                 context3D.clear(scene.br, scene.bg, scene.bb, 1.0);
 
                 if(!isPaused) {
-                    scene.timeSinceStartInSeconds = t;
-                    scene.stepNode(elapsed);
+                    scene.stepNode(elapsed, t);
                 }
 
                 if(deviceWasLost) {

@@ -44,8 +44,9 @@ package tests {
     import flash.events.Event;
     import flash.events.MouseEvent;
     import flash.geom.Point;
+	import flash.geom.Vector3D;
 
-    public class MassiveSpriteCloudTest extends Scene2D {
+	public class MassiveSpriteCloudTest extends Scene2D {
 
         [Embed(source="/assets/spritechar2.png")]
         private var cubeTexture:Class;

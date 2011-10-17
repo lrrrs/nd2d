@@ -39,7 +39,8 @@ package tests {
 	import flash.events.Event;
     import flash.events.KeyboardEvent;
     import flash.geom.Point;
-    import flash.ui.Keyboard;
+	import flash.geom.Vector3D;
+	import flash.ui.Keyboard;
 
     public class SpriteHierarchyTest2 extends Scene2D {
 
