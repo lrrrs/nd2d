@@ -25,6 +25,8 @@ public function getIndexForFrame(name:String):uint {
 - check for internal / public methods throughout all nodes
 + scene2d br, bg, bb internal!!!
 - Zoë: A SWF animation exporter for the EaselJS library. ? more TextureAtlas tools?
+- pixel perfect collisions -> save bitmapdata alpha channel? only 1-bit
++ setactivescene public!
 
 
 

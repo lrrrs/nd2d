@@ -30,175 +30,159 @@
 
 package {
 
-    import avmplus.getQualifiedClassName;
+	import avmplus.getQualifiedClassName;
 
-    import de.nulldesign.nd2d.display.Scene2D;
-    import de.nulldesign.nd2d.display.World2D;
+	import com.bit101.components.PushButton;
 
-    import flash.display.StageAlign;
-    import flash.display.StageScaleMode;
-    import flash.display3D.Context3DRenderMode;
-    import flash.events.Event;
-    import flash.events.KeyboardEvent;
-    import flash.events.MouseEvent;
-    import flash.text.TextField;
-    import flash.text.TextFormat;
-    import flash.ui.Keyboard;
+	import de.nulldesign.nd2d.display.Scene2D;
+	import de.nulldesign.nd2d.display.World2D;
 
-    import net.hires.debug.Stats;
+	import flash.display.StageAlign;
+	import flash.display.StageScaleMode;
+	import flash.display3D.Context3DRenderMode;
+	import flash.events.Event;
+	import flash.events.KeyboardEvent;
+	import flash.events.MouseEvent;
+	import flash.text.TextField;
+	import flash.text.TextFormat;
+	import flash.ui.Keyboard;
 
-    import tests.BatchTest;
-    import tests.CameraTest;
-    import tests.ColorTransformTest;
-    import tests.Font2DTest;
-    import tests.Grid2DTest;
-    import tests.MaskTest;
-    import tests.MassiveSpriteCloudTest;
-    import tests.MassiveSpritesTest;
-    import tests.ParticleExplorer;
-    import tests.ParticleSystemTest;
-    import tests.PostProcessingTest;
-    import tests.SideScrollerTest;
-    import tests.Sprite2DCloudParticles;
-    import tests.SpriteAnimTest;
-    import tests.SpriteHierarchyTest;
-    import tests.SpriteHierarchyTest2;
-    import tests.SpriteTest;
-    import tests.StarFieldTest;
-    import tests.TextureAtlasTest;
-    import tests.TextureRendererTest;
+	import net.hires.debug.Stats;
 
-    //[SWF(width="1000", height="550", frameRate="60", backgroundColor="#000000")]
-    public class Main extends World2D {
+	import tests.BatchTest;
+	import tests.CameraTest;
+	import tests.ColorTransformTest;
+	import tests.Font2DTest;
+	import tests.Grid2DTest;
+	import tests.MaskTest;
+	import tests.MassiveSpriteCloudTest;
+	import tests.MassiveSpritesTest;
+	import tests.ParticleExplorer;
+	import tests.ParticleSystemTest;
+	import tests.PostProcessingTest;
+	import tests.SideScrollerTest;
+	import tests.Sprite2DCloudParticles;
+	import tests.SpriteAnimTest;
+	import tests.SpriteHierarchyTest;
+	import tests.SpriteHierarchyTest2;
+	import tests.SpriteTest;
+	import tests.StarFieldTest;
+	import tests.TextureAtlasTest;
+	import tests.TextureRendererTest;
 
-        private var scenes:Vector.<Scene2D> = new Vector.<Scene2D>();
-        private var activeSceneIdx:uint = 0;
-        private var stats:Stats = new Stats();
+	//[SWF(width="1000", height="550", frameRate="60", backgroundColor="#000000")]
+	public class Main extends World2D {
 
-        private var sceneText:TextField;
+		private var scenes:Vector.<Scene2D> = new Vector.<Scene2D>();
+		private var activeSceneIdx:uint = 0;
+		private var stats:Stats = new Stats();
 
-        public function Main() {
+		private var sceneText:TextField;
 
-            stage.scaleMode = StageScaleMode.NO_SCALE;
-            stage.align = StageAlign.TOP_LEFT;
-            enableErrorChecking = true;
+		public function Main() {
 
-            super(Context3DRenderMode.AUTO, 60);
+			stage.scaleMode = StageScaleMode.NO_SCALE;
+			stage.align = StageAlign.TOP_LEFT;
+			enableErrorChecking = false;
 
-            scenes.push(new SideScrollerTest());
-            scenes.push(new MassiveSpritesTest());
-            scenes.push(new MassiveSpriteCloudTest());
-            scenes.push(new SpriteHierarchyTest());
-            scenes.push(new SpriteHierarchyTest2());
-            scenes.push(new Font2DTest());
-            scenes.push(new Grid2DTest());
-            scenes.push(new SpriteTest());
-            scenes.push(new SpriteAnimTest());
-            scenes.push(new StarFieldTest());
-            scenes.push(new ParticleSystemTest());
-            scenes.push(new CameraTest());
-            scenes.push(new ParticleExplorer());
-            scenes.push(new MaskTest());
-            scenes.push(new TextureAtlasTest());
-            scenes.push(new BatchTest());
-            scenes.push(new TextureRendererTest());
-            scenes.push(new PostProcessingTest());
-            scenes.push(new ColorTransformTest());
-            scenes.push(new Sprite2DCloudParticles());
+			super(Context3DRenderMode.AUTO, 60);
+		}
 
-            var tf:TextFormat = new TextFormat("Arial", 11, 0xFFFFFF, true);
+		override protected function addedToStage(event:Event):void {
+			super.addedToStage(event);
 
-            sceneText = new TextField();
-            sceneText.width = 300;
-            sceneText.defaultTextFormat = tf;
+			scenes.push(new SideScrollerTest());
+			scenes.push(new MassiveSpritesTest());
+			scenes.push(new MassiveSpriteCloudTest());
+			scenes.push(new SpriteHierarchyTest());
+			scenes.push(new SpriteHierarchyTest2());
+			scenes.push(new Font2DTest());
+			scenes.push(new Grid2DTest());
+			scenes.push(new SpriteTest());
+			scenes.push(new SpriteAnimTest());
+			scenes.push(new StarFieldTest());
+			scenes.push(new ParticleSystemTest());
+			scenes.push(new CameraTest());
+			scenes.push(new ParticleExplorer());
+			scenes.push(new MaskTest());
+			scenes.push(new TextureAtlasTest());
+			scenes.push(new BatchTest());
+			scenes.push(new TextureRendererTest());
+			scenes.push(new PostProcessingTest());
+			scenes.push(new ColorTransformTest());
+			scenes.push(new Sprite2DCloudParticles());
 
-            addChild(sceneText);
+			var tf:TextFormat = new TextFormat("Arial", 11, 0xFFFFFF, true);
 
-            addChild(stats);
+			sceneText = new TextField();
+			sceneText.width = 300;
+			sceneText.defaultTextFormat = tf;
 
-            stage.addEventListener(Event.RESIZE, stageResize);
-            stageResize(null);
+			addChild(sceneText);
 
-            activeSceneIdx = scenes.length - 1;
-            nextBtnClick();
+			addChild(stats);
 
-            stage.addEventListener(KeyboardEvent.KEY_UP, keyUp);
+			stage.addEventListener(Event.RESIZE, stageResize);
+			stageResize(null);
 
-            /********************************
-             * API CHANGE: YOU HAVE TO CALL START TO INITIALIZE THE WORLD2D. OTHERWISE YOUR SCREEN WILL BE BLANK
-             ********************************/
-            start();
+			activeSceneIdx = scenes.length - 1;
+			nextBtnClick();
 
-            // test buttons
-            /*
-             var b:PushButton;
-             b = new PushButton(this, 0, 460, "pause", buttonClicked);
-             b.tag = 0;
-             b = new PushButton(this, 0, 480, "resume", buttonClicked);
-             b.tag = 1;
-             b = new PushButton(this, 0, 500, "sleep", buttonClicked);
-             b.tag = 2;
-             b = new PushButton(this, 0, 520, "wakeup", buttonClicked);
-             b.tag = 3;
-             */
-        }
+			stage.addEventListener(KeyboardEvent.KEY_UP, keyUp);
 
-        private function buttonClicked(e:MouseEvent):void {
-            switch(e.target.tag) {
-                case 0:
-                    pause();
-                    break;
-                case 1:
-                    resume();
-                    break;
-                case 2:
-                    sleep();
-                    break;
-                case 3:
-                    wakeUp();
-                    break;
-            }
-        }
+			start();
 
-        private function keyUp(e:KeyboardEvent):void {
-            if(e.keyCode == Keyboard.D) {
-                // simulate device loss
-                context3D.dispose();
-            } else if(e.keyCode == Keyboard.SPACE) {
-                nextBtnClick();
-            }
-        }
+			// test buttons
+			/*
+			var b:PushButton;
+			b = new PushButton(this, 380, 0, "next", buttonClicked);
+			b.tag = 0;
+			*/
+		}
 
-        private function nextBtnClick():void {
+		private function buttonClicked(e:MouseEvent):void {
+			nextBtnClick();
+		}
 
-            camera.reset();
+		private function keyUp(e:KeyboardEvent):void {
+			if(e.keyCode == Keyboard.D) {
+				// simulate device loss
+				context3D.dispose();
+			} else if(e.keyCode == Keyboard.SPACE) {
+				nextBtnClick();
+			}
+		}
 
-            sceneText.text = "(" + (activeSceneIdx + 1) + "/" + scenes.length + ") " + getQualifiedClassName(scenes[activeSceneIdx]) + " // hit space for next test.";
+		private function nextBtnClick():void {
 
-            setActiveScene(scenes[activeSceneIdx++]);
+			camera.reset();
 
-            if(activeSceneIdx > scenes.length - 1) {
-                activeSceneIdx = 0;
-            }
-        }
+			sceneText.text = "(" + (activeSceneIdx + 1) + "/" + scenes.length + ") " + getQualifiedClassName(scenes[activeSceneIdx]) + " // hit space for next test.";
 
-        private function stageResize(e:Event):void {
-            sceneText.x = 5;
-            sceneText.y = stage.stageHeight - 20;
-        }
+			setActiveScene(scenes[activeSceneIdx++]);
 
-        override protected function mainLoop(e:Event):void {
-            super.mainLoop(e);
-            stats.update(statsObject.totalDrawCalls, statsObject.totalTris);
-        }
+			if(activeSceneIdx > scenes.length - 1) {
+				activeSceneIdx = 0;
+			}
+		}
 
-        override protected function context3DCreated(e:Event):void {
+		private function stageResize(e:Event):void {
+			sceneText.x = 5;
+			sceneText.y = stage.stageHeight - 20;
+		}
 
-            super.context3DCreated(e);
+		override protected function mainLoop(e:Event):void {
+			super.mainLoop(e);
+			stats.update(statsObject.totalDrawCalls, statsObject.totalTris);
+		}
 
-            if(context3D) {
-                stats.driverInfo = context3D.driverInfo;
-            }
-        }
-    }
+		override protected function context3DCreated(e:Event):void {
+
+			super.context3DCreated(e);
+
+			if(context3D) {
+				stats.driverInfo = context3D.driverInfo;
+			}
+		}
+	}
 }

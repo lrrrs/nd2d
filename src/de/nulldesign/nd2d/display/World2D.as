@@ -89,8 +89,6 @@ package de.nulldesign.nd2d.display {
 
         protected var statsObject:StatsObject = new StatsObject();
 
-        protected var initializeNodesAfterStartUp:Boolean = false;
-
         public static var isHardwareAccelerated:Boolean;
 
         /**
@@ -146,8 +144,8 @@ package de.nulldesign.nd2d.display {
 
             deviceInitialized = true;
 
-            if(initializeNodesAfterStartUp) {
-                doInitializeNodes();
+            if(scene) {
+                scene.setStageAndCamRef(stage, camera);
             }
 
             dispatchEvent(new Event(Event.INIT));
@@ -182,7 +180,7 @@ package de.nulldesign.nd2d.display {
             var t:Number = getTimer() / 1000.0;
             var elapsed:Number = t - lastFramesTime;
 
-            if(scene) {
+            if(scene && context3D) {
                 context3D.clear(scene.br, scene.bg, scene.bb, 1.0);
 
                 if(!isPaused) {
@@ -205,7 +203,7 @@ package de.nulldesign.nd2d.display {
             lastFramesTime = t;
         }
 
-        protected function setActiveScene(value:Scene2D):void {
+        public function setActiveScene(value:Scene2D):void {
 
             if(scene) {
                 scene.setStageAndCamRef(null, null);
@@ -255,24 +253,6 @@ package de.nulldesign.nd2d.display {
         public function wakeUp():void {
             removeEventListener(Event.ENTER_FRAME, mainLoop);
             addEventListener(Event.ENTER_FRAME, mainLoop);
-        }
-
-        /**
-         * optionally you can call this method to initialize all your object in the active scene
-         * an event will be dispatched when the initializing is done
-         */
-        public function initializeNodes():void {
-
-            if(deviceInitialized) {
-                doInitializeNodes();
-            } else {
-                initializeNodesAfterStartUp = true;
-            }
-        }
-
-        private function doInitializeNodes():void {
-            // TODO traverse through displaylist and initialize nodes in a seperate thread / loop? dispatch event when ready, etc...
-            trace("TODO! Implement initializeNodes");
         }
 
         public function destroy():void {
