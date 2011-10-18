@@ -70,7 +70,7 @@ package de.nulldesign.nd2d.materials {
             return _spriteHeight;
         }
 
-        protected var _frame:uint = 0;
+        protected var _frame:uint = int.MAX_VALUE;
 
         public function get frame():uint {
             return _frame;
