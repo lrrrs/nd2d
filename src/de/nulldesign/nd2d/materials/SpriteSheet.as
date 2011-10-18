@@ -82,6 +82,8 @@ package de.nulldesign.nd2d.materials {
                                            _spriteWidth,
                                            _spriteHeight));
             }
+
+			frame = 0;
         }
 
         override public function getOffsetForFrame():Point {
