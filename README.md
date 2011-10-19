@@ -45,6 +45,11 @@ Important links:
 
 # Changelog:
 
+2011-10-19
+
+- CHANGE: mouseEvents, behave like you're used to in flash now. Only the topmost node will dispatch the event.
+- TODO: Pixel precise mouseevents are on the way, stay tuned
+
 2011-10-17
 
 - NEW: globalToLocal / localToGlobal methods in Node2D

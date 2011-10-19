@@ -151,6 +151,8 @@ package de.nulldesign.nd2d.display {
 		private var mouseInNode:Boolean = false;
 		private var localMouseMatrix:Matrix3D = new Matrix3D();
 
+		internal var mouseEvents:Vector.<MouseEvent>;
+
 		/**
 		 * @private
 		 */
@@ -422,7 +424,10 @@ package de.nulldesign.nd2d.display {
 		/**
 		 * @private
 		 */
-		internal function processMouseEvents(mousePosition:Vector3D, mouseEventType:String, cameraViewProjectionMatrix:Matrix3D):void {
+		internal function processMouseEvent(mousePosition:Vector3D, mouseEventType:String, cameraViewProjectionMatrix:Matrix3D):Node2D {
+
+			mouseEvents = new Vector.<MouseEvent>();
+			var childMouseNode:Node2D = null;
 
 			if(mouseEnabled && mouseEventType) {
 				// transform mousepos to local coordinate system
@@ -447,18 +452,30 @@ package de.nulldesign.nd2d.display {
 
 					if(mouseInNode) {
 						if(!oldMouseInNodeState) {
-							dispatchMouseEvent(MouseEvent.MOUSE_OVER);
+							mouseEvents.push(new MouseEvent(MouseEvent.MOUSE_OVER, true, false, localMouse.x, localMouse.y, null, false, false, false, (mouseEventType == MouseEvent.MOUSE_DOWN), 0));
 						}
-						dispatchMouseEvent(mouseEventType);
+						mouseEvents.push(new MouseEvent(mouseEventType, true, false, localMouse.x, localMouse.y, null, false, false, false, (mouseEventType == MouseEvent.MOUSE_DOWN), 0));
+						childMouseNode = this;
+
 					} else if(oldMouseInNodeState && !mouseInNode) {
-						dispatchMouseEvent(MouseEvent.MOUSE_OUT);
+						// dispatch mouse out directly, no hierarchy test
+						dispatchEvent(new MouseEvent(MouseEvent.MOUSE_OUT, true, false, localMouse.x, localMouse.y, null, false, false, false, (mouseEventType == MouseEvent.MOUSE_DOWN), 0));
 					}
 				}
 			}
 
+			var subChildMouseNode:Node2D;
 			for each(var child:Node2D in children) {
-				child.processMouseEvents(mousePosition, mouseEventType, cameraViewProjectionMatrix);
+				subChildMouseNode = child.processMouseEvent(mousePosition, mouseEventType, cameraViewProjectionMatrix);
+				if(subChildMouseNode) {
+					childMouseNode = subChildMouseNode;
+				}
 			}
+
+			// set over to false, if one of our childs stole the event
+			if(childMouseNode != this) mouseInNode = false;
+
+			return childMouseNode;
 		}
 
 		internal function setStageAndCamRef(value:Stage, cameraValue:Camera2D):void {
@@ -535,10 +552,6 @@ package de.nulldesign.nd2d.display {
 			}
 		}
 
-		private function dispatchMouseEvent(mouseEventType:String):void {
-			dispatchEvent(new MouseEvent(mouseEventType, true, false, localMouse.x, localMouse.y, null, false, false, false, (mouseEventType == MouseEvent.MOUSE_DOWN), 0));
-		}
-
 		protected function draw(context:Context3D, camera:Camera2D):void {
 			// overwrite in extended classes
 		}
@@ -612,9 +625,8 @@ package de.nulldesign.nd2d.display {
 			clipSpaceMat.append(camera.getViewProjectionMatrix());
 
 			var v:Vector3D = clipSpaceMat.transformVector(new Vector3D(p.x, p.y, 0.0));
-			var p:Point = new Point((v.x + 1.0) * 0.5 * camera.sceneWidth, (-v.y + 1.0) * 0.5 * camera.sceneHeight);
 
-			return p;
+			return new Point((v.x + 1.0) * 0.5 * camera.sceneWidth, (-v.y + 1.0) * 0.5 * camera.sceneHeight);
 		}
 
 		public function globalToLocal(p:Point):Point {
@@ -624,8 +636,8 @@ package de.nulldesign.nd2d.display {
 			clipSpaceMat.invert();
 
 			var from:Vector3D = new Vector3D(p.x / camera.sceneWidth * 2.0 - 1.0,
-											-(p.y / camera.sceneHeight * 2.0 - 1.0),
-											 0.0, 1.0);
+					-(p.y / camera.sceneHeight * 2.0 - 1.0),
+					0.0, 1.0);
 
 			var v:Vector3D = clipSpaceMat.transformVector(from);
 			v.w = 1.0 / v.w;
@@ -633,8 +645,7 @@ package de.nulldesign.nd2d.display {
 			v.y /= v.w;
 			//v.z /= v.w;
 
-			var p:Point = new Point(v.x, v.y);
-			return p;
+			return new Point(v.x, v.y);
 		}
 
 		public function dispose():void {
