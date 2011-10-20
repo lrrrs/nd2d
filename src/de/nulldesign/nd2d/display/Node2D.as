@@ -148,9 +148,9 @@ package de.nulldesign.nd2d.display {
 		protected var camera:Camera2D;
 
 		private var localMouse:Vector3D;
-		private var mouseInNode:Boolean = false;
 		private var localMouseMatrix:Matrix3D = new Matrix3D();
 
+		internal var mouseInNode:Boolean = false;
 		internal var mouseEvents:Vector.<MouseEvent>;
 
 		/**
@@ -448,16 +448,16 @@ package de.nulldesign.nd2d.display {
 				if(!isNaN(width) && !isNaN(height)) {
 
 					var oldMouseInNodeState:Boolean = mouseInNode;
-					mouseInNode = (mouseX >= -_width * 0.5 && mouseX <= _width * 0.5 && mouseY >= -_height * 0.5 && mouseY <= _height * 0.5);
+					var newMouseInNode:Boolean = (mouseX >= -_width * 0.5 && mouseX <= _width * 0.5 && mouseY >= -_height * 0.5 && mouseY <= _height * 0.5);
 
-					if(mouseInNode) {
+					if(newMouseInNode) {
 						if(!oldMouseInNodeState) {
 							mouseEvents.push(new MouseEvent(MouseEvent.MOUSE_OVER, true, false, localMouse.x, localMouse.y, null, false, false, false, (mouseEventType == MouseEvent.MOUSE_DOWN), 0));
 						}
 						mouseEvents.push(new MouseEvent(mouseEventType, true, false, localMouse.x, localMouse.y, null, false, false, false, (mouseEventType == MouseEvent.MOUSE_DOWN), 0));
 						childMouseNode = this;
 
-					} else if(oldMouseInNodeState && !mouseInNode) {
+					} else if(oldMouseInNodeState && !newMouseInNode) {
 						// dispatch mouse out directly, no hierarchy test
 						dispatchEvent(new MouseEvent(MouseEvent.MOUSE_OUT, true, false, localMouse.x, localMouse.y, null, false, false, false, (mouseEventType == MouseEvent.MOUSE_DOWN), 0));
 					}
@@ -473,7 +473,9 @@ package de.nulldesign.nd2d.display {
 			}
 
 			// set over to false, if one of our childs stole the event
-			if(childMouseNode != this) mouseInNode = false;
+			if(childMouseNode != this) {
+				mouseInNode = false;
+			}
 
 			return childMouseNode;
 		}
@@ -541,6 +543,7 @@ package de.nulldesign.nd2d.display {
 
 			if(parentMatrixChanged || myMatrixChanged) {
 				updateWorldMatrix();
+				myMatrixChanged = true;
 			}
 
 			draw(context, camera);

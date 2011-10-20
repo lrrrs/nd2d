@@ -38,6 +38,7 @@ package {
 	import de.nulldesign.nd2d.display.World2D;
 
 	import flash.display.StageAlign;
+	import flash.display.StageDisplayState;
 	import flash.display.StageScaleMode;
 	import flash.display3D.Context3DRenderMode;
 	import flash.events.Event;
@@ -61,6 +62,7 @@ package {
 	import tests.ParticleSystemTest;
 	import tests.PostProcessingTest;
 	import tests.SideScrollerTest;
+	import tests.SpeedTest;
 	import tests.Sprite2DCloudParticles;
 	import tests.SpriteAnimTest;
 	import tests.SpriteHierarchyTest;
@@ -75,7 +77,7 @@ package {
 
 		private var scenes:Vector.<Scene2D> = new Vector.<Scene2D>();
 		private var activeSceneIdx:uint = 0;
-		private var stats:Stats = new Stats();
+		public static var stats:Stats = new Stats();
 
 		private var sceneText:TextField;
 
@@ -111,6 +113,7 @@ package {
 			scenes.push(new PostProcessingTest());
 			scenes.push(new ColorTransformTest());
 			scenes.push(new Sprite2DCloudParticles());
+			scenes.push(new SpeedTest());
 
 			var tf:TextFormat = new TextFormat("Arial", 11, 0xFFFFFF, true);
 
@@ -125,7 +128,7 @@ package {
 			stage.addEventListener(Event.RESIZE, stageResize);
 			stageResize(null);
 
-			activeSceneIdx = scenes.length - 1;
+			activeSceneIdx = 0;//scenes.length - 1;
 			nextBtnClick();
 
 			stage.addEventListener(KeyboardEvent.KEY_UP, keyUp);
@@ -150,6 +153,8 @@ package {
 				context3D.dispose();
 			} else if(e.keyCode == Keyboard.SPACE) {
 				nextBtnClick();
+			} else if(e.keyCode == Keyboard.F) {
+				 stage.displayState = StageDisplayState.FULL_SCREEN;
 			}
 		}
 

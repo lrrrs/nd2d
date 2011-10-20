@@ -68,6 +68,7 @@ package net.hires.debug {
         protected var mem_graph:uint;
         protected var mem_max_graph:uint;
 
+		public var measuredFPS:Number = 0.0;
         public var driverInfo:String;
         protected var driverInfoToggle:Boolean = false;
 
@@ -75,8 +76,6 @@ package net.hires.debug {
 
         /**
          * <b>Stats</b> FPS, MS and MEM, all in one.
-         *
-         * @param _theme         Example: { bg: 0x202020, fps: 0xC0C0C0, ms: 0x505050, mem: 0x707070, memmax: 0xA0A0A0 }
          */
         public function Stats():void {
 
@@ -152,7 +151,8 @@ package net.hires.debug {
                 mem = Number((System.totalMemory * 0.000000954).toFixed(3));
                 mem_max = mem_max > mem ? mem_max : mem;
 
-                fps_graph = Math.min(graph.height, (fps / stage.frameRate) * graph.height);
+                measuredFPS = fps;
+				fps_graph = Math.min(graph.height, (fps / stage.frameRate) * graph.height);
                 mem_graph = Math.min(graph.height, Math.sqrt(Math.sqrt(mem * 5000))) - 2;
                 mem_max_graph = Math.min(graph.height, Math.sqrt(Math.sqrt(mem_max * 5000))) - 2;
 

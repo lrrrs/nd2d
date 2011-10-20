@@ -169,7 +169,9 @@ package de.nulldesign.nd2d.display {
 					for each(var mouseEvent:MouseEvent in newTopMostMouseNode.mouseEvents) {
 
 						if(topMostMouseNode && mouseEvent.type == MouseEvent.MOUSE_OVER) {
+							topMostMouseNode.mouseInNode = false;
 							topMostMouseNode.dispatchEvent(new MouseEvent(MouseEvent.MOUSE_OUT, true, false, topMostMouseNode.mouseX, topMostMouseNode.mouseY));
+							newTopMostMouseNode.mouseInNode = true;
 						}
 
 						newTopMostMouseNode.dispatchEvent(mouseEvent);

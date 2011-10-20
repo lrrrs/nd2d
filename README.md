@@ -45,6 +45,13 @@ Important links:
 
 # Changelog:
 
+2011-10-20
+
+- FIXED: nested nodes movement bug
+- FIXED: mouse handling for nodes
+- FIXED: camera movement
+- FIXED: Vector allocations. PERFORMANCE BOOST in all materials (Thanks Shawn!)
+
 2011-10-19
 
 - CHANGE: mouseEvents, behave like you're used to in flash now. Only the topmost node will dispatch the event.

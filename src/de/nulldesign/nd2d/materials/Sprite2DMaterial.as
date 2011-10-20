@@ -118,24 +118,28 @@ package de.nulldesign.nd2d.materials {
 
             context.setProgramConstantsFromMatrix(Context3DProgramType.VERTEX, 0, clipSpaceMatrix, true);
 
-            context.setProgramConstantsFromVector(Context3DProgramType.VERTEX, 4, Vector.<Number>([   uvOffsetAndScale.x + uvOffsetX,
-                uvOffsetAndScale.y + uvOffsetY,
-                uvOffsetAndScale.width,
-                uvOffsetAndScale.height]));
+			programConstVector[0] = uvOffsetAndScale.x + uvOffsetX;
+			programConstVector[1] = uvOffsetAndScale.y + uvOffsetY;
+			programConstVector[2] = uvOffsetAndScale.width;
+			programConstVector[3] = uvOffsetAndScale.height;
+
+			context.setProgramConstantsFromVector(Context3DProgramType.VERTEX, 4, programConstVector);
 
             var offsetFactor:Number = 1.0 / 255.0;
 
-            context.setProgramConstantsFromVector(Context3DProgramType.FRAGMENT, 0,
-                    Vector.<Number>([ colorTransform.redMultiplier,
-                        colorTransform.greenMultiplier,
-                        colorTransform.blueMultiplier,
-                        colorTransform.alphaMultiplier ]));
+			programConstVector[0] = colorTransform.redMultiplier;
+			programConstVector[1] = colorTransform.greenMultiplier;
+			programConstVector[2] = colorTransform.blueMultiplier;
+			programConstVector[3] = colorTransform.alphaMultiplier;
 
-            context.setProgramConstantsFromVector(Context3DProgramType.FRAGMENT, 1,
-                    Vector.<Number>([ colorTransform.redOffset * offsetFactor,
-                        colorTransform.greenOffset * offsetFactor,
-                        colorTransform.blueOffset * offsetFactor,
-                        colorTransform.alphaOffset * offsetFactor ]));
+            context.setProgramConstantsFromVector(Context3DProgramType.FRAGMENT, 0, programConstVector);
+
+			programConstVector[0] = colorTransform.redOffset * offsetFactor;
+			programConstVector[1] = colorTransform.greenOffset * offsetFactor;
+			programConstVector[2] = colorTransform.blueOffset * offsetFactor;
+			programConstVector[3] = colorTransform.alphaOffset * offsetFactor;
+
+            context.setProgramConstantsFromVector(Context3DProgramType.FRAGMENT, 1, programConstVector);
         }
 
         override protected function clearAfterRender(context:Context3D):void {
@@ -189,4 +193,3 @@ package de.nulldesign.nd2d.materials {
         }
     }
 }
-

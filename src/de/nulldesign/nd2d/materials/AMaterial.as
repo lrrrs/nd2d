@@ -70,6 +70,7 @@ package de.nulldesign.nd2d.materials {
         protected var mVertexBuffer:Vector.<Number>;
 
         protected var programData:ProgramData;
+		protected var programConstVector:Vector.<Number> = new Vector.<Number>(4);
 
         public static const VERTEX_POSITION:String = "PB3D_POSITION";
         public static const VERTEX_UV:String = "PB3D_UV";
@@ -179,7 +180,7 @@ package de.nulldesign.nd2d.materials {
 
         public function render(context:Context3D, faceList:Vector.<Face>, startTri:uint, numTris:uint):void {
             generateBufferData(context, faceList);
-            prepareForRender(context)
+            prepareForRender(context);
             context.drawTriangles(indexBuffer, startTri * 3, numTris);
             clearAfterRender(context);
         }

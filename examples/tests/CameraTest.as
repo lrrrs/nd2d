@@ -86,8 +86,8 @@ package tests {
             back.height = camera.sceneHeight * 5.0;
 
             if(targetNode) {
-                camera.x += ((-targetNode.x + camera.sceneWidth * 0.5) - camera.x) * 0.05;
-                camera.y += ((-targetNode.y + camera.sceneHeight * 0.5) - camera.y) * 0.05;
+                camera.x += ((targetNode.x - camera.sceneWidth * 0.5) - camera.x) * 0.05;
+                camera.y += ((targetNode.y - camera.sceneHeight * 0.5) - camera.y) * 0.05;
                 camera.rotation += (-targetNode.rotation - camera.rotation) * 0.05;
             }
         }
