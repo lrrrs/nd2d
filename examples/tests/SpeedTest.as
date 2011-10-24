@@ -40,6 +40,7 @@ package tests {
 
 		private var selectedTestIdx:int = -1;
 		private var numChilds:uint = 0;
+		private var maxCloudSize:uint = 16000;
 
 		public function SpeedTest() {
 
@@ -78,6 +79,7 @@ package tests {
 
 			} else {
 				stage.addChild(comboBox);
+				stage.addChild(label);
 			}
 		}
 
@@ -104,7 +106,7 @@ package tests {
 
 			switch(selectedTestIdx) {
 				case 1:
-					spriteCloud = new Sprite2DCloud(10000, tex);
+					spriteCloud = new Sprite2DCloud(maxCloudSize, tex);
 					spriteCloud.setSpriteSheet(sheet);
 					addChild(spriteCloud);
 					break;
@@ -130,25 +132,27 @@ package tests {
 						s = new Sprite2D(tex);
 						s.setSpriteSheet(sheet.clone());
 						s.x = stage.stageWidth * Math.random();
-						s.y = stage.stageWidth * Math.random();
+						s.y = stage.stageHeight * Math.random();
 						addChild(s);
 						s.spriteSheet.playAnimation("blah");
 						break;
 
 					case 1:
-						++numChilds;
-						s = new Sprite2D();
-						s.x = stage.stageWidth * Math.random();
-						s.y = stage.stageWidth * Math.random();
-						spriteCloud.addChild(s);
-						s.spriteSheet.playAnimation("blah");
+						if(numChilds < maxCloudSize) {
+							++numChilds;
+							s = new Sprite2D();
+							s.x = stage.stageWidth * Math.random();
+							s.y = stage.stageHeight * Math.random();
+							spriteCloud.addChild(s);
+							s.spriteSheet.playAnimation("blah");
+						}
 						break;
 
 					case 2:
 						++numChilds;
 						s = new Sprite2D();
 						s.x = stage.stageWidth * Math.random();
-						s.y = stage.stageWidth * Math.random();
+						s.y = stage.stageHeight * Math.random();
 						spriteBatch.addChild(s);
 						s.spriteSheet.playAnimation("blah");
 						break;
@@ -165,7 +169,7 @@ package tests {
 						s = new Sprite2D(rndTex);
 						s.setSpriteSheet(sheet.clone());
 						s.x = stage.stageWidth * Math.random();
-						s.y = stage.stageWidth * Math.random();
+						s.y = stage.stageHeight * Math.random();
 						s.spriteSheet.playAnimation("blah");
 						addChild(s);
 						break;
@@ -174,20 +178,22 @@ package tests {
 				label.text = "numChildren: " + String(numChilds);
 			}
 
+			var n:Node2D;
+
 			switch(selectedTestIdx) {
 				case 0:
 				case 3:
-					for each(var n:Node2D in children) {
+					for each(n in children) {
 						n.rotation += 10.0;
 					}
 					break;
 				case 1:
-					for each(var n:Node2D in spriteCloud.children) {
+					for each(n in spriteCloud.children) {
 						n.rotation += 10.0;
 					}
 					break;
 				case 2:
-					for each(var n:Node2D in spriteBatch.children) {
+					for each(n in spriteBatch.children) {
 						n.rotation += 10.0;
 					}
 					break;

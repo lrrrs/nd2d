@@ -1,34 +1,18 @@
-- PVTR support
+- ATF support
 - ParticleSystem2D: add support for bursts!
-- Multitouch events!!!
-- init method for world -> async buffer & texture creation w/ event before launching the world. (no startup lag anymore, "preloadable")
-- option in world2d: auto dispose of textures, etc. cleanUp / destroy
-- Tilemaps?
+- Multitouch events
 - texture smoothing mipmap, nearest, linear, etc. customize per object or per ND2D instance?
 - premultiplied / non premultiplied alpha check for textures!
-- TextureCache
 - Depricate bitmapData as constructor argument. Only Texture2D allowed! Static creation methods?
 - updateFromPreset method for particlesystem to update the buffer on the fly?!
 - blurmaterial
-- texturerenderer -> clear optional.
-- local2global / global2local coordinate transforms
-+ camera resizestage - internal
-- fullscreen management!
 - mask size restricted to 2^ bug? outer coordinates "go wild"? border / clamp
 - solid / gradient quad as new object
-+ put back:
-public function getIndexForFrame(name:String):uint {
-	return frameNameToIndex[name] as uint;
-}
-- Sprite2DTiled ? UV coordinates tiles?
-+ timeSinceStartInSeconds protected?
-+ check for internal / public methods throughout all nodes
-+ scene2d br, bg, bb internal!!!
+- UV coordinates tiles multiplier
 - Zoë: A SWF animation exporter for the EaselJS library. ? more TextureAtlas tools?
 - pixel perfect collisions -> save bitmapdata alpha channel? only 1-bit
-+ setactivescene public!
-+ premultiplied / non premultiplied alpha - bug in particlesystem? dynamic per texturetype
+- premultiplied / non premultiplied alpha - bug in particlesystem? dynamic per texturetype
 - color uint instead of number
-
-
-
+- multiple worlds test
+- fullScreenSourceRect test!
+- rotationXYZ, z depth's?

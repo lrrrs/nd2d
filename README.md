@@ -45,6 +45,12 @@ Important links:
 
 # Changelog:
 
+2011-10-24
+
+- FIXED: Sprite2D width / height bug, when a TextureAtlas was set
+- ADDED: setChildIndex(), thanks Björn!
+
+
 2011-10-20
 
 - FIXED: nested nodes movement bug

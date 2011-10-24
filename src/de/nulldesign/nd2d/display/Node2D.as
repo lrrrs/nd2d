@@ -430,6 +430,7 @@ package de.nulldesign.nd2d.display {
 			var childMouseNode:Node2D = null;
 
 			if(mouseEnabled && mouseEventType) {
+
 				// transform mousepos to local coordinate system
 				localMouseMatrix.identity();
 				localMouseMatrix.append(worldModelMatrix);
@@ -563,6 +564,11 @@ package de.nulldesign.nd2d.display {
 			// overwrite in extended classes
 		}
 
+		public function setChildIndex(child:Node2D, index:int):void {
+			var child2:Node2D = getChildAt(index);
+			if(child2 != null) swapChildren(child, child2);
+		}
+
 		public function addChild(child:Node2D):Node2D {
 			return addChildAt(child, children.length);
 		}
@@ -628,7 +634,6 @@ package de.nulldesign.nd2d.display {
 			clipSpaceMat.append(camera.getViewProjectionMatrix());
 
 			var v:Vector3D = clipSpaceMat.transformVector(new Vector3D(p.x, p.y, 0.0));
-
 			return new Point((v.x + 1.0) * 0.5 * camera.sceneWidth, (-v.y + 1.0) * 0.5 * camera.sceneHeight);
 		}
 

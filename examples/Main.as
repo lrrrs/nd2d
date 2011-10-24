@@ -44,6 +44,7 @@ package {
 	import flash.events.Event;
 	import flash.events.KeyboardEvent;
 	import flash.events.MouseEvent;
+	import flash.geom.Rectangle;
 	import flash.text.TextField;
 	import flash.text.TextFormat;
 	import flash.ui.Keyboard;
@@ -128,7 +129,7 @@ package {
 			stage.addEventListener(Event.RESIZE, stageResize);
 			stageResize(null);
 
-			activeSceneIdx = 0;//scenes.length - 1;
+			activeSceneIdx = scenes.length - 1;
 			nextBtnClick();
 
 			stage.addEventListener(KeyboardEvent.KEY_UP, keyUp);
@@ -154,7 +155,7 @@ package {
 			} else if(e.keyCode == Keyboard.SPACE) {
 				nextBtnClick();
 			} else if(e.keyCode == Keyboard.F) {
-				 stage.displayState = StageDisplayState.FULL_SCREEN;
+				stage.displayState = StageDisplayState.FULL_SCREEN;
 			}
 		}
 

@@ -30,116 +30,191 @@
 
 package de.nulldesign.nd2d.display {
 
-    import flash.geom.Matrix3D;
-    import flash.geom.Vector3D;
+	import flash.geom.Matrix3D;
+	import flash.geom.Vector3D;
 
-    public class Camera2D {
+	public class Camera2D {
 
-        protected var renderMatrix:Matrix3D = new Matrix3D();
+		protected var renderMatrix:Matrix3D = new Matrix3D();
 
-        public var projectionMatrix:Matrix3D = new Matrix3D();
-        public var viewMatrix:Matrix3D = new Matrix3D();
+		public var projectionMatrix:Matrix3D = new Matrix3D();
+		public var viewMatrix:Matrix3D = new Matrix3D();
 
-        protected var _sceneWidth:Number;
-        protected var _sceneHeight:Number;
+		protected var _sceneWidth:Number;
+		protected var _sceneHeight:Number;
 
-        protected var invalidated:Boolean = true;
+		protected var invalidated:Boolean = true;
 
-        public function Camera2D(w:Number, h:Number) {
-            resizeCameraStage(w, h);
-        }
+		public function Camera2D(w:Number, h:Number) {
+			resizeCameraStage(w, h);
+		}
 
-        internal function resizeCameraStage(w:Number, h:Number):void {
-            _sceneWidth = w;
-            _sceneHeight = h;
-            invalidated = true;
-            projectionMatrix = makeOrtographicMatrix(0, w, 0, h);
-        }
+		internal function resizeCameraStage(w:Number, h:Number):void {
+			_sceneWidth = w;
+			_sceneHeight = h;
+			invalidated = true;
 
+			projectionMatrix = makeOrtographicMatrix(0, w, 0, h);
+			/*
+			var projMat:Matrix3D = makeProjectionMatrix(0.1, h / 2, 90.0, w / h);
+			var lookAtPosition:Vector3D = new Vector3D(0.0, 0.0, 0.0);
+			var position:Vector3D = new Vector3D(0, 0, -_sceneHeight / 2.0);
+			var lookAtMat:Matrix3D = lookAt(lookAtPosition, position);
 
-        protected function makeOrtographicMatrix(left:Number, right:Number, top:Number, bottom:Number, zNear:Number = 0, zFar:Number = 1):Matrix3D {
+			lookAtMat.append(projMat);
+			projectionMatrix = lookAtMat;
+            */
+		}
 
-            return new Matrix3D(Vector.<Number>([
-                                                    2 / (right - left), 0, 0,  0,
-                                                    0,  2 / (top - bottom), 0, 0,
-                                                    0,  0, 1 / (zFar - zNear), 0,
-                                                    0, 0, zNear / (zNear - zFar), 1
-                                                ]));
-        }
+		protected function lookAt(lookAt:Vector3D, position:Vector3D):Matrix3D {
 
-        public function getViewProjectionMatrix():Matrix3D {
+			var up:Vector3D = new Vector3D();
+			up.x = Math.sin(0.0);
+			up.y = -Math.cos(0.0);
+			up.z = 0;
 
-            if(invalidated) {
-                invalidated = false;
+			var forward:Vector3D = new Vector3D();
+			forward.x = lookAt.x - position.x;
+			forward.y = lookAt.y - position.y;
+			forward.z = lookAt.z - position.z;
+			forward.normalize();
 
-                viewMatrix.identity();
-                viewMatrix.appendTranslation(-sceneWidth / 2 - x, -sceneHeight / 2 - y, 0.0);
-                viewMatrix.appendScale(zoom, zoom, 1.0);
-                viewMatrix.appendRotation(_rotation, Vector3D.Z_AXIS);
+			var right:Vector3D = up.crossProduct(forward);
+			right.normalize();
 
-                renderMatrix.identity();
-                renderMatrix.append(viewMatrix);
-                renderMatrix.append(projectionMatrix);
-            }
+			up = right.crossProduct(forward);
+			up.normalize();
 
-            return renderMatrix;
-        }
+			var rawData:Vector.<Number> = new Vector.<Number>();
+			rawData.push(-right.x, -right.y, -right.z, 0,
+					up.x, up.y, up.z, 0,
+					-forward.x, -forward.y, -forward.z, 0,
+					0, 0, 0, 1);
 
-        public function reset():void {
-            x = y = rotation = 0;
-            zoom = 1;
-        }
+			var mat:Matrix3D = new Matrix3D(rawData);
+			mat.prependTranslation(-position.x, -position.y, -position.z);
 
-        private var _x:Number = 0.0;
+			return mat;
+		}
 
-        public function get x():Number {
-            return _x;
-        }
+		protected function makeProjectionMatrix(zNear:Number, zFar:Number, fovDegrees:Number, aspect:Number):Matrix3D {
+			var yval:Number = zNear * Math.tan(fovDegrees * (Math.PI / 360.0));
+			var xval:Number = yval * aspect;
 
-        public function set x(value:Number):void {
-            invalidated = true;
-            _x = value;
-        }
+			return makeFrustumMatrix(-xval, xval, -yval, yval, zNear, zFar);
+		}
 
-        private var _y:Number = 0.0;
+		protected function makeFrustumMatrix(left:Number, right:Number, top:Number, bottom:Number, zNear:Number, zFar:Number):Matrix3D {
+			return new Matrix3D(
+					Vector.<Number>(
+							[
+								(2 * zNear) / (right - left),
+								0,
+								(right + left) / (right - left),
+								0,
 
-        public function get y():Number {
-            return _y;
-        }
+								0,
+								(2 * zNear) / (top - bottom),
+								(top + bottom) / (top - bottom),
+								0,
 
-        public function set y(value:Number):void {
-            invalidated = true;
-            _y = value;
-        }
+								0,
+								0,
+								zFar / (zNear - zFar),
+								-1,
 
-        private var _zoom:Number = 1.0;
+								0,
+								0,
+								(zNear * zFar) / (zNear - zFar),
+								0
+							]
+					)
+			);
+		}
 
-        public function get zoom():Number {
-            return _zoom;
-        }
+		protected function makeOrtographicMatrix(left:Number, right:Number, top:Number, bottom:Number, zNear:Number = 0, zFar:Number = 1):Matrix3D {
 
-        public function set zoom(value:Number):void {
-            invalidated = true;
-            _zoom = value;
-        }
+			return new Matrix3D(Vector.<Number>([
+				2 / (right - left), 0, 0,  0,
+				0,  2 / (top - bottom), 0, 0,
+				0,  0, 1 / (zFar - zNear), 0,
+				0, 0, zNear / (zNear - zFar), 1
+			]));
+		}
 
-        private var _rotation:Number = 0.0;
+		public function getViewProjectionMatrix():Matrix3D {
 
-        public function get rotation():Number {
-            return _rotation;
-        }
+			if(invalidated) {
+				invalidated = false;
 
-        public function set rotation(value:Number):void {
-            invalidated = true;
-            _rotation = value;
-        }
+				viewMatrix.identity();
+				viewMatrix.appendTranslation(-sceneWidth / 2 - x, -sceneHeight / 2 - y, 0.0);
+				viewMatrix.appendScale(zoom, zoom, 1.0);
+				viewMatrix.appendRotation(_rotation, Vector3D.Z_AXIS);
 
-        public function get sceneWidth():Number {
-            return _sceneWidth;
-        }
+				renderMatrix.identity();
+				renderMatrix.append(viewMatrix);
+				renderMatrix.append(projectionMatrix);
+			}
 
-        public function get sceneHeight():Number {
-            return _sceneHeight;
-        }
-    }
+			return renderMatrix;
+		}
+
+		public function reset():void {
+			x = y = rotation = 0;
+			zoom = 1;
+		}
+
+		private var _x:Number = 0.0;
+
+		public function get x():Number {
+			return _x;
+		}
+
+		public function set x(value:Number):void {
+			invalidated = true;
+			_x = value;
+		}
+
+		private var _y:Number = 0.0;
+
+		public function get y():Number {
+			return _y;
+		}
+
+		public function set y(value:Number):void {
+			invalidated = true;
+			_y = value;
+		}
+
+		private var _zoom:Number = 1.0;
+
+		public function get zoom():Number {
+			return _zoom;
+		}
+
+		public function set zoom(value:Number):void {
+			invalidated = true;
+			_zoom = value;
+		}
+
+		private var _rotation:Number = 0.0;
+
+		public function get rotation():Number {
+			return _rotation;
+		}
+
+		public function set rotation(value:Number):void {
+			invalidated = true;
+			_rotation = value;
+		}
+
+		public function get sceneWidth():Number {
+			return _sceneWidth;
+		}
+
+		public function get sceneHeight():Number {
+			return _sceneHeight;
+		}
+	}
 }
