@@ -156,5 +156,19 @@ package de.nulldesign.nd2d.display {
             material.spriteSheet = spriteSheet;
             material.renderBatch(context, faceList, children);
         }
+
+        override public function dispose() : void {
+            if(material) {
+                material.dispose();
+                material = null;
+            }
+
+            if (texture) {
+                texture.cleanUp();
+                texture = null;
+            }
+
+            super.dispose();
+        }
     }
 }
