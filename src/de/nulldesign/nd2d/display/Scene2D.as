@@ -30,11 +30,11 @@
 
 package de.nulldesign.nd2d.display {
 
-    import de.nulldesign.nd2d.utils.StatsObject;
+	import de.nulldesign.nd2d.utils.StatsObject;
 
-    import flash.display3D.Context3D;
+	import flash.display3D.Context3D;
 
-    /**
+	/**
      * A scene that can contain 2D nodes
      * Even if a scene has x,y, rotation etc. properties you can't modify a scene this way.
      * Use the built in camera instance to pan and zoom over your scene.

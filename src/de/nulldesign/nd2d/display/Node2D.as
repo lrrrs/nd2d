@@ -30,7 +30,6 @@
 
 package de.nulldesign.nd2d.display {
 
-	import de.nulldesign.nd2d.geom.Vertex;
 	import de.nulldesign.nd2d.materials.BlendModePresets;
 	import de.nulldesign.nd2d.utils.NodeBlendMode;
 	import de.nulldesign.nd2d.utils.StatsObject;
@@ -43,7 +42,6 @@ package de.nulldesign.nd2d.display {
 	import flash.geom.ColorTransform;
 	import flash.geom.Matrix3D;
 	import flash.geom.Point;
-	import flash.geom.Vector3D;
 	import flash.geom.Vector3D;
 
 	/**
@@ -224,13 +222,13 @@ package de.nulldesign.nd2d.display {
 			}
 		}
 
-		protected var _tint:Number = 0xFFFFFF;
+		protected var _tint:uint = 0xFFFFFF;
 
-		public function get tint():Number {
+		public function get tint():uint {
 			return _tint;
 		}
 
-		public function set tint(value:Number):void {
+		public function set tint(value:uint):void {
 			if(_tint != value) {
 				_tint = value;
 
@@ -303,16 +301,30 @@ package de.nulldesign.nd2d.display {
 			return _y;
 		}
 
-		protected var _position:Point = new Point(0.0, 0.0);
+		protected var _z:Number = 0.0;
 
-		public function get position():Point {
+		public function set z(value:Number):void {
+			if(_z != value) {
+				_position.z = _z = value;
+				invalidateMatrix = true;
+			}
+		}
+
+		public function get z():Number {
+			return _z;
+		}
+
+		protected var _position:Vector3D = new Vector3D(0.0, 0.0, 0.0);
+
+		public function get position():Vector3D {
 			return _position;
 		}
 
-		public function set position(value:Point):void {
-			if(_x != value.x || _y != value.y) {
+		public function set position(value:Vector3D):void {
+			if(_x != value.x || _y != value.y || _z != value.z) {
 				_position.x = _x = value.x;
 				_position.y = _y = value.y;
+				_position.z = _z = value.z;
 				invalidateMatrix = true;
 			}
 		}
@@ -331,17 +343,54 @@ package de.nulldesign.nd2d.display {
 			}
 		}
 
-		protected var _rotation:Number = 0.0;
-
 		public function set rotation(value:Number):void {
-			if(_rotation != value) {
-				_rotation = value;
+			if(_rotationZ != value) {
+				_rotationZ = value;
 				invalidateMatrix = true;
 			}
 		}
 
 		public function get rotation():Number {
-			return _rotation;
+			return _rotationZ;
+		}
+
+		protected var _rotationX:Number = 0.0;
+
+		public function set rotationX(value:Number):void {
+			if(_rotationX != value) {
+				_rotationX = value;
+				invalidateMatrix = true;
+			}
+		}
+
+		public function get rotationX():Number {
+			return _rotationX;
+		}
+
+		protected var _rotationY:Number = 0.0;
+
+		public function set rotationY(value:Number):void {
+			if(_rotationY != value) {
+				_rotationY = value;
+				invalidateMatrix = true;
+			}
+		}
+
+		public function get rotationY():Number {
+			return _rotationY;
+		}
+
+		protected var _rotationZ:Number = 0.0;
+
+		public function set rotationZ(value:Number):void {
+			if(_rotationZ != value) {
+				_rotationZ = value;
+				invalidateMatrix = true;
+			}
+		}
+
+		public function get rotationZ():Number {
+			return _rotationZ;
 		}
 
 		protected var _mouseX:Number = 0.0;
@@ -379,8 +428,10 @@ package de.nulldesign.nd2d.display {
 			localModelMatrix.identity();
 			localModelMatrix.appendTranslation(-_pivot.x, -_pivot.y, 0);
 			localModelMatrix.appendScale(_scaleX, _scaleY, 1.0);
-			localModelMatrix.appendRotation(_rotation, Vector3D.Z_AXIS);
-			localModelMatrix.appendTranslation(_x, _y, 0.0);
+			localModelMatrix.appendRotation(_rotationZ, Vector3D.Z_AXIS);
+			localModelMatrix.appendRotation(_rotationY, Vector3D.Y_AXIS);
+			localModelMatrix.appendRotation(_rotationX, Vector3D.X_AXIS);
+			localModelMatrix.appendTranslation(_x, _y, _z);
 		}
 
 		/**

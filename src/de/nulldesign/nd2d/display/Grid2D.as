@@ -30,21 +30,18 @@
 
 package de.nulldesign.nd2d.display {
 
-    import de.nulldesign.nd2d.geom.Face;
-    import de.nulldesign.nd2d.geom.UV;
-    import de.nulldesign.nd2d.geom.Vertex;
-    import de.nulldesign.nd2d.materials.Sprite2DMaterial;
+	import de.nulldesign.nd2d.geom.Face;
+	import de.nulldesign.nd2d.geom.UV;
+	import de.nulldesign.nd2d.geom.Vertex;
+	import de.nulldesign.nd2d.materials.texture.Texture2D;
 
-    import flash.display.BitmapData;
-    import flash.display3D.textures.Texture;
-
-    public class Grid2D extends Sprite2D {
+	public class Grid2D extends Sprite2D {
 
         protected var stepsX:uint;
         protected var stepsY:uint;
         protected var vertexList:Vector.<Vertex>;
 
-        public function Grid2D(stepsX:uint, stepsY:uint, textureObject:Object = null) {
+        public function Grid2D(stepsX:uint, stepsY:uint, textureObject:Texture2D = null) {
             this.stepsX = stepsX;
             this.stepsY = stepsY;
             super(textureObject);

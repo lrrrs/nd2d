@@ -30,13 +30,14 @@
 
 package de.nulldesign.nd2d.display {
 
-    import de.nulldesign.nd2d.materials.SpriteSheet;
+	import de.nulldesign.nd2d.materials.texture.SpriteSheet;
+	import de.nulldesign.nd2d.materials.texture.Texture2D;
 
-    import flash.display.BitmapData;
+	import flash.display.BitmapData;
 
-    import flashx.textLayout.formats.TextAlign;
+	import flashx.textLayout.formats.TextAlign;
 
-    public class Font2D extends Sprite2DCloud {
+	public class Font2D extends Sprite2DCloud {
 
         private var charString:String;
         private var charSpacing:Number;
@@ -67,14 +68,14 @@ package de.nulldesign.nd2d.display {
             textChanged = true;
         }
 
-        public function Font2D(fontBitmap:BitmapData, charWidth:Number, charHeight:Number, charString:String,
+        public function Font2D(fontTexture:Texture2D, charWidth:Number, charHeight:Number, charString:String,
                                charSpacing:Number, maxTextLen:uint, spritesPackedWithoutSpaces:Boolean = false) {
 
             this.charString = charString;
             this.charSpacing = charSpacing;
 
-            super(maxTextLen, fontBitmap);
-            setSpriteSheet(new SpriteSheet(fontBitmap.width, fontBitmap.height, charWidth, charHeight, 1, spritesPackedWithoutSpaces));
+            super(maxTextLen, fontTexture);
+            setSpriteSheet(new SpriteSheet(fontTexture.textureWidth, fontTexture.textureHeight, charWidth, charHeight, 1, spritesPackedWithoutSpaces));
         }
 
         override protected function step(elapsed:Number):void {

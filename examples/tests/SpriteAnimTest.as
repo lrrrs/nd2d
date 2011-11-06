@@ -30,14 +30,12 @@
 
 package tests {
 
-    import de.nulldesign.nd2d.display.Scene2D;
-    import de.nulldesign.nd2d.display.Sprite2D;
-    import de.nulldesign.nd2d.materials.SpriteSheet;
-	import de.nulldesign.nd2d.materials.Texture2D;
+	import de.nulldesign.nd2d.display.Scene2D;
+	import de.nulldesign.nd2d.display.Sprite2D;
+	import de.nulldesign.nd2d.materials.texture.SpriteSheet;
+	import de.nulldesign.nd2d.materials.texture.Texture2D;
 
-	import flash.display.BitmapData;
-
-    public class SpriteAnimTest extends Scene2D {
+	public class SpriteAnimTest extends Scene2D {
 
         [Embed(source="/assets/spritechar1.png")]
         private var spriteTexture:Class;

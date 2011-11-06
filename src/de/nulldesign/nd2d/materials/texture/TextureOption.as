@@ -28,18 +28,32 @@
  * THE SOFTWARE.
  */
 
-package de.nulldesign.nd2d.materials {
+package de.nulldesign.nd2d.materials.texture {
 
-    public class SpriteSheetAnimation {
+	/**
+	 * TextureOptions available for Texture2D
+	 * Use a bitmask to combine options, example:
+	 * myOption = MIPMAP_NEAREST | FILTERING_NEAREST | REPEAT_NORMAL;
+	 */
+	public class TextureOption {
 
-        public var loop:Boolean;
-        public var frames:Array;
-        public var numFrames:uint;
+		// mip mapping
+		public static const MIPMAP_DISABLE:uint = 1;
+		public static const MIPMAP_NEAREST:uint = 2;
+		public static const MIPMAP_LINEAR:uint = 4;
 
-        public function SpriteSheetAnimation(frames:Array, loop:Boolean) {
-            this.loop = loop;
-            this.frames = frames;
-            this.numFrames = frames.length;
-        }
-    }
+		// texture filtering
+		public static const FILTERING_NEAREST:uint = 8;
+		public static const FILTERING_LINEAR:uint = 16;
+
+		// texture repeat
+		public static const REPEAT_NORMAL:uint = 32;
+		public static const REPEAT_CLAMP:uint = 64;
+
+		// predefined presets
+		public static const QUALITY_LOW:uint = MIPMAP_DISABLE | FILTERING_NEAREST | REPEAT_NORMAL;
+		public static const QUALITY_MEDIUM:uint = MIPMAP_DISABLE | FILTERING_LINEAR | REPEAT_NORMAL;
+		public static const QUALITY_HIGH:uint = MIPMAP_NEAREST | FILTERING_LINEAR | REPEAT_NORMAL;
+		public static const QUALITY_ULTRA:uint = MIPMAP_LINEAR | FILTERING_LINEAR | REPEAT_NORMAL;
+	}
 }

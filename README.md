@@ -45,6 +45,15 @@ Important links:
 
 # Changelog:
 
+2011-10-31
+
+- ADDED: uvMultiplier for Sprite2DMaterial. You can scale your textures now. See TextureAndRotationOptionsTest
+- ADDED: Texture filtering options: LOW, MED, HIGH, ULTRA and texture repear options: CLAMP, REPEAT. See TextureAndRotationOptionsTest
+- ADDED: rotationX,Y,Z for nodes. You can rotate your objects in 2.5D now, just like the Flash 10 2.5D API.
+- CHANGED: constructor arguments of Sprite2D, Cloud and Batch take only a Texture2D now.
+- tint is a uint now.
+- cleaned up a lot of stuff
+
 2011-10-24
 
 - FIXED: Sprite2D width / height bug, when a TextureAtlas was set

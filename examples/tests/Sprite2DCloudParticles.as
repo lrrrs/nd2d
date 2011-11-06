@@ -1,19 +1,17 @@
 package tests {
 
-    import de.nulldesign.nd2d.display.Node2D;
-    import de.nulldesign.nd2d.display.Scene2D;
-    import de.nulldesign.nd2d.display.Sprite2D;
-    import de.nulldesign.nd2d.display.Sprite2DCloud;
-    import de.nulldesign.nd2d.materials.BlendModePresets;
-	import de.nulldesign.nd2d.materials.Texture2D;
+	import de.nulldesign.nd2d.display.Node2D;
+	import de.nulldesign.nd2d.display.Scene2D;
+	import de.nulldesign.nd2d.display.Sprite2D;
+	import de.nulldesign.nd2d.display.Sprite2DCloud;
+	import de.nulldesign.nd2d.materials.BlendModePresets;
+	import de.nulldesign.nd2d.materials.texture.Texture2D;
 	import de.nulldesign.nd2d.utils.ColorUtil;
-    import de.nulldesign.nd2d.utils.NumberUtil;
+	import de.nulldesign.nd2d.utils.NumberUtil;
 
-    import flash.display.Sprite;
+	import flash.events.Event;
 
-    import flash.events.Event;
-
-    public class Sprite2DCloudParticles extends Scene2D {
+	public class Sprite2DCloudParticles extends Scene2D {
 
         [Embed(source="/assets/twirl.jpg")]
         private var twirlBmp:Class;

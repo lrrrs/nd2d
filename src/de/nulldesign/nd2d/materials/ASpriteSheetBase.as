@@ -30,12 +30,13 @@
 
 package de.nulldesign.nd2d.materials {
 
-    import flash.display.BitmapData;
-    import flash.geom.Point;
-    import flash.geom.Rectangle;
-    import flash.utils.Dictionary;
+	import de.nulldesign.nd2d.materials.texture.SpriteSheetAnimation;
 
-    public class ASpriteSheetBase {
+	import flash.geom.Point;
+	import flash.geom.Rectangle;
+	import flash.utils.Dictionary;
+
+	public class ASpriteSheetBase {
 
         protected var frames:Vector.<Rectangle> = new Vector.<Rectangle>();
         protected var offsets:Vector.<Point> = new Vector.<Point>();

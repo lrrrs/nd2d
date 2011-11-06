@@ -30,24 +30,21 @@
 
 package de.nulldesign.nd2d.materials {
 
-    import com.adobe.utils.AGALMiniAssembler;
+	import de.nulldesign.nd2d.geom.Face;
+	import de.nulldesign.nd2d.geom.UV;
+	import de.nulldesign.nd2d.geom.Vertex;
+	import de.nulldesign.nd2d.materials.shader.ShaderCache;
+	import de.nulldesign.nd2d.materials.texture.Texture2D;
 
-    import de.nulldesign.nd2d.geom.Face;
-    import de.nulldesign.nd2d.geom.UV;
-    import de.nulldesign.nd2d.geom.Vertex;
-    import de.nulldesign.nd2d.utils.TextureHelper;
+	import flash.display3D.Context3D;
+	import flash.display3D.Context3DProgramType;
+	import flash.display3D.Context3DVertexBufferFormat;
+	import flash.display3D.textures.Texture;
+	import flash.geom.ColorTransform;
+	import flash.geom.Point;
+	import flash.geom.Rectangle;
 
-    import flash.display.BitmapData;
-    import flash.display3D.Context3D;
-    import flash.display3D.Context3DProgramType;
-    import flash.display3D.Context3DVertexBufferFormat;
-    import flash.display3D.Program3D;
-    import flash.display3D.textures.Texture;
-    import flash.geom.ColorTransform;
-    import flash.geom.Point;
-    import flash.geom.Rectangle;
-
-    public class Sprite2DMaterial extends AMaterial {
+	public class Sprite2DMaterial extends AMaterial {
 
         private const VERTEX_SHADER:String = "m44 op, va0, vc0   \n" + // vertex * clipspace
                 "mov vt0, va1  \n" + // save uv in temp register
@@ -56,25 +53,34 @@ package de.nulldesign.nd2d.materials {
                 "mov v0, vt0 \n"; // copy uv
 
         private const FRAGMENT_SHADER:String =
-                "tex ft0, v0, fs0 <2d,repeat,linear,mipnearest>\n" + // sample texture from interpolated uv coords
+                "tex ft0, v0, fs0 <TEXTURE_SAMPLING_OPTIONS>\n" + // sample texture from interpolated uv coords
                         "mul ft0, ft0, fc0\n" + // mult with colorMultiplier
                         "add oc, ft0, fc1\n"; // mult with colorOffset
-
-        private static var sprite2DProgramData:ProgramData;
 
         public var texture:Texture2D;
         public var spriteSheet:ASpriteSheetBase;
         public var colorTransform:ColorTransform;
 
         /**
-         * Use this property to animate a texture, infinite scroller, etc.
+         * Use this property to animate a texture
          */
         public var uvOffsetX:Number = 0.0;
 
         /**
-         * Use this property to animate a texture, infinite scroller, etc.
+         * Use this property to animate a texture
          */
         public var uvOffsetY:Number = 0.0;
+
+		/**
+		 * Use this property to repeat/scale a texture
+		 */
+		public var uvScaleX:Number = 1.0;
+
+		/**
+		 * Use this property to repeat/scale a texture
+		 */
+		public var uvScaleY:Number = 1.0;
+
 
         public function Sprite2DMaterial() {
             drawCalls = 1;
@@ -83,7 +89,7 @@ package de.nulldesign.nd2d.materials {
         override public function handleDeviceLoss():void {
             super.handleDeviceLoss();
             texture.texture = null;
-            sprite2DProgramData = null;
+            shaderData = null;
         }
 
         override protected function prepareForRender(context:Context3D):void {
@@ -91,7 +97,7 @@ package de.nulldesign.nd2d.materials {
             super.prepareForRender(context);
 
             var uvOffsetAndScale:Rectangle = new Rectangle(0.0, 0.0, 1.0, 1.0);
-            var textureObj:Texture = texture.getTexture(context, true);
+            var textureObj:Texture = texture.getTexture(context);
 
             if(spriteSheet) {
 
@@ -120,8 +126,8 @@ package de.nulldesign.nd2d.materials {
 
 			programConstVector[0] = uvOffsetAndScale.x + uvOffsetX;
 			programConstVector[1] = uvOffsetAndScale.y + uvOffsetY;
-			programConstVector[2] = uvOffsetAndScale.width;
-			programConstVector[3] = uvOffsetAndScale.height;
+			programConstVector[2] = uvOffsetAndScale.width * uvScaleX;
+			programConstVector[3] = uvOffsetAndScale.height * uvScaleY;
 
 			context.setProgramConstantsFromVector(Context3DProgramType.VERTEX, 4, programConstVector);
 
@@ -155,28 +161,15 @@ package de.nulldesign.nd2d.materials {
         }
 
         override protected function initProgram(context:Context3D):void {
-
-            // program will be only created once and cached as static var in material
-            if(!sprite2DProgramData) {
-                var vertexShaderAssembler:AGALMiniAssembler = new AGALMiniAssembler();
-                vertexShaderAssembler.assemble(Context3DProgramType.VERTEX, VERTEX_SHADER);
-
-                var colorFragmentShaderAssembler:AGALMiniAssembler = new AGALMiniAssembler();
-                colorFragmentShaderAssembler.assemble(Context3DProgramType.FRAGMENT, FRAGMENT_SHADER);
-
-                var program:Program3D = context.createProgram();
-                program.upload(vertexShaderAssembler.agalcode, colorFragmentShaderAssembler.agalcode);
-
-                sprite2DProgramData = new ProgramData(program, 4);
+            if(!shaderData) {
+                shaderData = ShaderCache.getInstance().getShader(context, this, VERTEX_SHADER, FRAGMENT_SHADER, 4, texture.textureOptions);
             }
-
-            programData = sprite2DProgramData;
         }
 
         override public function dispose():void {
             super.dispose();
             if(texture) {
-                texture.cleanUp();
+                texture.dispose();
                 texture = null;
             }
         }
@@ -184,7 +177,7 @@ package de.nulldesign.nd2d.materials {
         public function modifyVertexInBuffer(bufferIdx:uint, x:Number, y:Number):void {
 
             if(!mVertexBuffer || mVertexBuffer.length == 0) return;
-            var idx:uint = bufferIdx * programData.numFloatsPerVertex;
+            var idx:uint = bufferIdx * shaderData.numFloatsPerVertex;
 
             mVertexBuffer[idx] = x;
             mVertexBuffer[idx + 1] = y;

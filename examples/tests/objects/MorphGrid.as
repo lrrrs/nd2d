@@ -30,17 +30,15 @@
 
 package tests.objects {
 
-    import de.nulldesign.nd2d.display.Grid2D;
-    import de.nulldesign.nd2d.geom.Vertex;
+	import de.nulldesign.nd2d.display.Grid2D;
+	import de.nulldesign.nd2d.geom.Vertex;
+	import de.nulldesign.nd2d.materials.texture.Texture2D;
 
-    import flash.display.BitmapData;
-    import flash.geom.Vector3D;
-
-    public class MorphGrid extends Grid2D {
+	public class MorphGrid extends Grid2D {
 
         private var strength:Number;
 
-        public function MorphGrid(stepsX:uint, stepsY:uint, textureObject:Object = null, strength:Number = 0.07) {
+        public function MorphGrid(stepsX:uint, stepsY:uint, textureObject:Texture2D = null, strength:Number = 0.07) {
             this.strength = strength;
             super(stepsX, stepsY, textureObject);
         }

@@ -30,22 +30,19 @@
 
 package de.nulldesign.nd2d.utils {
 
-    import de.nulldesign.nd2d.geom.Face;
-    import de.nulldesign.nd2d.geom.UV;
-    import de.nulldesign.nd2d.geom.Vertex;
-    import de.nulldesign.nd2d.materials.ASpriteSheetBase;
-    import de.nulldesign.nd2d.materials.SpriteSheet;
-    import de.nulldesign.nd2d.materials.TextureAtlas;
+	import de.nulldesign.nd2d.geom.Face;
+	import de.nulldesign.nd2d.geom.UV;
+	import de.nulldesign.nd2d.geom.Vertex;
 
-    import flash.display.BitmapData;
-    import flash.display3D.Context3D;
-    import flash.display3D.Context3DTextureFormat;
-    import flash.display3D.textures.Texture;
-    import flash.geom.Matrix;
-    import flash.geom.Point;
-    import flash.geom.Rectangle;
+	import flash.display.BitmapData;
+	import flash.display3D.Context3D;
+	import flash.display3D.Context3DTextureFormat;
+	import flash.display3D.textures.Texture;
+	import flash.geom.Matrix;
+	import flash.geom.Point;
+	import flash.geom.Rectangle;
 
-    public class TextureHelper {
+	public class TextureHelper {
         public function TextureHelper() {
         }
 

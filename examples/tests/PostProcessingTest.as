@@ -30,16 +30,16 @@
 
 package tests {
 
-    import de.nulldesign.nd2d.display.Node2D;
-    import de.nulldesign.nd2d.display.Sprite2D;
-    import de.nulldesign.nd2d.display.TextureRenderer;
-    import de.nulldesign.nd2d.events.TextureEvent;
-    import materials.Sprite2DDizzyMaterial;
-    import de.nulldesign.nd2d.materials.Texture2D;
+	import de.nulldesign.nd2d.display.Node2D;
+	import de.nulldesign.nd2d.display.Sprite2D;
+	import de.nulldesign.nd2d.display.TextureRenderer;
+	import de.nulldesign.nd2d.events.TextureEvent;
 
-    import flash.events.Event;
+	import flash.events.Event;
 
-    public class PostProcessingTest extends SideScrollerTest {
+	import materials.Sprite2DDizzyMaterial;
+
+	public class PostProcessingTest extends SideScrollerTest {
 
         protected var sceneNode:Node2D;
         protected var textureRenderer:TextureRenderer;

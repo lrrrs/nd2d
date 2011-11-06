@@ -30,22 +30,17 @@
 
 package materials {
 
-    import com.adobe.utils.AGALMiniAssembler;
+	import de.nulldesign.nd2d.geom.Face;
+	import de.nulldesign.nd2d.geom.UV;
+	import de.nulldesign.nd2d.geom.Vertex;
+	import de.nulldesign.nd2d.materials.Sprite2DMaterial;
+	import de.nulldesign.nd2d.materials.shader.Shader2D;
 
-    import de.nulldesign.nd2d.geom.Face;
-    import de.nulldesign.nd2d.geom.UV;
-    import de.nulldesign.nd2d.geom.Vertex;
-    import de.nulldesign.nd2d.materials.ProgramData;
-    import de.nulldesign.nd2d.materials.Sprite2DMaterial;
-    import de.nulldesign.nd2d.utils.TextureHelper;
+	import flash.display3D.Context3D;
+	import flash.display3D.Context3DProgramType;
+	import flash.utils.getTimer;
 
-    import flash.display3D.Context3D;
-    import flash.display3D.Context3DProgramType;
-    import flash.display3D.Context3DVertexBufferFormat;
-    import flash.display3D.Program3D;
-    import flash.utils.getTimer;
-
-    public class Sprite2DDizzyMaterial extends Sprite2DMaterial {
+	public class Sprite2DDizzyMaterial extends Sprite2DMaterial {
 
         private const VERTEX_SHADER:String =
                 "m44 op, va0, vc0   \n" + // vertex * clipspace
@@ -64,7 +59,7 @@ package materials {
                 "add ft0, ft0, fc1                          \n" + // mult with colorOffset
                 "mov oc, ft0                                \n";
 
-        private static var dizzyProgramData:ProgramData;
+        private static var dizzyProgramData:Shader2D;
 
         public function Sprite2DDizzyMaterial() {
             super();
@@ -93,19 +88,10 @@ package materials {
 
         override protected function initProgram(context:Context3D):void {
             if(!dizzyProgramData) {
-                var vertexShaderAssembler:AGALMiniAssembler = new AGALMiniAssembler();
-                vertexShaderAssembler.assemble(Context3DProgramType.VERTEX, VERTEX_SHADER);
-
-                var colorFragmentShaderAssembler:AGALMiniAssembler = new AGALMiniAssembler();
-                colorFragmentShaderAssembler.assemble(Context3DProgramType.FRAGMENT, FRAGMENT_SHADER);
-
-                var program:Program3D = context.createProgram();
-                program.upload(vertexShaderAssembler.agalcode, colorFragmentShaderAssembler.agalcode);
-
-                dizzyProgramData = new ProgramData(program, 4);
+				dizzyProgramData = new Shader2D(context, VERTEX_SHADER, FRAGMENT_SHADER, 4, texture.textureOptions);
             }
 
-            programData = dizzyProgramData;
+            shaderData = dizzyProgramData;
         }
     }
 }

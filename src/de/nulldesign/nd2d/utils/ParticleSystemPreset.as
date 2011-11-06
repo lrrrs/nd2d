@@ -30,9 +30,9 @@
 
 package de.nulldesign.nd2d.utils {
 
-    import flash.geom.Point;
+	import flash.geom.Point;
 
-    public class ParticleSystemPreset {
+	public class ParticleSystemPreset {
 
         public var minStartPosition:Point = new Point(-5.0, 0.0);
         public var maxStartPosition:Point = new Point(5.0, 0.0);

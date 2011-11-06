@@ -35,7 +35,7 @@ package tests {
 	import de.nulldesign.nd2d.display.Sprite2D;
 	import de.nulldesign.nd2d.display.Sprite2DCloud;
 	import de.nulldesign.nd2d.materials.BlendModePresets;
-	import de.nulldesign.nd2d.materials.Texture2D;
+	import de.nulldesign.nd2d.materials.texture.Texture2D;
 
 	import flash.display.BitmapData;
 	import flash.display.BitmapDataChannel;

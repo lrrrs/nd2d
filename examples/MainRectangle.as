@@ -30,17 +30,17 @@
 
 package {
 
-    import de.nulldesign.nd2d.display.World2D;
+	import de.nulldesign.nd2d.display.World2D;
 
-    import flash.display.Sprite;
-    import flash.display.StageAlign;
-    import flash.display.StageScaleMode;
-    import flash.display3D.Context3DRenderMode;
-    import flash.geom.Rectangle;
+	import flash.display.Sprite;
+	import flash.display.StageAlign;
+	import flash.display.StageScaleMode;
+	import flash.display3D.Context3DRenderMode;
+	import flash.geom.Rectangle;
 
-    import tests.RectangleWorld;
+	import tests.RectangleWorld;
 
-    [SWF(width="800", height="600", frameRate="60", backgroundColor="#333333")]
+	[SWF(width="800", height="600", frameRate="60", backgroundColor="#333333")]
     public class MainRectangle extends Sprite {
 
         private var world:World2D;

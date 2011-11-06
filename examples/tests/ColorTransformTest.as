@@ -30,23 +30,22 @@
 
 package tests {
 
-    import com.bit101.components.HUISlider;
+	import com.bit101.components.HUISlider;
+	import com.bit101.components.Style;
 
-    import de.nulldesign.nd2d.display.Sprite2D;
-    import de.nulldesign.nd2d.display.Sprite2DBatch;
-    import de.nulldesign.nd2d.display.Sprite2DCloud;
-    import de.nulldesign.nd2d.materials.BlendModePresets;
-    import de.nulldesign.nd2d.materials.SpriteSheet;
-	import de.nulldesign.nd2d.materials.Texture2D;
-	import de.nulldesign.nd2d.materials.Texture2D;
-	import de.nulldesign.nd2d.materials.TextureAtlas;
+	import de.nulldesign.nd2d.display.Sprite2D;
+	import de.nulldesign.nd2d.display.Sprite2DBatch;
+	import de.nulldesign.nd2d.display.Sprite2DCloud;
+	import de.nulldesign.nd2d.materials.BlendModePresets;
+	import de.nulldesign.nd2d.materials.texture.SpriteSheet;
+	import de.nulldesign.nd2d.materials.texture.Texture2D;
+	import de.nulldesign.nd2d.materials.texture.TextureAtlas;
 
-    import flash.display.BitmapData;
-    import flash.display.Sprite;
-    import flash.events.Event;
-    import flash.geom.ColorTransform;
+	import flash.display.Sprite;
+	import flash.events.Event;
+	import flash.geom.ColorTransform;
 
-    public class ColorTransformTest extends TextureAtlasTest {
+	public class ColorTransformTest extends TextureAtlasTest {
 
         [Embed(source="/assets/nd_logo.png")]
         protected var spriteBitmap:Class;
@@ -146,6 +145,8 @@ package tests {
                 panel.graphics.beginFill(0x000000, 1.0);
                 panel.graphics.drawRect(0.0, 0.0, 180.0, 160.0);
                 panel.graphics.endFill();
+
+				Style.LABEL_TEXT = 0xFFFFFF;
 
                 c = new HUISlider(panel, 0, 0, "redMultiplier", changeHandler);
                 c.minimum = 0.0;

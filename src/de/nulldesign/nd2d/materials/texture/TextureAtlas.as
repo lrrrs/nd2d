@@ -28,14 +28,12 @@
  * THE SOFTWARE.
  */
 
-package de.nulldesign.nd2d.materials {
+package de.nulldesign.nd2d.materials.texture {
 
-	import de.nulldesign.nd2d.utils.TextureHelper;
+	import de.nulldesign.nd2d.materials.*;
 
-	import flash.display.BitmapData;
 	import flash.geom.Point;
 	import flash.geom.Rectangle;
-	import flash.utils.Dictionary;
 
 	public class TextureAtlas extends ASpriteSheetBase {
 

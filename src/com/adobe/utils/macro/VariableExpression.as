@@ -1,6 +1,6 @@
 package com.adobe.utils.macro
 {
-	internal class VariableExpression extends com.adobe.utils.macro.Expression
+	internal class VariableExpression extends Expression
 	{
 		public function VariableExpression( n:String )
 		{

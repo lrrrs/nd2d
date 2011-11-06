@@ -30,19 +30,16 @@
 
 package de.nulldesign.nd2d.materials {
 
-	import com.adobe.utils.AGALMiniAssembler;
-
 	import de.nulldesign.nd2d.display.Node2D;
 	import de.nulldesign.nd2d.display.Sprite2D;
 	import de.nulldesign.nd2d.geom.Face;
 	import de.nulldesign.nd2d.geom.UV;
 	import de.nulldesign.nd2d.geom.Vertex;
-	import de.nulldesign.nd2d.utils.TextureHelper;
+	import de.nulldesign.nd2d.materials.shader.ShaderCache;
 
 	import flash.display3D.Context3D;
 	import flash.display3D.Context3DProgramType;
 	import flash.display3D.Context3DVertexBufferFormat;
-	import flash.display3D.Program3D;
 	import flash.geom.Point;
 	import flash.geom.Rectangle;
 
@@ -66,14 +63,12 @@ package de.nulldesign.nd2d.materials {
 		 */
 
 		protected const DEFAULT_FRAGMENT_SHADER:String =
-				"tex ft0, v0, fs0 <2d,clamp,linear,mipnearest>  \n" + // sample texture from interpolated uv coords
+				"tex ft0, v0, fs0 <TEXTURE_SAMPLING_OPTIONS>  \n" + // sample texture from interpolated uv coords
 						"mul ft0, ft0, v1                               \n" + // mult with colorMultiplier
 						"add oc, ft0, v2                               \n"; // add with colorOffset
 
 		protected var constantsPerSprite:uint = 7; // matrix, colorMultiplier, colorOffset, uvoffset
 		protected var constantsPerMatrix:uint = 4;
-
-		protected static var cloudProgramData:ProgramData;
 
 		protected const BATCH_SIZE:uint = 126 / constantsPerSprite;
 		protected var batchLen:uint = 0;
@@ -86,7 +81,7 @@ package de.nulldesign.nd2d.materials {
 
 		override public function handleDeviceLoss():void {
 			super.handleDeviceLoss();
-			cloudProgramData = null;
+			shaderData = null;
 		}
 
 		override protected function generateBufferData(context:Context3D, faceList:Vector.<Face>):void {
@@ -123,9 +118,9 @@ package de.nulldesign.nd2d.materials {
 
 		override protected function prepareForRender(context:Context3D):void {
 
-			context.setProgram(programData.program);
+			context.setProgram(shaderData.shader);
 			context.setBlendFactors(blendMode.src, blendMode.dst);
-			context.setTextureAt(0, texture.getTexture(context, true));
+			context.setTextureAt(0, texture.getTexture(context));
 			context.setVertexBufferAt(0, vertexBuffer, 0, Context3DVertexBufferFormat.FLOAT_2); // vertex
 			context.setVertexBufferAt(1, vertexBuffer, 2, Context3DVertexBufferFormat.FLOAT_2); // uv
 			context.setVertexBufferAt(2, vertexBuffer, 4, Context3DVertexBufferFormat.FLOAT_4); // idx
@@ -240,21 +235,9 @@ package de.nulldesign.nd2d.materials {
 		}
 
 		override protected function initProgram(context:Context3D):void {
-
-			if(!cloudProgramData) {
-				var vertexShaderAssembler:AGALMiniAssembler = new AGALMiniAssembler();
-				vertexShaderAssembler.assemble(Context3DProgramType.VERTEX, DEFAULT_VERTEX_SHADER);
-
-				var colorFragmentShaderAssembler:AGALMiniAssembler = new AGALMiniAssembler();
-				colorFragmentShaderAssembler.assemble(Context3DProgramType.FRAGMENT, DEFAULT_FRAGMENT_SHADER);
-
-				var program:Program3D = context.createProgram();
-				program.upload(vertexShaderAssembler.agalcode, colorFragmentShaderAssembler.agalcode);
-
-				cloudProgramData = new ProgramData(program, 8);
+			if(!shaderData) {
+				shaderData = ShaderCache.getInstance().getShader(context, this, DEFAULT_VERTEX_SHADER, DEFAULT_FRAGMENT_SHADER, 8, texture.textureOptions);
 			}
-
-			programData = cloudProgramData;
 		}
 
 		override protected function addVertex(context:Context3D, buffer:Vector.<Number>, v:Vertex, uv:UV, face:Face):void {

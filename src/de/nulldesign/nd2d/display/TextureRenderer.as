@@ -30,81 +30,88 @@
 
 package de.nulldesign.nd2d.display {
 
-    import de.nulldesign.nd2d.events.TextureEvent;
-    import de.nulldesign.nd2d.materials.Texture2D;
-    import de.nulldesign.nd2d.utils.StatsObject;
-    import de.nulldesign.nd2d.utils.TextureHelper;
+	import de.nulldesign.nd2d.events.TextureEvent;
+	import de.nulldesign.nd2d.materials.texture.Texture2D;
+	import de.nulldesign.nd2d.utils.StatsObject;
+	import de.nulldesign.nd2d.utils.TextureHelper;
 
-    import flash.display3D.Context3D;
-    import flash.display3D.Context3DTextureFormat;
-    import flash.display3D.textures.Texture;
-    import flash.geom.Point;
+	import flash.display3D.Context3D;
+	import flash.display3D.Context3DTextureFormat;
+	import flash.geom.Point;
 
-    /**
-     * Dispatched when the generated texture is created.
-     * @eventType de.nulldesign.nd2d.events.TextureEvent.READY
-     */
-    [Event(name="textureReady", type="de.nulldesign.nd2d.events.TextureEvent")]
+	/**
+	 * Dispatched when the generated texture is created.
+	 * @eventType de.nulldesign.nd2d.events.TextureEvent.READY
+	 */
+	[Event(name="textureReady", type="de.nulldesign.nd2d.events.TextureEvent")]
 
-    public class TextureRenderer extends Node2D {
+	public class TextureRenderer extends Node2D {
 
-        protected var renderNode:Node2D;
-        protected var texCamera:Camera2D = new Camera2D(1, 1);
+		protected var renderNode:Node2D;
+		protected var texCamera:Camera2D = new Camera2D(1, 1);
 
-        public var texture:Texture2D;
+		public var texture:Texture2D;
 
-        private var cameraOffsetX:Number;
-        private var cameraOffsetY:Number;
+		private var cameraOffsetX:Number;
+		private var cameraOffsetY:Number;
 
-        public function TextureRenderer(renderNode:Node2D, textureWidth:Number, textureHeight:Number, cameraOffsetX:Number = NaN,
-                                        cameraOffsetY:Number = NaN) {
+		public function TextureRenderer(renderNode:Node2D, textureWidth:Number, textureHeight:Number, cameraOffsetX:Number = NaN, cameraOffsetY:Number = NaN) {
 
-            var size:Point = TextureHelper.getTextureDimensionsFromSize(textureWidth, textureHeight);
+			var size:Point = TextureHelper.getTextureDimensionsFromSize(textureWidth, textureHeight);
 
-            texture = new Texture2D();
-            texture.textureWidth = size.x;
-            texture.textureHeight = size.y;
-            texture.bitmapWidth = size.x;
-            texture.bitmapHeight = size.y;
+			texture = new Texture2D();
+			texture.textureWidth = size.x;
+			texture.textureHeight = size.y;
+			texture.bitmapWidth = size.x;
+			texture.bitmapHeight = size.y;
 
-            this.renderNode = renderNode;
-            _width = size.x;
-            _height = size.y;
-            this.cameraOffsetX = cameraOffsetX;
-            this.cameraOffsetY = cameraOffsetY;
+			this.renderNode = renderNode;
+			_width = size.x;
+			_height = size.y;
+			this.cameraOffsetX = cameraOffsetX;
+			this.cameraOffsetY = cameraOffsetY;
 
-            texCamera.resizeCameraStage(width, height);
-        }
+			texCamera.resizeCameraStage(width, height);
+		}
 
-        override public function handleDeviceLoss():void {
-            super.handleDeviceLoss();
-            texture.texture = null;
-        }
+		override public function handleDeviceLoss():void {
+			super.handleDeviceLoss();
+			texture.texture = null;
+		}
 
-        override internal function drawNode(context:Context3D, camera:Camera2D, parentMatrixChanged:Boolean, statsObject:StatsObject):void {
+		override internal function drawNode(context:Context3D, camera:Camera2D, parentMatrixChanged:Boolean, statsObject:StatsObject):void {
 
-            if(!texture.texture) {
-                texture.texture = context.createTexture(width, height, Context3DTextureFormat.BGRA, true);
-                dispatchEvent(new TextureEvent(TextureEvent.READY));
-            }
+			if(!texture.texture) {
+				texture.texture = context.createTexture(width, height, Context3DTextureFormat.BGRA, true);
+				dispatchEvent(new TextureEvent(TextureEvent.READY));
+			}
 
-            context.setRenderToTexture(texture.texture, false, 2, 0);
-            context.clear(0.0, 0.0, 0.0, 0.0);
+			context.setRenderToTexture(texture.texture, false, 2, 0);
+			context.clear(0.0, 0.0, 0.0, 0.0);
 
-            if(!isNaN(cameraOffsetX) && !isNaN(cameraOffsetY)) {
-                texCamera.x = cameraOffsetX;
-                texCamera.y = cameraOffsetY;
-            } else {
-                texCamera.x = renderNode.x - width * 0.5;
-                texCamera.y = renderNode.y - height * 0.5;
-            }
+			if(!isNaN(cameraOffsetX) && !isNaN(cameraOffsetY)) {
+				texCamera.x = cameraOffsetX;
+				texCamera.y = cameraOffsetY;
+			} else {
+				texCamera.x = renderNode.x - width * 0.5;
+				texCamera.y = renderNode.y - height * 0.5;
+			}
 
-            var visibleState:Boolean = renderNode.visible;
-            renderNode.visible = true;
-            renderNode.drawNode(context, texCamera, parentMatrixChanged, statsObject);
-            renderNode.visible = visibleState;
+			var visibleState:Boolean = renderNode.visible;
+			renderNode.visible = true;
+			renderNode.drawNode(context, texCamera, parentMatrixChanged, statsObject);
+			renderNode.visible = visibleState;
 
-            context.setRenderToBackBuffer();
-        }
-    }
+			context.setRenderToBackBuffer();
+		}
+
+		override public function dispose():void {
+			super.dispose();
+
+			if(texture) {
+				texture.dispose();
+				texture = null;
+			}
+		}
+	}
 }

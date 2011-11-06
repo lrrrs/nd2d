@@ -30,9 +30,9 @@
 
 package de.nulldesign.nd2d.events {
 
-    import flash.events.Event;
+	import flash.events.Event;
 
-    public class TextureEvent extends Event {
+	public class TextureEvent extends Event {
 
         public static const READY:String = "textureReady";
 

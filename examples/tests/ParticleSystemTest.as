@@ -30,18 +30,18 @@
 
 package tests {
 
-    import de.nulldesign.nd2d.display.ParticleSystem2D;
-    import de.nulldesign.nd2d.display.Scene2D;
-    import de.nulldesign.nd2d.materials.BlendModePresets;
-	import de.nulldesign.nd2d.materials.Texture2D;
+	import de.nulldesign.nd2d.display.ParticleSystem2D;
+	import de.nulldesign.nd2d.display.Scene2D;
+	import de.nulldesign.nd2d.materials.BlendModePresets;
+	import de.nulldesign.nd2d.materials.texture.Texture2D;
 	import de.nulldesign.nd2d.utils.ParticleSystemPreset;
 
-    import flash.display.Sprite;
-    import flash.events.Event;
-    import flash.events.MouseEvent;
-    import flash.geom.Point;
+	import flash.display.Sprite;
+	import flash.events.Event;
+	import flash.events.MouseEvent;
+	import flash.geom.Point;
 
-    public class ParticleSystemTest extends Scene2D {
+	public class ParticleSystemTest extends Scene2D {
 
         [Embed(source="/assets/particle_small.png")]
         private var particleClass:Class;

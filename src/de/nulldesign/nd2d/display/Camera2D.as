@@ -30,15 +30,19 @@
 
 package de.nulldesign.nd2d.display {
 
+	import de.nulldesign.nd2d.utils.VectorUtil;
+
 	import flash.geom.Matrix3D;
 	import flash.geom.Vector3D;
 
 	public class Camera2D {
 
-		protected var renderMatrix:Matrix3D = new Matrix3D();
+		protected var renderMatrixOrtho:Matrix3D = new Matrix3D();
+		protected var renderMatrixPerspective:Matrix3D = new Matrix3D();
 
-		public var projectionMatrix:Matrix3D = new Matrix3D();
-		public var viewMatrix:Matrix3D = new Matrix3D();
+		protected var perspectiveProjectionMatrix:Matrix3D = new Matrix3D();
+		protected var orthoProjectionMatrix:Matrix3D = new Matrix3D();
+		protected var viewMatrix:Matrix3D = new Matrix3D();
 
 		protected var _sceneWidth:Number;
 		protected var _sceneHeight:Number;
@@ -54,16 +58,19 @@ package de.nulldesign.nd2d.display {
 			_sceneHeight = h;
 			invalidated = true;
 
-			projectionMatrix = makeOrtographicMatrix(0, w, 0, h);
-			/*
-			var projMat:Matrix3D = makeProjectionMatrix(0.1, h / 2, 90.0, w / h);
+			orthoProjectionMatrix = makeOrtographicMatrix(0, w, 0, h);
+
+			var fovDegree:Number = 45.0;
+			var magicNumber:Number = Math.tan(VectorUtil.deg2rad(fovDegree * 0.5));
+			var projMat:Matrix3D = makeProjectionMatrix(0.1, 1500.0, fovDegree, w / h);
 			var lookAtPosition:Vector3D = new Vector3D(0.0, 0.0, 0.0);
-			var position:Vector3D = new Vector3D(0, 0, -_sceneHeight / 2.0);
-			var lookAtMat:Matrix3D = lookAt(lookAtPosition, position);
+			
+			// zEye distance from origin: sceneHeight * 0.5 / tan(a) 
+			var eye:Vector3D = new Vector3D(0, 0, -(_sceneHeight * 0.5) / magicNumber);
+			var lookAtMat:Matrix3D = lookAt(lookAtPosition, eye);
 
 			lookAtMat.append(projMat);
-			projectionMatrix = lookAtMat;
-            */
+			perspectiveProjectionMatrix = lookAtMat;
 		}
 
 		protected function lookAt(lookAt:Vector3D, position:Vector3D):Matrix3D {
@@ -142,7 +149,7 @@ package de.nulldesign.nd2d.display {
 			]));
 		}
 
-		public function getViewProjectionMatrix():Matrix3D {
+		public function getViewProjectionMatrix(useOrthoMatrix:Boolean = true):Matrix3D {
 
 			if(invalidated) {
 				invalidated = false;
@@ -152,12 +159,17 @@ package de.nulldesign.nd2d.display {
 				viewMatrix.appendScale(zoom, zoom, 1.0);
 				viewMatrix.appendRotation(_rotation, Vector3D.Z_AXIS);
 
-				renderMatrix.identity();
-				renderMatrix.append(viewMatrix);
-				renderMatrix.append(projectionMatrix);
+				renderMatrixOrtho.identity();
+				renderMatrixOrtho.append(viewMatrix);
+
+				renderMatrixPerspective.identity();
+				renderMatrixPerspective.append(viewMatrix);
+
+				renderMatrixOrtho.append(orthoProjectionMatrix);
+				renderMatrixPerspective.append(perspectiveProjectionMatrix);
 			}
 
-			return renderMatrix;
+			return useOrthoMatrix ? renderMatrixOrtho : renderMatrixPerspective;
 		}
 
 		public function reset():void {

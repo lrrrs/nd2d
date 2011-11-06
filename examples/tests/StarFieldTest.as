@@ -30,14 +30,14 @@
 
 package tests {
 
-    import de.nulldesign.nd2d.display.Scene2D;
-    import de.nulldesign.nd2d.display.Sprite2D;
-    import de.nulldesign.nd2d.materials.BlendModePresets;
-	import de.nulldesign.nd2d.materials.Texture2D;
+	import de.nulldesign.nd2d.display.Scene2D;
+	import de.nulldesign.nd2d.display.Sprite2D;
+	import de.nulldesign.nd2d.materials.BlendModePresets;
+	import de.nulldesign.nd2d.materials.texture.Texture2D;
 
 	import flash.events.Event;
 
-    public class StarFieldTest extends Scene2D {
+	public class StarFieldTest extends Scene2D {
 
         [Embed(source="/assets/starfield.jpg")]
         private var starFieldTexture:Class;

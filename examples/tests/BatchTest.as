@@ -33,9 +33,8 @@ package tests {
 	import de.nulldesign.nd2d.display.Node2D;
 	import de.nulldesign.nd2d.display.Scene2D;
 	import de.nulldesign.nd2d.display.Sprite2D;
-	import de.nulldesign.nd2d.display.Sprite2D;
 	import de.nulldesign.nd2d.display.Sprite2DBatch;
-	import de.nulldesign.nd2d.materials.Texture2D;
+	import de.nulldesign.nd2d.materials.texture.Texture2D;
 
 	public class BatchTest extends Scene2D {
 

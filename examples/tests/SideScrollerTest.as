@@ -30,22 +30,21 @@
 
 package tests {
 
-    import de.nulldesign.nd2d.display.ParticleSystem2D;
-    import de.nulldesign.nd2d.display.Scene2D;
-    import de.nulldesign.nd2d.display.Sprite2D;
-    import de.nulldesign.nd2d.display.Sprite2DCloud;
-    import de.nulldesign.nd2d.materials.BlendModePresets;
-    import de.nulldesign.nd2d.materials.SpriteSheet;
-	import de.nulldesign.nd2d.materials.Texture2D;
+	import de.nulldesign.nd2d.display.ParticleSystem2D;
+	import de.nulldesign.nd2d.display.Scene2D;
+	import de.nulldesign.nd2d.display.Sprite2D;
+	import de.nulldesign.nd2d.display.Sprite2DCloud;
+	import de.nulldesign.nd2d.materials.BlendModePresets;
+	import de.nulldesign.nd2d.materials.texture.SpriteSheet;
+	import de.nulldesign.nd2d.materials.texture.Texture2D;
 	import de.nulldesign.nd2d.utils.NumberUtil;
-    import de.nulldesign.nd2d.utils.ParticleSystemPreset;
+	import de.nulldesign.nd2d.utils.ParticleSystemPreset;
 
-    import flash.display.BitmapData;
-    import flash.events.Event;
+	import flash.events.Event;
 
-    import tests.objects.MorphGrid;
+	import tests.objects.MorphGrid;
 
-    public class SideScrollerTest extends Scene2D {
+	public class SideScrollerTest extends Scene2D {
 
         [Embed(source="/assets/particle_small.png")]
         protected var particleTexture:Class;

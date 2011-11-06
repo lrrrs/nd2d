@@ -32,8 +32,6 @@ package {
 
 	import avmplus.getQualifiedClassName;
 
-	import com.bit101.components.PushButton;
-
 	import de.nulldesign.nd2d.display.Scene2D;
 	import de.nulldesign.nd2d.display.World2D;
 
@@ -44,7 +42,6 @@ package {
 	import flash.events.Event;
 	import flash.events.KeyboardEvent;
 	import flash.events.MouseEvent;
-	import flash.geom.Rectangle;
 	import flash.text.TextField;
 	import flash.text.TextFormat;
 	import flash.ui.Keyboard;
@@ -72,6 +69,7 @@ package {
 	import tests.StarFieldTest;
 	import tests.TextureAtlasTest;
 	import tests.TextureRendererTest;
+	import tests.TextureAndRotationOptionsTest;
 
 	//[SWF(width="1000", height="550", frameRate="60", backgroundColor="#000000")]
 	public class Main extends World2D {
@@ -115,6 +113,7 @@ package {
 			scenes.push(new ColorTransformTest());
 			scenes.push(new Sprite2DCloudParticles());
 			scenes.push(new SpeedTest());
+			scenes.push(new TextureAndRotationOptionsTest());
 
 			var tf:TextFormat = new TextFormat("Arial", 11, 0xFFFFFF, true);
 
@@ -129,7 +128,7 @@ package {
 			stage.addEventListener(Event.RESIZE, stageResize);
 			stageResize(null);
 
-			activeSceneIdx = scenes.length - 1;
+			activeSceneIdx = scenes.length - 3;
 			nextBtnClick();
 
 			stage.addEventListener(KeyboardEvent.KEY_UP, keyUp);

@@ -1,25 +1,25 @@
 package {
 
-    import com.adobe.utils.AGALMiniAssembler;
+	import com.adobe.utils.AGALMiniAssembler;
 
-    import flash.display.Sprite;
-    import flash.display3D.Context3D;
-    import flash.display3D.Context3DCompareMode;
-    import flash.display3D.Context3DProgramType;
-    import flash.display3D.Context3DRenderMode;
-    import flash.display3D.Context3DTriangleFace;
-    import flash.display3D.Context3DVertexBufferFormat;
-    import flash.display3D.IndexBuffer3D;
-    import flash.display3D.Program3D;
-    import flash.display3D.VertexBuffer3D;
-    import flash.events.ErrorEvent;
-    import flash.events.Event;
-    import flash.geom.Matrix3D;
-    import flash.geom.Vector3D;
-    import flash.system.System;
-    import flash.text.TextField;
+	import flash.display.Sprite;
+	import flash.display3D.Context3D;
+	import flash.display3D.Context3DCompareMode;
+	import flash.display3D.Context3DProgramType;
+	import flash.display3D.Context3DRenderMode;
+	import flash.display3D.Context3DTriangleFace;
+	import flash.display3D.Context3DVertexBufferFormat;
+	import flash.display3D.IndexBuffer3D;
+	import flash.display3D.Program3D;
+	import flash.display3D.VertexBuffer3D;
+	import flash.events.ErrorEvent;
+	import flash.events.Event;
+	import flash.geom.Matrix3D;
+	import flash.geom.Vector3D;
+	import flash.system.System;
+	import flash.text.TextField;
 
-    public class MinimalMolehillTest extends Sprite {
+	public class MinimalMolehillTest extends Sprite {
 
         private var context3D:Context3D;
         private var vertexBuffer:VertexBuffer3D;

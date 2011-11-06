@@ -1,10 +1,11 @@
 package com.adobe.utils.macro
 {
+
 	import flash.utils.Dictionary;
-	
+
 	public class VM
 	{
-		public var vars:flash.utils.Dictionary = new flash.utils.Dictionary();
+		public var vars:Dictionary = new Dictionary();
 		public var stack:Array = new Array();
 		
 		public function pushIf():void	

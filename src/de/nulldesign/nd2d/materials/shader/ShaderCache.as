@@ -28,32 +28,43 @@
  * THE SOFTWARE.
  */
 
-package tests {
+package de.nulldesign.nd2d.materials.shader {
 
-	import de.nulldesign.nd2d.display.Grid2D;
-	import de.nulldesign.nd2d.display.Scene2D;
-	import de.nulldesign.nd2d.materials.texture.Texture2D;
+	import flash.display3D.Context3D;
+	import flash.utils.getQualifiedClassName;
 
-	import tests.objects.MorphGrid;
+	public class ShaderCache {
 
-	public class Grid2DTest extends Scene2D {
+		private static var instance:ShaderCache;
 
-        [Embed(source="/assets/water_texture.jpg")]
-        private var spriteTexture:Class;
+		private var cacheObj:Object = {};
 
-        private var grid:Grid2D;
+		public function ShaderCache() {
+		}
 
-        public function Grid2DTest() {
+		public static function getInstance():ShaderCache {
+			if(!instance) {
+				instance = new ShaderCache();
+			}
+			return instance;
+		}
 
-            grid = new MorphGrid(16, 16, Texture2D.textureFromBitmapData(new spriteTexture().bitmapData));
-            addChild(grid);
-        }
+		public function getShader(context:Context3D, materialClass:Object, vertexShaderString:String, fragmentShaderString:String, numFloatsPerVertex:uint, textureOptions:uint):Shader2D {
 
-        override protected function step(elapsed:Number):void {
-            grid.x = stage.stageWidth * 0.5;
-            grid.y = stage.stageHeight * 0.5;
-            grid.width = stage.stageWidth;
-            grid.height = stage.stageHeight;
-        }
-    }
+			var shaderName:String = getQualifiedClassName(materialClass);
+
+			if(cacheObj[shaderName] && cacheObj[shaderName][textureOptions]) {
+				return cacheObj[shaderName][textureOptions];
+			} else {
+				var shader:Shader2D = new Shader2D(context, vertexShaderString, fragmentShaderString, numFloatsPerVertex, textureOptions);
+
+				if(!cacheObj[shaderName]) {
+					cacheObj[shaderName] = {};
+				}
+
+				cacheObj[shaderName][textureOptions] = shader;
+				return shader;
+			}
+		}
+	}
 }

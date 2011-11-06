@@ -30,19 +30,19 @@
 
 package tests {
 
-    import de.nulldesign.nd2d.display.Node2D;
-    import de.nulldesign.nd2d.display.Scene2D;
-    import de.nulldesign.nd2d.display.Sprite2D;
-    import de.nulldesign.nd2d.display.Sprite2DCloud;
-	import de.nulldesign.nd2d.materials.Texture2D;
+	import de.nulldesign.nd2d.display.Node2D;
+	import de.nulldesign.nd2d.display.Scene2D;
+	import de.nulldesign.nd2d.display.Sprite2D;
+	import de.nulldesign.nd2d.display.Sprite2DCloud;
+	import de.nulldesign.nd2d.materials.texture.Texture2D;
 
 	import flash.events.Event;
-    import flash.events.KeyboardEvent;
-    import flash.geom.Point;
+	import flash.events.KeyboardEvent;
+	import flash.geom.Point;
 	import flash.geom.Vector3D;
 	import flash.ui.Keyboard;
 
-    public class SpriteHierarchyTest2 extends Scene2D {
+	public class SpriteHierarchyTest2 extends Scene2D {
 
         [Embed(source="/assets/crate.jpg")]
         private var spriteTexture:Class;
@@ -65,42 +65,42 @@ package tests {
 
             tmp = new Sprite2D(tex);
             tmp.tint = 0xFF0000;
-            tmp.position = new Point(200, 100);
+            tmp.position = new Vector3D(200, 100);
             tmp.alpha = 0.7;
             tmp.rotation = 0.0;
             s.addChild(tmp);
 
             tmp = new Sprite2D(tex);
             tmp.tint = 0x00FF00;
-            tmp.position = new Point(300, 100);
+            tmp.position = new Vector3D(300, 100);
             tmp.rotation = 20.0;
             tmp.alpha = 0.7;
             s.addChild(tmp);
 
             tmp = new Sprite2D(tex);
             tmp.tint = 0x0000FF;
-            tmp.position = new Point(400, 100);
+            tmp.position = new Vector3D(400, 100);
             tmp.rotation = 40.0;
             tmp.alpha = 0.7;
             s.addChild(tmp);
 
             tmp = new Sprite2D();
             tmp.tint = 0xFF0000;
-            tmp.position = new Point(200, 100);
+            tmp.position = new Vector3D(200, 100);
             tmp.rotation = 0.0;
             tmp.alpha = 0.7;
             sc.addChild(tmp);
 
             tmp = new Sprite2D();
             tmp.tint = 0x00FF00;
-            tmp.position = new Point(300, 100);
+            tmp.position = new Vector3D(300, 100);
             tmp.rotation = 20.0;
             tmp.alpha = 0.7;
             sc.addChild(tmp);
 
             tmp = new Sprite2D();
             tmp.tint = 0x0000FF;
-            tmp.position = new Point(400, 100);
+            tmp.position = new Vector3D(400, 100);
             tmp.rotation = 40.0;
             tmp.alpha = 0.7;
             sc.addChild(tmp);

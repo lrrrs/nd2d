@@ -30,24 +30,13 @@
 
 package tests {
 
-    import de.nulldesign.nd2d.display.Scene2D;
-    import de.nulldesign.nd2d.display.Sprite2D;
-    import de.nulldesign.nd2d.materials.SpriteSheet;
-	import de.nulldesign.nd2d.materials.Texture2D;
-	import de.nulldesign.nd2d.materials.TextureAtlas;
-    import de.nulldesign.nd2d.utils.NumberUtil;
+	import de.nulldesign.nd2d.display.Scene2D;
+	import de.nulldesign.nd2d.display.Sprite2D;
+	import de.nulldesign.nd2d.materials.texture.SpriteSheet;
+	import de.nulldesign.nd2d.materials.texture.Texture2D;
+	import de.nulldesign.nd2d.materials.texture.TextureAtlas;
 
-    import flash.display.BitmapData;
-
-    import flash.display.BitmapData;
-
-    import flash.display.BitmapData;
-    import flash.geom.Matrix3D;
-    import flash.geom.Rectangle;
-    import flash.geom.Vector3D;
-    import flash.utils.getTimer;
-
-    public class MaskTest extends Scene2D {
+	public class MaskTest extends Scene2D {
 
         [Embed(source="/assets/textureatlas_test.png")]
         private var textureAtlasBitmap:Class;

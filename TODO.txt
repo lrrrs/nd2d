@@ -1,18 +1,27 @@
 - ATF support
 - ParticleSystem2D: add support for bursts!
 - Multitouch events
-- texture smoothing mipmap, nearest, linear, etc. customize per object or per ND2D instance?
++ texture smoothing mipmap, nearest, linear, etc. customize per object or per ND2D instance?
 - premultiplied / non premultiplied alpha check for textures!
-- Depricate bitmapData as constructor argument. Only Texture2D allowed! Static creation methods?
++ Depricate bitmapData as constructor argument. Only Texture2D allowed! Static creation methods?
 - updateFromPreset method for particlesystem to update the buffer on the fly?!
 - blurmaterial
 - mask size restricted to 2^ bug? outer coordinates "go wild"? border / clamp
 - solid / gradient quad as new object
-- UV coordinates tiles multiplier
++ UV coordinates tiles multiplier
 - Zoë: A SWF animation exporter for the EaselJS library. ? more TextureAtlas tools?
 - pixel perfect collisions -> save bitmapdata alpha channel? only 1-bit
 - premultiplied / non premultiplied alpha - bug in particlesystem? dynamic per texturetype
-- color uint instead of number
++ color uint instead of number
 - multiple worlds test
-- fullScreenSourceRect test!
-- rotationXYZ, z depth's?
++ rotationXYZ, z depth's?
+- camera zoom example for independent resolutions
+- Sprite2DCloud - addChildAt - invalidation not THAT agressive if possible?
+- http://nulldesign.de/nd2d/forum/topic.php?id=53 crop bug? smoothing?
+- premultiplied alpha bug for sprite2dcloud
+- http://nulldesign.de/nd2d/forum/topic.php?id=64
+
+What I don't like about the spritesheets is:
+- it's a pain to declare animations from a (cocos2D) spritesheet - it needs a simpler way like just sheet.playAnimation("foo*") and it would automatically build the animation with all assets named "foo001.png", "foo002.png", etc.
+- and it seems inefficient to have to clone the spritesheet object.
+About Sprite2DBatch: only addChildAt/removeChildAt are implemented and I'm not sure why addChild/removeChild aren't - maybe there's a hidden reason? Also invalidation in the *At methods seem a bit aggressive.

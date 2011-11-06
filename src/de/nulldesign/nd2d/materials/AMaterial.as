@@ -30,26 +30,23 @@
 
 package de.nulldesign.nd2d.materials {
 
-    import de.nulldesign.nd2d.geom.Face;
-    import de.nulldesign.nd2d.geom.UV;
-    import de.nulldesign.nd2d.geom.Vertex;
-    import de.nulldesign.nd2d.utils.NodeBlendMode;
+	import de.nulldesign.nd2d.geom.Face;
+	import de.nulldesign.nd2d.geom.UV;
+	import de.nulldesign.nd2d.geom.Vertex;
+	import de.nulldesign.nd2d.materials.shader.Shader2D;
+	import de.nulldesign.nd2d.utils.NodeBlendMode;
 
-    import flash.display3D.Context3D;
-    import flash.display3D.Context3DVertexBufferFormat;
-    import flash.display3D.IndexBuffer3D;
-    import flash.display3D.VertexBuffer3D;
-    import flash.geom.Matrix3D;
-    import flash.geom.Rectangle;
-    import flash.utils.Dictionary;
+	import flash.display3D.Context3D;
+	import flash.display3D.Context3DVertexBufferFormat;
+	import flash.display3D.IndexBuffer3D;
+	import flash.display3D.VertexBuffer3D;
+	import flash.geom.Matrix3D;
+	import flash.utils.Dictionary;
 
-    public class AMaterial {
+	public class AMaterial {
 
         // cameras view projectionmatrix
         public var viewProjectionMatrix:Matrix3D;
-
-        // cameras projection matrix
-        public var projectionMatrix:Matrix3D;
 
         // models modelmatrix
         public var modelMatrix:Matrix3D;
@@ -69,11 +66,12 @@ package de.nulldesign.nd2d.materials {
         protected var mIndexBuffer:Vector.<uint>;
         protected var mVertexBuffer:Vector.<Number>;
 
-        protected var programData:ProgramData;
+        protected var shaderData:Shader2D;
 		protected var programConstVector:Vector.<Number> = new Vector.<Number>(4);
 
         public static const VERTEX_POSITION:String = "PB3D_POSITION";
         public static const VERTEX_UV:String = "PB3D_UV";
+		public static const VERTEX_COLOR:String = "PB3D_COLOR";
 
         public function AMaterial() {
 
@@ -143,10 +141,10 @@ package de.nulldesign.nd2d.materials {
             }
 
             duplicateCheck = null;
-            numIndices = mVertexBuffer.length / programData.numFloatsPerVertex;
+            numIndices = mVertexBuffer.length / shaderData.numFloatsPerVertex;
 
             // GENERATE BUFFERS
-            vertexBuffer = context.createVertexBuffer(numIndices, programData.numFloatsPerVertex);
+            vertexBuffer = context.createVertexBuffer(numIndices, shaderData.numFloatsPerVertex);
             vertexBuffer.uploadFromVector(mVertexBuffer, 0, numIndices);
 
             if(!indexBuffer) {
@@ -160,12 +158,12 @@ package de.nulldesign.nd2d.materials {
 
         protected function prepareForRender(context:Context3D):void {
 
-            context.setProgram(programData.program);
+            context.setProgram(shaderData.shader);
             context.setBlendFactors(blendMode.src, blendMode.dst);
 
             if(needUploadVertexBuffer) {
                 needUploadVertexBuffer = false;
-                vertexBuffer.uploadFromVector(mVertexBuffer, 0, mVertexBuffer.length / programData.numFloatsPerVertex);
+                vertexBuffer.uploadFromVector(mVertexBuffer, 0, mVertexBuffer.length / shaderData.numFloatsPerVertex);
             }
         }
 
@@ -174,7 +172,7 @@ package de.nulldesign.nd2d.materials {
             vertexBuffer = null;
             mIndexBuffer = null;
             mVertexBuffer = null;
-            programData = null;
+            shaderData = null;
             needUploadVertexBuffer = true;
         }
 
@@ -230,6 +228,13 @@ package de.nulldesign.nd2d.materials {
                 if(floatFormat == 4)
                     buffer.push(0.0, 0.0);
             }
+
+			if(semanticsID == VERTEX_COLOR) {
+                buffer.push(v.r,  v.g,  v.b);
+
+				if(floatFormat == 4)
+                    buffer.push(v.a);
+            }
         }
 
         protected function getFloatFormat(format:String):int {
@@ -254,10 +259,8 @@ package de.nulldesign.nd2d.materials {
                 vertexBuffer.dispose();
                 vertexBuffer = null;
             }
-            if(programData) {
-                // dont' kill program... it's cached
-                //programData.program.dispose();
-                programData = null;
+            if(shaderData) {
+                shaderData = null;
             }
         }
     }

@@ -30,20 +30,17 @@
 
 package de.nulldesign.nd2d.display {
 
-    import de.nulldesign.nd2d.geom.Face;
-    import de.nulldesign.nd2d.materials.ASpriteSheetBase;
-    import de.nulldesign.nd2d.materials.Sprite2DMaskMaterial;
-    import de.nulldesign.nd2d.materials.Sprite2DMaterial;
-    import de.nulldesign.nd2d.materials.SpriteSheet;
-    import de.nulldesign.nd2d.materials.Texture2D;
-    import de.nulldesign.nd2d.utils.TextureHelper;
+	import de.nulldesign.nd2d.geom.Face;
+	import de.nulldesign.nd2d.materials.ASpriteSheetBase;
+	import de.nulldesign.nd2d.materials.Sprite2DMaskMaterial;
+	import de.nulldesign.nd2d.materials.Sprite2DMaterial;
+	import de.nulldesign.nd2d.materials.texture.Texture2D;
+	import de.nulldesign.nd2d.utils.TextureHelper;
 
-    import flash.display.BitmapData;
+	import flash.display.BitmapData;
+	import flash.display3D.Context3D;
 
-    import flash.display3D.Context3D;
-    import flash.display3D.textures.Texture;
-
-    /**
+	/**
      * <p>2D sprite class</p>
      * One draw call is used per sprite.
      * If you have a lot of sprites with the same texture / spritesheet try to use a Sprite2DCould, it will be a lot faster.
@@ -61,22 +58,12 @@ package de.nulldesign.nd2d.display {
          * Constructor of class Sprite2D
          * @param textureObject can be a BitmapData or Texture2D
          */
-        public function Sprite2D(textureObject:Object = null) {
+        public function Sprite2D(textureObject:Texture2D = null) {
             faceList = TextureHelper.generateQuadFromDimensions(2, 2);
-
-            var tex:Texture2D;
-            if(textureObject is BitmapData) {
-                tex = Texture2D.textureFromBitmapData(textureObject as BitmapData);
-				trace("Setting constructor argument in a Sprite2D as a BitmapData is depricated. Please pass a Texture2D object to the constructor. Create Texture2D object from a BitmapData by using the static method: Texture2D.textureFromBitmapData()");
-            } else if(textureObject is Texture2D) {
-                tex = textureObject as Texture2D;
-            } else if(textureObject != null) {
-                throw new Error("textureObject has to be a BitmapData or a Texture2D");
-            }
 
             if(textureObject) {
                 setMaterial(new Sprite2DMaterial());
-                setTexture(tex);
+                setTexture(textureObject);
             }
         }
 
@@ -92,7 +79,7 @@ package de.nulldesign.nd2d.display {
         public function setTexture(value:Texture2D):void {
 
             if(texture) {
-                texture.cleanUp();
+                texture.dispose();
             }
 
             this.texture = value;
@@ -155,8 +142,7 @@ package de.nulldesign.nd2d.display {
 
             material.blendMode = blendMode;
             material.modelMatrix = worldModelMatrix;
-            material.projectionMatrix = camera.projectionMatrix;
-            material.viewProjectionMatrix = camera.getViewProjectionMatrix();
+            material.viewProjectionMatrix = camera.getViewProjectionMatrix(false);
             material.colorTransform = combinedColorTransform;
             material.spriteSheet = spriteSheet;
             material.texture = texture;
@@ -180,11 +166,6 @@ package de.nulldesign.nd2d.display {
             if(material) {
                 material.dispose();
                 material = null;
-            }
-
-            if(texture) {
-                texture.cleanUp();
-                texture = null;
             }
 
             super.dispose();

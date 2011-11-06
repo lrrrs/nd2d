@@ -39,7 +39,6 @@ package de.nulldesign.nd2d.display {
 	import flash.events.ErrorEvent;
 	import flash.events.Event;
 	import flash.events.MouseEvent;
-	import flash.events.MouseEvent;
 	import flash.geom.Rectangle;
 	import flash.geom.Vector3D;
 	import flash.utils.getTimer;

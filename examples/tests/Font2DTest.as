@@ -30,19 +30,20 @@
 
 package tests {
 
-    import de.nulldesign.nd2d.display.Font2D;
-    import de.nulldesign.nd2d.display.Node2D;
-    import de.nulldesign.nd2d.display.Scene2D;
-    import de.nulldesign.nd2d.utils.ColorUtil;
-    import de.nulldesign.nd2d.utils.NumberUtil;
+	import de.nulldesign.nd2d.display.Font2D;
+	import de.nulldesign.nd2d.display.Node2D;
+	import de.nulldesign.nd2d.display.Scene2D;
+	import de.nulldesign.nd2d.materials.texture.Texture2D;
+	import de.nulldesign.nd2d.utils.ColorUtil;
+	import de.nulldesign.nd2d.utils.NumberUtil;
 
-    import flash.display.BitmapData;
-    import flash.events.Event;
-    import flash.utils.getTimer;
+	import flash.display.BitmapData;
+	import flash.events.Event;
+	import flash.utils.getTimer;
 
-    import flashx.textLayout.formats.TextAlign;
+	import flashx.textLayout.formats.TextAlign;
 
-    public class Font2DTest extends Scene2D {
+	public class Font2DTest extends Scene2D {
 
         [Embed(source="/assets/kromagrad_16x16.png")]
         private var fontTexture:Class;
@@ -63,14 +64,15 @@ package tests {
             removeEventListener(Event.ADDED_TO_STAGE, addedToStage);
 
             var fontBmp:BitmapData = new fontTexture().bitmapData;
+			var tex:Texture2D = Texture2D.textureFromBitmapData(fontBmp);
 
-            font = new Font2D(fontBmp, 16, 16, fontChars, 20, 100, true);
+            font = new Font2D(tex, 16, 16, fontChars, 20, 100, true);
             font.text = "HELLO FOLKS!         ND2D JUST GOT NICE BITMAP FONTS.      DON'T YOU JUST ♥ IT? :)";
             font.x = stage.stageWidth;
             font.scaleX = font.scaleY = 2.0;
             addChild(font);
 
-            counter = new Font2D(fontBmp, 16, 16, fontChars, 16, 10, true);
+            counter = new Font2D(tex, 16, 16, fontChars, 16, 10, true);
             counter.textAlign = TextAlign.CENTER;
             addChild(counter);
         }

@@ -30,17 +30,13 @@
 
 package tests {
 
-	import de.nulldesign.nd2d.display.Node2D;
 	import de.nulldesign.nd2d.display.Scene2D;
 	import de.nulldesign.nd2d.display.Sprite2D;
 	import de.nulldesign.nd2d.materials.BlendModePresets;
-	import de.nulldesign.nd2d.materials.SpriteSheet;
-	import de.nulldesign.nd2d.materials.Texture2D;
+	import de.nulldesign.nd2d.materials.texture.SpriteSheet;
+	import de.nulldesign.nd2d.materials.texture.Texture2D;
 
-	import flash.display.BitmapData;
 	import flash.events.MouseEvent;
-	import flash.geom.Point;
-	import flash.geom.Point;
 	import flash.geom.Point;
 	import flash.geom.Vector3D;
 
@@ -131,7 +127,7 @@ package tests {
 
 		override protected function step(elapsed:Number):void {
 
-			s.position = new Point(stage.stageWidth / 2, stage.stageHeight / 2);
+			s.position = new Vector3D(stage.stageWidth / 2, stage.stageHeight / 2);
 			s.rotation += 0.1;
 			s2.rotation -= 0.5;
 			s3.rotation -= 0.5;

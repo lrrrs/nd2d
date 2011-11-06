@@ -30,23 +30,16 @@
 
 package de.nulldesign.nd2d.materials {
 
-	import com.adobe.utils.AGALMiniAssembler;
-
 	import de.nulldesign.nd2d.geom.Face;
 	import de.nulldesign.nd2d.geom.ParticleVertex;
-
 	import de.nulldesign.nd2d.geom.UV;
-
 	import de.nulldesign.nd2d.geom.Vertex;
+	import de.nulldesign.nd2d.materials.shader.ShaderCache;
+	import de.nulldesign.nd2d.materials.texture.Texture2D;
 
-	import de.nulldesign.nd2d.utils.TextureHelper;
-
-	import flash.display.BitmapData;
 	import flash.display3D.Context3D;
 	import flash.display3D.Context3DProgramType;
 	import flash.display3D.Context3DVertexBufferFormat;
-	import flash.display3D.Program3D;
-	import flash.display3D.textures.Texture;
 	import flash.geom.Point;
 
 	public class ParticleSystemMaterial extends AMaterial {
@@ -99,10 +92,8 @@ package de.nulldesign.nd2d.materials {
 						"add v1, vt3, vt4           \n"; // save color
 
 		private const FRAGMENT_SHADER:String =
-				"tex ft0, v0, fs0 <2d,clamp,linear,mipnearest>  \n" + // sample texture from interpolated uv coords
+				"tex ft0, v0, fs0 <TEXTURE_SAMPLING_OPTIONS>  \n" + // sample texture from interpolated uv coords
 						"mul oc, ft0, v1                               \n";  // mult with color
-
-		private static var particleSystemProgramData:ProgramData;
 
 		protected var texture:Texture2D;
 
@@ -117,7 +108,7 @@ package de.nulldesign.nd2d.materials {
 		override public function handleDeviceLoss():void {
 			super.handleDeviceLoss();
 			texture.texture = null;
-			particleSystemProgramData = null;
+			shaderData = null;
 		}
 
 		override protected function prepareForRender(context:Context3D):void {
@@ -126,7 +117,7 @@ package de.nulldesign.nd2d.materials {
 
 			refreshClipspaceMatrix();
 
-			context.setTextureAt(0, texture.getTexture(context, true));
+			context.setTextureAt(0, texture.getTexture(context));
 			context.setVertexBufferAt(0, vertexBuffer, 0, Context3DVertexBufferFormat.FLOAT_2); // vertex
 			context.setVertexBufferAt(1, vertexBuffer, 2, Context3DVertexBufferFormat.FLOAT_2); // uv
 			context.setVertexBufferAt(2, vertexBuffer, 4, Context3DVertexBufferFormat.FLOAT_4); // misc (starttime, life, startsize, endsize
@@ -197,26 +188,15 @@ package de.nulldesign.nd2d.materials {
 		override public function dispose():void {
 			super.dispose();
 			if(texture) {
-				texture.cleanUp();
+				texture.dispose();
 				texture = null;
 			}
 		}
 
 		override protected function initProgram(context:Context3D):void {
-			if(!particleSystemProgramData) {
-				var vertexShaderAssembler:AGALMiniAssembler = new AGALMiniAssembler();
-				vertexShaderAssembler.assemble(Context3DProgramType.VERTEX, VERTEX_SHADER);
-
-				var colorFragmentShaderAssembler:AGALMiniAssembler = new AGALMiniAssembler();
-				colorFragmentShaderAssembler.assemble(Context3DProgramType.FRAGMENT, FRAGMENT_SHADER);
-
-				var program:Program3D = context.createProgram();
-				program.upload(vertexShaderAssembler.agalcode, colorFragmentShaderAssembler.agalcode);
-
-				particleSystemProgramData = new ProgramData(program, 20);
+			if(!shaderData) {
+				shaderData = ShaderCache.getInstance().getShader(context, this, VERTEX_SHADER, FRAGMENT_SHADER, 20, texture.textureOptions);
 			}
-
-			programData = particleSystemProgramData;
 		}
 	}
 }

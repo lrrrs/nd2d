@@ -30,21 +30,17 @@
 
 package tests {
 
-    import com.bit101.components.PushButton;
+	import com.bit101.components.PushButton;
 
-    import de.nulldesign.nd2d.display.Node2D;
-    import de.nulldesign.nd2d.display.Scene2D;
-    import de.nulldesign.nd2d.display.Sprite2D;
-    import de.nulldesign.nd2d.display.Sprite2DBatch;
-    import de.nulldesign.nd2d.display.Sprite2DCloud;
-    import de.nulldesign.nd2d.materials.SpriteSheet;
-	import de.nulldesign.nd2d.materials.Texture2D;
+	import de.nulldesign.nd2d.display.Scene2D;
+	import de.nulldesign.nd2d.display.Sprite2D;
+	import de.nulldesign.nd2d.display.Sprite2DCloud;
+	import de.nulldesign.nd2d.materials.texture.SpriteSheet;
+	import de.nulldesign.nd2d.materials.texture.Texture2D;
 
-	import flash.display.BitmapData;
-    import flash.events.Event;
-    import flash.events.MouseEvent;
-    import flash.geom.Point;
-	import flash.geom.Vector3D;
+	import flash.events.Event;
+	import flash.events.MouseEvent;
+	import flash.geom.Point;
 
 	public class MassiveSpriteCloudTest extends Scene2D {
 

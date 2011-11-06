@@ -30,22 +30,22 @@
 
 package tests {
 
-    import com.bit101.components.ColorChooser;
-    import com.bit101.components.HUISlider;
+	import com.bit101.components.ColorChooser;
+	import com.bit101.components.HUISlider;
+	import com.bit101.components.Style;
 
-    import de.nulldesign.nd2d.display.ParticleSystem2D;
-    import de.nulldesign.nd2d.display.Scene2D;
-    import de.nulldesign.nd2d.materials.BlendModePresets;
-	import de.nulldesign.nd2d.materials.Texture2D;
+	import de.nulldesign.nd2d.display.ParticleSystem2D;
+	import de.nulldesign.nd2d.display.Scene2D;
+	import de.nulldesign.nd2d.materials.BlendModePresets;
+	import de.nulldesign.nd2d.materials.texture.Texture2D;
 	import de.nulldesign.nd2d.utils.ParticleSystemPreset;
 
-    import flash.display.BitmapData;
-    import flash.display.Sprite;
-    import flash.events.Event;
-    import flash.events.TimerEvent;
-    import flash.utils.Timer;
+	import flash.display.Sprite;
+	import flash.events.Event;
+	import flash.events.TimerEvent;
+	import flash.utils.Timer;
 
-    public class ParticleExplorer extends Scene2D {
+	public class ParticleExplorer extends Scene2D {
 
         [Embed(source="/assets/particle_small.png")]
         private var particleClass:Class;
@@ -91,6 +91,8 @@ package tests {
                 var s:HUISlider;
                 var c:ColorChooser;
                 var nextY:Number = 5;
+
+				Style.LABEL_TEXT = 0xFFFFFF;
 
                 s = new HUISlider(panel, 0, nextY, "minStartX", changeHandler);
                 s.minimum = -stage.stageWidth / 2;

@@ -30,19 +30,15 @@
 
 package de.nulldesign.nd2d.materials {
 
-	import com.adobe.utils.AGALMiniAssembler;
-
 	import de.nulldesign.nd2d.geom.Face;
 	import de.nulldesign.nd2d.geom.UV;
 	import de.nulldesign.nd2d.geom.Vertex;
-	import de.nulldesign.nd2d.utils.TextureHelper;
+	import de.nulldesign.nd2d.materials.shader.ShaderCache;
+	import de.nulldesign.nd2d.materials.texture.Texture2D;
 
-	import flash.display.BitmapData;
 	import flash.display3D.Context3D;
 	import flash.display3D.Context3DProgramType;
 	import flash.display3D.Context3DVertexBufferFormat;
-	import flash.display3D.Program3D;
-	import flash.display3D.textures.Texture;
 	import flash.geom.Matrix3D;
 	import flash.geom.Point;
 	import flash.geom.Rectangle;
@@ -62,10 +58,10 @@ package de.nulldesign.nd2d.materials {
 
 
 		protected const DEFAULT_FRAGMENT_SHADER:String =
-				"tex ft0, v0, fs0 <2d,clamp,linear,mipnearest>  \n" + // sample texture
+				"tex ft0, v0, fs0 <TEXTURE_SAMPLING_OPTIONS>  \n" + // sample texture
 						"mul ft0, ft0, fc0                              \n" + // mult with colorMultiplier
 						"add ft0, ft0, fc1                              \n" + // mult with colorOffset
-						"tex ft1, v1, fs1 <2d,clamp,linear,mipnearest>  \n" + // sample mask
+						"tex ft1, v1, fs1 <TEXTURE_SAMPLING_OPTIONS>  \n" + // sample mask
 
 						"sub ft2, fc2, ft1                              \n" + // (1 - maskcolor)
 						"mov ft3, fc3                                   \n" + // save maskalpha
@@ -83,8 +79,6 @@ package de.nulldesign.nd2d.materials {
 		protected var maskDimensions:Point;
 		protected var maskClipSpaceMatrix:Matrix3D = new Matrix3D();
 
-		protected static var maskProgramData:ProgramData;
-
 		public function Sprite2DMaskMaterial() {
 			super();
 		}
@@ -92,15 +86,15 @@ package de.nulldesign.nd2d.materials {
 		override public function handleDeviceLoss():void {
 			super.handleDeviceLoss();
 			maskTexture.texture = null;
-			maskProgramData = null;
+			shaderData = null;
 		}
 
 		override protected function prepareForRender(context:Context3D):void {
 
 			super.prepareForRender(context);
 
-			context.setTextureAt(0, texture.getTexture(context, true));
-			context.setTextureAt(1, maskTexture.getTexture(context, true));
+			context.setTextureAt(0, texture.getTexture(context));
+			context.setTextureAt(1, maskTexture.getTexture(context));
 			context.setVertexBufferAt(0, vertexBuffer, 0, Context3DVertexBufferFormat.FLOAT_2); // vertex
 			context.setVertexBufferAt(1, vertexBuffer, 2, Context3DVertexBufferFormat.FLOAT_2); // uv
 
@@ -192,27 +186,16 @@ package de.nulldesign.nd2d.materials {
 		}
 
 		override protected function initProgram(context:Context3D):void {
-			if(!maskProgramData) {
-				var vertexShaderAssembler:AGALMiniAssembler = new AGALMiniAssembler();
-				vertexShaderAssembler.assemble(Context3DProgramType.VERTEX, DEFAULT_VERTEX_SHADER);
-
-				var colorFragmentShaderAssembler:AGALMiniAssembler = new AGALMiniAssembler();
-				colorFragmentShaderAssembler.assemble(Context3DProgramType.FRAGMENT, DEFAULT_FRAGMENT_SHADER);
-
-				var program:Program3D = context.createProgram();
-				program.upload(vertexShaderAssembler.agalcode, colorFragmentShaderAssembler.agalcode);
-
-				maskProgramData = new ProgramData(program, 4);
-			}
-
-			programData = maskProgramData;
+            if(!shaderData) {
+                shaderData = ShaderCache.getInstance().getShader(context, this, DEFAULT_VERTEX_SHADER, DEFAULT_FRAGMENT_SHADER, 4, texture.textureOptions);
+            }
 		}
 
 		override public function dispose():void {
 			super.dispose();
 
 			if(maskTexture) {
-				maskTexture.cleanUp();
+				maskTexture.dispose();
 				maskTexture = null;
 			}
 		}

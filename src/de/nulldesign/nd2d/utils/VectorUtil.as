@@ -30,9 +30,9 @@
 
 package de.nulldesign.nd2d.utils {
 
-    import de.nulldesign.nd2d.display.Node2D;
+	import de.nulldesign.nd2d.display.Node2D;
 
-    import flash.geom.Point;
+	import flash.geom.Point;
 	import flash.geom.Vector3D;
 
 	public class VectorUtil {
@@ -75,8 +75,8 @@ package de.nulldesign.nd2d.utils {
 		 * @return distance between two Node2D
 		 */
         public static function distance(n1:Node2D, n2:Node2D):Number {
-			const p1:Point = n1.position;
-			const p2:Point = n2.position;
+			const p1:Vector3D = n1.position;
+			const p2:Vector3D = n2.position;
 			const dx:Number = p1.x - p2.x;
 			const dy:Number = p1.y - p2.y;
 			return Math.sqrt(dx * dx + dy * dy);

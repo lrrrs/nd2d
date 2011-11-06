@@ -34,18 +34,18 @@
 
 package net.hires.debug {
 
-    import flash.display.Bitmap;
-    import flash.display.BitmapData;
-    import flash.display.Sprite;
-    import flash.events.Event;
-    import flash.events.MouseEvent;
-    import flash.geom.Rectangle;
-    import flash.system.System;
-    import flash.text.StyleSheet;
-    import flash.text.TextField;
-    import flash.utils.getTimer;
+	import flash.display.Bitmap;
+	import flash.display.BitmapData;
+	import flash.display.Sprite;
+	import flash.events.Event;
+	import flash.events.MouseEvent;
+	import flash.geom.Rectangle;
+	import flash.system.System;
+	import flash.text.StyleSheet;
+	import flash.text.TextField;
+	import flash.utils.getTimer;
 
-    public class Stats extends Sprite {
+	public class Stats extends Sprite {
         protected const WIDTH:uint = 80;
         protected const HEIGHT:uint = 100;
 
