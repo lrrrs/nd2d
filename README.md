@@ -45,12 +45,13 @@ Important links:
 
 # Changelog:
 
-2011-10-31
+2011-11-06
 
 - ADDED: uvMultiplier for Sprite2DMaterial. You can scale your textures now. See TextureAndRotationOptionsTest
-- ADDED: Texture filtering options: LOW, MED, HIGH, ULTRA and texture repear options: CLAMP, REPEAT. See TextureAndRotationOptionsTest
-- ADDED: rotationX,Y,Z for nodes. You can rotate your objects in 2.5D now, just like the Flash 10 2.5D API.
+- ADDED: Texture filtering options: LOW, MED, HIGH, ULTRA and texture repeat options: CLAMP, REPEAT. See TextureAndRotationOptionsTest
+- ADDED: rotationX,Y,Z for nodes. You can rotate your objects in 2.5D now, just like the Flash 10 2.5D API. See Transform3DTest
 - CHANGED: constructor arguments of Sprite2D, Cloud and Batch take only a Texture2D now.
+- FIXED: mask size is not restriced to 2^ anymore
 - tint is a uint now.
 - cleaned up a lot of stuff
 
