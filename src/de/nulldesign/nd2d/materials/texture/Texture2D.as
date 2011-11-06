@@ -146,11 +146,6 @@ package de.nulldesign.nd2d.materials.texture {
 				texture.dispose();
 				texture = null;
 			}
-
-			if(bitmap) {
-				bitmap.dispose();
-				bitmap = null;
-			}
 		}
 	}
 }

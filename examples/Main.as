@@ -70,6 +70,7 @@ package {
 	import tests.TextureAtlasTest;
 	import tests.TextureRendererTest;
 	import tests.TextureAndRotationOptionsTest;
+	import tests.Transform3DTest;
 
 	//[SWF(width="1000", height="550", frameRate="60", backgroundColor="#000000")]
 	public class Main extends World2D {
@@ -114,6 +115,7 @@ package {
 			scenes.push(new Sprite2DCloudParticles());
 			scenes.push(new SpeedTest());
 			scenes.push(new TextureAndRotationOptionsTest());
+			scenes.push(new Transform3DTest());
 
 			var tf:TextFormat = new TextFormat("Arial", 11, 0xFFFFFF, true);
 
