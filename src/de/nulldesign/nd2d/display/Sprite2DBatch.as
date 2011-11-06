@@ -85,7 +85,7 @@ package de.nulldesign.nd2d.display {
 			// distribute spritesheets to sprites
 			if(spriteSheet && !c.spriteSheet) {
 				c.setSpriteSheet(spriteSheet.clone());
-			} else {
+			} else if(!c.texture) {
 				c.setTexture(texture);
 			}
 
@@ -149,12 +149,17 @@ package de.nulldesign.nd2d.display {
 		}
 
 		override public function dispose():void {
-            if(material) {
-                material.dispose();
-                material = null;
-            }
+			if(material) {
+				material.dispose();
+				material = null;
+			}
 
-            super.dispose();
-        }
+			if(texture) {
+				texture.dispose();
+				texture = null;
+			}
+
+			super.dispose();
+		}
 	}
 }

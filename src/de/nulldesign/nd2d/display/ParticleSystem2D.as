@@ -194,6 +194,7 @@ package de.nulldesign.nd2d.display {
 		override public function dispose():void {
 			if(material) {
 				material.dispose();
+				material = null;
 			}
 			super.dispose();
 		}
