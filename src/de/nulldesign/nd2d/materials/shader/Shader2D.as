@@ -66,8 +66,8 @@ package de.nulldesign.nd2d.materials.shader {
 			} else if(textureOptions & TextureOption.REPEAT_NORMAL) {
 				texOptions.push("repeat");
 			}
-
-			var finalFragmentShader:String = fragmentShaderString.replace("TEXTURE_SAMPLING_OPTIONS", texOptions.join(","));
+			var pattern:RegExp = /TEXTURE_SAMPLING_OPTIONS/g;
+			var finalFragmentShader:String = fragmentShaderString.replace(pattern, texOptions.join(","));
 
 			var vertexShaderAssembler:AGALMiniAssembler = new AGALMiniAssembler();
 			vertexShaderAssembler.assemble(Context3DProgramType.VERTEX, vertexShaderString);

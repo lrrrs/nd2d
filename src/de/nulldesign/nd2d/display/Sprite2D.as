@@ -99,6 +99,11 @@ package de.nulldesign.nd2d.display {
             this.material = value;
         }
 
+		/**
+		 * The mask texture can be any size, but it needs a 1px padding around the borders, otherwise the masks edges get repeated
+		 * Don't disable mipmapping for the masks texture, it won't work...
+		 * @param mask sprite
+		 */
         public function setMask(mask:Sprite2D):void {
 
             this.mask = mask;

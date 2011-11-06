@@ -61,7 +61,7 @@ package de.nulldesign.nd2d.materials {
 				"tex ft0, v0, fs0 <TEXTURE_SAMPLING_OPTIONS>  \n" + // sample texture
 						"mul ft0, ft0, fc0                              \n" + // mult with colorMultiplier
 						"add ft0, ft0, fc1                              \n" + // mult with colorOffset
-						"tex ft1, v1, fs1 <TEXTURE_SAMPLING_OPTIONS>  \n" + // sample mask
+						"tex ft1, v1, fs1 <2d,miplinear,linear,clamp>   \n" + // sample mask
 
 						"sub ft2, fc2, ft1                              \n" + // (1 - maskcolor)
 						"mov ft3, fc3                                   \n" + // save maskalpha
@@ -127,10 +127,10 @@ package de.nulldesign.nd2d.materials {
 			context.setProgramConstantsFromMatrix(Context3DProgramType.VERTEX, 0, clipSpaceMatrix, true);
 			context.setProgramConstantsFromMatrix(Context3DProgramType.VERTEX, 4, maskClipSpaceMatrix, true);
 
-			programConstVector[0] = maskTexture.bitmapWidth * 0.5;
-			programConstVector[1] = maskTexture.bitmapHeight * 0.5;
-			programConstVector[2] = maskTexture.bitmapWidth;
-			programConstVector[3] = maskTexture.bitmapHeight;
+			programConstVector[0] = maskTexture.textureWidth * 0.5;
+			programConstVector[1] = maskTexture.textureHeight * 0.5;
+			programConstVector[2] = maskTexture.textureWidth;
+			programConstVector[3] = maskTexture.textureHeight;
 
 			context.setProgramConstantsFromVector(Context3DProgramType.VERTEX, 8, programConstVector);
 
