@@ -242,6 +242,11 @@ package de.nulldesign.nd2d.display {
                 indexBuffer.dispose();
                 indexBuffer = null;
             }
+
+            if (texture) {
+                texture.cleanUp();
+                texture = null;
+            }
         }
 
         override internal function drawNode(context:Context3D, camera:Camera2D, parentMatrixChanged:Boolean, statsObject:StatsObject):void {
