@@ -41,139 +41,149 @@ package de.nulldesign.nd2d.display {
 	import flash.display3D.Context3D;
 
 	/**
-     * <p>2D sprite class</p>
-     * One draw call is used per sprite.
-     * If you have a lot of sprites with the same texture / spritesheet try to use a Sprite2DCould, it will be a lot faster.
-     */
-    public class Sprite2D extends Node2D {
+	 * <p>2D sprite class</p>
+	 * One draw call is used per sprite.
+	 * If you have a lot of sprites with the same texture / spritesheet try to use a Sprite2DCould, it will be a lot faster.
+	 */
+	public class Sprite2D extends Node2D {
 
-        protected var faceList:Vector.<Face>;
-        protected var mask:Sprite2D;
+		protected var faceList:Vector.<Face>;
+		protected var mask:Sprite2D;
 
-        public var texture:Texture2D;
-        public var spriteSheet:ASpriteSheetBase;
-        public var material:Sprite2DMaterial;
+		public var texture:Texture2D;
+		public var spriteSheet:ASpriteSheetBase;
+		public var material:Sprite2DMaterial;
 
-        /**
-         * Constructor of class Sprite2D
-         * @param textureObject can be a BitmapData or Texture2D
-         */
-        public function Sprite2D(textureObject:Texture2D = null) {
-            faceList = TextureHelper.generateQuadFromDimensions(2, 2);
+		/**
+		 * Constructor of class Sprite2D
+		 * @param textureObject can be a BitmapData or Texture2D
+		 */
+		public function Sprite2D(textureObject:Texture2D = null) {
+			faceList = TextureHelper.generateQuadFromDimensions(2, 2);
 
-            if(textureObject) {
-                setMaterial(new Sprite2DMaterial());
-                setTexture(textureObject);
-            }
-        }
+			if(textureObject) {
+				setMaterial(new Sprite2DMaterial());
+				setTexture(textureObject);
+			}
+		}
 
-        public function setSpriteSheet(value:ASpriteSheetBase):void {
-            this.spriteSheet = value;
+		public function setSpriteSheet(value:ASpriteSheetBase):void {
+			this.spriteSheet = value;
 
-            if(spriteSheet) {
-                _width = spriteSheet.spriteWidth;
-                _height = spriteSheet.spriteHeight;
-            }
-        }
+			if(spriteSheet) {
+				_width = spriteSheet.spriteWidth;
+				_height = spriteSheet.spriteHeight;
+			}
+		}
 
-        public function setTexture(value:Texture2D):void {
+		public function setTexture(value:Texture2D):void {
 
-            if(texture) {
-                texture.dispose();
-            }
+			if(texture) {
+				texture.dispose();
+			}
 
-            this.texture = value;
+			this.texture = value;
 
-            if(texture && !spriteSheet) {
-                _width = texture.bitmapWidth;
-                _height = texture.bitmapHeight;
-            }
-        }
+			if(texture && !spriteSheet) {
+				_width = texture.bitmapWidth;
+				_height = texture.bitmapHeight;
+			}
+		}
 
-        public function setMaterial(value:Sprite2DMaterial):void {
+		public function setMaterial(value:Sprite2DMaterial):void {
 
-            if(material) {
-                material.dispose();
-            }
+			if(material) {
+				material.dispose();
+			}
 
-            this.material = value;
-        }
+			this.material = value;
+		}
 
 		/**
 		 * The mask texture can be any size, but it needs a 1px padding around the borders, otherwise the masks edges get repeated
 		 * Don't disable mipmapping for the masks texture, it won't work...
 		 * @param mask sprite
 		 */
-        public function setMask(mask:Sprite2D):void {
+		public function setMask(mask:Sprite2D):void {
 
-            this.mask = mask;
+			this.mask = mask;
 
-            if(mask) {
-                setMaterial(new Sprite2DMaskMaterial());
-            } else {
-                setMaterial(new Sprite2DMaterial());
-            }
-        }
+			if(mask) {
+				setMaterial(new Sprite2DMaskMaterial());
+			} else {
+				setMaterial(new Sprite2DMaterial());
+			}
+		}
 
-        override public function get numTris():uint {
-            return 2;
-        }
+		override public function get numTris():uint {
+			return 2;
+		}
 
-        override public function get drawCalls():uint {
-            return material ? material.drawCalls : 0;
-        }
+		override public function get drawCalls():uint {
+			return material ? material.drawCalls : 0;
+		}
 
-        /**
-         * @private
-         */
-        override internal function stepNode(elapsed:Number, timeSinceStartInSeconds:Number):void {
+		/**
+		 * @private
+		 */
+		override internal function stepNode(elapsed:Number, timeSinceStartInSeconds:Number):void {
 
-            super.stepNode(elapsed, timeSinceStartInSeconds);
+			super.stepNode(elapsed, timeSinceStartInSeconds);
 
-            if(spriteSheet) {
-                spriteSheet.update(timeSinceStartInSeconds);
-                _width = spriteSheet.spriteWidth;
-                _height = spriteSheet.spriteHeight;
-            }
-        }
+			if(spriteSheet) {
+				spriteSheet.update(timeSinceStartInSeconds);
+				_width = spriteSheet.spriteWidth;
+				_height = spriteSheet.spriteHeight;
+			}
+		}
 
-        override public function handleDeviceLoss():void {
-            super.handleDeviceLoss();
-            if(material)
-                material.handleDeviceLoss();
-        }
+		override public function handleDeviceLoss():void {
+			super.handleDeviceLoss();
+			if(material)
+				material.handleDeviceLoss();
+		}
 
-        override protected function draw(context:Context3D, camera:Camera2D):void {
+		override protected function draw(context:Context3D, camera:Camera2D):void {
 
-            material.blendMode = blendMode;
-            material.modelMatrix = worldModelMatrix;
-            material.viewProjectionMatrix = camera.getViewProjectionMatrix(false);
-            material.colorTransform = combinedColorTransform;
-            material.spriteSheet = spriteSheet;
-            material.texture = texture;
+			material.blendMode = blendMode;
+			material.modelMatrix = worldModelMatrix;
+			material.viewProjectionMatrix = camera.getViewProjectionMatrix(false);
+			material.colorTransform = combinedColorTransform;
+			material.spriteSheet = spriteSheet;
+			material.texture = texture;
 
-            if(mask) {
+			if(mask) {
 
-                if(mask.invalidateMatrix) {
-                    mask.updateLocalMatrix();
-                }
+				if(mask.invalidateMatrix) {
+					mask.updateLocalMatrix();
+				}
 
-                var maskMat:Sprite2DMaskMaterial = Sprite2DMaskMaterial(material);
-                maskMat.maskTexture = mask.texture;
-                maskMat.maskModelMatrix = mask.localModelMatrix;
-                maskMat.maskAlpha = mask.alpha;
-            }
+				var maskMat:Sprite2DMaskMaterial = Sprite2DMaskMaterial(material);
+				maskMat.maskTexture = mask.texture;
+				maskMat.maskModelMatrix = mask.localModelMatrix;
+				maskMat.maskAlpha = mask.alpha;
+			}
 
-            material.render(context, faceList, 0, faceList.length);
-        }
+			material.render(context, faceList, 0, faceList.length);
+		}
 
-        override public function dispose():void {
-            if(material) {
-                material.dispose();
-                material = null;
-            }
+		override public function dispose():void {
+			if(material) {
+				material.dispose();
+				material = null;
+			}
 
-            super.dispose();
-        }
-    }
+			if(mask) {
+				mask.dispose();
+				mask = null;
+			}
+
+			if(texture) {
+				texture.dispose();
+				texture = null;
+			}
+
+			super.dispose();
+		}
+	}
 }

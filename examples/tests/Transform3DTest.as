@@ -62,7 +62,7 @@ package tests {
 			for(var i:int = 0; i < batchNode.children.length; i++) {
 				n = batchNode.getChildAt(i);
 				n.rotationX = NumberUtil.sin0_1(timeSinceStartInSeconds * 0.8) * 180.0 * (Math.floor(i / 10) % 2 == 0 ? -1 : 1);
-				n.rotationY = NumberUtil.sin0_1(timeSinceStartInSeconds * 0.8) * 180.0 * (i % 2 == 0 ? -1 : 1);
+				n.rotationY = NumberUtil.sin0_1(timeSinceStartInSeconds * 0.8) * 90.0 * (i % 2 == 0 ? 1 : -1);
 			}
 		}
 	}

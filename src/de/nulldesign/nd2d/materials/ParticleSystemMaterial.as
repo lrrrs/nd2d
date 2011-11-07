@@ -187,6 +187,7 @@ package de.nulldesign.nd2d.materials {
 
 		override public function dispose():void {
 			super.dispose();
+
 			if(texture) {
 				texture.dispose();
 				texture = null;

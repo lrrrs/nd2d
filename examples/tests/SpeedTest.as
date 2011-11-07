@@ -32,6 +32,7 @@ package tests {
 
 	import com.bit101.components.ComboBox;
 	import com.bit101.components.Label;
+	import com.bit101.components.Style;
 
 	import de.nulldesign.nd2d.display.Node2D;
 	import de.nulldesign.nd2d.display.Scene2D;
@@ -83,6 +84,9 @@ package tests {
 		private function addedToStage(e:Event):void {
 
 			if(!comboBox) {
+
+				Style.LABEL_TEXT = 0x000000;
+
 				comboBox = new ComboBox(stage, 0, 130, "select test", ["Sprite2D shared Texture", "Sprite2DCloud", "Sprite2DBatch", "Sprite2D individual Textures", "clear"]);
 				comboBox.width = 150;
 				comboBox.addEventListener(Event.SELECT, onTestSelect);

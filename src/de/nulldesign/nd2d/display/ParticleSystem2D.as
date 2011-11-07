@@ -196,6 +196,7 @@ package de.nulldesign.nd2d.display {
 				material.dispose();
 				material = null;
 			}
+
 			super.dispose();
 		}
 	}
