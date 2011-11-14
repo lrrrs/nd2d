@@ -45,6 +45,9 @@ Important links:
 
 # Changelog:
 
+2011-11-14
+- FIXED: device loss is working again :)
+
 2011-11-06
 
 - ADDED: uvMultiplier for Sprite2DMaterial. You can scale your textures now. See TextureAndRotationOptionsTest

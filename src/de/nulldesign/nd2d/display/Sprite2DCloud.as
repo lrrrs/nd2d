@@ -302,7 +302,7 @@ package de.nulldesign.nd2d.display {
 
 				spriteSheet = child.spriteSheet;
 
-				if(invalidateColors || child.invalidateColors) {
+				if(child.invalidateColors && !invalidateColors) {
 					child.updateColors();
 					child.invalidateColors = true;
 				}

@@ -66,5 +66,9 @@ package de.nulldesign.nd2d.materials.shader {
 				return shader;
 			}
 		}
+
+		public function handleDeviceLoss():void {
+			cacheObj = {};
+		}
 	}
 }

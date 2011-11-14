@@ -79,11 +79,6 @@ package de.nulldesign.nd2d.materials {
 			super();
 		}
 
-		override public function handleDeviceLoss():void {
-			super.handleDeviceLoss();
-			shaderData = null;
-		}
-
 		override protected function generateBufferData(context:Context3D, faceList:Vector.<Face>):void {
 
 			if(vertexBuffer) {

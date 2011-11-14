@@ -37,12 +37,12 @@ package de.nulldesign.nd2d.materials.texture {
 	 */
 	public class TextureOption {
 
-		// mip mapping
+		// defines how and if mip mapping should be used
 		public static const MIPMAP_DISABLE:uint = 1;
 		public static const MIPMAP_NEAREST:uint = 2;
 		public static const MIPMAP_LINEAR:uint = 4;
 
-		// texture filtering
+		// texture filtering methods
 		public static const FILTERING_NEAREST:uint = 8;
 		public static const FILTERING_LINEAR:uint = 16;
 

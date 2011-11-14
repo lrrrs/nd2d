@@ -72,12 +72,12 @@ package de.nulldesign.nd2d.materials {
         public var uvOffsetY:Number = 0.0;
 
 		/**
-		 * Use this property to repeat/scale a texture
+		 * Use this property to repeat/scale a texture. Your texture has to be a power of two (256x128, etc)
 		 */
 		public var uvScaleX:Number = 1.0;
 
 		/**
-		 * Use this property to repeat/scale a texture
+		 * Use this property to repeat/scale a texture. Your texture has to be a power of two (256x128, etc)
 		 */
 		public var uvScaleY:Number = 1.0;
 
@@ -89,7 +89,6 @@ package de.nulldesign.nd2d.materials {
         override public function handleDeviceLoss():void {
             super.handleDeviceLoss();
             texture.texture = null;
-            shaderData = null;
         }
 
         override protected function prepareForRender(context:Context3D):void {

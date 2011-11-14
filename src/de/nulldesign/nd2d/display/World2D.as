@@ -30,6 +30,7 @@
 
 package de.nulldesign.nd2d.display {
 
+	import de.nulldesign.nd2d.materials.shader.ShaderCache;
 	import de.nulldesign.nd2d.utils.StatsObject;
 
 	import flash.display.Sprite;
@@ -204,6 +205,7 @@ package de.nulldesign.nd2d.display {
 				}
 
 				if(deviceWasLost) {
+					ShaderCache.getInstance().handleDeviceLoss();
 					scene.handleDeviceLoss();
 					deviceWasLost = false;
 				}
@@ -271,7 +273,7 @@ package de.nulldesign.nd2d.display {
 			addEventListener(Event.ENTER_FRAME, mainLoop);
 		}
 
-		public function destroy():void {
+		public function dispose():void {
 			sleep();
 			if(context3D) {
 				context3D.dispose();
