@@ -37,70 +37,73 @@ package de.nulldesign.nd2d.materials.texture {
 
 	public class SpriteSheet extends ASpriteSheetBase {
 
-        private var nullOffset:Point = new Point();
+		private var nullOffset:Point = new Point();
 
-        /**
-         *
-         * @param sheetWidth
-         * @param sheetHeight
-         * @param spriteWidth
-         * @param spriteHeight
-         * @param fps
-         * @param spritesPackedWithoutSpace set to true to get rid of pixel bleeding for packed sprites without spaces: http://www.nulldesign.de/2011/08/30/nd2d-pixel-bleeding/
-         */
-        public function SpriteSheet(sheetWidth:Number, sheetHeight:Number, spriteWidth:Number, spriteHeight:Number, fps:uint,
-                                    spritesPackedWithoutSpace:Boolean = false) {
-            this.fps = fps;
-            this.spritesPackedWithoutSpace = spritesPackedWithoutSpace;
+		/**
+		 *
+		 * @param sheetWidth
+		 * @param sheetHeight
+		 * @param spriteWidth
+		 * @param spriteHeight
+		 * @param fps
+		 * @param spritesPackedWithoutSpace set to true to get rid of pixel bleeding for packed sprites without spaces: http://www.nulldesign.de/2011/08/30/nd2d-pixel-bleeding/
+		 */
+		public function SpriteSheet(sheetWidth:Number, sheetHeight:Number, spriteWidth:Number, spriteHeight:Number, fps:uint, spritesPackedWithoutSpace:Boolean = false) {
+			this.fps = fps;
+			this.spritesPackedWithoutSpace = spritesPackedWithoutSpace;
 
-            _spriteWidth = spriteWidth;
-            _spriteHeight = spriteHeight;
-            _sheetWidth = sheetWidth;
-            _sheetHeight = sheetHeight;
+			_spriteWidth = spriteWidth;
+			_spriteHeight = spriteHeight;
+			_sheetWidth = sheetWidth;
+			_sheetHeight = sheetHeight;
 
-            generateSheet();
-        }
+			generateSheet();
+		}
 
-        private function generateSheet():void {
-            var numSheetsPerRow:int = Math.round(_sheetWidth / spriteWidth);
-            var numRows:int = Math.round(_sheetHeight / spriteHeight);
-            var numSheets:int = numSheetsPerRow * numRows;
-            var rowIdx:uint;
-            var colIdx:uint;
+		private function generateSheet():void {
+			var numSheetsPerRow:int = Math.round(_sheetWidth / spriteWidth);
+			var numRows:int = Math.round(_sheetHeight / spriteHeight);
+			var numSheets:int = numSheetsPerRow * numRows;
+			var rowIdx:uint;
+			var colIdx:uint;
 
-            uvRects = new Vector.<Rectangle>(numSheets, true);
-            frames = new Vector.<Rectangle>();
-            uvRects = new Vector.<Rectangle>(numSheets, true);
+			uvRects = new Vector.<Rectangle>(numSheets, true);
+			frames = new Vector.<Rectangle>();
+			uvRects = new Vector.<Rectangle>(numSheets, true);
 
-            for(var i:int = 0; i < numSheets; i++) {
-                rowIdx = i % numSheetsPerRow;
-                colIdx = Math.floor(i / numSheetsPerRow);
+			for(var i:int = 0; i < numSheets; i++) {
+				rowIdx = i % numSheetsPerRow;
+				colIdx = Math.floor(i / numSheetsPerRow);
 
-                frames.push(new Rectangle((spriteWidth * rowIdx),
-                                          (spriteHeight * colIdx),
-                                           _spriteWidth,
-                                           _spriteHeight));
-            }
+				frames.push(new Rectangle((spriteWidth * rowIdx),
+						(spriteHeight * colIdx),
+						_spriteWidth,
+						_spriteHeight));
+			}
 
 			frame = 0;
-        }
+		}
 
-        override public function getOffsetForFrame():Point {
-            return nullOffset;
-        }
+		override public function addAnimation(name:String, keyFrames:Array, loop:Boolean):void {
+			animationMap[name] = new SpriteSheetAnimation(keyFrames, loop);
+		}
 
-        override public function clone():ASpriteSheetBase {
+		override public function getOffsetForFrame():Point {
+			return nullOffset;
+		}
 
-            var s:SpriteSheet = new SpriteSheet(_sheetWidth, _sheetHeight, _spriteWidth, _spriteHeight, fps, spritesPackedWithoutSpace);
+		override public function clone():ASpriteSheetBase {
 
-            for(var name:String in animationMap) {
-                var anim:SpriteSheetAnimation = animationMap[name];
-                s.addAnimation(name, anim.frames.concat(), anim.loop, false);
-            }
+			var s:SpriteSheet = new SpriteSheet(_sheetWidth, _sheetHeight, _spriteWidth, _spriteHeight, fps, spritesPackedWithoutSpace);
 
-            s.frame = frame;
+			for(var name:String in animationMap) {
+				var anim:SpriteSheetAnimation = animationMap[name];
+				s.addAnimation(name, anim.frames.concat(), anim.loop);
+			}
 
-            return s;
-        }
-    }
+			s.frame = frame;
+
+			return s;
+		}
+	}
 }

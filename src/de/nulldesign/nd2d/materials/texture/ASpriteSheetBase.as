@@ -28,7 +28,7 @@
  * THE SOFTWARE.
  */
 
-package de.nulldesign.nd2d.materials {
+package de.nulldesign.nd2d.materials.texture {
 
 	import de.nulldesign.nd2d.materials.texture.SpriteSheetAnimation;
 
@@ -116,16 +116,16 @@ package de.nulldesign.nd2d.materials {
             otime = ctime;
         }
 
-        public function addAnimation(name:String, keyFrames:Array, loop:Boolean, keyIsString:Boolean = false):void {
-            animationMap[name] = new SpriteSheetAnimation(keyFrames, loop);
-        }
-
         public function playAnimation(name:String, startIdx:uint = 0, restart:Boolean = false):void {
             if(restart || activeAnimation != animationMap[name]) {
                 frameIdx = startIdx;
                 activeAnimation = animationMap[name];
             }
         }
+
+		public function addAnimation(name:String, keyFrames:Array, loop:Boolean):void {
+
+		}
 
         public function clone():ASpriteSheetBase {
             return null;

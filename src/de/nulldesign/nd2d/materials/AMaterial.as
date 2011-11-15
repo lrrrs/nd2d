@@ -237,19 +237,6 @@ package de.nulldesign.nd2d.materials {
             }
         }
 
-        protected function getFloatFormat(format:String):int {
-            if(format == Context3DVertexBufferFormat.FLOAT_1)
-                return 1;
-            if(format == Context3DVertexBufferFormat.FLOAT_2)
-                return 2;
-            if(format == Context3DVertexBufferFormat.FLOAT_3)
-                return 3;
-            if(format == Context3DVertexBufferFormat.FLOAT_4)
-                return 4;
-
-            throw new Error("bad format");
-        }
-
         public function dispose():void {
             if(indexBuffer) {
                 indexBuffer.dispose();

@@ -62,15 +62,12 @@ package de.nulldesign.nd2d.materials {
 						"mul ft0, ft0, fc0                              \n" + // mult with colorMultiplier
 						"add ft0, ft0, fc1                              \n" + // mult with colorOffset
 						"tex ft1, v1, fs1 <2d,miplinear,linear,clamp>   \n" + // sample mask
-
 						"sub ft2, fc2, ft1                              \n" + // (1 - maskcolor)
 						"mov ft3, fc3                                   \n" + // save maskalpha
 						"sub ft3, fc2, ft3                              \n" + // (1 - maskalpha)
 						"mul ft3, ft2, ft3                              \n" + // (1 - maskcolor) * (1 - maskalpha)
 						"add ft3, ft1, ft3                              \n" + // finalmaskcolor = maskcolor + (1 - maskcolor) * (1 - maskalpha));
-						"mul ft0, ft0, ft3                              \n" + // mult mask color with tex color
-//                "mul ft0, ft0, ft1                              \n" + // mult mask color with tex color
-				"mov oc, ft0                                    \n";  // output color
+						"mul oc, ft0, ft3                               \n"; // mult mask color with tex color and output it
 
 		public var maskModelMatrix:Matrix3D;
 		public var maskTexture:Texture2D;
@@ -107,14 +104,14 @@ package de.nulldesign.nd2d.materials {
 				var offset:Point = spriteSheet.getOffsetForFrame();
 
 				clipSpaceMatrix.identity();
-				clipSpaceMatrix.appendScale(spriteSheet.spriteWidth * 0.5, spriteSheet.spriteHeight * 0.5, 1.0);
+				clipSpaceMatrix.appendScale(spriteSheet.spriteWidth >> 1, spriteSheet.spriteHeight >> 1, 1.0);
 				clipSpaceMatrix.appendTranslation(offset.x, offset.y, 0.0);
 				clipSpaceMatrix.append(modelMatrix);
 				clipSpaceMatrix.append(viewProjectionMatrix);
 
 			} else {
 				clipSpaceMatrix.identity();
-				clipSpaceMatrix.appendScale(texture.textureWidth * 0.5, texture.textureHeight * 0.5, 1.0);
+				clipSpaceMatrix.appendScale(texture.textureWidth >> 1, texture.textureHeight >> 1, 1.0);
 				clipSpaceMatrix.append(modelMatrix);
 				clipSpaceMatrix.append(viewProjectionMatrix);
 			}
@@ -127,8 +124,8 @@ package de.nulldesign.nd2d.materials {
 			context.setProgramConstantsFromMatrix(Context3DProgramType.VERTEX, 0, clipSpaceMatrix, true);
 			context.setProgramConstantsFromMatrix(Context3DProgramType.VERTEX, 4, maskClipSpaceMatrix, true);
 
-			programConstVector[0] = maskTexture.textureWidth * 0.5;
-			programConstVector[1] = maskTexture.textureHeight * 0.5;
+			programConstVector[0] = maskTexture.textureWidth >> 1;
+			programConstVector[1] = maskTexture.textureHeight >> 1;
 			programConstVector[2] = maskTexture.textureWidth;
 			programConstVector[3] = maskTexture.textureHeight;
 
@@ -186,9 +183,9 @@ package de.nulldesign.nd2d.materials {
 		}
 
 		override protected function initProgram(context:Context3D):void {
-            if(!shaderData) {
-                shaderData = ShaderCache.getInstance().getShader(context, this, DEFAULT_VERTEX_SHADER, DEFAULT_FRAGMENT_SHADER, 4, texture.textureOptions);
-            }
+			if(!shaderData) {
+				shaderData = ShaderCache.getInstance().getShader(context, this, DEFAULT_VERTEX_SHADER, DEFAULT_FRAGMENT_SHADER, 4, texture.textureOptions);
+			}
 		}
 
 		override public function dispose():void {

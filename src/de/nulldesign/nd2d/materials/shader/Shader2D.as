@@ -74,7 +74,7 @@ package de.nulldesign.nd2d.materials.shader {
 				optionMissing = true;
 			}
 
-			if(optionMissing) {
+			if(optionMissing && textureOptions > 0) {
 				throw new Error("you need to specify all three texture option components. for example: myOption = MIPMAP_NEAREST | FILTERING_NEAREST | REPEAT_NORMAL;");
 			}
 

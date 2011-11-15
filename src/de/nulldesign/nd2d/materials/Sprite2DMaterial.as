@@ -34,6 +34,7 @@ package de.nulldesign.nd2d.materials {
 	import de.nulldesign.nd2d.geom.UV;
 	import de.nulldesign.nd2d.geom.Vertex;
 	import de.nulldesign.nd2d.materials.shader.ShaderCache;
+	import de.nulldesign.nd2d.materials.texture.ASpriteSheetBase;
 	import de.nulldesign.nd2d.materials.texture.Texture2D;
 
 	import flash.display3D.Context3D;
@@ -105,14 +106,14 @@ package de.nulldesign.nd2d.materials {
                 var offset:Point = spriteSheet.getOffsetForFrame();
 
                 clipSpaceMatrix.identity();
-                clipSpaceMatrix.appendScale(spriteSheet.spriteWidth * 0.5, spriteSheet.spriteHeight * 0.5, 1.0);
+                clipSpaceMatrix.appendScale(spriteSheet.spriteWidth >> 1, spriteSheet.spriteHeight >> 1, 1.0);
                 clipSpaceMatrix.appendTranslation(offset.x, offset.y, 0.0);
                 clipSpaceMatrix.append(modelMatrix);
                 clipSpaceMatrix.append(viewProjectionMatrix);
 
             } else {
                 clipSpaceMatrix.identity();
-                clipSpaceMatrix.appendScale(texture.textureWidth * 0.5, texture.textureHeight * 0.5, 1.0);
+                clipSpaceMatrix.appendScale(texture.textureWidth >> 1, texture.textureHeight >> 1, 1.0);
                 clipSpaceMatrix.append(modelMatrix);
                 clipSpaceMatrix.append(viewProjectionMatrix);
             }

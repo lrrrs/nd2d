@@ -33,7 +33,7 @@ package de.nulldesign.nd2d.display {
 	import de.nulldesign.nd2d.geom.Face;
 	import de.nulldesign.nd2d.geom.UV;
 	import de.nulldesign.nd2d.geom.Vertex;
-	import de.nulldesign.nd2d.materials.ASpriteSheetBase;
+	import de.nulldesign.nd2d.materials.texture.ASpriteSheetBase;
 	import de.nulldesign.nd2d.materials.shader.Shader2D;
 	import de.nulldesign.nd2d.materials.shader.ShaderCache;
 	import de.nulldesign.nd2d.materials.texture.Texture2D;
@@ -61,6 +61,7 @@ package de.nulldesign.nd2d.display {
 	 * - Mouseevents are disabled and won't work for childs
 	 * - Reordering childs (add, remove) is very expensive. Try to avoid it! A Sprite2DBatch might work better in this case
 	 * - Subchilds are not rendered. The cloud will only render it's own childs, you can't nest nodes deeper with a cloud.
+	 * - rotationX,Y won't work for Sprite2DCloud childs
 	 */
 	public class Sprite2DCloud extends Node2D {
 
@@ -320,12 +321,12 @@ package de.nulldesign.nd2d.display {
 				sy = child.scaleY;
 
 				if(spriteSheet) {
-					sx *= spriteSheet.spriteWidth * 0.5;
-					sy *= spriteSheet.spriteHeight * 0.5;
+					sx *= spriteSheet.spriteWidth >> 1;
+					sy *= spriteSheet.spriteHeight >> 1;
 					atlasOffset = spriteSheet.getOffsetForFrame();
 				} else {
-					sx *= texture.textureWidth * 0.5;
-					sy *= texture.textureHeight * 0.5;
+					sx *= texture.textureWidth >> 1;
+					sy *= texture.textureHeight >> 1;
 					atlasOffset.x = 0.0;
 					atlasOffset.y = 0.0;
 				}

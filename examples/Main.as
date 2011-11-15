@@ -50,6 +50,7 @@ package {
 
 	import tests.BatchTest;
 	import tests.CameraTest;
+	import tests.QuadMaterialTest;
 	import tests.ColorTransformTest;
 	import tests.Font2DTest;
 	import tests.Grid2DTest;
@@ -116,6 +117,7 @@ package {
 			scenes.push(new SpeedTest());
 			scenes.push(new TextureAndRotationOptionsTest());
 			scenes.push(new Transform3DTest());
+			scenes.push(new QuadMaterialTest());
 
 			var tf:TextFormat = new TextFormat("Arial", 11, 0xFFFFFF, true);
 

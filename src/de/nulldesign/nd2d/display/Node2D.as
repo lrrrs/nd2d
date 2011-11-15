@@ -476,12 +476,10 @@ package de.nulldesign.nd2d.display {
 		 * @private
 		 */
 		internal function processMouseEvent(mousePosition:Vector3D, mouseEventType:String, cameraViewProjectionMatrix:Matrix3D):Node2D {
-
 			mouseEvents = new Vector.<MouseEvent>();
-			var childMouseNode:Node2D = null;
+			var result:Node2D = null;
 
 			if(mouseEnabled && mouseEventType) {
-
 				// transform mousepos to local coordinate system
 				localMouseMatrix.identity();
 				localMouseMatrix.append(worldModelMatrix);
@@ -497,39 +495,52 @@ package de.nulldesign.nd2d.display {
 				_mouseX = localMouse.x;
 				_mouseY = localMouse.y;
 
-				if(!isNaN(width) && !isNaN(height)) {
+				var oldMouseInNodeState:Boolean = mouseInNode;
+				var newMouseInNode:Boolean = hitTest();
 
-					var oldMouseInNodeState:Boolean = mouseInNode;
-					var newMouseInNode:Boolean = (mouseX >= -_width * 0.5 && mouseX <= _width * 0.5 && mouseY >= -_height * 0.5 && mouseY <= _height * 0.5);
-
-					if(newMouseInNode) {
-						if(!oldMouseInNodeState) {
-							mouseEvents.push(new MouseEvent(MouseEvent.MOUSE_OVER, true, false, localMouse.x, localMouse.y, null, false, false, false, (mouseEventType == MouseEvent.MOUSE_DOWN), 0));
-						}
-						mouseEvents.push(new MouseEvent(mouseEventType, true, false, localMouse.x, localMouse.y, null, false, false, false, (mouseEventType == MouseEvent.MOUSE_DOWN), 0));
-						childMouseNode = this;
-
-					} else if(oldMouseInNodeState && !newMouseInNode) {
-						// dispatch mouse out directly, no hierarchy test
-						dispatchEvent(new MouseEvent(MouseEvent.MOUSE_OUT, true, false, localMouse.x, localMouse.y, null, false, false, false, (mouseEventType == MouseEvent.MOUSE_DOWN), 0));
+				if(newMouseInNode) {
+					if(!oldMouseInNodeState) {
+						mouseEvents.push(new MouseEvent(MouseEvent.MOUSE_OVER, true, false, localMouse.x, localMouse.y, null, false, false, false, (mouseEventType == MouseEvent.MOUSE_DOWN), 0));
 					}
+
+					mouseEvents.push(new MouseEvent(mouseEventType, true, false, localMouse.x, localMouse.y, null, false, false, false, (mouseEventType == MouseEvent.MOUSE_DOWN), 0));
+					result = this;
+
+				} else if(oldMouseInNodeState) {
+					// dispatch mouse out directly, no hierarchy test
+					dispatchEvent(new MouseEvent(MouseEvent.MOUSE_OUT, true, false, localMouse.x, localMouse.y, null, false, false, false, (mouseEventType == MouseEvent.MOUSE_DOWN), 0));
 				}
 			}
 
 			var subChildMouseNode:Node2D;
-			for each(var child:Node2D in children) {
-				subChildMouseNode = child.processMouseEvent(mousePosition, mouseEventType, cameraViewProjectionMatrix);
+			for(var i:Number = children.length - 1; i >= 0; --i) {
+				subChildMouseNode = children[i].processMouseEvent(mousePosition, mouseEventType, cameraViewProjectionMatrix);
 				if(subChildMouseNode) {
-					childMouseNode = subChildMouseNode;
+					result = subChildMouseNode;
+					break;
 				}
 			}
 
 			// set over to false, if one of our childs stole the event
-			if(childMouseNode != this) {
+			if(result != this) {
 				mouseInNode = false;
 			}
 
-			return childMouseNode;
+			return result;
+		}
+
+		/**
+		 * Overwrite and do your own hitTest if you like
+		 * @return
+		 */
+		protected function hitTest():Boolean {
+			if(isNaN(_width) || isNaN(_height)) {
+				return false;
+			}
+
+			var halfWidth:Number = _width >> 1;
+			var halfHeight:Number = _height >> 1;
+			return (_mouseX >= -halfWidth && _mouseX <= halfWidth && _mouseY >= -halfHeight && _mouseY <= halfHeight);
 		}
 
 		internal function setStageAndCamRef(value:Stage, cameraValue:Camera2D):void {

@@ -93,8 +93,8 @@ package de.nulldesign.nd2d.display {
 				texCamera.x = cameraOffsetX;
 				texCamera.y = cameraOffsetY;
 			} else {
-				texCamera.x = renderNode.x - width * 0.5;
-				texCamera.y = renderNode.y - height * 0.5;
+				texCamera.x = renderNode.x - (width >> 1);
+				texCamera.y = renderNode.y - (height >> 1);
 			}
 
 			var visibleState:Boolean = renderNode.visible;

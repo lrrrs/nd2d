@@ -6,15 +6,13 @@
 - blurmaterial
 - solid / gradient quad as new object
 - Zoë: A SWF animation exporter for the EaselJS library. ? more TextureAtlas tools?
-- pixel perfect collisions -> save bitmapdata alpha channel? only 1-bit
 - premultiplied / non premultiplied alpha - bug in particlesystem? dynamic per texturetype
 - multiple worlds test
 - camera zoom example for independent resolutions
 - Sprite2DCloud - addChildAt - invalidation not THAT agressive if possible?
 - premultiplied alpha bug for sprite2dcloud
-- http://nulldesign.de/nd2d/forum/topic.php?id=64
 - Dynamic TextureAtlas. Packing algorithm: http://www.codeproject.com/KB/web-image/rectanglepacker.aspx. font from bmp / font from textfield? new Font2D class! with textureatlas http://ge.runcode.us/q/get-bounds-of-filters-applied-to-flash-sprite-within-sprite http://www.blackpawn.com/texts/lightmaps/
-- Sprite2DBatch setspritesheet of deeper nested childs bug
+
 What I don't like about the spritesheets is:
 - it's a pain to declare animations from a (cocos2D) spritesheet - it needs a simpler way like just sheet.playAnimation("foo*") and it would automatically build the animation with all assets named "foo001.png", "foo002.png", etc.
 - and it seems inefficient to have to clone the spritesheet object.
@@ -22,4 +20,4 @@ About Sprite2DBatch: only addChildAt/removeChildAt are implemented and I'm not s
 getChildByTag()
 
 - GUI layer - no camera movement?
-- getEnclosingRectangle for node2d?
+- http://nulldesign.de/nd2d/forum/topic.php?id=86 TextField2D

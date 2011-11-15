@@ -62,5 +62,9 @@ package de.nulldesign.nd2d.utils {
         public static function b(color:Number):Number {
             return (color & 0xFF) / 0xFF;
         }
+
+		public static function colorWithAlphaFromColor(color:uint, alpha:Number):uint {
+			return color | ((alpha * 0xFF) << 24);
+		}
     }
 }

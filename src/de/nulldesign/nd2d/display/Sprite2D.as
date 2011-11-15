@@ -31,7 +31,7 @@
 package de.nulldesign.nd2d.display {
 
 	import de.nulldesign.nd2d.geom.Face;
-	import de.nulldesign.nd2d.materials.ASpriteSheetBase;
+	import de.nulldesign.nd2d.materials.texture.ASpriteSheetBase;
 	import de.nulldesign.nd2d.materials.Sprite2DMaskMaterial;
 	import de.nulldesign.nd2d.materials.Sprite2DMaterial;
 	import de.nulldesign.nd2d.materials.texture.Texture2D;

@@ -63,20 +63,16 @@ package de.nulldesign.nd2d.materials.texture {
 			return frameNameToIndex[name];
 		}
 
-		override public function addAnimation(name:String, keyFrames:Array, loop:Boolean, keyIsString:Boolean = false):void {
+		override public function addAnimation(name:String, keyFrames:Array, loop:Boolean):void {
 
 			// make indices out of names
 			var keyFramesIndices:Array = [];
 
-			if(keyIsString) {
-				for(var i:int = 0; i < keyFrames.length; i++) {
-					keyFramesIndices.push(frameNameToIndex[keyFrames[i]]);
-				}
-			} else {
-				keyFramesIndices = keyFrames;
+			for(var i:int = 0; i < keyFrames.length; i++) {
+				keyFramesIndices.push(frameNameToIndex[keyFrames[i]]);
 			}
 
-			super.addAnimation(name, keyFramesIndices, loop);
+			animationMap[name] = new SpriteSheetAnimation(keyFramesIndices, loop);
 		}
 
 		/**
@@ -190,7 +186,7 @@ package de.nulldesign.nd2d.materials.texture {
 
 			for(var name:String in animationMap) {
 				var anim:SpriteSheetAnimation = animationMap[name];
-				t.addAnimation(name, anim.frames.concat(), anim.loop, false);
+				t.addAnimation(name, anim.frames.concat(), anim.loop);
 			}
 
 			t.frame = frame;

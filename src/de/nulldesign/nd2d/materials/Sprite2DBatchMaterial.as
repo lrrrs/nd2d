@@ -155,6 +155,12 @@ package de.nulldesign.nd2d.materials {
 
 				if(child.visible) {
 
+					if(spriteSheet && !child.spriteSheet) {
+						child.setSpriteSheet(spriteSheet.clone());
+					} else if(!child.texture) {
+						child.setTexture(texture);
+					}
+
 					if(child.invalidateColors) child.updateColors();
 					if(child.invalidateMatrix) child.updateLocalMatrix();
 
@@ -170,14 +176,14 @@ package de.nulldesign.nd2d.materials {
 						var offset:Point = child.spriteSheet.getOffsetForFrame();
 
 						clipSpaceMatrix.identity();
-						clipSpaceMatrix.appendScale(child.spriteSheet.spriteWidth * 0.5, child.spriteSheet.spriteHeight * 0.5, 1.0);
+						clipSpaceMatrix.appendScale(child.spriteSheet.spriteWidth >> 1, child.spriteSheet.spriteHeight >> 1, 1.0);
 						clipSpaceMatrix.appendTranslation(offset.x, offset.y, 0.0);
 						clipSpaceMatrix.append(child.worldModelMatrix);
 						clipSpaceMatrix.append(viewProjectionMatrix);
 
 					} else {
 						clipSpaceMatrix.identity();
-						clipSpaceMatrix.appendScale(texture.textureWidth * 0.5, texture.textureHeight * 0.5, 1.0);
+						clipSpaceMatrix.appendScale(texture.textureWidth >> 1, texture.textureHeight >> 1, 1.0);
 						clipSpaceMatrix.append(child.worldModelMatrix);
 						clipSpaceMatrix.append(viewProjectionMatrix);
 					}

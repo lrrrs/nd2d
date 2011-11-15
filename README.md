@@ -45,7 +45,15 @@ Important links:
 
 # Changelog:
 
+2011-11-15
+
+- MERGED: optimizations from komelgman (Thanks!)
+- ADDED: possibility to add a custom hitTest for nodes
+- ADDED: new displayobject: Quad2D - A quad with four colors
+- FIXED: spritesheet distribution in Sprite2DBatch
+
 2011-11-14
+
 - FIXED: device loss is working again :)
 
 2011-11-06
