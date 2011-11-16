@@ -30,6 +30,7 @@
 
 package tests {
 
+	import com.bit101.components.CheckBox;
 	import com.bit101.components.ColorChooser;
 	import com.bit101.components.HUISlider;
 	import com.bit101.components.Style;
@@ -60,6 +61,7 @@ package tests {
         private var preset:ParticleSystemPreset = new ParticleSystemPreset();
 
         private var panel:Sprite;
+		private var burst:Boolean = false;
 
         public function ParticleExplorer() {
 
@@ -216,6 +218,9 @@ package tests {
                 s.minimum = 0;
                 s.maximum = 10000;
                 s.value = maxParticles;
+				nextY += 30;
+
+				var check:CheckBox = new CheckBox(panel, 10, nextY, "burst", changeHandler);
             }
 
             stage.addChild(panel);
@@ -225,6 +230,7 @@ package tests {
 
             var s:HUISlider = e.target as HUISlider;
             var c:ColorChooser = e.target as ColorChooser;
+			var check:CheckBox = e.target as CheckBox;
 
             //drrty switch ;)
             if(s) {
@@ -304,6 +310,10 @@ package tests {
                 }
             }
 
+			if(check) {
+				burst = check.selected;
+			}
+
             timer.reset();
             timer.start();
         }
@@ -313,7 +323,7 @@ package tests {
             removeChild(particles);
             particles.dispose();
 
-            particles = new ParticleSystem2D(tex, maxParticles, preset);
+            particles = new ParticleSystem2D(tex, maxParticles, preset, burst);
             particles.blendMode = BlendModePresets.ADD;
 
             addChild(particles);

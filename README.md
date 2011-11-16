@@ -50,7 +50,10 @@ Important links:
 - MERGED: optimizations from komelgman (Thanks!)
 - ADDED: possibility to add a custom hitTest for nodes
 - ADDED: new displayobject: Quad2D - A quad with four colors
+- ADDED: TextField2D - use native Flash TextFields in ND2D (thanks Ryan!)
+- ADDED: Burst mode for ParticleSystem2D
 - FIXED: spritesheet distribution in Sprite2DBatch
+- RENAMED: Font2D to BitmapFont2D
 
 2011-11-14
 

@@ -40,8 +40,15 @@ package de.nulldesign.nd2d.display {
 
 	import flash.display.BitmapData;
 	import flash.display3D.Context3D;
+	import flash.events.Event;
 	import flash.geom.Point;
 	import flash.utils.getTimer;
+
+	/**
+	 * Dispatched when the system's burst is finished
+	 * @eventType flash.events.Event.COMPLETE
+	 */
+	[Event(name="complete", type="flash.events.Event")]
 
 	public class ParticleSystem2D extends Node2D {
 
@@ -58,6 +65,9 @@ package de.nulldesign.nd2d.display {
 
 		protected var currentTime:Number;
 		protected var startTime:Number;
+		protected var burst:Boolean;
+		protected var burstDone:Boolean = false;
+		protected var lastParticleDeathTime:Number = 0.0;
 
 		override public function get numTris():uint {
 			return activeParticles * 2;
@@ -67,9 +77,10 @@ package de.nulldesign.nd2d.display {
 			return material.drawCalls;
 		}
 
-		public function ParticleSystem2D(textureObject:Texture2D, maxCapacity:uint, preset:ParticleSystemPreset) {
+		public function ParticleSystem2D(textureObject:Texture2D, maxCapacity:uint, preset:ParticleSystemPreset, burst:Boolean = false) {
 			super();
 			this.preset = preset;
+			this.burst = burst;
 			init(textureObject, maxCapacity);
 		}
 
@@ -77,6 +88,7 @@ package de.nulldesign.nd2d.display {
 			startTime = getTimer();
 			currentTime = 0;
 			activeParticles = 1;
+			burstDone = false;
 		}
 
 		protected function init(textureObject:Texture2D, maxCapacity:uint):void {
@@ -86,7 +98,7 @@ package de.nulldesign.nd2d.display {
 			var tex:Texture2D;
 			tex = textureObject;
 
-			material = new ParticleSystemMaterial(tex);
+			material = new ParticleSystemMaterial(tex, burst);
 
 			texW = tex.textureWidth / 2.0;
 			texH = tex.textureHeight / 2.0;
@@ -165,6 +177,8 @@ package de.nulldesign.nd2d.display {
 			p.v1.endSize = p.v2.endSize = p.v3.endSize = p.v4.endSize = endSize;
 
 			++activeParticles;
+
+			lastParticleDeathTime = Math.max(startTime + life, lastParticleDeathTime);
 		}
 
 		override protected function step(elapsed:Number):void {
@@ -172,6 +186,11 @@ package de.nulldesign.nd2d.display {
 
 			if(activeParticles < maxCapacity) {
 				activeParticles = Math.min(Math.ceil(currentTime / preset.spawnDelay), maxCapacity);
+			}
+
+			if(burst && !burstDone && (currentTime > lastParticleDeathTime)) {
+				burstDone = true;
+				dispatchEvent(new Event(Event.COMPLETE));
 			}
 		}
 
@@ -182,6 +201,10 @@ package de.nulldesign.nd2d.display {
 		}
 
 		override protected function draw(context:Context3D, camera:Camera2D):void {
+
+			if(burstDone) {
+				return;
+			}
 
 			material.blendMode = blendMode;
 			material.modelMatrix = worldModelMatrix;

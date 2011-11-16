@@ -44,6 +44,9 @@ package de.nulldesign.nd2d.materials {
 
 	public class ParticleSystemMaterial extends AMaterial {
 
+		private const BURST_SHADER_PART:String = "";
+		private const REPEAT_SHADER_PART:String = "frc vt0, vt0 \n";
+
 		private const VERTEX_SHADER:String =
 
 			/*
@@ -62,7 +65,7 @@ package de.nulldesign.nd2d.materials {
 			// progress calculation p -> vt0
 				"sub vt0, vc4, va2.x        \n" + // currentTime - birth
 						"div vt0, vt0, va2.y        \n" + // (currentTime - birth) / life
-						"frc vt0, vt0               \n" + // (fract((currentTime - birth) / life)
+						"[PARTICLES_REPEAT]" + // (fract((currentTime - birth) / life)
 						"sat vt0, vt0               \n" + // clamp(fract((currentTime - birth) / life), 0.0, 1.0) == p -> vt0
 
 					// velocity / position by progress / gravity calculation
@@ -100,9 +103,12 @@ package de.nulldesign.nd2d.materials {
 		public var gravity:Point;
 		public var currentTime:Number;
 
-		public function ParticleSystemMaterial(texture:Texture2D) {
+		protected var burst:Boolean;
+
+		public function ParticleSystemMaterial(texture:Texture2D, burst:Boolean) {
 			this.texture = texture;
 			this.drawCalls = 1;
+			this.burst = burst;
 		}
 
 		override public function handleDeviceLoss():void {
@@ -196,7 +202,8 @@ package de.nulldesign.nd2d.materials {
 
 		override protected function initProgram(context:Context3D):void {
 			if(!shaderData) {
-				shaderData = ShaderCache.getInstance().getShader(context, this, VERTEX_SHADER, FRAGMENT_SHADER, 20, texture.textureOptions);
+				var vertexString:String = VERTEX_SHADER.replace("[PARTICLES_REPEAT]", burst ? BURST_SHADER_PART : REPEAT_SHADER_PART);
+				shaderData = ShaderCache.getInstance().getShader(context, this, vertexString, FRAGMENT_SHADER, 20, texture.textureOptions, burst ? 1000 : 0);
 			}
 		}
 	}

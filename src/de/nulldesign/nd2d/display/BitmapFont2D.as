@@ -37,7 +37,7 @@ package de.nulldesign.nd2d.display {
 
 	import flashx.textLayout.formats.TextAlign;
 
-	public class Font2D extends Sprite2DCloud {
+	public class BitmapFont2D extends Sprite2DCloud {
 
         private var charString:String;
         private var charSpacing:Number;
@@ -68,7 +68,7 @@ package de.nulldesign.nd2d.display {
             textChanged = true;
         }
 
-        public function Font2D(fontTexture:Texture2D, charWidth:Number, charHeight:Number, charString:String,
+        public function BitmapFont2D(fontTexture:Texture2D, charWidth:Number, charHeight:Number, charString:String,
                                charSpacing:Number, maxTextLen:uint, spritesPackedWithoutSpaces:Boolean = false) {
 
             this.charString = charString;

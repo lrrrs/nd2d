@@ -30,7 +30,7 @@
 
 package tests {
 
-	import de.nulldesign.nd2d.display.Font2D;
+	import de.nulldesign.nd2d.display.BitmapFont2D;
 	import de.nulldesign.nd2d.display.Node2D;
 	import de.nulldesign.nd2d.display.Scene2D;
 	import de.nulldesign.nd2d.materials.texture.Texture2D;
@@ -50,8 +50,8 @@ package tests {
 
         private var fontChars:String = " !\"©♥%<'()^+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ";
 
-        private var font:Font2D;
-        private var counter:Font2D;
+        private var font:BitmapFont2D;
+        private var counter:BitmapFont2D;
 
         public function Font2DTest() {
 
@@ -66,13 +66,13 @@ package tests {
             var fontBmp:BitmapData = new fontTexture().bitmapData;
 			var tex:Texture2D = Texture2D.textureFromBitmapData(fontBmp);
 
-            font = new Font2D(tex, 16, 16, fontChars, 20, 100, true);
+            font = new BitmapFont2D(tex, 16, 16, fontChars, 20, 100, true);
             font.text = "HELLO FOLKS!         ND2D JUST GOT NICE BITMAP FONTS.      DON'T YOU JUST ♥ IT? :)";
             font.x = stage.stageWidth;
             font.scaleX = font.scaleY = 2.0;
             addChild(font);
 
-            counter = new Font2D(tex, 16, 16, fontChars, 16, 10, true);
+            counter = new BitmapFont2D(tex, 16, 16, fontChars, 16, 10, true);
             counter.textAlign = TextAlign.CENTER;
             addChild(counter);
         }

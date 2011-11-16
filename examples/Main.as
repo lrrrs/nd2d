@@ -68,6 +68,7 @@ package {
 	import tests.SpriteHierarchyTest2;
 	import tests.SpriteTest;
 	import tests.StarFieldTest;
+	import tests.TextFieldTest;
 	import tests.TextureAtlasTest;
 	import tests.TextureRendererTest;
 	import tests.TextureAndRotationOptionsTest;
@@ -117,6 +118,7 @@ package {
 			scenes.push(new SpeedTest());
 			scenes.push(new TextureAndRotationOptionsTest());
 			scenes.push(new Transform3DTest());
+			scenes.push(new TextFieldTest());
 			scenes.push(new QuadMaterialTest());
 
 			var tf:TextFormat = new TextFormat("Arial", 11, 0xFFFFFF, true);

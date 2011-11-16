@@ -49,12 +49,12 @@ package de.nulldesign.nd2d.materials.shader {
 			return instance;
 		}
 
-		public function getShader(context:Context3D, materialClass:Object, vertexShaderString:String, fragmentShaderString:String, numFloatsPerVertex:uint, textureOptions:uint):Shader2D {
+		public function getShader(context:Context3D, materialClass:Object, vertexShaderString:String, fragmentShaderString:String, numFloatsPerVertex:uint, textureOptions:uint, miscOptions:uint = 0):Shader2D {
 
 			var shaderName:String = getQualifiedClassName(materialClass);
 
-			if(cacheObj[shaderName] && cacheObj[shaderName][textureOptions]) {
-				return cacheObj[shaderName][textureOptions];
+			if(cacheObj[shaderName] && cacheObj[shaderName][textureOptions + miscOptions]) {
+				return cacheObj[shaderName][textureOptions + miscOptions];
 			} else {
 				var shader:Shader2D = new Shader2D(context, vertexShaderString, fragmentShaderString, numFloatsPerVertex, textureOptions);
 
@@ -62,7 +62,7 @@ package de.nulldesign.nd2d.materials.shader {
 					cacheObj[shaderName] = {};
 				}
 
-				cacheObj[shaderName][textureOptions] = shader;
+				cacheObj[shaderName][textureOptions + miscOptions] = shader;
 				return shader;
 			}
 		}
