@@ -65,14 +65,20 @@ package de.nulldesign.nd2d.materials.texture {
 
 		override public function addAnimation(name:String, keyFrames:Array, loop:Boolean):void {
 
-			// make indices out of names
-			var keyFramesIndices:Array = [];
+			if(keyFrames[i] is String) {
 
-			for(var i:int = 0; i < keyFrames.length; i++) {
-				keyFramesIndices.push(frameNameToIndex[keyFrames[i]]);
+				// make indices out of names
+				var keyFramesIndices:Array = [];
+
+				for(var i:int = 0; i < keyFrames.length; i++) {
+					keyFramesIndices.push(frameNameToIndex[keyFrames[i]]);
+				}
+
+				animationMap[name] = new SpriteSheetAnimation(keyFramesIndices, loop);
+
+			} else {
+				animationMap[name] = new SpriteSheetAnimation(keyFrames, loop);
 			}
-
-			animationMap[name] = new SpriteSheetAnimation(keyFramesIndices, loop);
 		}
 
 		/**
