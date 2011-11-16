@@ -79,10 +79,9 @@ package tests {
             sheet.playAnimation("blah", 0, true);
 
             var atlasTex:Texture2D = Texture2D.textureFromBitmapData(new textureAtlasBitmap().bitmapData);
-            var atlas:TextureAtlas = new TextureAtlas(atlasTex.bitmapWidth, atlasTex.bitmapHeight, new XML(new textureAtlasXML()), 10, true);
+            var atlas:TextureAtlas = new TextureAtlas(atlasTex.bitmapWidth, atlasTex.bitmapHeight, new XML(new textureAtlasXML()), 10, false);
 
-            atlas.addAnimation("blah", ["c01", "c02", "c03", "c04", "c05", "c06", "c07", "c08", "c09", "c10", "c11", "c12",
-                "01", "02", "03", "04", "05", "06", "07", "08", "09", "10", "11", "12", "13", "14", "15"], true);
+            atlas.addAnimation("blah", ["c01", "c02", "c03", "c04", "c05", "c06", "c07", "c08", "c09", "c10", "c11", "c12", "b01", "b02", "b03", "b04", "b05", "b06", "b07", "b08", "b09", "b10", "b11", "b12"], true);
 
             atlas.playAnimation("blah");
 
@@ -95,7 +94,7 @@ package tests {
 
             spriteCloud = addChild(new Sprite2DCloud(1, tex)) as Sprite2DCloud;
             spriteCloud.setSpriteSheet(sheet);
-            spriteCloud.x = 400.0;
+            spriteCloud.x = 220.0;
             spriteCloud.y = 200.0;
             spriteCloud.addChild(new Sprite2D());
             spriteCloud.scaleX = spriteCloud.scaleY = 1.0;
@@ -104,7 +103,7 @@ package tests {
 
             spriteBatch = addChild(new Sprite2DBatch(atlasTex)) as Sprite2DBatch;
             spriteBatch.setSpriteSheet(atlas);
-            spriteBatch.x = 600.0;
+            spriteBatch.x = 240.0;
             spriteBatch.y = 200.0;
             spriteBatch.scaleX = spriteBatch.scaleY = 1.0;
             spriteBatch.addChild(new Sprite2D());
@@ -113,13 +112,13 @@ package tests {
 
             spriteWithMask = addChild(new Sprite2D(tex)) as Sprite2D;
             spriteWithMask.setSpriteSheet(sheet);
-            spriteWithMask.x = 800.0;
+            spriteWithMask.x = 260.0;
             spriteWithMask.y = 200.0;
             spriteWithMask.blendMode = BlendModePresets.BLEND;
             spriteWithMask.scaleX = spriteWithMask.scaleY = 1.0;
 
             maskSprite = new Sprite2D(Texture2D.textureFromBitmapData(new maskBitmap().bitmapData));
-            maskSprite.x = 800.0;
+            maskSprite.x = 280.0;
             maskSprite.y = 200.0;
             maskSprite.scaleY = 0.2;
             spriteWithMask.setMask(maskSprite);

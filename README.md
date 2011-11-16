@@ -53,6 +53,7 @@ Important links:
 - ADDED: TextField2D - use native Flash TextFields in ND2D (thanks Ryan!)
 - ADDED: Burst mode for ParticleSystem2D
 - FIXED: spritesheet distribution in Sprite2DBatch
+- FIXED: TextureAtlas offset calculation from sourceColorRect to support dynamic generation
 - RENAMED: Font2D to BitmapFont2D
 
 2011-11-14

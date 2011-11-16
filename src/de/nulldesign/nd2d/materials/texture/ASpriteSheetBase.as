@@ -41,6 +41,7 @@ package de.nulldesign.nd2d.materials.texture {
         protected var frames:Vector.<Rectangle> = new Vector.<Rectangle>();
         protected var offsets:Vector.<Point> = new Vector.<Point>();
         protected var sourceSizes:Vector.<Point> = new Vector.<Point>();
+		protected var sourceColorRects:Vector.<Rectangle> = new Vector.<Rectangle>();
         protected var frameNameToIndex:Dictionary = new Dictionary();
         protected var uvRects:Vector.<Rectangle>;
         protected var spritesPackedWithoutSpace:Boolean;

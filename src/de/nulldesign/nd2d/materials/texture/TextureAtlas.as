@@ -146,6 +146,16 @@ package de.nulldesign.nd2d.materials.texture {
 										}
 									}
 										break;
+									case "sourceColorRect":
+									{
+										if(type == "string") {
+											array = data.split(/[^0-9-]+/);
+											sourceColorRects.push(new Rectangle(array[1], array[2], array[3], array[4]));
+										} else {
+											throw new Error("Error parsing descriptor format");
+										}
+									}
+										break;
 									case "rotated":
 									{
 										if(type != "false") {
@@ -155,6 +165,17 @@ package de.nulldesign.nd2d.materials.texture {
 										break;
 								}
 							}
+
+							// calculate real offset
+							var idx:uint = sourceColorRects.length - 1;
+							var offset:Point = offsets[idx];
+							var sourceFrame:Rectangle = frames[idx];
+							var sourceColorRect:Rectangle = sourceColorRects[idx];
+							var sourceSize:Point = sourceSizes[idx];
+							var newOffset:Point = new Point((sourceSize.x - sourceFrame.width) / 2 - sourceColorRect.x, (sourceSize.y - sourceFrame.height) / 2 - sourceColorRect.y);
+
+							offset.x = -newOffset.x;
+							offset.y = -newOffset.y;
 						}
 					}
 						break;
