@@ -287,14 +287,19 @@ package de.nulldesign.nd2d.display {
 			var n:uint = children.length;
 			var sx:Number;
 			var sy:Number;
+			var pivotX: Number, pivotY: Number;
+			var offsetX: Number,  offsetY: Number;
 			var somethingChanged:Boolean = false;
 			var atlasOffset:Point = new Point();
-			var pivot:Point;
 			var offsetFactor:Number = 1.0 / 255.0;
+			var isChildInvalidatedColors : Boolean = false;
+			var halfTextureWidth : Number = texture.textureWidth >> 1;
+			var halfTextureHeight : Number = texture.textureHeight >> 1;
+			var isInvalidatedColors : Boolean = false;
 
-			if(invalidateColors) {
+    		if(invalidateColors) {
 				updateColors();
-				invalidateColors = true;
+				isInvalidatedColors = true;
 			}
 
 			while(++i < n) {
@@ -303,9 +308,10 @@ package de.nulldesign.nd2d.display {
 
 				spriteSheet = child.spriteSheet;
 
-				if(child.invalidateColors && !invalidateColors) {
+				isChildInvalidatedColors = false;
+				if(child.invalidateColors && !isInvalidatedColors) {
 					child.updateColors();
-					child.invalidateColors = true;
+					isChildInvalidatedColors = true;
 				}
 
 				rMultiplier = child.combinedColorTransform.redMultiplier;
@@ -317,26 +323,44 @@ package de.nulldesign.nd2d.display {
 				bOffset = child.combinedColorTransform.blueOffset * offsetFactor;
 				aOffset = child.visible ? child.combinedColorTransform.alphaOffset * offsetFactor : 0.0; // fake visibility. just set alpha to zero, it's faster
 
-				sx = child.scaleX;
-				sy = child.scaleY;
+				var initUV:Boolean = !uvInited;
 
 				if(spriteSheet) {
-					sx *= spriteSheet.spriteWidth >> 1;
-					sy *= spriteSheet.spriteHeight >> 1;
+					sx = child.scaleX * (spriteSheet.spriteWidth >> 1);
+					sy = child.scaleY * (spriteSheet.spriteHeight >> 1);
 					atlasOffset = spriteSheet.getOffsetForFrame();
+
+					if(spriteSheet.frameUpdated || initUV) {
+						spriteSheet.frameUpdated = false;
+						uvOffsetAndScale = spriteSheet.getUVRectForFrame(texture.textureWidth, texture.textureHeight);
+
+						initUV = true;
+					}
 				} else {
-					sx *= texture.textureWidth >> 1;
-					sy *= texture.textureHeight >> 1;
+					sx = child.scaleX * halfTextureWidth;
+					sy = child.scaleY * halfTextureHeight;
 					atlasOffset.x = 0.0;
 					atlasOffset.y = 0.0;
 				}
 
-				var initUV:Boolean = !uvInited;
+				if(initUV) {
+					// v1
+					mVertexBuffer[vIdx + 2] = uvOffsetAndScale.width * uv1.u + uvOffsetAndScale.x;
+					mVertexBuffer[vIdx + 3] = uvOffsetAndScale.height * uv1.v + uvOffsetAndScale.y;
 
-				if(spriteSheet && (spriteSheet.frameUpdated || initUV)) {
-					spriteSheet.frameUpdated = false;
-					initUV = true;
-					uvOffsetAndScale = spriteSheet.getUVRectForFrame(texture.textureWidth, texture.textureHeight);
+					// v2
+					mVertexBuffer[vIdx + 14] = uvOffsetAndScale.width * uv2.u + uvOffsetAndScale.x;
+					mVertexBuffer[vIdx + 15] = uvOffsetAndScale.height * uv2.v + uvOffsetAndScale.y;
+
+					// v3
+					mVertexBuffer[vIdx + 26] = uvOffsetAndScale.width * uv3.u + uvOffsetAndScale.x;
+					mVertexBuffer[vIdx + 27] = uvOffsetAndScale.height * uv3.v + uvOffsetAndScale.y;
+
+					// v4
+					mVertexBuffer[vIdx + 38] = uvOffsetAndScale.width * uv4.u + uvOffsetAndScale.x;
+					mVertexBuffer[vIdx + 39] = uvOffsetAndScale.height * uv4.v + uvOffsetAndScale.y;
+
+					somethingChanged = true;
 				}
 
 				if(child.invalidateMatrix) {
@@ -344,23 +368,34 @@ package de.nulldesign.nd2d.display {
 					cr = Math.cos(rot);
 					sr = Math.sin(rot);
 
-					pivot = child.pivot;
-				}
+					pivotX = child.pivot.x;
+					pivotY = child.pivot.y;
 
-				// v1
-				if(child.invalidateMatrix) {
-					mVertexBuffer[vIdx] = (v1.x * sx - pivot.x) * cr - (v1.y * sy - pivot.y) * sr + child.x + atlasOffset.x;
-					mVertexBuffer[vIdx + 1] = (v1.x * sx - pivot.x) * sr + (v1.y * sy - pivot.y) * cr + child.y + atlasOffset.y;
+					offsetX = child.x + atlasOffset.x;
+					offsetY = child.y + atlasOffset.y;
+
+					// v1
+					mVertexBuffer[vIdx] = (v1.x * sx - pivotX) * cr - (v1.y * sy - pivotY) * sr + offsetX;
+					mVertexBuffer[vIdx + 1] = (v1.x * sx - pivotX) * sr + (v1.y * sy - pivotY) * cr + offsetY;
+
+					// v2
+					mVertexBuffer[vIdx + 12] = (v2.x * sx - pivotX) * cr - (v2.y * sy - pivotY) * sr + offsetX;
+					mVertexBuffer[vIdx + 13] = (v2.x * sx - pivotX) * sr + (v2.y * sy - pivotY) * cr + offsetY;
+
+					// v3
+					mVertexBuffer[vIdx + 24] = (v3.x * sx - pivotX) * cr - (v3.y * sy - pivotY) * sr + offsetX;
+					mVertexBuffer[vIdx + 25] = (v3.x * sx - pivotX) * sr + (v3.y * sy - pivotY) * cr + offsetY;
+
+					// v4
+					mVertexBuffer[vIdx + 36] = (v4.x * sx - pivotX) * cr - (v4.y * sy - pivotY) * sr + offsetX;
+					mVertexBuffer[vIdx + 37] = (v4.x * sx - pivotX) * sr + (v4.y * sy - pivotY) * cr + offsetY;
+
 					somethingChanged = true;
 				}
 
-				if(initUV) {
-					mVertexBuffer[vIdx + 2] = uvOffsetAndScale.width * uv1.u + uvOffsetAndScale.x;
-					mVertexBuffer[vIdx + 3] = uvOffsetAndScale.height * uv1.v + uvOffsetAndScale.y;
-					somethingChanged = true;
-				}
+				if(isInvalidatedColors || isChildInvalidatedColors || child.invalidateVisibility) {
 
-				if(invalidateColors || child.invalidateColors || child.invalidateVisibility) {
+					// v1
 					mVertexBuffer[vIdx + 4] = rMultiplier;
 					mVertexBuffer[vIdx + 5] = gMultiplier;
 					mVertexBuffer[vIdx + 6] = bMultiplier;
@@ -369,21 +404,8 @@ package de.nulldesign.nd2d.display {
 					mVertexBuffer[vIdx + 9] = gOffset;
 					mVertexBuffer[vIdx + 10] = bOffset;
 					mVertexBuffer[vIdx + 11] = aOffset;
-					somethingChanged = true;
-				}
 
-				// v2
-				if(child.invalidateMatrix) {
-					mVertexBuffer[vIdx + 12] = (v2.x * sx - pivot.x) * cr - (v2.y * sy - pivot.y) * sr + child.x + atlasOffset.x;
-					mVertexBuffer[vIdx + 13] = (v2.x * sx - pivot.x) * sr + (v2.y * sy - pivot.y) * cr + child.y + atlasOffset.y;
-				}
-
-				if(initUV) {
-					mVertexBuffer[vIdx + 14] = uvOffsetAndScale.width * uv2.u + uvOffsetAndScale.x;
-					mVertexBuffer[vIdx + 15] = uvOffsetAndScale.height * uv2.v + uvOffsetAndScale.y;
-				}
-
-				if(invalidateColors || child.invalidateColors || child.invalidateVisibility) {
+					// v2
 					mVertexBuffer[vIdx + 16] = rMultiplier;
 					mVertexBuffer[vIdx + 17] = gMultiplier;
 					mVertexBuffer[vIdx + 18] = bMultiplier;
@@ -392,20 +414,8 @@ package de.nulldesign.nd2d.display {
 					mVertexBuffer[vIdx + 21] = gOffset;
 					mVertexBuffer[vIdx + 22] = bOffset;
 					mVertexBuffer[vIdx + 23] = aOffset;
-				}
 
-				// v3
-				if(child.invalidateMatrix) {
-					mVertexBuffer[vIdx + 24] = (v3.x * sx - pivot.x) * cr - (v3.y * sy - pivot.y) * sr + child.x + atlasOffset.x;
-					mVertexBuffer[vIdx + 25] = (v3.x * sx - pivot.x) * sr + (v3.y * sy - pivot.y) * cr + child.y + atlasOffset.y;
-				}
-
-				if(initUV) {
-					mVertexBuffer[vIdx + 26] = uvOffsetAndScale.width * uv3.u + uvOffsetAndScale.x;
-					mVertexBuffer[vIdx + 27] = uvOffsetAndScale.height * uv3.v + uvOffsetAndScale.y;
-				}
-
-				if(invalidateColors || child.invalidateColors || child.invalidateVisibility) {
+					// v3
 					mVertexBuffer[vIdx + 28] = rMultiplier;
 					mVertexBuffer[vIdx + 29] = gMultiplier;
 					mVertexBuffer[vIdx + 30] = bMultiplier;
@@ -414,20 +424,8 @@ package de.nulldesign.nd2d.display {
 					mVertexBuffer[vIdx + 33] = gOffset;
 					mVertexBuffer[vIdx + 34] = bOffset;
 					mVertexBuffer[vIdx + 35] = aOffset;
-				}
 
-				// v4
-				if(child.invalidateMatrix) {
-					mVertexBuffer[vIdx + 36] = (v4.x * sx - pivot.x) * cr - (v4.y * sy - pivot.y) * sr + child.x + atlasOffset.x;
-					mVertexBuffer[vIdx + 37] = (v4.x * sx - pivot.x) * sr + (v4.y * sy - pivot.y) * cr + child.y + atlasOffset.y;
-				}
-
-				if(initUV) {
-					mVertexBuffer[vIdx + 38] = uvOffsetAndScale.width * uv4.u + uvOffsetAndScale.x;
-					mVertexBuffer[vIdx + 39] = uvOffsetAndScale.height * uv4.v + uvOffsetAndScale.y;
-				}
-
-				if(invalidateColors || child.invalidateColors || child.invalidateVisibility) {
+					// v4
 					mVertexBuffer[vIdx + 40] = rMultiplier;
 					mVertexBuffer[vIdx + 41] = gMultiplier;
 					mVertexBuffer[vIdx + 42] = bMultiplier;
@@ -436,15 +434,17 @@ package de.nulldesign.nd2d.display {
 					mVertexBuffer[vIdx + 45] = gOffset;
 					mVertexBuffer[vIdx + 46] = bOffset;
 					mVertexBuffer[vIdx + 47] = aOffset;
+
+					somethingChanged = true;
 				}
 
 				vIdx += 48;
 
-				child.invalidateMatrix = child.invalidateColors = child.invalidateVisibility = false;
+				child.invalidateMatrix = child.invalidateVisibility = false;
 			}
 
-			invalidateColors = false;
 			uvInited = true;
+			isInvalidatedColors = false;
 
 			if(!vertexBuffer) {
 				vertexBuffer = context.createVertexBuffer(mVertexBuffer.length / numFloatsPerVertex, numFloatsPerVertex);
