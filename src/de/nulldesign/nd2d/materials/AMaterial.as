@@ -86,7 +86,7 @@ package de.nulldesign.nd2d.materials {
             initProgram(context);
 
             var i:int;
-            var numFaces:int = faceList.length;
+            const numFaces:int = faceList.length;
             var numIndices:int;
 
             mIndexBuffer = new Vector.<uint>();
@@ -148,11 +148,12 @@ package de.nulldesign.nd2d.materials {
             vertexBuffer.uploadFromVector(mVertexBuffer, 0, numIndices);
 
             if(!indexBuffer) {
+				
+                const mIndexBuffer_length:int = mIndexBuffer.length;
+                indexBuffer = context.createIndexBuffer(mIndexBuffer_length);
+                indexBuffer.uploadFromVector(mIndexBuffer, 0, mIndexBuffer_length);
 
-                indexBuffer = context.createIndexBuffer(mIndexBuffer.length);
-                indexBuffer.uploadFromVector(mIndexBuffer, 0, mIndexBuffer.length);
-
-                numTris = int(mIndexBuffer.length / 3);
+                numTris = int(mIndexBuffer_length / 3);
             }
         }
 
