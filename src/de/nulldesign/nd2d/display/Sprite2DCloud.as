@@ -208,12 +208,8 @@ package de.nulldesign.nd2d.display {
 			indexBuffer = null;
 			uvInited = false;
 
-			var c:Sprite2D;
-			for(var i:int = 0; i < children.length; i++) {
-				c = children[i] as Sprite2D;
-				c.invalidateColors = true;
-				c.invalidateMatrix = true;
-			}
+			for each(var c:Sprite2D in children)
+				c.invalidateColors = c.invalidateMatrix = true;
 		}
 
 		override public function dispose():void {
@@ -284,17 +280,17 @@ package de.nulldesign.nd2d.display {
 			var sr:Number;
 			var i:int = -1;
 			var child:Sprite2D;
-			var n:uint = children.length;
+			const n:uint = children.length;
 			var sx:Number;
 			var sy:Number;
 			var pivotX: Number, pivotY: Number;
 			var offsetX: Number,  offsetY: Number;
 			var somethingChanged:Boolean = false;
 			var atlasOffset:Point = new Point();
-			var offsetFactor:Number = 1.0 / 255.0;
+			const offsetFactor:Number = 1.0 / 255.0;
 			var isChildInvalidatedColors : Boolean = false;
-			var halfTextureWidth : Number = texture.textureWidth >> 1;
-			var halfTextureHeight : Number = texture.textureHeight >> 1;
+			const halfTextureWidth : Number = texture.textureWidth >> 1;
+			const halfTextureHeight : Number = texture.textureHeight >> 1;
 			var isInvalidatedColors : Boolean = false;
 
     		if(invalidateColors) {
