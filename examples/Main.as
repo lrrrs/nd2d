@@ -124,7 +124,7 @@ package {
 			var tf:TextFormat = new TextFormat("Arial", 11, 0xFFFFFF, true);
 
 			sceneText = new TextField();
-			sceneText.width = 300;
+			sceneText.width = 500;
 			sceneText.defaultTextFormat = tf;
 
 			addChild(sceneText);
@@ -168,7 +168,7 @@ package {
 
 			camera.reset();
 
-			sceneText.text = "(" + (activeSceneIdx + 1) + "/" + scenes.length + ") " + getQualifiedClassName(scenes[activeSceneIdx]) + " // hit space for next test.";
+			sceneText.text = "(" + (activeSceneIdx + 1) + "/" + scenes.length + ") " + getQualifiedClassName(scenes[activeSceneIdx]) + " // hit space for next test. f for fullscreen";
 
 			setActiveScene(scenes[activeSceneIdx++]);
 

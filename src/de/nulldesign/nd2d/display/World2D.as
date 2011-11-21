@@ -102,7 +102,6 @@ package de.nulldesign.nd2d.display {
 		 * @param stageID
 		 */
 		public function World2D(renderMode:String, frameRate:uint = 60, bounds:Rectangle = null, stageID:uint = 0) {
-
 			this.renderMode = renderMode;
 			this.frameRate = frameRate;
 			this.bounds = bounds;

@@ -165,7 +165,7 @@ package de.nulldesign.nd2d.materials.texture {
 										break;
 								}
 							}
-
+							/*
 							// calculate real offset
 							var idx:uint = sourceColorRects.length - 1;
 							var offset:Point = offsets[idx];
@@ -176,6 +176,7 @@ package de.nulldesign.nd2d.materials.texture {
 
 							offset.x = -newOffset.x;
 							offset.y = -newOffset.y;
+							*/
 						}
 					}
 						break;
