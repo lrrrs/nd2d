@@ -31,10 +31,12 @@
 package {
 
 	import avmplus.getQualifiedClassName;
-
+	
+	import com.bit101.components.PushButton;
+	
 	import de.nulldesign.nd2d.display.Scene2D;
 	import de.nulldesign.nd2d.display.World2D;
-
+	
 	import flash.display.StageAlign;
 	import flash.display.StageDisplayState;
 	import flash.display.StageScaleMode;
@@ -45,12 +47,11 @@ package {
 	import flash.text.TextField;
 	import flash.text.TextFormat;
 	import flash.ui.Keyboard;
-
+	
 	import net.hires.debug.Stats;
-
+	
 	import tests.BatchTest;
 	import tests.CameraTest;
-	import tests.QuadMaterialTest;
 	import tests.ColorTransformTest;
 	import tests.Font2DTest;
 	import tests.Grid2DTest;
@@ -60,6 +61,7 @@ package {
 	import tests.ParticleExplorer;
 	import tests.ParticleSystemTest;
 	import tests.PostProcessingTest;
+	import tests.QuadMaterialTest;
 	import tests.SideScrollerTest;
 	import tests.SpeedTest;
 	import tests.Sprite2DCloudParticles;
@@ -69,9 +71,9 @@ package {
 	import tests.SpriteTest;
 	import tests.StarFieldTest;
 	import tests.TextFieldTest;
+	import tests.TextureAndRotationOptionsTest;
 	import tests.TextureAtlasTest;
 	import tests.TextureRendererTest;
-	import tests.TextureAndRotationOptionsTest;
 	import tests.Transform3DTest;
 
 	[SWF(width="1000", height="550", frameRate="60", backgroundColor="#000000")]
@@ -135,7 +137,7 @@ package {
 			stageResize(null);
 
 			activeSceneIdx = scenes.length - 1;
-			nextBtnClick();
+            nextDemo();
 
 			stage.addEventListener(KeyboardEvent.KEY_UP, keyUp);
 
@@ -147,10 +149,16 @@ package {
 			b = new PushButton(this, 380, 0, "next", buttonClicked);
 			b.tag = 0;
 			*/
+			
+			addChild(new PushButton(this, 220, 0, "next", nextButtonClick));
+		}
+		
+		private function nextButtonClick(e:MouseEvent):void {
+			nextDemo();
 		}
 
 		private function buttonClicked(e:MouseEvent):void {
-			nextBtnClick();
+            nextDemo();
 		}
 
 		private function keyUp(e:KeyboardEvent):void {
@@ -158,13 +166,13 @@ package {
 				// simulate device loss
 				context3D.dispose();
 			} else if(e.keyCode == Keyboard.SPACE) {
-				nextBtnClick();
+                nextDemo();
 			} else if(e.keyCode == Keyboard.F) {
 				stage.displayState = StageDisplayState.FULL_SCREEN;
 			}
 		}
 
-		private function nextBtnClick():void {
+		private function nextDemo():void {
 
 			camera.reset();
 
