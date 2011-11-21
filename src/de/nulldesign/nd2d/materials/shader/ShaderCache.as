@@ -28,18 +28,47 @@
  * THE SOFTWARE.
  */
 
-package de.nulldesign.nd2d.materials {
+package de.nulldesign.nd2d.materials.shader {
 
-    public class SpriteSheetAnimation {
+	import flash.display3D.Context3D;
+	import flash.utils.getQualifiedClassName;
 
-        public var loop:Boolean;
-        public var frames:Array;
-        public var numFrames:uint;
+	public class ShaderCache {
 
-        public function SpriteSheetAnimation(frames:Array, loop:Boolean) {
-            this.loop = loop;
-            this.frames = frames;
-            this.numFrames = frames.length;
-        }
-    }
+		private static var instance:ShaderCache;
+
+		private var cacheObj:Object = {};
+
+		public function ShaderCache() {
+		}
+
+		public static function getInstance():ShaderCache {
+			if(!instance) {
+				instance = new ShaderCache();
+			}
+			return instance;
+		}
+
+		public function getShader(context:Context3D, materialClass:Object, vertexShaderString:String, fragmentShaderString:String, numFloatsPerVertex:uint, textureOptions:uint, miscOptions:uint = 0):Shader2D {
+
+			var shaderName:String = getQualifiedClassName(materialClass);
+
+			if(cacheObj[shaderName] && cacheObj[shaderName][textureOptions + miscOptions]) {
+				return cacheObj[shaderName][textureOptions + miscOptions];
+			} else {
+				var shader:Shader2D = new Shader2D(context, vertexShaderString, fragmentShaderString, numFloatsPerVertex, textureOptions);
+
+				if(!cacheObj[shaderName]) {
+					cacheObj[shaderName] = {};
+				}
+
+				cacheObj[shaderName][textureOptions + miscOptions] = shader;
+				return shader;
+			}
+		}
+
+		public function handleDeviceLoss():void {
+			cacheObj = {};
+		}
+	}
 }

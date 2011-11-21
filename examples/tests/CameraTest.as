@@ -30,16 +30,16 @@
 
 package tests {
 
-    import de.nulldesign.nd2d.display.Node2D;
-    import de.nulldesign.nd2d.display.Scene2D;
-    import de.nulldesign.nd2d.display.Sprite2D;
-	import de.nulldesign.nd2d.materials.Texture2D;
+	import de.nulldesign.nd2d.display.Node2D;
+	import de.nulldesign.nd2d.display.Scene2D;
+	import de.nulldesign.nd2d.display.Sprite2D;
+	import de.nulldesign.nd2d.materials.texture.Texture2D;
 	import de.nulldesign.nd2d.utils.NumberUtil;
 
-    import flash.events.Event;
-    import flash.events.MouseEvent;
+	import flash.events.Event;
+	import flash.events.MouseEvent;
 
-    public class CameraTest extends Scene2D {
+	public class CameraTest extends Scene2D {
 
         [Embed(source="/assets/water_texture.jpg")]
         private var backgroundTexture:Class;
@@ -86,8 +86,8 @@ package tests {
             back.height = camera.sceneHeight * 5.0;
 
             if(targetNode) {
-                camera.x += ((-targetNode.x + camera.sceneWidth * 0.5) - camera.x) * 0.05;
-                camera.y += ((-targetNode.y + camera.sceneHeight * 0.5) - camera.y) * 0.05;
+                camera.x += ((targetNode.x - camera.sceneWidth * 0.5) - camera.x) * 0.05;
+                camera.y += ((targetNode.y - camera.sceneHeight * 0.5) - camera.y) * 0.05;
                 camera.rotation += (-targetNode.rotation - camera.rotation) * 0.05;
             }
         }

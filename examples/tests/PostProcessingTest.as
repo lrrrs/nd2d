@@ -30,16 +30,16 @@
 
 package tests {
 
-    import de.nulldesign.nd2d.display.Node2D;
-    import de.nulldesign.nd2d.display.Sprite2D;
-    import de.nulldesign.nd2d.display.TextureRenderer;
-    import de.nulldesign.nd2d.events.TextureEvent;
-    import materials.Sprite2DDizzyMaterial;
-    import de.nulldesign.nd2d.materials.Texture2D;
+	import de.nulldesign.nd2d.display.Node2D;
+	import de.nulldesign.nd2d.display.Sprite2D;
+	import de.nulldesign.nd2d.display.TextureRenderer;
+	import de.nulldesign.nd2d.events.TextureEvent;
 
-    import flash.events.Event;
+	import flash.events.Event;
 
-    public class PostProcessingTest extends SideScrollerTest {
+	import materials.Sprite2DDizzyMaterial;
+
+	public class PostProcessingTest extends SideScrollerTest {
 
         protected var sceneNode:Node2D;
         protected var textureRenderer:TextureRenderer;
@@ -71,20 +71,18 @@ package tests {
 
             if(postProcessedScene) {
                 removeChild(postProcessedScene);
-                postProcessedScene.cleanUp();
+                postProcessedScene.dispose();
                 postProcessedScene = null;
             }
 
             //textureRenderer.removeEventListener(TextureEvent.READY, textureCreated);
 
-            var t2D:Texture2D = new Texture2D(textureRenderer.texture, textureRenderer.width, textureRenderer.height);
-
-            postProcessedScene = new Sprite2D();
-            postProcessedScene.setMaterial(new Sprite2DDizzyMaterial(t2D));
+            postProcessedScene = new Sprite2D(textureRenderer.texture);
+            postProcessedScene.setMaterial(new Sprite2DDizzyMaterial());
             //postProcessedScene.blendMode = BlendModePresets.ADD;
             postProcessedScene.tint = 0xAA99FF;
-            postProcessedScene.x = postProcessedScene.width * 0.5;
-            postProcessedScene.y = postProcessedScene.height * 0.5;
+            postProcessedScene.x = textureRenderer.width * 0.5;
+            postProcessedScene.y = textureRenderer.height * 0.5;
             addChild(postProcessedScene);
         }
 

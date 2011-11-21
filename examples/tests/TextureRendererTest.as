@@ -30,17 +30,16 @@
 
 package tests {
 
-    import de.nulldesign.nd2d.display.Grid2D;
-    import de.nulldesign.nd2d.display.Scene2D;
-    import de.nulldesign.nd2d.display.Sprite2D;
-    import de.nulldesign.nd2d.display.TextureRenderer;
-    import de.nulldesign.nd2d.events.TextureEvent;
+	import de.nulldesign.nd2d.display.Grid2D;
+	import de.nulldesign.nd2d.display.Scene2D;
+	import de.nulldesign.nd2d.display.Sprite2D;
+	import de.nulldesign.nd2d.display.TextureRenderer;
+	import de.nulldesign.nd2d.events.TextureEvent;
+	import de.nulldesign.nd2d.materials.texture.Texture2D;
 
-    import flash.display.BitmapData;
+	import tests.objects.MorphGrid;
 
-    import tests.objects.MorphGrid;
-
-    public class TextureRendererTest extends Scene2D {
+	public class TextureRendererTest extends Scene2D {
 
         [Embed(source="../assets/crate.jpg")]
         private var spriteTexture:Class;
@@ -76,8 +75,7 @@ package tests {
                 texturedGrid = null;
             }
 
-            texturedGrid = new MorphGrid(12, 12);
-            texturedGrid.setTexture(texRenderer.texture, texRenderer.width, texRenderer.height);
+            texturedGrid = new MorphGrid(12, 12, texRenderer.texture, 0.05);
             texturedGrid.tint = 0x99ff00;
             addChild(texturedGrid);
         }

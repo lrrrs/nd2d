@@ -28,32 +28,32 @@
  * THE SOFTWARE.
  */
 
-package tests {
+package de.nulldesign.nd2d.materials.texture {
 
-	import de.nulldesign.nd2d.display.Grid2D;
-	import de.nulldesign.nd2d.display.Scene2D;
-	import de.nulldesign.nd2d.materials.texture.Texture2D;
+	/**
+	 * TextureOptions available for Texture2D
+	 * Use a bitmask to combine options, example:
+	 * myOption = MIPMAP_NEAREST | FILTERING_NEAREST | REPEAT_NORMAL;
+	 */
+	public class TextureOption {
 
-	import tests.objects.MorphGrid;
+		// defines how and if mip mapping should be used
+		public static const MIPMAP_DISABLE:uint = 1;
+		public static const MIPMAP_NEAREST:uint = 2;
+		public static const MIPMAP_LINEAR:uint = 4;
 
-	public class Grid2DTest extends Scene2D {
+		// texture filtering methods
+		public static const FILTERING_NEAREST:uint = 8;
+		public static const FILTERING_LINEAR:uint = 16;
 
-        [Embed(source="/assets/water_texture.jpg")]
-        private var spriteTexture:Class;
+		// texture repeat
+		public static const REPEAT_NORMAL:uint = 32;
+		public static const REPEAT_CLAMP:uint = 64;
 
-        private var grid:Grid2D;
-
-        public function Grid2DTest() {
-
-            grid = new MorphGrid(16, 16, Texture2D.textureFromBitmapData(new spriteTexture().bitmapData));
-            addChild(grid);
-        }
-
-        override protected function step(elapsed:Number):void {
-            grid.x = stage.stageWidth * 0.5;
-            grid.y = stage.stageHeight * 0.5;
-            grid.width = stage.stageWidth;
-            grid.height = stage.stageHeight;
-        }
-    }
+		// predefined presets
+		public static const QUALITY_LOW:uint = MIPMAP_DISABLE | FILTERING_NEAREST | REPEAT_NORMAL;
+		public static const QUALITY_MEDIUM:uint = MIPMAP_DISABLE | FILTERING_LINEAR | REPEAT_NORMAL;
+		public static const QUALITY_HIGH:uint = MIPMAP_NEAREST | FILTERING_LINEAR | REPEAT_NORMAL;
+		public static const QUALITY_ULTRA:uint = MIPMAP_LINEAR | FILTERING_LINEAR | REPEAT_NORMAL;
+	}
 }

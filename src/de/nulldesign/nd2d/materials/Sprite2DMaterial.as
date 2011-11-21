@@ -30,24 +30,22 @@
 
 package de.nulldesign.nd2d.materials {
 
-    import com.adobe.utils.AGALMiniAssembler;
+	import de.nulldesign.nd2d.geom.Face;
+	import de.nulldesign.nd2d.geom.UV;
+	import de.nulldesign.nd2d.geom.Vertex;
+	import de.nulldesign.nd2d.materials.shader.ShaderCache;
+	import de.nulldesign.nd2d.materials.texture.ASpriteSheetBase;
+	import de.nulldesign.nd2d.materials.texture.Texture2D;
 
-    import de.nulldesign.nd2d.geom.Face;
-    import de.nulldesign.nd2d.geom.UV;
-    import de.nulldesign.nd2d.geom.Vertex;
-    import de.nulldesign.nd2d.utils.TextureHelper;
+	import flash.display3D.Context3D;
+	import flash.display3D.Context3DProgramType;
+	import flash.display3D.Context3DVertexBufferFormat;
+	import flash.display3D.textures.Texture;
+	import flash.geom.ColorTransform;
+	import flash.geom.Point;
+	import flash.geom.Rectangle;
 
-    import flash.display.BitmapData;
-    import flash.display3D.Context3D;
-    import flash.display3D.Context3DProgramType;
-    import flash.display3D.Context3DVertexBufferFormat;
-    import flash.display3D.Program3D;
-    import flash.display3D.textures.Texture;
-    import flash.geom.ColorTransform;
-    import flash.geom.Point;
-    import flash.geom.Rectangle;
-
-    public class Sprite2DMaterial extends AMaterial {
+	public class Sprite2DMaterial extends AMaterial {
 
         private const VERTEX_SHADER:String = "m44 op, va0, vc0   \n" + // vertex * clipspace
                 "mov vt0, va1  \n" + // save uv in temp register
@@ -56,110 +54,98 @@ package de.nulldesign.nd2d.materials {
                 "mov v0, vt0 \n"; // copy uv
 
         private const FRAGMENT_SHADER:String =
-                "tex ft0, v0, fs0 <2d,repeat,linear,mipnearest>\n" + // sample texture from interpolated uv coords
-                "mul ft0, ft0, fc0\n" + // mult with colorMultiplier
-                "add oc, ft0, fc1\n"; // mult with colorOffset
+                "tex ft0, v0, fs0 <TEXTURE_SAMPLING_OPTIONS>\n" + // sample texture from interpolated uv coords
+                        "mul ft0, ft0, fc0\n" + // mult with colorMultiplier
+                        "add oc, ft0, fc1\n"; // mult with colorOffset
 
-        private static var sprite2DProgramData:ProgramData;
-
-        public var texture:Texture;
-        public var textureWidth:Number;
-        public var textureHeight:Number;
-
-        public var colorTransform:ColorTransform;
+        public var texture:Texture2D;
         public var spriteSheet:ASpriteSheetBase;
+        public var colorTransform:ColorTransform;
 
         /**
-         * Use this property to animate a texture, infinite scroller, etc.
+         * Use this property to animate a texture
          */
         public var uvOffsetX:Number = 0.0;
 
         /**
-         * Use this property to animate a texture, infinite scroller, etc.
+         * Use this property to animate a texture
          */
         public var uvOffsetY:Number = 0.0;
 
-        public function Sprite2DMaterial(textureObject:Object) {
+		/**
+		 * Use this property to repeat/scale a texture. Your texture has to be a power of two (256x128, etc)
+		 */
+		public var uvScaleX:Number = 1.0;
 
-            if(textureObject is BitmapData) {
-                var bmp:BitmapData = textureObject as BitmapData;
-                spriteSheet = new SpriteSheet(bmp, bmp.width, bmp.height, 0);
-            } else if(textureObject is SpriteSheet) {
-                spriteSheet = textureObject as SpriteSheet;
-            } else if(textureObject is TextureAtlas) {
-                spriteSheet = textureObject as TextureAtlas;
-            } else if(textureObject is Texture2D) {
-                var t2D:Texture2D = textureObject as Texture2D;
-                texture = t2D.texture;
-                textureWidth = t2D.textureWidth;
-                textureHeight = t2D.textureHeight;
-            }
+		/**
+		 * Use this property to repeat/scale a texture. Your texture has to be a power of two (256x128, etc)
+		 */
+		public var uvScaleY:Number = 1.0;
 
+
+        public function Sprite2DMaterial() {
             drawCalls = 1;
         }
 
         override public function handleDeviceLoss():void {
             super.handleDeviceLoss();
-            texture = null;
-            sprite2DProgramData = null;
+            texture.texture = null;
         }
 
-        override protected function prepareForRender(context:Context3D):Boolean {
+        override protected function prepareForRender(context:Context3D):void {
 
             super.prepareForRender(context);
 
-            if(!texture && spriteSheet && spriteSheet.bitmapData) {
-                texture = TextureHelper.generateTextureFromBitmap(context, spriteSheet.bitmapData, true);
-            }
-
-            if(!texture) {
-                // can happen after a device loss
-                return false;
-            }
-
-            var rect:Rectangle = new Rectangle(0.0, 0.0, 1.0, 1.0);
+            var uvOffsetAndScale:Rectangle = new Rectangle(0.0, 0.0, 1.0, 1.0);
+            var textureObj:Texture = texture.getTexture(context);
 
             if(spriteSheet) {
 
-                rect = spriteSheet.getUVRectForFrame();
+                uvOffsetAndScale = spriteSheet.getUVRectForFrame(texture.textureWidth, texture.textureHeight);
 
-                var atlas:TextureAtlas = spriteSheet as TextureAtlas;
+                var offset:Point = spriteSheet.getOffsetForFrame();
 
-                if(atlas) {
+                clipSpaceMatrix.identity();
+                clipSpaceMatrix.appendScale(spriteSheet.spriteWidth >> 1, spriteSheet.spriteHeight >> 1, 1.0);
+                clipSpaceMatrix.appendTranslation(offset.x, offset.y, 0.0);
+                clipSpaceMatrix.append(modelMatrix);
+                clipSpaceMatrix.append(viewProjectionMatrix);
 
-                    var offset:Point = atlas.getOffsetForFrame();
-
-                    clipSpaceMatrix.identity();
-                    clipSpaceMatrix.appendScale(spriteSheet.spriteWidth * 0.5, spriteSheet.spriteHeight * 0.5, 1.0);
-                    clipSpaceMatrix.appendTranslation(offset.x, offset.y, 0.0);
-                    clipSpaceMatrix.append(modelMatrix);
-                    clipSpaceMatrix.append(viewProjectionMatrix);
-
-                } else {
-                    refreshClipspaceMatrix();
-                }
             } else {
-                refreshClipspaceMatrix();
+                clipSpaceMatrix.identity();
+                clipSpaceMatrix.appendScale(texture.textureWidth >> 1, texture.textureHeight >> 1, 1.0);
+                clipSpaceMatrix.append(modelMatrix);
+                clipSpaceMatrix.append(viewProjectionMatrix);
             }
 
-            context.setTextureAt(0, texture);
+            context.setTextureAt(0, textureObj);
             context.setVertexBufferAt(0, vertexBuffer, 0, Context3DVertexBufferFormat.FLOAT_2); // vertex
             context.setVertexBufferAt(1, vertexBuffer, 2, Context3DVertexBufferFormat.FLOAT_2); // uv
 
             context.setProgramConstantsFromMatrix(Context3DProgramType.VERTEX, 0, clipSpaceMatrix, true);
 
-            context.setProgramConstantsFromVector(Context3DProgramType.VERTEX, 4, Vector.<Number>([ rect.x + uvOffsetX,
-                                                                                                    rect.y + uvOffsetY,
-                                                                                                    rect.width,
-                                                                                                    rect.height]));
+			programConstVector[0] = uvOffsetAndScale.x + uvOffsetX;
+			programConstVector[1] = uvOffsetAndScale.y + uvOffsetY;
+			programConstVector[2] = uvOffsetAndScale.width * uvScaleX;
+			programConstVector[3] = uvOffsetAndScale.height * uvScaleY;
+
+			context.setProgramConstantsFromVector(Context3DProgramType.VERTEX, 4, programConstVector);
 
             var offsetFactor:Number = 1.0 / 255.0;
-            context.setProgramConstantsFromVector(Context3DProgramType.FRAGMENT, 0,
-                                                  Vector.<Number>([ colorTransform.redMultiplier, colorTransform.greenMultiplier, colorTransform.blueMultiplier, colorTransform.alphaMultiplier ]));
-            context.setProgramConstantsFromVector(Context3DProgramType.FRAGMENT, 1,
-                                                  Vector.<Number>([ colorTransform.redOffset * offsetFactor, colorTransform.greenOffset * offsetFactor, colorTransform.blueOffset * offsetFactor, colorTransform.alphaOffset * offsetFactor ]));
 
-            return true;
+			programConstVector[0] = colorTransform.redMultiplier;
+			programConstVector[1] = colorTransform.greenMultiplier;
+			programConstVector[2] = colorTransform.blueMultiplier;
+			programConstVector[3] = colorTransform.alphaMultiplier;
+
+            context.setProgramConstantsFromVector(Context3DProgramType.FRAGMENT, 0, programConstVector);
+
+			programConstVector[0] = colorTransform.redOffset * offsetFactor;
+			programConstVector[1] = colorTransform.greenOffset * offsetFactor;
+			programConstVector[2] = colorTransform.blueOffset * offsetFactor;
+			programConstVector[3] = colorTransform.alphaOffset * offsetFactor;
+
+            context.setProgramConstantsFromVector(Context3DProgramType.FRAGMENT, 1, programConstVector);
         }
 
         override protected function clearAfterRender(context:Context3D):void {
@@ -175,26 +161,13 @@ package de.nulldesign.nd2d.materials {
         }
 
         override protected function initProgram(context:Context3D):void {
-
-            // program will be only created once and cached as static var in material
-            if(!sprite2DProgramData) {
-                var vertexShaderAssembler:AGALMiniAssembler = new AGALMiniAssembler();
-                vertexShaderAssembler.assemble(Context3DProgramType.VERTEX, VERTEX_SHADER);
-
-                var colorFragmentShaderAssembler:AGALMiniAssembler = new AGALMiniAssembler();
-                colorFragmentShaderAssembler.assemble(Context3DProgramType.FRAGMENT, FRAGMENT_SHADER);
-
-                var program:Program3D = context.createProgram();
-                program.upload(vertexShaderAssembler.agalcode, colorFragmentShaderAssembler.agalcode);
-
-                sprite2DProgramData = new ProgramData(program, 4);
+            if(!shaderData) {
+                shaderData = ShaderCache.getInstance().getShader(context, this, VERTEX_SHADER, FRAGMENT_SHADER, 4, texture.textureOptions);
             }
-
-            programData = sprite2DProgramData;
         }
 
-        override public function cleanUp():void {
-            super.cleanUp();
+        override public function dispose():void {
+            super.dispose();
             if(texture) {
                 texture.dispose();
                 texture = null;
@@ -204,7 +177,7 @@ package de.nulldesign.nd2d.materials {
         public function modifyVertexInBuffer(bufferIdx:uint, x:Number, y:Number):void {
 
             if(!mVertexBuffer || mVertexBuffer.length == 0) return;
-            var idx:uint = bufferIdx * programData.numFloatsPerVertex;
+            var idx:uint = bufferIdx * shaderData.numFloatsPerVertex;
 
             mVertexBuffer[idx] = x;
             mVertexBuffer[idx + 1] = y;
@@ -213,4 +186,3 @@ package de.nulldesign.nd2d.materials {
         }
     }
 }
-

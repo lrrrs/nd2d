@@ -1,6 +1,6 @@
 # ND2D - A Flash Molehill (Stage3D) GPU accelerated 2D engine.
 
-ND2D is a 2D sprite engine using the new GPU hardware features of flash currently available in a beta build. To run this engine you must download and install the latest flash player:
+ND2D is a 2D framework using the new GPU hardware features of flash. To run this engine you must download and install the latest flash player:
 
 [Flash Player 11 & playerglobal.swc](http://get.adobe.com/de/flashplayer/)
 
@@ -39,10 +39,68 @@ Important links:
 - Distortable 2D grid for wave / ripple effects
 - Texturerenderer for post process effects
 - Extendable material system that makes it easy to write own effects and shaders with PixelBender3D or AGAL
+- Device loss is handled by the framework automatically, you don't have to care about this.
 
 [Check out the WIKI for more details](https://github.com/nulldesign/nd2d/wiki)
 
 # Changelog:
+
+2011-11-15
+
+- MERGED: optimizations from komelgman (Thanks!)
+- ADDED: possibility to add a custom hitTest for nodes
+- ADDED: new displayobject: Quad2D - A quad with four colors
+- ADDED: TextField2D - use native Flash TextFields in ND2D (thanks Ryan!)
+- ADDED: Burst mode for ParticleSystem2D
+- FIXED: spritesheet distribution in Sprite2DBatch
+- FIXED: TextureAtlas offset calculation from sourceColorRect to support dynamic generation
+- RENAMED: Font2D to BitmapFont2D
+
+2011-11-14
+
+- FIXED: device loss is working again :)
+
+2011-11-06
+
+- ADDED: uvMultiplier for Sprite2DMaterial. You can scale your textures now. See TextureAndRotationOptionsTest
+- ADDED: Texture filtering options: LOW, MED, HIGH, ULTRA and texture repeat options: CLAMP, REPEAT. See TextureAndRotationOptionsTest
+- ADDED: rotationX,Y,Z for nodes. You can rotate your objects in 2.5D now, just like the Flash 10 2.5D API. See Transform3DTest
+- CHANGED: constructor arguments of Sprite2D, Cloud and Batch take only a Texture2D now.
+- FIXED: mask size is not restriced to 2^ anymore
+- tint is a uint now.
+- cleaned up a lot of stuff
+
+2011-10-24
+
+- FIXED: Sprite2D width / height bug, when a TextureAtlas was set
+- ADDED: setChildIndex(), thanks Björn!
+
+
+2011-10-20
+
+- FIXED: nested nodes movement bug
+- FIXED: mouse handling for nodes
+- FIXED: camera movement
+- FIXED: Vector allocations. PERFORMANCE BOOST in all materials (Thanks Shawn!)
+
+2011-10-19
+
+- CHANGE: mouseEvents, behave like you're used to in flash now. Only the topmost node will dispatch the event.
+- TODO: Pixel precise mouseevents are on the way, stay tuned
+
+2011-10-17
+
+- NEW: globalToLocal / localToGlobal methods in Node2D
+- set some properties to internal
+- getIndexForFrame added for TextureAtlas
+
+2011-10-08
+
+- API Changes:
+    All nodes (Sprite2D, Sprite2DCloud, etc.) take only a BitmapData or a Texture2D as constructor argument now.
+    You have to set the material or spritesheet via setMaterial or setSpriteSheet now.
+    Constructor of TextureAtlas and SpriteSheet slightly different.
+- Bugfix in Sprite2DBatch
 
 2011-10-06
 

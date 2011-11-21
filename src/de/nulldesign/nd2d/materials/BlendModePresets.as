@@ -30,11 +30,11 @@
 
 package de.nulldesign.nd2d.materials {
 
-    import de.nulldesign.nd2d.utils.*;
+	import de.nulldesign.nd2d.utils.*;
 
-    import flash.display3D.Context3DBlendFactor;
+	import flash.display3D.Context3DBlendFactor;
 
-    public class BlendModePresets {
+	public class BlendModePresets {
 
         public static const ADD_NOALPHA:NodeBlendMode = new NodeBlendMode(Context3DBlendFactor.ONE,
                                                                           Context3DBlendFactor.ONE);

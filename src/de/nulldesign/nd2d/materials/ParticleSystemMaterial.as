@@ -30,188 +30,181 @@
 
 package de.nulldesign.nd2d.materials {
 
-    import com.adobe.utils.AGALMiniAssembler;
+	import de.nulldesign.nd2d.geom.Face;
+	import de.nulldesign.nd2d.geom.ParticleVertex;
+	import de.nulldesign.nd2d.geom.UV;
+	import de.nulldesign.nd2d.geom.Vertex;
+	import de.nulldesign.nd2d.materials.shader.ShaderCache;
+	import de.nulldesign.nd2d.materials.texture.Texture2D;
 
-    import de.nulldesign.nd2d.geom.Face;
-    import de.nulldesign.nd2d.geom.ParticleVertex;
+	import flash.display3D.Context3D;
+	import flash.display3D.Context3DProgramType;
+	import flash.display3D.Context3DVertexBufferFormat;
+	import flash.geom.Point;
 
-    import de.nulldesign.nd2d.geom.UV;
+	public class ParticleSystemMaterial extends AMaterial {
 
-    import de.nulldesign.nd2d.geom.Vertex;
+		private const BURST_SHADER_PART:String = "";
+		private const REPEAT_SHADER_PART:String = "frc vt0, vt0 \n";
 
-    import de.nulldesign.nd2d.utils.TextureHelper;
+		private const VERTEX_SHADER:String =
 
-    import flash.display.BitmapData;
-    import flash.display3D.Context3D;
-    import flash.display3D.Context3DProgramType;
-    import flash.display3D.Context3DVertexBufferFormat;
-    import flash.display3D.Program3D;
-    import flash.display3D.textures.Texture;
-    import flash.geom.Point;
+			/*
+			 va0 = vertex
+			 va1 = uv
+			 va2 = misc (starttime, life, startsize, endsize)
+			 va3 = velocity / startpos
+			 va4 = startcolor
+			 va5 = endcolor
 
-    public class ParticleSystemMaterial extends AMaterial {
+			 vc0 = matrix
+			 vc4 = current time
+			 vc5 = gravity
+			 */
 
-        private const VERTEX_SHADER:String =
+			// progress calculation p -> vt0
+				"sub vt0, vc4, va2.x        \n" + // currentTime - birth
+						"div vt0, vt0, va2.y        \n" + // (currentTime - birth) / life
+						"[PARTICLES_REPEAT]" + // (fract((currentTime - birth) / life)
+						"sat vt0, vt0               \n" + // clamp(fract((currentTime - birth) / life), 0.0, 1.0) == p -> vt0
 
-                /*
-                va0 = vertex
-                va1 = uv
-                va2 = misc (starttime, life, startsize, endsize)
-                va3 = velocity / startpos
-                va4 = startcolor
-                va5 = endcolor
+					// velocity / position by progress / gravity calculation
+						"mov vt1.xy, va3.xy         \n" + // tmp velocity -> vt1
+						"mul vt2 vc5.xy, vt0        \n" + // (gravity * p) -> vt2
+						"add vt1.xy, vt1.xy, vt2.xy \n" + // tmpVelocity += gravity * p;
+						"mul vt1.xy, vt1.xy, vt0.xy \n" + // tmpVelocity *= p; -> vt1
 
-                vc0 = matrix
-                vc4 = current time
-                vc5 = gravity
-                */
-                
-                // progress calculation p -> vt0
-                "sub vt0, vc4, va2.x        \n" + // currentTime - birth
-                "div vt0, vt0, va2.y        \n" + // (currentTime - birth) / life
-                "frc vt0, vt0               \n" + // (fract((currentTime - birth) / life)
-                "sat vt0, vt0               \n" + // clamp(fract((currentTime - birth) / life), 0.0, 1.0) == p -> vt0
+					// size calculation -> float size = startSize * (1.0 - progress) + endSize * progress;
+						"sub vt2.x, va0.w, vt0.x    \n" + // (1.0 - progress)
+						"mul vt3.x va2.z, vt2.x     \n" + // startSize * (1.0 - progress)
+						"mul vt2.x, va2.w, vt0.x    \n" + // endSize * progress;
+						"add vt3.x, vt3.x, vt2.x    \n" + // startSize * (1.0 - progress) + endSize * progress -> size vt3.x
 
-                // velocity / position by progress / gravity calculation
-                "mov vt1.xy, va3.xy         \n" + // tmp velocity -> vt1
-                "mul vt2 vc5.xy, vt0        \n" + // (gravity * p) -> vt2
-                "add vt1.xy, vt1.xy, vt2.xy \n" + // tmpVelocity += gravity * p;
-                "mul vt1.xy, vt1.xy, vt0.xy \n" + // tmpVelocity *= p; -> vt1
+						"mov vt2, va0               \n" + // tmp initial vertex position
+						"mul vt2.xy, vt2.xy, vt3.x  \n" + // tmpVertexPos.xy *= size;
+						"add vt2.xy, vt2.xy, va3.zw \n" + // tmpVertexPos.xy += velocity.zw;
+						"add vt2.xy, vt2.xy, vt1.xy \n" + //tmpVertexPos.xy += tmpVelocity.xy;
+						"m44 op, vt2, vc0           \n" + // vertex * clipspace
 
-                // size calculation -> float size = startSize * (1.0 - progress) + endSize * progress;
-                "sub vt2.x, va0.w, vt0.x    \n" + // (1.0 - progress)
-                "mul vt3.x va2.z, vt2.x     \n" + // startSize * (1.0 - progress)
-                "mul vt2.x, va2.w, vt0.x    \n" + // endSize * progress;
-                "add vt3.x, vt3.x, vt2.x    \n" + // startSize * (1.0 - progress) + endSize * progress -> size vt3.x
+						"mov v0, va1                \n" + // copy uv
 
-                "mov vt2, va0               \n" + // tmp initial vertex position
-                "mul vt2.xy, vt2.xy, vt3.x  \n" + // tmpVertexPos.xy *= size;
-                "add vt2.xy, vt2.xy, va3.zw \n" + // tmpVertexPos.xy += velocity.zw;
-                "add vt2.xy, vt2.xy, vt1.xy \n" +  //tmpVertexPos.xy += tmpVelocity.xy;
-                "m44 op, vt2, vc0           \n" + // vertex * clipspace
+					// mix colors -> startColor * (1.0 - progress) + endColor * progress
+						"sub vt2.x, va0.w, vt0.x    \n" + // 1.0 - progress
+						"mul vt3, va4, vt2.x        \n" + // startColor * (1.0 - progress)
+						"mul vt4, va5, vt0.x        \n" + // endColor * progress
+						"add v1, vt3, vt4           \n"; // save color
 
-                "mov v0, va1                \n" +  // copy uv
+		private const FRAGMENT_SHADER:String =
+				"tex ft0, v0, fs0 <TEXTURE_SAMPLING_OPTIONS>  \n" + // sample texture from interpolated uv coords
+						"mul oc, ft0, v1                               \n";  // mult with color
 
-                // mix colors -> startColor * (1.0 - progress) + endColor * progress
-                "sub vt2.x, va0.w, vt0.x    \n" +  // 1.0 - progress
-                "mul vt3, va4, vt2.x        \n" + // startColor * (1.0 - progress)
-                "mul vt4, va5, vt0.x        \n" + // endColor * progress
-                "add v1, vt3, vt4           \n"; // save color
+		protected var texture:Texture2D;
 
-        private const FRAGMENT_SHADER:String =
-                "tex ft0, v0, fs0 <2d,clamp,linear,mipnearest>  \n" + // sample texture from interpolated uv coords
-                "mul oc, ft0, v1                               \n";  // mult with color
+		public var gravity:Point;
+		public var currentTime:Number;
 
-        private static var particleSystemProgramData:ProgramData;
+		protected var burst:Boolean;
 
-        protected var texture:Texture;
-        protected var particleTexture:BitmapData;
+		public function ParticleSystemMaterial(texture:Texture2D, burst:Boolean) {
+			this.texture = texture;
+			this.drawCalls = 1;
+			this.burst = burst;
+		}
 
-        public var gravity:Point;
-        public var currentTime:Number;
+		override public function handleDeviceLoss():void {
+			super.handleDeviceLoss();
+			texture.texture = null;
+			shaderData = null;
+		}
 
-        public function ParticleSystemMaterial(particleTexture:BitmapData) {
-            this.particleTexture = particleTexture;
-            this.drawCalls = 1;
-        }
+		override protected function prepareForRender(context:Context3D):void {
 
-        override public function handleDeviceLoss():void {
-            super.handleDeviceLoss();
-            texture = null;
-            particleSystemProgramData = null;
-        }
+			super.prepareForRender(context);
 
-        override protected function prepareForRender(context:Context3D):Boolean {
+			refreshClipspaceMatrix();
 
-            super.prepareForRender(context);
+			context.setTextureAt(0, texture.getTexture(context));
+			context.setVertexBufferAt(0, vertexBuffer, 0, Context3DVertexBufferFormat.FLOAT_2); // vertex
+			context.setVertexBufferAt(1, vertexBuffer, 2, Context3DVertexBufferFormat.FLOAT_2); // uv
+			context.setVertexBufferAt(2, vertexBuffer, 4, Context3DVertexBufferFormat.FLOAT_4); // misc (starttime, life, startsize, endsize
+			context.setVertexBufferAt(3, vertexBuffer, 8, Context3DVertexBufferFormat.FLOAT_4); // velocity / startpos
+			context.setVertexBufferAt(4, vertexBuffer, 12, Context3DVertexBufferFormat.FLOAT_4); // startcolor
+			context.setVertexBufferAt(5, vertexBuffer, 16, Context3DVertexBufferFormat.FLOAT_4); // endcolor
 
-            refreshClipspaceMatrix();
+			context.setProgramConstantsFromMatrix(Context3DProgramType.VERTEX, 0, clipSpaceMatrix, true);
 
-            if(!texture) {
-                texture = TextureHelper.generateTextureFromBitmap(context, particleTexture, true);
-            }
+			programConstVector[0] = currentTime;
+			programConstVector[1] = currentTime;
+			programConstVector[2] = currentTime;
+			programConstVector[3] = currentTime;
 
-            context.setTextureAt(0, texture);
-            context.setVertexBufferAt(0, vertexBuffer, 0, Context3DVertexBufferFormat.FLOAT_2); // vertex
-            context.setVertexBufferAt(1, vertexBuffer, 2, Context3DVertexBufferFormat.FLOAT_2); // uv
-            context.setVertexBufferAt(2, vertexBuffer, 4, Context3DVertexBufferFormat.FLOAT_4); // misc (starttime, life, startsize, endsize
-            context.setVertexBufferAt(3, vertexBuffer, 8, Context3DVertexBufferFormat.FLOAT_4); // velocity / startpos
-            context.setVertexBufferAt(4, vertexBuffer, 12, Context3DVertexBufferFormat.FLOAT_4); // startcolor
-            context.setVertexBufferAt(5, vertexBuffer, 16, Context3DVertexBufferFormat.FLOAT_4); // endcolor
+			context.setProgramConstantsFromVector(Context3DProgramType.VERTEX, 4, programConstVector);
 
-            context.setProgramConstantsFromMatrix(Context3DProgramType.VERTEX, 0, clipSpaceMatrix, true);
-            context.setProgramConstantsFromVector(Context3DProgramType.VERTEX, 4, Vector.<Number>([ currentTime, currentTime, currentTime, currentTime ]));
-            context.setProgramConstantsFromVector(Context3DProgramType.VERTEX, 5, Vector.<Number>([ gravity.x, gravity.y, 0.0, 1.0 ]));
+			programConstVector[0] = gravity.x;
+			programConstVector[1] = gravity.y;
+			programConstVector[2] = 0.0;
+			programConstVector[3] = 1.0;
 
-            return true;
-        }
+			context.setProgramConstantsFromVector(Context3DProgramType.VERTEX, 5, programConstVector);
+		}
 
-        override protected function clearAfterRender(context:Context3D):void {
-            context.setTextureAt(0, null);
-            context.setVertexBufferAt(0, null);
-            context.setVertexBufferAt(1, null);
-            context.setVertexBufferAt(2, null);
-            context.setVertexBufferAt(3, null);
-            context.setVertexBufferAt(4, null);
-            context.setVertexBufferAt(5, null);
-        }
+		override protected function clearAfterRender(context:Context3D):void {
+			context.setTextureAt(0, null);
+			context.setVertexBufferAt(0, null);
+			context.setVertexBufferAt(1, null);
+			context.setVertexBufferAt(2, null);
+			context.setVertexBufferAt(3, null);
+			context.setVertexBufferAt(4, null);
+			context.setVertexBufferAt(5, null);
+		}
 
-        override protected function addVertex(context:Context3D, buffer:Vector.<Number>, v:Vertex, uv:UV, face:Face):void {
+		override protected function addVertex(context:Context3D, buffer:Vector.<Number>, v:Vertex, uv:UV, face:Face):void {
 
-            fillBuffer(buffer, v, uv, face, VERTEX_POSITION, 2);
-            fillBuffer(buffer, v, uv, face, VERTEX_UV, 2);
-            fillBuffer(buffer, v, uv, face, "PB3D_MISC", 4);
-            fillBuffer(buffer, v, uv, face, "PB3D_VELOCITY", 4);
-            fillBuffer(buffer, v, uv, face, "PB3D_STARTCOLOR", 4);
-            fillBuffer(buffer, v, uv, face, "PB3D_ENDCOLOR", 4);
-        }
+			fillBuffer(buffer, v, uv, face, VERTEX_POSITION, 2);
+			fillBuffer(buffer, v, uv, face, VERTEX_UV, 2);
+			fillBuffer(buffer, v, uv, face, "PB3D_MISC", 4);
+			fillBuffer(buffer, v, uv, face, "PB3D_VELOCITY", 4);
+			fillBuffer(buffer, v, uv, face, "PB3D_STARTCOLOR", 4);
+			fillBuffer(buffer, v, uv, face, "PB3D_ENDCOLOR", 4);
+		}
 
-        override protected function fillBuffer(buffer:Vector.<Number>, v:Vertex, uv:UV, face:Face, semanticsID:String, floatFormat:int):void {
+		override protected function fillBuffer(buffer:Vector.<Number>, v:Vertex, uv:UV, face:Face, semanticsID:String, floatFormat:int):void {
 
-            super.fillBuffer(buffer, v, uv, face, semanticsID, floatFormat);
+			super.fillBuffer(buffer, v, uv, face, semanticsID, floatFormat);
 
-            var pv:ParticleVertex = ParticleVertex(v);
+			var pv:ParticleVertex = ParticleVertex(v);
 
-            if(semanticsID == "PB3D_VELOCITY") {
-                buffer.push(pv.vx, pv.vy, pv.startX, pv.startY);
-            }
+			if(semanticsID == "PB3D_VELOCITY") {
+				buffer.push(pv.vx, pv.vy, pv.startX, pv.startY);
+			}
 
-            if(semanticsID == "PB3D_MISC") {
-                buffer.push(pv.startTime, pv.life, pv.startSize, pv.endSize);
-            }
+			if(semanticsID == "PB3D_MISC") {
+				buffer.push(pv.startTime, pv.life, pv.startSize, pv.endSize);
+			}
 
-            if(semanticsID == "PB3D_ENDCOLOR") {
-                buffer.push(pv.endColorR, pv.endColorG, pv.endColorB, pv.endAlpha);
-            }
+			if(semanticsID == "PB3D_ENDCOLOR") {
+				buffer.push(pv.endColorR, pv.endColorG, pv.endColorB, pv.endAlpha);
+			}
 
-            if(semanticsID == "PB3D_STARTCOLOR") {
-                buffer.push(pv.startColorR, pv.startColorG, pv.startColorB, pv.startAlpha);
-            }
-        }
+			if(semanticsID == "PB3D_STARTCOLOR") {
+				buffer.push(pv.startColorR, pv.startColorG, pv.startColorB, pv.startAlpha);
+			}
+		}
 
-        override public function cleanUp():void {
-            super.cleanUp();
-            if(texture) {
-                texture.dispose();
-                texture = null;
-            }
-        }
+		override public function dispose():void {
+			super.dispose();
 
-        override protected function initProgram(context:Context3D):void {
-            if(!particleSystemProgramData) {
-                var vertexShaderAssembler:AGALMiniAssembler = new AGALMiniAssembler();
-                vertexShaderAssembler.assemble(Context3DProgramType.VERTEX, VERTEX_SHADER);
+			if(texture) {
+				texture.dispose();
+				texture = null;
+			}
+		}
 
-                var colorFragmentShaderAssembler:AGALMiniAssembler = new AGALMiniAssembler();
-                colorFragmentShaderAssembler.assemble(Context3DProgramType.FRAGMENT, FRAGMENT_SHADER);
-
-                var program:Program3D = context.createProgram();
-                program.upload(vertexShaderAssembler.agalcode, colorFragmentShaderAssembler.agalcode);
-
-                particleSystemProgramData = new ProgramData(program, 20);
-            }
-
-            programData = particleSystemProgramData;
-        }
-    }
+		override protected function initProgram(context:Context3D):void {
+			if(!shaderData) {
+				var vertexString:String = VERTEX_SHADER.replace("[PARTICLES_REPEAT]", burst ? BURST_SHADER_PART : REPEAT_SHADER_PART);
+				shaderData = ShaderCache.getInstance().getShader(context, this, vertexString, FRAGMENT_SHADER, 20, texture.textureOptions, burst ? 1000 : 0);
+			}
+		}
+	}
 }

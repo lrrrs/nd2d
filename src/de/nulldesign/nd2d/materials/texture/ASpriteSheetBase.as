@@ -28,13 +28,23 @@
  * THE SOFTWARE.
  */
 
-package de.nulldesign.nd2d.materials {
+package de.nulldesign.nd2d.materials.texture {
 
-    import flash.display.BitmapData;
-    import flash.geom.Rectangle;
-    import flash.utils.Dictionary;
+	import de.nulldesign.nd2d.materials.texture.SpriteSheetAnimation;
 
-    public class ASpriteSheetBase {
+	import flash.geom.Point;
+	import flash.geom.Rectangle;
+	import flash.utils.Dictionary;
+
+	public class ASpriteSheetBase {
+
+        protected var frames:Vector.<Rectangle> = new Vector.<Rectangle>();
+        protected var offsets:Vector.<Point> = new Vector.<Point>();
+        protected var sourceSizes:Vector.<Point> = new Vector.<Point>();
+		protected var sourceColorRects:Vector.<Rectangle> = new Vector.<Rectangle>();
+        protected var frameNameToIndex:Dictionary = new Dictionary();
+        protected var uvRects:Vector.<Rectangle>;
+        protected var spritesPackedWithoutSpace:Boolean;
 
         protected var ctime:Number = 0.0;
         protected var otime:Number = 0.0;
@@ -45,24 +55,14 @@ package de.nulldesign.nd2d.materials {
         protected var activeAnimation:SpriteSheetAnimation;
         protected var animationMap:Dictionary = new Dictionary();
 
-        public var bitmapData:BitmapData;
         public var frameUpdated:Boolean = true;
 
         protected var fps:uint;
 
-        protected var _textureWidth:Number;
-        protected var _textureHeight:Number;
-
-        public function get textureWidth():Number {
-            return _textureWidth;
-        }
-
-        public function get textureHeight():Number {
-            return _textureHeight;
-        }
-
         protected var _spriteWidth:Number;
         protected var _spriteHeight:Number;
+        protected var _sheetWidth:Number;
+        protected var _sheetHeight:Number;
 
         public function get spriteWidth():Number {
             return _spriteWidth;
@@ -72,7 +72,7 @@ package de.nulldesign.nd2d.materials {
             return _spriteHeight;
         }
 
-        protected var _frame:uint = 0;
+        protected var _frame:uint = int.MAX_VALUE;
 
         public function get frame():uint {
             return _frame;
@@ -82,6 +82,11 @@ package de.nulldesign.nd2d.materials {
             if(frame != value) {
                 _frame = value;
                 frameUpdated = true;
+
+                if(frames.length - 1 >= _frame) {
+                    _spriteWidth = frames[_frame].width;
+                    _spriteHeight = frames[_frame].height;
+                }
             }
         }
 
@@ -112,10 +117,6 @@ package de.nulldesign.nd2d.materials {
             otime = ctime;
         }
 
-        public function addAnimation(name:String, keyFrames:Array, loop:Boolean, keyIsString:Boolean = false):void {
-            animationMap[name] = new SpriteSheetAnimation(keyFrames, loop);
-        }
-
         public function playAnimation(name:String, startIdx:uint = 0, restart:Boolean = false):void {
             if(restart || activeAnimation != animationMap[name]) {
                 frameIdx = startIdx;
@@ -123,12 +124,46 @@ package de.nulldesign.nd2d.materials {
             }
         }
 
+		public function addAnimation(name:String, keyFrames:Array, loop:Boolean):void {
+
+		}
+
         public function clone():ASpriteSheetBase {
             return null;
         }
 
-        public function getUVRectForFrame():Rectangle {
-            return null;
+        public function getOffsetForFrame():Point {
+            return offsets[frame];
+        }
+
+        public function getUVRectForFrame(textureWidth:Number, textureHeight:Number):Rectangle {
+
+            if(uvRects[frame]) {
+                return uvRects[frame];
+            }
+
+            var rect:Rectangle = frames[frame].clone();
+            var texturePixelOffset:Point = new Point((textureWidth - _sheetWidth) / 2.0, (textureHeight - _sheetHeight) / 2.0);
+
+            rect.x += texturePixelOffset.x;
+            rect.y += texturePixelOffset.y;
+
+            if(spritesPackedWithoutSpace) {
+                rect.x += 0.5;
+                rect.y += 0.5;
+
+                rect.width -= 1.0;
+                rect.height -= 1.0;
+            }
+
+            rect.x /= textureWidth;
+            rect.y /= textureHeight;
+            rect.width /= textureWidth;
+            rect.height /= textureHeight;
+
+            uvRects[frame] = rect;
+
+            return rect;
         }
     }
 }

@@ -28,19 +28,18 @@
  * THE SOFTWARE.
  */
 
-package de.nulldesign.nd2d.materials {
+package de.nulldesign.nd2d.materials.texture {
 
-    import flash.display3D.Program3D;
+    public class SpriteSheetAnimation {
 
-    // TODO semi/automatic vertex attributes mapping?
-    public class ProgramData {
+        public var loop:Boolean;
+        public var frames:Array;
+        public var numFrames:uint;
 
-        public var program:Program3D;
-        public var numFloatsPerVertex:int;
-
-        public function ProgramData(program:Program3D, numFloatsPerVertex:uint) {
-            this.program = program;
-            this.numFloatsPerVertex = numFloatsPerVertex;
+        public function SpriteSheetAnimation(frames:Array, loop:Boolean) {
+            this.loop = loop;
+            this.frames = frames;
+            this.numFrames = frames.length;
         }
     }
 }

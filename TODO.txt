@@ -1,18 +1,23 @@
-- PVTR support
+- ATF support
 - ParticleSystem2D: add support for bursts!
-- Multitouch events!!!
-- init method for world -> async buffer & texture creation w/ event before launching the world. (no startup lag anymore, "preloadable")
-- disposing of textures, etc. cleanUp / destroy
-- Filtering options:  nearest neighbor / linear filtering, etc...
-- Tilemaps?
-- texture smoothing mipmap, nearest, linear, etc. customize per object or per ND2D instance?
+- Multitouch events
 - premultiplied / non premultiplied alpha check for textures!
-- TextureCache
-- Sprite2DBatch recursive rendering (done!. need to text)
-- Depricate bitmapData as constructor argument. Only Texture2D allowed! Static creation methods?
 - updateFromPreset method for particlesystem to update the buffer on the fly?!
 - blurmaterial
-- texturerenderer -> clear optional.
+- solid / gradient quad as new object
+- Zoë: A SWF animation exporter for the EaselJS library. ? more TextureAtlas tools?
+- premultiplied / non premultiplied alpha - bug in particlesystem? dynamic per texturetype
+- multiple worlds test
+- camera zoom example for independent resolutions
+- Sprite2DCloud - addChildAt - invalidation not THAT agressive if possible?
+- premultiplied alpha bug for sprite2dcloud
+- Dynamic TextureAtlas. Packing algorithm: http://www.codeproject.com/KB/web-image/rectanglepacker.aspx. font from bmp / font from textfield? new Font2D class! with textureatlas http://ge.runcode.us/q/get-bounds-of-filters-applied-to-flash-sprite-within-sprite http://www.blackpawn.com/texts/lightmaps/
 
+What I don't like about the spritesheets is:
+- it's a pain to declare animations from a (cocos2D) spritesheet - it needs a simpler way like just sheet.playAnimation("foo*") and it would automatically build the animation with all assets named "foo001.png", "foo002.png", etc.
+- and it seems inefficient to have to clone the spritesheet object.
+About Sprite2DBatch: only addChildAt/removeChildAt are implemented and I'm not sure why addChild/removeChild aren't - maybe there's a hidden reason? Also invalidation in the *At methods seem a bit aggressive.
+getChildByTag()
 
-
+- GUI layer - no camera movement?
+- http://nulldesign.de/nd2d/forum/topic.php?id=86 TextField2D

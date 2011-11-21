@@ -30,181 +30,170 @@
 
 package {
 
-    import avmplus.getQualifiedClassName;
-    
-    import com.bit101.components.PushButton;
-    
-    import de.nulldesign.nd2d.display.Scene2D;
-    import de.nulldesign.nd2d.display.World2D;
-    
-    import flash.display.StageAlign;
-    import flash.display.StageScaleMode;
-    import flash.display3D.Context3DRenderMode;
-    import flash.events.Event;
-    import flash.events.KeyboardEvent;
-    import flash.events.MouseEvent;
-    import flash.text.TextField;
-    import flash.text.TextFormat;
-    import flash.ui.Keyboard;
-    
-    import net.hires.debug.Stats;
-    
-    import tests.BatchTest;
-    import tests.CameraTest;
-    import tests.ColorTransformTest;
-    import tests.Font2DTest;
-    import tests.Grid2DTest;
-    import tests.MaskTest;
-    import tests.MassiveSpriteCloudTest;
-    import tests.MassiveSpritesTest;
-    import tests.ParticleExplorer;
-    import tests.ParticleSystemTest;
-    import tests.PostProcessingTest;
-    import tests.SideScrollerTest;
-    import tests.Sprite2DCloudParticles;
-    import tests.SpriteAnimTest;
-    import tests.SpriteHierarchyTest;
-    import tests.SpriteHierarchyTest2;
-    import tests.SpriteTest;
-    import tests.StarFieldTest;
-    import tests.TextureAtlasTest;
-    import tests.TextureRendererTest;
+	import avmplus.getQualifiedClassName;
 
-    //[SWF(width="1000", height="550", frameRate="60", backgroundColor="#000000")]
+	import de.nulldesign.nd2d.display.Scene2D;
+	import de.nulldesign.nd2d.display.World2D;
 
-    public class Main extends World2D {
+	import flash.display.StageAlign;
+	import flash.display.StageDisplayState;
+	import flash.display.StageScaleMode;
+	import flash.display3D.Context3DRenderMode;
+	import flash.events.Event;
+	import flash.events.KeyboardEvent;
+	import flash.events.MouseEvent;
+	import flash.text.TextField;
+	import flash.text.TextFormat;
+	import flash.ui.Keyboard;
 
-        private var scenes:Vector.<Scene2D> = new Vector.<Scene2D>();
-        private var activeSceneIdx:uint = 0;
-        private var stats:Stats = new Stats();
+	import net.hires.debug.Stats;
 
-        private var sceneText:TextField;
+	import tests.BatchTest;
+	import tests.CameraTest;
+	import tests.QuadMaterialTest;
+	import tests.ColorTransformTest;
+	import tests.Font2DTest;
+	import tests.Grid2DTest;
+	import tests.MaskTest;
+	import tests.MassiveSpriteCloudTest;
+	import tests.MassiveSpritesTest;
+	import tests.ParticleExplorer;
+	import tests.ParticleSystemTest;
+	import tests.PostProcessingTest;
+	import tests.SideScrollerTest;
+	import tests.SpeedTest;
+	import tests.Sprite2DCloudParticles;
+	import tests.SpriteAnimTest;
+	import tests.SpriteHierarchyTest;
+	import tests.SpriteHierarchyTest2;
+	import tests.SpriteTest;
+	import tests.StarFieldTest;
+	import tests.TextFieldTest;
+	import tests.TextureAtlasTest;
+	import tests.TextureRendererTest;
+	import tests.TextureAndRotationOptionsTest;
+	import tests.Transform3DTest;
 
-        public function Main() {
+	[SWF(width="1000", height="550", frameRate="60", backgroundColor="#000000")]
+	public class Main extends World2D {
 
-            stage.scaleMode = StageScaleMode.NO_SCALE;
-            stage.align = StageAlign.TOP_LEFT;
-            enableErrorChecking = true;
+		private var scenes:Vector.<Scene2D> = new Vector.<Scene2D>();
+		private var activeSceneIdx:uint = 0;
+		public static var stats:Stats = new Stats();
 
-            super(Context3DRenderMode.AUTO, 60);
+		private var sceneText:TextField;
 
-            scenes.push(new SideScrollerTest());
-            scenes.push(new MassiveSpritesTest());
-            scenes.push(new MassiveSpriteCloudTest());
-            scenes.push(new SpriteHierarchyTest());
-            scenes.push(new SpriteHierarchyTest2());
-            scenes.push(new Font2DTest());
-            scenes.push(new Grid2DTest());
-            scenes.push(new SpriteTest());
-            scenes.push(new SpriteAnimTest());
-            scenes.push(new StarFieldTest());
-            scenes.push(new ParticleSystemTest());
-            scenes.push(new CameraTest());
-            scenes.push(new ParticleExplorer());
-            scenes.push(new MaskTest());
-            scenes.push(new TextureAtlasTest());
-            scenes.push(new BatchTest());
-            scenes.push(new TextureRendererTest());
-            scenes.push(new PostProcessingTest());
-            scenes.push(new ColorTransformTest());
-            scenes.push(new Sprite2DCloudParticles());
+		public function Main() {
 
-            var tf:TextFormat = new TextFormat("Arial", 11, 0xFFFFFF, true);
+			stage.scaleMode = StageScaleMode.NO_SCALE;
+			stage.align = StageAlign.TOP_LEFT;
+			enableErrorChecking = false;
 
-            sceneText = new TextField();
-            sceneText.width = 300;
-            sceneText.defaultTextFormat = tf;
-            sceneText.autoSize = "left";
+			super(Context3DRenderMode.AUTO, 60);
+		}
 
-            addChild(sceneText);
+		override protected function addedToStage(event:Event):void {
+			super.addedToStage(event);
 
-            addChild(stats);
+			scenes.push(new SideScrollerTest());
+			scenes.push(new MassiveSpritesTest());
+			scenes.push(new MassiveSpriteCloudTest());
+			scenes.push(new SpriteHierarchyTest());
+			scenes.push(new SpriteHierarchyTest2());
+			scenes.push(new Font2DTest());
+			scenes.push(new Grid2DTest());
+			scenes.push(new SpriteTest());
+			scenes.push(new SpriteAnimTest());
+			scenes.push(new StarFieldTest());
+			scenes.push(new ParticleSystemTest());
+			scenes.push(new CameraTest());
+			scenes.push(new ParticleExplorer());
+			scenes.push(new MaskTest());
+			scenes.push(new TextureAtlasTest());
+			scenes.push(new BatchTest());
+			scenes.push(new TextureRendererTest());
+			scenes.push(new PostProcessingTest());
+			scenes.push(new ColorTransformTest());
+			scenes.push(new Sprite2DCloudParticles());
+			scenes.push(new SpeedTest());
+			scenes.push(new TextureAndRotationOptionsTest());
+			scenes.push(new Transform3DTest());
+			scenes.push(new TextFieldTest());
+			scenes.push(new QuadMaterialTest());
 
-            stage.addEventListener(Event.RESIZE, stageResize);
-            stageResize(null);
+			var tf:TextFormat = new TextFormat("Arial", 11, 0xFFFFFF, true);
 
-            activeSceneIdx = scenes.length - 1;
-            nextDemo();
+			sceneText = new TextField();
+			sceneText.width = 300;
+			sceneText.defaultTextFormat = tf;
 
-            stage.addEventListener(KeyboardEvent.KEY_UP, keyUp);
+			addChild(sceneText);
 
-            /********************************
-             * API CHANGE: YOU HAVE TO CALL START TO INITIALIZE THE WORLD2D. OTHERWISE YOUR SCREEN WILL BE BLANK
-             ********************************/
-            start();
+			addChild(stats);
 
-            // test buttons
-            /*
-            var b:PushButton;
-            b = new PushButton(this, 0, 460, "pause", buttonClicked);
-            b.tag = 0;
-            b = new PushButton(this, 0, 480, "resume", buttonClicked);
-            b.tag = 1;
-            b = new PushButton(this, 0, 500, "sleep", buttonClicked);
-            b.tag = 2;
-            b = new PushButton(this, 0, 520, "wakeup", buttonClicked);
-            b.tag = 3;
-            */
-            
-            addChild(new PushButton(this, stage.stageWidth-100, stage.stageHeight-20, "next", function nextButtonClick(e:MouseEvent):void {
-                nextDemo();
-            }));
-        }
+			stage.addEventListener(Event.RESIZE, stageResize);
+			stageResize(null);
 
-        private function buttonClicked(e:MouseEvent):void {
-            switch(e.target.tag) {
-                case 0:
-                    pause();
-                    break;
-                case 1:
-                    resume();
-                    break;
-                case 2:
-                    sleep();
-                    break;
-                case 3:
-                    wakeUp();
-                    break;
-            }
-        }
+			activeSceneIdx = scenes.length - 1;
+			nextBtnClick();
 
-        private function keyUp(e:KeyboardEvent):void {
-            if(e.keyCode == Keyboard.D) {
-                // simulate device loss
-                context3D.dispose();
-            } else if(e.keyCode == Keyboard.SPACE) {
-                nextDemo();
-            }
-        }
+			stage.addEventListener(KeyboardEvent.KEY_UP, keyUp);
 
-        private function nextDemo():void {
+			start();
 
-            camera.reset();
+			// test buttons
+			/*
+			var b:PushButton;
+			b = new PushButton(this, 380, 0, "next", buttonClicked);
+			b.tag = 0;
+			*/
+		}
 
-            sceneText.text = "(" + (activeSceneIdx + 1) + "/" + scenes.length + ") " + getQualifiedClassName(scenes[activeSceneIdx]);
+		private function buttonClicked(e:MouseEvent):void {
+			nextBtnClick();
+		}
 
-            setActiveScene(scenes[activeSceneIdx++]);
+		private function keyUp(e:KeyboardEvent):void {
+			if(e.keyCode == Keyboard.D) {
+				// simulate device loss
+				context3D.dispose();
+			} else if(e.keyCode == Keyboard.SPACE) {
+				nextBtnClick();
+			} else if(e.keyCode == Keyboard.F) {
+				stage.displayState = StageDisplayState.FULL_SCREEN;
+			}
+		}
 
-            if(activeSceneIdx > scenes.length - 1) {
-                activeSceneIdx = 0;
-            }
-        }
-        
-        override protected function context3DCreated(e:Event):void {
-            super.context3DCreated(e);
-            
-            if(context3D)
-                stats.driverInfo = context3D.driverInfo;
-        }
+		private function nextBtnClick():void {
 
-        private function stageResize(e:Event):void {
-            sceneText.x = 5;
-            sceneText.y = stage.stageHeight - 20;
-        }
+			camera.reset();
 
-        override protected function mainLoop(e:Event):void {
-            super.mainLoop(e);
-            stats.update(scene.drawCalls, scene.numTris);
-        }
-    }
+			sceneText.text = "(" + (activeSceneIdx + 1) + "/" + scenes.length + ") " + getQualifiedClassName(scenes[activeSceneIdx]) + " // hit space for next test.";
+
+			setActiveScene(scenes[activeSceneIdx++]);
+
+			if(activeSceneIdx > scenes.length - 1) {
+				activeSceneIdx = 0;
+			}
+		}
+
+		private function stageResize(e:Event):void {
+			sceneText.x = 5;
+			sceneText.y = stage.stageHeight - 20;
+		}
+
+		override protected function mainLoop(e:Event):void {
+			super.mainLoop(e);
+			stats.update(statsObject.totalDrawCalls, statsObject.totalTris);
+		}
+
+		override protected function context3DCreated(e:Event):void {
+
+			super.context3DCreated(e);
+
+			if(context3D) {
+				stats.driverInfo = context3D.driverInfo;
+			}
+		}
+	}
 }

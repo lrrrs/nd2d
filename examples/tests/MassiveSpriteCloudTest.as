@@ -30,28 +30,25 @@
 
 package tests {
 
-    import com.bit101.components.PushButton;
+	import com.bit101.components.PushButton;
 
-    import de.nulldesign.nd2d.display.Node2D;
-    import de.nulldesign.nd2d.display.Scene2D;
-    import de.nulldesign.nd2d.display.Sprite2D;
-    import de.nulldesign.nd2d.display.Sprite2DBatch;
-    import de.nulldesign.nd2d.display.Sprite2DCloud;
-    import de.nulldesign.nd2d.materials.SpriteSheet;
-	import de.nulldesign.nd2d.materials.Texture2D;
+	import de.nulldesign.nd2d.display.Scene2D;
+	import de.nulldesign.nd2d.display.Sprite2D;
+	import de.nulldesign.nd2d.display.Sprite2DCloud;
+	import de.nulldesign.nd2d.materials.texture.SpriteSheet;
+	import de.nulldesign.nd2d.materials.texture.Texture2D;
 
-	import flash.display.BitmapData;
-    import flash.events.Event;
-    import flash.events.MouseEvent;
-    import flash.geom.Point;
+	import flash.events.Event;
+	import flash.events.MouseEvent;
+	import flash.geom.Point;
 
-    public class MassiveSpriteCloudTest extends Scene2D {
+	public class MassiveSpriteCloudTest extends Scene2D {
 
         [Embed(source="/assets/spritechar2.png")]
         private var cubeTexture:Class;
 
         private var sprites:Vector.<Sprite2D>;
-        private var spriteCloud:Node2D;
+        private var spriteCloud:Sprite2DCloud;
 
         private var numSprites:uint = 1600;
 
@@ -65,17 +62,14 @@ package tests {
             var tex:Texture2D = Texture2D.textureFromBitmapData(new cubeTexture().bitmapData);
             var s:Sprite2D;
 
-<<<<<<< HEAD
-            var sheet:SpriteSheet = new SpriteSheet(tex, 24, 32, 10);
-=======
             var sheet:SpriteSheet = new SpriteSheet(tex.bitmapWidth, tex.bitmapHeight, 24, 32, 10);
->>>>>>> 8a56cc990a05cac58f6831cd856041787f9b139f
             sheet.addAnimation("up", [0, 1, 2], true);
             sheet.addAnimation("right", [3, 4, 5], true);
             sheet.addAnimation("down", [6, 7, 8], true);
             sheet.addAnimation("left", [9, 10, 11], true);
 
-            spriteCloud = new Sprite2DCloud(numSprites, sheet);
+            spriteCloud = new Sprite2DCloud(numSprites, tex);
+            spriteCloud.setSpriteSheet(sheet);
             //spriteCloud = new Sprite2DBatch(sheet);
 
             addSpritesClick();

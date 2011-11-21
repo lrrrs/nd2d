@@ -30,253 +30,254 @@
 
 package de.nulldesign.nd2d.display {
 
-    import flash.display.Sprite;
-    import flash.display3D.Context3D;
-    import flash.display3D.Context3DCompareMode;
-    import flash.display3D.Context3DTriangleFace;
-    import flash.events.ErrorEvent;
-    import flash.events.Event;
-    import flash.events.MouseEvent;
-    import flash.geom.Rectangle;
-    import flash.geom.Vector3D;
-    import flash.utils.getTimer;
+	import de.nulldesign.nd2d.materials.shader.ShaderCache;
+	import de.nulldesign.nd2d.utils.StatsObject;
 
-    /**
-     * Dispatched when the World2D is initialized and the context3D is available. The flag 'isHardwareAccelerated' is available then
-     * @eventType flash.events.Event.INIT
-     */
-    [Event(name="init", type="flash.events.Event")]
+	import flash.display.Sprite;
+	import flash.display3D.Context3D;
+	import flash.display3D.Context3DCompareMode;
+	import flash.display3D.Context3DTriangleFace;
+	import flash.events.ErrorEvent;
+	import flash.events.Event;
+	import flash.events.MouseEvent;
+	import flash.geom.Rectangle;
+	import flash.geom.Vector3D;
+	import flash.utils.getTimer;
 
-    /**
-     * <p>Baseclass for ND2D</p>
-     * Extend this class and add your own scenes and sprites
-     *
-     * Set up your project like this:
-     * <ul>
-     * <li>MyGameWorld2D</li>
-     * <li>- MyStartScene2D</li>
-     * <li>-- StartButtonSprite2D</li>
-     * <li>-- ...</li>
-     * <li>- MyGameScene2D</li>
-     * <li>-- GameSprites2D</li>
-     * <li>-- ...</li>
-     * </ul>
-     * <p>Put your game logic in the step() method of each scene / node</p>
-     *
-     * You can switch between scenes with the setActiveScene method of World2D.
-     * There can be only one active scene.
-     *
-     * NOTICE: API change. You have to call start once to initialize the world
-     *
-     */ public class World2D extends Sprite {
+	/**
+	 * Dispatched when the World2D is initialized and the context3D is available. The flag 'isHardwareAccelerated' is available then
+	 * @eventType flash.events.Event.INIT
+	 */
+	[Event(name="init", type="flash.events.Event")]
 
-        protected var camera:Camera2D = new Camera2D(1, 1);
-        protected var context3D:Context3D;
-        protected var stageID:uint;
-        protected var scene:Scene2D;
-        protected var frameRate:uint;
-        protected var isPaused:Boolean = false;
-        protected var bounds:Rectangle;
-        protected var lastFramesTime:Number = 0.0;
-        protected var enableErrorChecking:Boolean = false;
+	/**
+	 * <p>Baseclass for ND2D</p>
+	 * Extend this class and add your own scenes and sprites
+	 *
+	 * Set up your project like this:
+	 * <ul>
+	 * <li>MyGameWorld2D</li>
+	 * <li>- MyStartScene2D</li>
+	 * <li>-- StartButtonSprite2D</li>
+	 * <li>-- ...</li>
+	 * <li>- MyGameScene2D</li>
+	 * <li>-- GameSprites2D</li>
+	 * <li>-- ...</li>
+	 * </ul>
+	 * <p>Put your game logic in the step() method of each scene / node</p>
+	 *
+	 * You can switch between scenes with the setActiveScene method of World2D.
+	 * There can be only one active scene.
+	 *
+	 *
+	 */ public class World2D extends Sprite {
 
-        protected var renderMode:String;
-        protected var mousePosition:Vector3D = new Vector3D(0.0, 0.0, 0.0);
-        protected var antialiasing:uint = 2;
-        protected var deviceInitialized:Boolean = false;
-        protected var deviceWasLost:Boolean = false;
+		protected var camera:Camera2D = new Camera2D(1, 1);
+		protected var context3D:Context3D;
+		protected var stageID:uint;
+		protected var scene:Scene2D;
+		protected var frameRate:uint;
+		protected var isPaused:Boolean = false;
+		protected var bounds:Rectangle;
+		protected var lastFramesTime:Number = 0.0;
+		protected var enableErrorChecking:Boolean = false;
 
-        protected var initializeNodesAfterStartUp:Boolean = false;
+		protected var renderMode:String;
+		protected var mousePosition:Vector3D = new Vector3D(0.0, 0.0, 0.0);
+		protected var antialiasing:uint = 2;
+		protected var deviceInitialized:Boolean = false;
+		protected var deviceWasLost:Boolean = false;
 
-        public static var isHardwareAccelerated:Boolean;
+		protected var statsObject:StatsObject = new StatsObject();
 
-        /**
-         * Constructor of class world
-         * @param renderMode Context3DRenderMode (auto, software)
-         * @param frameRate timer and the swf will be set to this framerate
-         * @param frameBased whether to use a timer or a enterFrame to step()
-         * @param bounds the worlds boundaries
-         * @param stageID
-         */
-        public function World2D(renderMode:String, frameRate:uint = 60, bounds:Rectangle = null, stageID:uint = 0) {
+		internal var topMostMouseNode:Node2D;
 
-            this.renderMode = renderMode;
-            this.frameRate = frameRate;
-            this.bounds = bounds;
-            this.stageID = stageID;
-            addEventListener(Event.ADDED_TO_STAGE, addedToStage);
-        }
+		public static var isHardwareAccelerated:Boolean;
 
-        protected function addedToStage(event:Event):void {
+		/**
+		 * Constructor of class world
+		 * @param renderMode Context3DRenderMode (auto, software)
+		 * @param frameRate timer and the swf will be set to this framerate
+		 * @param bounds the worlds boundaries
+		 * @param stageID
+		 */
+		public function World2D(renderMode:String, frameRate:uint = 60, bounds:Rectangle = null, stageID:uint = 0) {
 
-            removeEventListener(Event.ADDED_TO_STAGE, addedToStage);
-            stage.addEventListener(Event.RESIZE, resizeStage);
-            stage.frameRate = frameRate;
-            stage.stage3Ds[stageID].addEventListener(Event.CONTEXT3D_CREATE, context3DCreated);
-            stage.stage3Ds[stageID].addEventListener(ErrorEvent.ERROR, context3DError);
-            stage.stage3Ds[stageID].requestContext3D(renderMode);
+			this.renderMode = renderMode;
+			this.frameRate = frameRate;
+			this.bounds = bounds;
+			this.stageID = stageID;
+			addEventListener(Event.ADDED_TO_STAGE, addedToStage);
+		}
 
-            stage.addEventListener(MouseEvent.CLICK, mouseEventHandler);
-            stage.addEventListener(MouseEvent.MOUSE_DOWN, mouseEventHandler);
-            stage.addEventListener(MouseEvent.MOUSE_MOVE, mouseEventHandler);
-            stage.addEventListener(MouseEvent.MOUSE_UP, mouseEventHandler);
-        }
+		protected function addedToStage(event:Event):void {
 
-        protected function context3DError(e:ErrorEvent):void {
-            throw new Error("The SWF is not embedded properly. The 3D context can't be created. Wrong WMODE? Set it to 'direct'.");
-        }
+			removeEventListener(Event.ADDED_TO_STAGE, addedToStage);
+			stage.addEventListener(Event.RESIZE, resizeStage);
+			stage.frameRate = frameRate;
+			stage.stage3Ds[stageID].addEventListener(Event.CONTEXT3D_CREATE, context3DCreated);
+			stage.stage3Ds[stageID].addEventListener(ErrorEvent.ERROR, context3DError);
+			stage.stage3Ds[stageID].requestContext3D(renderMode);
 
-        protected function context3DCreated(e:Event):void {
+			stage.addEventListener(MouseEvent.CLICK, mouseEventHandler);
+			stage.addEventListener(MouseEvent.MOUSE_DOWN, mouseEventHandler);
+			stage.addEventListener(MouseEvent.MOUSE_MOVE, mouseEventHandler);
+			stage.addEventListener(MouseEvent.MOUSE_UP, mouseEventHandler);
+		}
 
-            context3D = stage.stage3Ds[stageID].context3D;
-            context3D.enableErrorChecking = enableErrorChecking;
-            context3D.setCulling(Context3DTriangleFace.NONE);
-            context3D.setDepthTest(false, Context3DCompareMode.ALWAYS);
-            isHardwareAccelerated = context3D.driverInfo.toLowerCase().indexOf("software") == -1;
+		protected function context3DError(e:ErrorEvent):void {
+			throw new Error("The SWF is not embedded properly. The 3D context can't be created. Wrong WMODE? Set it to 'direct'.");
+		}
 
-            resizeStage();
+		protected function context3DCreated(e:Event):void {
 
-            // means we got the Event.CONTEXT3D_CREATE for the second time, the device was lost. reinit everything
-            if(deviceInitialized) {
-                deviceWasLost = true;
-            }
+			context3D = stage.stage3Ds[stageID].context3D;
+			context3D.enableErrorChecking = enableErrorChecking;
+			context3D.setCulling(Context3DTriangleFace.NONE);
+			context3D.setDepthTest(false, Context3DCompareMode.ALWAYS);
+			isHardwareAccelerated = context3D.driverInfo.toLowerCase().indexOf("software") == -1;
 
-            deviceInitialized = true;
+			resizeStage();
 
-            if(initializeNodesAfterStartUp) {
-                doInitializeNodes();
-            }
+			// means we got the Event.CONTEXT3D_CREATE for the second time, the device was lost. reinit everything
+			if(deviceInitialized) {
+				deviceWasLost = true;
+			}
 
-            dispatchEvent(new Event(Event.INIT));
-        }
+			deviceInitialized = true;
 
-        protected function mouseEventHandler(event:MouseEvent):void {
-            if(scene && scene.mouseEnabled && stage && camera) {
-                var mouseEventType:String = event.type;
+			if(scene) {
+				scene.setStageAndCamRef(stage, camera);
+			}
 
-                // transformation of normalized coordinates between -1 and 1
-                mousePosition.x = (stage.mouseX - 0.0) / camera.sceneWidth * 2.0 - 1.0;
-                mousePosition.y = -((stage.mouseY - 0.0) / camera.sceneHeight * 2.0 - 1.0);
-                mousePosition.z = 0.0;
-                mousePosition.w = 1.0;
+			dispatchEvent(new Event(Event.INIT));
+		}
 
-                scene.processMouseEvents(mousePosition, mouseEventType, camera.getViewProjectionMatrix());
-            }
-        }
+		protected function mouseEventHandler(event:MouseEvent):void {
+			if(scene && scene.mouseEnabled && stage && camera) {
+				var mouseEventType:String = event.type;
 
-        protected function resizeStage(e:Event = null):void {
-            if(!context3D) return;
-            var rect:Rectangle = bounds ? bounds : new Rectangle(0, 0, stage.stageWidth, stage.stageHeight);
-            stage.stage3Ds[stageID].x = rect.x;
-            stage.stage3Ds[stageID].y = rect.y;
+				// transformation of normalized coordinates between -1 and 1
+				mousePosition.x = (stage.mouseX - 0.0) / camera.sceneWidth * 2.0 - 1.0;
+				mousePosition.y = -((stage.mouseY - 0.0) / camera.sceneHeight * 2.0 - 1.0);
+				mousePosition.z = 0.0;
+				mousePosition.w = 1.0;
 
-            context3D.configureBackBuffer(rect.width, rect.height, antialiasing, false);
-            camera.resizeCameraStage(rect.width, rect.height);
-        }
+				var newTopMostMouseNode:Node2D = scene.processMouseEvent(mousePosition, mouseEventType, camera.getViewProjectionMatrix());
+				if(newTopMostMouseNode) {
 
-        protected function mainLoop(e:Event):void {
+					for each(var mouseEvent:MouseEvent in newTopMostMouseNode.mouseEvents) {
 
-            var t:Number = getTimer() / 1000.0;
-            var elapsed:Number = t - lastFramesTime;
+						if(topMostMouseNode && mouseEvent.type == MouseEvent.MOUSE_OVER) {
+							topMostMouseNode.mouseInNode = false;
+							topMostMouseNode.dispatchEvent(new MouseEvent(MouseEvent.MOUSE_OUT, true, false, topMostMouseNode.mouseX, topMostMouseNode.mouseY));
+							newTopMostMouseNode.mouseInNode = true;
+						}
 
-            if(scene) {
-                context3D.clear(scene.br, scene.bg, scene.bb, 1.0);
+						newTopMostMouseNode.dispatchEvent(mouseEvent);
+					}
 
-                if(!isPaused) {
-                    scene.timeSinceStartInSeconds = t;
-                    scene.stepNode(elapsed);
-                }
+					topMostMouseNode = newTopMostMouseNode;
+				}
+			}
+		}
 
-                if(deviceWasLost) {
-                    scene.handleDeviceLoss();
-                    deviceWasLost = false;
-                }
+		protected function resizeStage(e:Event = null):void {
+			if(!context3D) return;
+			var rect:Rectangle = bounds ? bounds : new Rectangle(0, 0, stage.stageWidth, stage.stageHeight);
+			stage.stage3Ds[stageID].x = rect.x;
+			stage.stage3Ds[stageID].y = rect.y;
 
-                scene.drawNode(context3D, camera, false);
+			context3D.configureBackBuffer(rect.width, rect.height, antialiasing, false);
+			camera.resizeCameraStage(rect.width, rect.height);
+		}
 
-                context3D.present();
-            }
+		protected function mainLoop(e:Event):void {
 
-            lastFramesTime = t;
-        }
+			var t:Number = getTimer() / 1000.0;
+			var elapsed:Number = t - lastFramesTime;
 
-        protected function setActiveScene(value:Scene2D):void {
+			if(scene && context3D) {
+				context3D.clear(scene.br, scene.bg, scene.bb, 1.0);
 
-            if(scene) {
-                scene.setStageRef(null);
-                scene.setCameraRef(null);
-            }
+				if(!isPaused) {
+					scene.stepNode(elapsed, t);
+				}
 
-            this.scene = value;
+				if(deviceWasLost) {
+					ShaderCache.getInstance().handleDeviceLoss();
+					scene.handleDeviceLoss();
+					deviceWasLost = false;
+				}
 
-            if(scene) {
-                scene.setCameraRef(camera);
-                scene.setStageRef(stage);
-            }
-        }
+				statsObject.totalDrawCalls = 0;
+				statsObject.totalTris = 0;
 
-        public function start():void {
-            wakeUp();
-        }
+				scene.drawNode(context3D, camera, false, statsObject);
 
-        /**
-         * Pause all movement in your game. The drawing loop will still fire
-         */
-        public function pause():void {
-            isPaused = true;
-        }
+				context3D.present();
+			}
 
-        /**
-         * Resume movement in your game.
-         */
-        public function resume():void {
-            isPaused = false;
-        }
+			lastFramesTime = t;
+		}
 
-        /**
-         * Put everything to sleep, no drawing and step loop will be fired
-         */
-        public function sleep():void {
+		public function setActiveScene(value:Scene2D):void {
 
-            removeEventListener(Event.ENTER_FRAME, mainLoop);
+			if(scene) {
+				scene.setStageAndCamRef(null, null);
+			}
 
-            if(context3D) {
-                context3D.clear(scene.br, scene.bg, scene.bb, 1.0);
-                context3D.present();
-            }
-        }
+			this.scene = value;
 
-        /**
-         * wake up from sleep. draw / step loops will start to fire again
-         */
-        public function wakeUp():void {
-            removeEventListener(Event.ENTER_FRAME, mainLoop);
-            addEventListener(Event.ENTER_FRAME, mainLoop);
-        }
+			if(scene) {
+				scene.setStageAndCamRef(stage, camera);
+			}
+		}
 
-        /**
-         * optionally you can call this method to initialize all your object in the active scene
-         * an event will be dispatched when the initializing is done
-         */
-        public function initializeNodes():void {
+		public function start():void {
+			wakeUp();
+		}
 
-            if(deviceInitialized) {
-                doInitializeNodes();
-            } else {
-                initializeNodesAfterStartUp = true;
-            }
-        }
+		/**
+		 * Pause all movement in your game. The drawing loop will still fire
+		 */
+		public function pause():void {
+			isPaused = true;
+		}
 
-        private function doInitializeNodes():void {
-            // TODO traverse through displaylist and initialize nodes in a seperate thread / loop? dispatch event when ready, etc...
-            trace("TODO! Implement initializeNodes");
-        }
+		/**
+		 * Resume movement in your game.
+		 */
+		public function resume():void {
+			isPaused = false;
+		}
 
-        public function destroy():void {
-            sleep();
-            if(context3D) {
-                context3D.dispose();
-            }
-        }
-    }
+		/**
+		 * Put everything to sleep, no drawing and step loop will be fired
+		 */
+		public function sleep():void {
+
+			removeEventListener(Event.ENTER_FRAME, mainLoop);
+
+			if(context3D) {
+				context3D.clear(scene.br, scene.bg, scene.bb, 1.0);
+				context3D.present();
+			}
+		}
+
+		/**
+		 * wake up from sleep. draw / step loops will start to fire again
+		 */
+		public function wakeUp():void {
+			removeEventListener(Event.ENTER_FRAME, mainLoop);
+			addEventListener(Event.ENTER_FRAME, mainLoop);
+		}
+
+		public function dispose():void {
+			sleep();
+			if(context3D) {
+				context3D.dispose();
+			}
+		}
+	}
 }

@@ -27,55 +27,65 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-
 package tests {
 
 	import de.nulldesign.nd2d.display.Node2D;
+
 	import de.nulldesign.nd2d.display.Scene2D;
 	import de.nulldesign.nd2d.display.Sprite2D;
 	import de.nulldesign.nd2d.display.Sprite2DBatch;
+	import de.nulldesign.nd2d.materials.texture.SpriteSheet;
 	import de.nulldesign.nd2d.materials.texture.Texture2D;
+	import de.nulldesign.nd2d.materials.texture.TextureOption;
+	import de.nulldesign.nd2d.utils.NumberUtil;
 
-	public class BatchTest extends Scene2D {
+	import flash.display.BitmapData;
+	import flash.display.Sprite;
 
-		[Embed(source="/assets/crate.jpg")]
-		private var spriteImage:Class;
+	import flash.events.Event;
+	import flash.events.MouseEvent;
 
-		private var batch:Node2D;
+	public class Transform3DTest extends Scene2D {
 
-		public function BatchTest() {
+		[Embed(source="../assets/test_image.jpg")]
+		private var imageBitmap:Class;
 
-			batch = new Sprite2DBatch(Texture2D.textureFromBitmapData(new spriteImage().bitmapData));
-			addChild(batch);
+		private var batchNode:Sprite2DBatch;
 
-			var s:Sprite2D = new Sprite2D();
-			s.x = s.y = 200.0;
-			batch.addChild(s);
+		public function Transform3DTest() {
+			addEventListener(Event.ADDED_TO_STAGE, addedToStage);
+		}
 
-			s = new Sprite2D();
-			s.x = s.y = 400.0;
-			s.alpha = 0.9;
-			batch.addChild(s);
+		private function addedToStage(e:Event):void {
+			removeEventListener(Event.ADDED_TO_STAGE, addedToStage);
 
-			var prevChild:Sprite2D = s;
-                                                    			for(var i:int = 0; i < 5; i++) {
-				var s2:Sprite2D = new Sprite2D();
-				s2.x = s2.y = 128.0;
-				s2.scaleX = s2.scaleY = 0.8;
-				s2.alpha = 0.9;
-				s2.rotation = 60.0;
-				prevChild.addChild(s2);
+			var tex:Texture2D = Texture2D.textureFromBitmapData(new imageBitmap().bitmapData);
 
-				prevChild = s2;
+			batchNode = new Sprite2DBatch(tex);
+			addChild(batchNode);
+
+			var sheet:SpriteSheet = new SpriteSheet(tex.bitmapWidth, tex.bitmapHeight, 780 / 10, 208 / 4, 1);
+			batchNode.setSpriteSheet(sheet);
+
+			for(var i:int = 0; i < 40; i++) {
+				var s:Sprite2D = new Sprite2D();
+				batchNode.addChild(s);
+
+				s.x = (i % 10) * 78.0 - 780.0 * 0.5;
+				s.y = Math.floor(i / 10) * 52.0 - 208.0 * 0.5;
+				s.spriteSheet.frame = i;
 			}
 		}
 
 		override protected function step(elapsed:Number):void {
-			super.step(elapsed);
+			batchNode.x = stage.stageWidth * 0.5;
+			batchNode.y = stage.stageHeight * 0.5;
 
-			for(var i:int = 0; i < batch.children.length; i++) {
-				var child:Node2D = batch.getChildAt(i);
-				child.rotation += 1.0 + i;
+			var n:Node2D
+			for(var i:int = 0; i < batchNode.children.length; i++) {
+				n = batchNode.getChildAt(i);
+				n.rotationX = NumberUtil.sin0_1(timeSinceStartInSeconds * 0.8) * 180.0 * (Math.floor(i / 10) % 2 == 0 ? -1 : 1);
+				n.rotationY = NumberUtil.sin0_1(timeSinceStartInSeconds * 0.8) * 90.0 * (i % 2 == 0 ? 1 : -1);
 			}
 		}
 	}

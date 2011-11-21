@@ -30,22 +30,23 @@
 
 package tests {
 
-    import com.bit101.components.ColorChooser;
-    import com.bit101.components.HUISlider;
+	import com.bit101.components.CheckBox;
+	import com.bit101.components.ColorChooser;
+	import com.bit101.components.HUISlider;
+	import com.bit101.components.Style;
 
-    import de.nulldesign.nd2d.display.ParticleSystem2D;
-    import de.nulldesign.nd2d.display.Scene2D;
-    import de.nulldesign.nd2d.materials.BlendModePresets;
-	import de.nulldesign.nd2d.materials.Texture2D;
+	import de.nulldesign.nd2d.display.ParticleSystem2D;
+	import de.nulldesign.nd2d.display.Scene2D;
+	import de.nulldesign.nd2d.materials.BlendModePresets;
+	import de.nulldesign.nd2d.materials.texture.Texture2D;
 	import de.nulldesign.nd2d.utils.ParticleSystemPreset;
 
-    import flash.display.BitmapData;
-    import flash.display.Sprite;
-    import flash.events.Event;
-    import flash.events.TimerEvent;
-    import flash.utils.Timer;
+	import flash.display.Sprite;
+	import flash.events.Event;
+	import flash.events.TimerEvent;
+	import flash.utils.Timer;
 
-    public class ParticleExplorer extends Scene2D {
+	public class ParticleExplorer extends Scene2D {
 
         [Embed(source="/assets/particle_small.png")]
         private var particleClass:Class;
@@ -60,6 +61,7 @@ package tests {
         private var preset:ParticleSystemPreset = new ParticleSystemPreset();
 
         private var panel:Sprite;
+		private var burst:Boolean = false;
 
         public function ParticleExplorer() {
 
@@ -91,6 +93,8 @@ package tests {
                 var s:HUISlider;
                 var c:ColorChooser;
                 var nextY:Number = 5;
+
+				Style.LABEL_TEXT = 0xFFFFFF;
 
                 s = new HUISlider(panel, 0, nextY, "minStartX", changeHandler);
                 s.minimum = -stage.stageWidth / 2;
@@ -214,6 +218,9 @@ package tests {
                 s.minimum = 0;
                 s.maximum = 10000;
                 s.value = maxParticles;
+				nextY += 30;
+
+				var check:CheckBox = new CheckBox(panel, 10, nextY, "burst", changeHandler);
             }
 
             stage.addChild(panel);
@@ -223,6 +230,7 @@ package tests {
 
             var s:HUISlider = e.target as HUISlider;
             var c:ColorChooser = e.target as ColorChooser;
+			var check:CheckBox = e.target as CheckBox;
 
             //drrty switch ;)
             if(s) {
@@ -302,6 +310,10 @@ package tests {
                 }
             }
 
+			if(check) {
+				burst = check.selected;
+			}
+
             timer.reset();
             timer.start();
         }
@@ -309,9 +321,9 @@ package tests {
         private function updateSystem(e:TimerEvent):void {
 
             removeChild(particles);
-            particles.cleanUp();
+            particles.dispose();
 
-            particles = new ParticleSystem2D(tex, maxParticles, preset);
+            particles = new ParticleSystem2D(tex, maxParticles, preset, burst);
             particles.blendMode = BlendModePresets.ADD;
 
             addChild(particles);

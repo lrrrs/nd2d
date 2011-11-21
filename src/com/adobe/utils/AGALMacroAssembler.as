@@ -14,12 +14,12 @@ package com.adobe.utils
 	//	Imports
 	// ---------------------------------------------------------------------------
 	//import flash.display3D.*;
+
 	import com.adobe.utils.macro.AGALPreAssembler;
 	import com.adobe.utils.macro.AGALVar;
-	
-	import flash.display.Stage;
+
 	import flash.utils.*;
-	
+
 	/**
 	 * AGALMacroAssembler
 	 * <p>A richer version of the AGALMiniAssembler. The MacroAssembler is
@@ -699,8 +699,9 @@ package com.adobe.utils
 
 import com.adobe.utils.AGALMacroAssembler;
 
+import flash.utils.*;
 
-internal class Macro 
+internal class Macro
 {
 	public var mangledName:String = "";
 	public var name:String	   = "";
@@ -713,7 +714,7 @@ internal class Macro
 		trace( "Macro: " + name + " [" + mangledName + "]" );
 		trace( "  args: " + args );
 		trace( "<==" );
-		var s:String = com.adobe.utils.AGALMacroAssembler.joinTokens( body );
+		var s:String = AGALMacroAssembler.joinTokens( body );
 		trace( s );
 		trace( "==>" );
 	}
@@ -721,8 +722,6 @@ internal class Macro
 
 internal class PerfStage
 {
-	import flash.utils.*;
-
 	public var name:String;
 	public var time:uint;
 	

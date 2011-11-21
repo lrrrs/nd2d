@@ -30,9 +30,9 @@
 
 package de.nulldesign.nd2d.geom {
 
-    import flash.geom.Vector3D;
+	import flash.geom.Vector3D;
 
-    public class Face {
+	public class Face {
 
         public var idx:uint = 0;
 

@@ -30,22 +30,21 @@
 
 package tests {
 
-    import de.nulldesign.nd2d.display.ParticleSystem2D;
-    import de.nulldesign.nd2d.display.Scene2D;
-    import de.nulldesign.nd2d.display.Sprite2D;
-    import de.nulldesign.nd2d.display.Sprite2DCloud;
-    import de.nulldesign.nd2d.materials.BlendModePresets;
-    import de.nulldesign.nd2d.materials.SpriteSheet;
-	import de.nulldesign.nd2d.materials.Texture2D;
+	import de.nulldesign.nd2d.display.ParticleSystem2D;
+	import de.nulldesign.nd2d.display.Scene2D;
+	import de.nulldesign.nd2d.display.Sprite2D;
+	import de.nulldesign.nd2d.display.Sprite2DCloud;
+	import de.nulldesign.nd2d.materials.BlendModePresets;
+	import de.nulldesign.nd2d.materials.texture.SpriteSheet;
+	import de.nulldesign.nd2d.materials.texture.Texture2D;
 	import de.nulldesign.nd2d.utils.NumberUtil;
-    import de.nulldesign.nd2d.utils.ParticleSystemPreset;
+	import de.nulldesign.nd2d.utils.ParticleSystemPreset;
 
-    import flash.display.BitmapData;
-    import flash.events.Event;
+	import flash.events.Event;
 
-    import tests.objects.MorphGrid;
+	import tests.objects.MorphGrid;
 
-    public class SideScrollerTest extends Scene2D {
+	public class SideScrollerTest extends Scene2D {
 
         [Embed(source="/assets/particle_small.png")]
         protected var particleTexture:Class;
@@ -165,11 +164,7 @@ package tests {
             var plantTex:Texture2D = Texture2D.textureFromBitmapData(new plantTexture().bitmapData);
 
             // TODO add reverse loop option to spritesheet
-<<<<<<< HEAD
-            var sheet:SpriteSheet = new SpriteSheet(plantTex, 200, 147, 20);
-=======
             var sheet:SpriteSheet = new SpriteSheet(plantTex.bitmapWidth, plantTex.bitmapHeight, 200, 147, 20);
->>>>>>> 8a56cc990a05cac58f6831cd856041787f9b139f
             var ar:Array = [];
             for(i = 2; i < 35; ++i) {
                 ar.push(i);
@@ -181,7 +176,8 @@ package tests {
 
             sheet.addAnimation("wave", ar, true);
 
-            cloud = new Sprite2DCloud(100, sheet);
+            cloud = new Sprite2DCloud(100, plantTex);
+            cloud.setSpriteSheet(sheet);
 
             grassSprites[0].addChild(cloud);
 

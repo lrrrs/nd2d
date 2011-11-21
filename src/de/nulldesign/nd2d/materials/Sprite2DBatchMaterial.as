@@ -30,50 +30,21 @@
 
 package de.nulldesign.nd2d.materials {
 
-	import com.adobe.utils.AGALMiniAssembler;
-
 	import de.nulldesign.nd2d.display.Node2D;
 	import de.nulldesign.nd2d.display.Sprite2D;
 	import de.nulldesign.nd2d.geom.Face;
 	import de.nulldesign.nd2d.geom.UV;
 	import de.nulldesign.nd2d.geom.Vertex;
-	import de.nulldesign.nd2d.utils.TextureHelper;
+	import de.nulldesign.nd2d.materials.shader.ShaderCache;
 
 	import flash.display3D.Context3D;
 	import flash.display3D.Context3DProgramType;
 	import flash.display3D.Context3DVertexBufferFormat;
-	import flash.display3D.Program3D;
 	import flash.geom.Point;
 	import flash.geom.Rectangle;
 
 	public class Sprite2DBatchMaterial extends Sprite2DMaterial {
 
-<<<<<<< HEAD
-    import de.nulldesign.nd2d.display.Node2D;
-    import de.nulldesign.nd2d.display.Sprite2D;
-    import de.nulldesign.nd2d.geom.Face;
-    import de.nulldesign.nd2d.geom.UV;
-    import de.nulldesign.nd2d.geom.Vertex;
-    import de.nulldesign.nd2d.utils.TextureHelper;
-
-    import flash.display3D.Context3D;
-    import flash.display3D.Context3DProgramType;
-    import flash.display3D.Context3DVertexBufferFormat;
-    import flash.display3D.Program3D;
-    import flash.geom.Point;
-    import flash.geom.Rectangle;
-
-    public class Sprite2DBatchMaterial extends Sprite2DMaterial {
-
-        protected const DEFAULT_VERTEX_SHADER:String =
-                "m44 op, va0, vc[va2.x]             \n" + // vertex * clipspace[idx]
-                "mov vt0, va1                       \n" + // save uv in temp register
-                "mul vt0.xy, vt0.xy, vc[va2.w].zw   \n" + // mult with uv-scale
-                "add vt0.xy, vt0.xy, vc[va2.w].xy   \n" + // add uv offset
-                "mov v0, vt0                        \n" + // copy uv
-                "mov v1, vc[va2.y]	                \n" + // copy colorMultiplier[idx]
-                "mov v2, vc[va2.z]	                \n"; // copy colorOffset[idx]
-=======
 		protected const DEFAULT_VERTEX_SHADER:String =
 				"m44 op, va0, vc[va2.x]             \n" + // vertex * clipspace[idx]
 						"mov vt0, va1                       \n" + // save uv in temp register
@@ -82,7 +53,6 @@ package de.nulldesign.nd2d.materials {
 						"mov v0, vt0                        \n" + // copy uv
 						"mov v1, vc[va2.y]	                \n" + // copy colorMultiplier[idx]
 						"mov v2, vc[va2.z]	                \n"; // copy colorOffset[idx]
->>>>>>> 8a56cc990a05cac58f6831cd856041787f9b139f
 
 		/*
 		 protected const DEFAULT_VERTEX_SHADER:String =
@@ -92,64 +62,21 @@ package de.nulldesign.nd2d.materials {
 		 "mov v1, vc[va2.y]	        \n"; // copy color[idx]
 		 */
 
-<<<<<<< HEAD
-        protected const DEFAULT_FRAGMENT_SHADER:String =
-                "tex ft0, v0, fs0 <2d,clamp,linear,mipnearest>  \n" + // sample texture from interpolated uv coords
-                "mul ft0, ft0, v1                               \n" + // mult with colorMultiplier
-                "add oc, ft0, v2                               \n"; // add with colorOffset
-=======
 		protected const DEFAULT_FRAGMENT_SHADER:String =
-				"tex ft0, v0, fs0 <2d,clamp,linear,mipnearest>  \n" + // sample texture from interpolated uv coords
+				"tex ft0, v0, fs0 <TEXTURE_SAMPLING_OPTIONS>  \n" + // sample texture from interpolated uv coords
 						"mul ft0, ft0, v1                               \n" + // mult with colorMultiplier
 						"add oc, ft0, v2                               \n"; // add with colorOffset
->>>>>>> 8a56cc990a05cac58f6831cd856041787f9b139f
 
 		protected var constantsPerSprite:uint = 7; // matrix, colorMultiplier, colorOffset, uvoffset
 		protected var constantsPerMatrix:uint = 4;
-
-		protected static var cloudProgramData:ProgramData;
 
 		protected const BATCH_SIZE:uint = 126 / constantsPerSprite;
 		protected var batchLen:uint = 0;
 
 		public static const VERTEX_IDX:String = "PB3D_IDX";
 
-<<<<<<< HEAD
-        public function Sprite2DBatchMaterial(textureObject:Object) {
-            super(textureObject);
-        }
-
-        override public function handleDeviceLoss():void {
-            super.handleDeviceLoss();
-            cloudProgramData = null;
-        }
-
-        override protected function generateBufferData(context:Context3D, faceList:Vector.<Face>):void {
-
-            if(vertexBuffer) {
-                return;
-            }
-
-            // use first two faces and extend facelist to max. batch size
-            var f0:Face = faceList[0];
-            var f1:Face = faceList[1];
-            var newF0:Face;
-            var newF1:Face;
-
-            var newFaceList:Vector.<Face> = new Vector.<Face>(BATCH_SIZE * 2, true);
-
-            for(var i:int = 0; i < BATCH_SIZE; i++) {
-                newF0 = f0.clone();
-                newF1 = f1.clone();
-=======
 		public function Sprite2DBatchMaterial() {
 			super();
-		}
->>>>>>> 8a56cc990a05cac58f6831cd856041787f9b139f
-
-		override public function handleDeviceLoss():void {
-			super.handleDeviceLoss();
-			cloudProgramData = null;
 		}
 
 		override protected function generateBufferData(context:Context3D, faceList:Vector.<Face>):void {
@@ -158,116 +85,6 @@ package de.nulldesign.nd2d.materials {
 				return;
 			}
 
-<<<<<<< HEAD
-        override public function render(context:Context3D, faceList:Vector.<Face>, startTri:uint, numTris:uint):void {
-            throw new Error("please call renderBatch for this material");
-        }
-
-        override protected function prepareForRender(context:Context3D):Boolean {
-
-            if(!texture) {
-                texture = TextureHelper.generateTextureFromBitmap(context, spriteSheet.bitmapData, true);
-            }
-
-            context.setProgram(programData.program);
-            context.setBlendFactors(blendMode.src, blendMode.dst);
-            context.setTextureAt(0, texture);
-            context.setVertexBufferAt(0, vertexBuffer, 0, Context3DVertexBufferFormat.FLOAT_2); // vertex
-            context.setVertexBufferAt(1, vertexBuffer, 2, Context3DVertexBufferFormat.FLOAT_2); // uv
-            context.setVertexBufferAt(2, vertexBuffer, 4, Context3DVertexBufferFormat.FLOAT_4); // idx
-
-            return true;
-        }
-
-        public function renderBatch(context:Context3D, faceList:Vector.<Face>, childList:Vector.<Node2D>):void {
-
-            drawCalls = 0;
-            generateBufferData(context, faceList);
-
-            if(prepareForRender(context)) {
-
-                var batchLen:uint = 0;
-                var child:Sprite2D;
-                var colorMultiplierAndOffset:Vector.<Number> = new Vector.<Number>(8, true);
-                var uvoffset:Vector.<Number> = new Vector.<Number>(4, true);
-                var i:int = -1;
-                var n:int = childList.length;
-                var uvOffsetAndScale:Rectangle;
-                var atlasOffset:Point;
-                var atlas:TextureAtlas;
-                var offsetFactor:Number = 1.0 / 255.0;
-
-                while(++i < n) {
-
-                    child = Sprite2D(childList[i]);
-
-                    if(child.visible) {
-
-                        if(child.invalidateColors) child.updateColors();
-                        if(child.invalidateMatrix) child.updateMatrix();
-
-                        atlas = child.spriteSheet as TextureAtlas;
-
-                        if(atlas) {
-
-                            atlasOffset = atlas.getOffsetForFrame();
-
-                            clipSpaceMatrix.identity();
-                            clipSpaceMatrix.appendScale(atlas.spriteWidth * 0.5, atlas.spriteHeight * 0.5, 1.0);
-                            clipSpaceMatrix.appendTranslation(atlasOffset.x, atlasOffset.y, 0.0);
-                            clipSpaceMatrix.append(child.localModelMatrix);
-                            clipSpaceMatrix.append(modelMatrix);
-                            clipSpaceMatrix.append(viewProjectionMatrix);
-
-                        } else {
-
-                            clipSpaceMatrix.identity();
-                            clipSpaceMatrix.append(child.localModelMatrix);
-                            clipSpaceMatrix.append(modelMatrix);
-                            clipSpaceMatrix.append(viewProjectionMatrix);
-                        }
-
-                        colorMultiplierAndOffset[0] = child.combinedColorTransform.redMultiplier;
-                        colorMultiplierAndOffset[1] = child.combinedColorTransform.greenMultiplier;
-                        colorMultiplierAndOffset[2] = child.combinedColorTransform.blueMultiplier;
-                        colorMultiplierAndOffset[3] = child.combinedColorTransform.alphaMultiplier;
-                        colorMultiplierAndOffset[4] = child.combinedColorTransform.redOffset * offsetFactor;
-                        colorMultiplierAndOffset[5] = child.combinedColorTransform.greenOffset * offsetFactor;
-                        colorMultiplierAndOffset[6] = child.combinedColorTransform.blueOffset * offsetFactor;
-                        colorMultiplierAndOffset[7] = child.combinedColorTransform.alphaOffset * offsetFactor;
-
-                        uvOffsetAndScale = child.spriteSheet.getUVRectForFrame();
-
-                        uvoffset[0] = uvOffsetAndScale.x;
-                        uvoffset[1] = uvOffsetAndScale.y;
-                        uvoffset[2] = uvOffsetAndScale.width;
-                        uvoffset[3] = uvOffsetAndScale.height;
-
-                        context.setProgramConstantsFromMatrix(Context3DProgramType.VERTEX,
-                                                              batchLen * constantsPerSprite, clipSpaceMatrix, true);
-
-                        context.setProgramConstantsFromVector(Context3DProgramType.VERTEX,
-                                                              batchLen * constantsPerSprite + constantsPerMatrix,
-                                                              colorMultiplierAndOffset);
-
-                        context.setProgramConstantsFromVector(Context3DProgramType.VERTEX,
-                                                              batchLen * constantsPerSprite + constantsPerMatrix + 2,
-                                                              uvoffset);
-
-                        ++batchLen;
-
-                        if(batchLen == BATCH_SIZE || i == n - 1) {
-                            context.drawTriangles(indexBuffer, 0, batchLen * 2);
-                            batchLen = 0;
-                            ++drawCalls;
-                        }
-                    }
-                }
-
-                clearAfterRender(context);
-            }
-        }
-=======
 			// use first two faces and extend facelist to max. batch size
 			var f0:Face = faceList[0];
 			var f1:Face = faceList[1];
@@ -296,9 +113,9 @@ package de.nulldesign.nd2d.materials {
 
 		override protected function prepareForRender(context:Context3D):void {
 
-			context.setProgram(programData.program);
+			context.setProgram(shaderData.shader);
 			context.setBlendFactors(blendMode.src, blendMode.dst);
-			context.setTextureAt(0, texture.getTexture(context, true));
+			context.setTextureAt(0, texture.getTexture(context));
 			context.setVertexBufferAt(0, vertexBuffer, 0, Context3DVertexBufferFormat.FLOAT_2); // vertex
 			context.setVertexBufferAt(1, vertexBuffer, 2, Context3DVertexBufferFormat.FLOAT_2); // uv
 			context.setVertexBufferAt(2, vertexBuffer, 4, Context3DVertexBufferFormat.FLOAT_4); // idx
@@ -338,9 +155,14 @@ package de.nulldesign.nd2d.materials {
 
 				if(child.visible) {
 
+					if(spriteSheet && !child.spriteSheet) {
+						child.setSpriteSheet(spriteSheet.clone());
+					} else if(!child.texture) {
+						child.setTexture(texture);
+					}
+
 					if(child.invalidateColors) child.updateColors();
 					if(child.invalidateMatrix) child.updateLocalMatrix();
->>>>>>> 8a56cc990a05cac58f6831cd856041787f9b139f
 
 					// TODO check if parent matrix changed?
 					child.updateWorldMatrix();
@@ -349,48 +171,19 @@ package de.nulldesign.nd2d.materials {
 
 					if(spriteSheet) {
 
-<<<<<<< HEAD
-        override protected function addVertex(context:Context3D, buffer:Vector.<Number>, v:Vertex, uv:UV,
-                                              face:Face):void {
-=======
 						uvOffsetAndScale = child.spriteSheet.getUVRectForFrame(texture.textureWidth, texture.textureHeight);
->>>>>>> 8a56cc990a05cac58f6831cd856041787f9b139f
 
 						var offset:Point = child.spriteSheet.getOffsetForFrame();
 
-<<<<<<< HEAD
-        override protected function fillBuffer(buffer:Vector.<Number>, v:Vertex, uv:UV, face:Face, semanticsID:String,
-                                               floatFormat:int):void {
-
-            if(semanticsID == VERTEX_IDX) {
-                // first float will be used for matrix index
-                buffer.push(face.idx * constantsPerSprite);
-                // second, colorMultiplier idx
-                buffer.push(face.idx * constantsPerSprite + constantsPerMatrix);
-                // second, colorOffset idx
-                buffer.push(face.idx * constantsPerSprite + constantsPerMatrix + 1);
-                // third uv offset idx
-                buffer.push(face.idx * constantsPerSprite + constantsPerMatrix + 2);
-
-            } else {
-                super.fillBuffer(buffer, v, uv, face, semanticsID, floatFormat);
-            }
-        }
-
-        override public function cleanUp():void {
-            super.cleanUp();
-        }
-    }
-=======
 						clipSpaceMatrix.identity();
-						clipSpaceMatrix.appendScale(child.spriteSheet.spriteWidth * 0.5, child.spriteSheet.spriteHeight * 0.5, 1.0);
+						clipSpaceMatrix.appendScale(child.spriteSheet.spriteWidth >> 1, child.spriteSheet.spriteHeight >> 1, 1.0);
 						clipSpaceMatrix.appendTranslation(offset.x, offset.y, 0.0);
 						clipSpaceMatrix.append(child.worldModelMatrix);
 						clipSpaceMatrix.append(viewProjectionMatrix);
 
 					} else {
 						clipSpaceMatrix.identity();
-						clipSpaceMatrix.appendScale(texture.textureWidth * 0.5, texture.textureHeight * 0.5, 1.0);
+						clipSpaceMatrix.appendScale(texture.textureWidth >> 1, texture.textureHeight >> 1, 1.0);
 						clipSpaceMatrix.append(child.worldModelMatrix);
 						clipSpaceMatrix.append(viewProjectionMatrix);
 					}
@@ -443,21 +236,9 @@ package de.nulldesign.nd2d.materials {
 		}
 
 		override protected function initProgram(context:Context3D):void {
-
-			if(!cloudProgramData) {
-				var vertexShaderAssembler:AGALMiniAssembler = new AGALMiniAssembler();
-				vertexShaderAssembler.assemble(Context3DProgramType.VERTEX, DEFAULT_VERTEX_SHADER);
-
-				var colorFragmentShaderAssembler:AGALMiniAssembler = new AGALMiniAssembler();
-				colorFragmentShaderAssembler.assemble(Context3DProgramType.FRAGMENT, DEFAULT_FRAGMENT_SHADER);
-
-				var program:Program3D = context.createProgram();
-				program.upload(vertexShaderAssembler.agalcode, colorFragmentShaderAssembler.agalcode);
-
-				cloudProgramData = new ProgramData(program, 8);
+			if(!shaderData) {
+				shaderData = ShaderCache.getInstance().getShader(context, this, DEFAULT_VERTEX_SHADER, DEFAULT_FRAGMENT_SHADER, 8, texture.textureOptions);
 			}
-
-			programData = cloudProgramData;
 		}
 
 		override protected function addVertex(context:Context3D, buffer:Vector.<Number>, v:Vertex, uv:UV, face:Face):void {
@@ -488,5 +269,4 @@ package de.nulldesign.nd2d.materials {
 			super.dispose();
 		}
 	}
->>>>>>> 8a56cc990a05cac58f6831cd856041787f9b139f
 }

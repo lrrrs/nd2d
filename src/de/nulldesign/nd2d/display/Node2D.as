@@ -30,586 +30,6 @@
 
 package de.nulldesign.nd2d.display {
 
-<<<<<<< HEAD
-    import de.nulldesign.nd2d.materials.BlendModePresets;
-    import de.nulldesign.nd2d.utils.NodeBlendMode;
-
-    import flash.display.Stage;
-    import flash.display3D.Context3D;
-    import flash.events.Event;
-    import flash.events.EventDispatcher;
-    import flash.events.MouseEvent;
-    import flash.geom.ColorTransform;
-    import flash.geom.Matrix3D;
-    import flash.geom.Point;
-    import flash.geom.Vector3D;
-
-    /**
-     * Dispatched when the scene is active and added to the stage.
-     * @eventType flash.events.Event.ADDED_TO_STAGE
-     */
-    [Event(name="addedToStage", type="flash.events.Event")]
-
-    /**
-     * Dispatched when the scene inactive and removed from stage.
-     * @eventType flash.events.Event.REMOVED_FROM_STAGE
-     */
-    [Event(name="removedFromStage", type="flash.events.Event")]
-
-    /**
-     * Dispatched when a user presses and releases the main button of the user's pointing device over the same Node2D.
-     * @eventType flash.events.MouseEvent.CLICK
-     */
-    [Event(name="click", type="flash.events.MouseEvent")]
-
-    /**
-     * Dispatched when a user presses the pointing device button over an Node2D instance.
-     * @eventType flash.events.MouseEvent.MOUSE_DOWN
-     */
-    [Event(name="mouseDown", type="flash.events.MouseEvent")]
-
-    /**
-     * Dispatched when a user moves the pointing device while it is over an Node2D.
-     * @eventType flash.events.MouseEvent.MOUSE_MOVE
-     */
-    [Event(name="mouseMove", type="flash.events.MouseEvent")]
-
-    /**
-     * Dispatched when a user releases the pointing device button over an Node2D instance.
-     * @eventType flash.events.MouseEvent.MOUSE_UP
-     */
-    [Event(name="mouseUp", type="flash.events.MouseEvent")]
-
-    /**
-     * Dispatched when the user moves a pointing device over an Node2D instance.
-     * @eventType flash.events.MouseEvent.MOUSE_OVER
-     */
-    [Event(name="mouseOver", type="flash.events.MouseEvent")]
-
-    /**
-     * Dispatched when the user moves a pointing device away from an Node2D instance.
-     * @eventType flash.events.MouseEvent.MOUSE_OUT
-     */
-    [Event(name="mouseOut", type="flash.events.MouseEvent")]
-
-    /**
-     * <p>Basic 2D object. All drawable objects must extend Node2D</p>
-     * A Node2D has two methods that are called during rendering:
-     * <ul>
-     * <li>step - Update the node's position here</li>
-     * <li>draw - Your rendering code goes here</li>
-     * </ul>
-     */
-
-    public class Node2D extends EventDispatcher {
-
-        /**
-         * @private
-         */
-        public var localModelMatrix:Matrix3D = new Matrix3D();
-
-        /**
-         * @private
-         */
-        public var worldModelMatrix:Matrix3D = new Matrix3D();
-
-        /**
-         * @private
-         */
-        public var invalidateMatrix:Boolean = true;
-
-        /**
-         * @private
-         */
-        public var invalidateVisibility:Boolean = true;
-
-        /**
-         * @private
-         */
-        public var invalidateColors:Boolean = true;
-
-        public var children:Vector.<Node2D> = new Vector.<Node2D>();
-        public var parent:Node2D;
-
-        public var vx:Number = 0.0;
-        public var vy:Number = 0.0;
-
-        public var blendMode:NodeBlendMode = BlendModePresets.NORMAL_PREMULTIPLIED_ALPHA;
-
-        public var mouseEnabled:Boolean = false;
-
-        public var timeSinceStartInSeconds:Number = 0.0;
-
-        protected var stage:Stage;
-
-        private var localMouse:Vector3D;
-        private var mouseInNode:Boolean = false;
-        private var localMouseMatrix:Matrix3D = new Matrix3D();
-
-        /**
-         * @private
-         */
-        protected var _width:Number;
-
-        public function get width():Number {
-            return Math.abs(_width * _scaleX);
-        }
-
-        public function set width(value:Number):void {
-            scaleX = value / _width;
-        }
-
-        /**
-         * @private
-         */
-        protected var _height:Number;
-
-        public function get height():Number {
-            return Math.abs(_height * _scaleY);
-        }
-
-        public function set height(value:Number):void {
-            scaleY = value / _height;
-        }
-
-        protected var _visible:Boolean = true;
-
-        public function get visible():Boolean {
-            return _visible;
-        }
-
-        public function set visible(value:Boolean):void {
-            if(_visible != value) {
-                _visible = value;
-                invalidateVisibility = true;
-            }
-        }
-
-        protected var _alpha:Number = 1.0;
-
-        public function set alpha(value:Number):void {
-            if(_alpha != value) {
-                _alpha = value;
-                invalidateColors = true;
-                visible = _alpha > 0.0;
-            }
-        }
-
-        public function get alpha():Number {
-            return _alpha;
-        }
-
-        /**
-         * @private
-         */
-        public var combinedColorTransform:ColorTransform = new ColorTransform();
-
-        protected var _colorTransform:ColorTransform = new ColorTransform();
-
-        public function get colorTransform():ColorTransform {
-            return _colorTransform;
-        }
-
-        public function set colorTransform(value:ColorTransform):void {
-            if(_colorTransform != value) {
-                _colorTransform = value;
-                invalidateColors = true;
-            }
-        }
-
-        protected var _tint:Number = 0xFFFFFF;
-
-        public function get tint():Number {
-            return _tint;
-        }
-
-        public function set tint(value:Number):void {
-            if(_tint != value) {
-                _tint = value;
-
-                var r:Number = (_tint >> 16) / 255.0;
-                var g:Number = (_tint >> 8 & 255) / 255.0;
-                var b:Number = (_tint & 255) / 255.0;
-
-                _colorTransform.redMultiplier = r;
-                _colorTransform.greenMultiplier = g;
-                _colorTransform.blueMultiplier = b;
-                _colorTransform.alphaMultiplier = 1.0;
-                _colorTransform.redOffset = 0;
-                _colorTransform.greenOffset = 0;
-                _colorTransform.blueOffset = 0;
-                _colorTransform.alphaOffset = 0;
-
-                invalidateColors = true;
-            }
-        }
-
-        protected var _scaleX:Number = 1.0;
-
-        public function set scaleX(value:Number):void {
-            if(_scaleX != value) {
-                _scaleX = value;
-                invalidateMatrix = true;
-            }
-        }
-
-        public function get scaleX():Number {
-            return _scaleX;
-        }
-
-        protected var _scaleY:Number = 1.0;
-
-        public function set scaleY(value:Number):void {
-            if(_scaleY != value) {
-                _scaleY = value;
-                invalidateMatrix = true;
-            }
-        }
-
-        public function get scaleY():Number {
-            return _scaleY;
-        }
-
-        protected var _x:Number = 0.0;
-
-        public function set x(value:Number):void {
-            if(_x != value) {
-                _position.x = _x = value;
-                invalidateMatrix = true;
-            }
-        }
-
-        public function get x():Number {
-            return _x;
-        }
-
-        protected var _y:Number = 0.0;
-
-        public function set y(value:Number):void {
-            if(_y != value) {
-                _position.y = _y = value;
-                invalidateMatrix = true;
-            }
-        }
-
-        public function get y():Number {
-            return _y;
-        }
-
-        protected var _position:Point = new Point(0.0, 0.0);
-
-        public function get position():Point {
-            return _position;
-        }
-
-        public function set position(value:Point):void {
-            if(_x != value.x || _y != value.y) {
-                _position.x = _x = value.x;
-                _position.y = _y = value.y;
-                invalidateMatrix = true;
-            }
-        }
-
-        protected var _pivot:Point = new Point(0.0, 0.0);
-
-        public function get pivot():Point {
-            return _pivot;
-        }
-
-        public function set pivot(value:Point):void {
-            if(_pivot.x != value.x || _pivot.y != value.y) {
-                _pivot.x = value.x;
-                _pivot.y = value.y;
-                invalidateMatrix = true;
-            }
-        }
-
-        protected var _rotation:Number = 0.0;
-
-        public function set rotation(value:Number):void {
-            if(_rotation != value) {
-                _rotation = value;
-                invalidateMatrix = true;
-            }
-        }
-
-        public function get rotation():Number {
-            return _rotation;
-        }
-
-        protected var _mouseX:Number = 0.0;
-
-        public function get mouseX():Number {
-            return _mouseX;
-        }
-
-        protected var _mouseY:Number = 0.0;
-
-        public function get mouseY():Number {
-            return _mouseY;
-        }
-
-        public function get numTris():uint {
-
-            var tris:uint = 0;
-
-            for each(var child:Node2D in children){
-                tris += child.numTris;
-            }
-
-            return tris;
-        }
-
-        public function get drawCalls():uint {
-
-            var calls:uint = 0;
-
-            for each(var child:Node2D in children){
-                calls += child.drawCalls;
-            }
-
-            return calls;
-        }
-
-        public function get numChildren():uint {
-            return children.length;
-        }
-
-        public function Node2D() {
-        }
-
-        /**
-         * @private
-         */
-        public function updateMatrix():void {
-            invalidateMatrix = false;
-            localModelMatrix.identity();
-            localModelMatrix.appendTranslation(-_pivot.x, -_pivot.y, 0);
-            localModelMatrix.appendScale(_scaleX, _scaleY, 1.0);
-            localModelMatrix.appendRotation(_rotation, Vector3D.Z_AXIS);
-            localModelMatrix.appendTranslation(_x, _y, 0.0);
-        }
-
-        /**
-         * @private
-         */
-        public function updateColors():void {
-
-            invalidateColors = false;
-
-            combinedColorTransform.redMultiplier = _colorTransform.redMultiplier * _alpha;
-            combinedColorTransform.greenMultiplier = _colorTransform.greenMultiplier * _alpha;
-            combinedColorTransform.blueMultiplier = _colorTransform.blueMultiplier * _alpha;
-            combinedColorTransform.alphaMultiplier = _colorTransform.alphaMultiplier * _alpha;
-            combinedColorTransform.redOffset = _colorTransform.redOffset;
-            combinedColorTransform.greenOffset = _colorTransform.greenOffset;
-            combinedColorTransform.blueOffset = _colorTransform.blueOffset;
-            combinedColorTransform.alphaOffset = _colorTransform.alphaOffset;
-
-            if(parent) {
-                combinedColorTransform.concat(parent.combinedColorTransform);
-            }
-
-            for each(var child:Node2D in children){
-                child.updateColors();
-            }
-        }
-
-        /**
-         * @private
-         */
-        internal function processMouseEvents(mousePosition:Vector3D, mouseEventType:String, projectionMatrix:Matrix3D):void {
-
-            if(mouseEnabled && mouseEventType) {
-                // transform mousepos to local coordinate system
-                localMouseMatrix.identity();
-                localMouseMatrix.append(worldModelMatrix);
-                localMouseMatrix.append(projectionMatrix);
-                localMouseMatrix.invert();
-
-                localMouse = localMouseMatrix.transformVector(mousePosition);
-                localMouse.w = 1.0 / localMouse.w;
-                localMouse.x /= localMouse.w;
-                localMouse.y /= localMouse.w;
-                localMouse.z /= localMouse.w;
-
-                _mouseX = localMouse.x;
-                _mouseY = localMouse.y;
-
-                if(!isNaN(width) && !isNaN(height)) {
-
-                    var oldMouseInNodeState:Boolean = mouseInNode;
-                    mouseInNode = (mouseX >= -_width * 0.5 && mouseX <= _width * 0.5 && mouseY >= -_height * 0.5 && mouseY <= _height * 0.5);
-
-                    if(mouseInNode) {
-                        if(!oldMouseInNodeState) {
-                            dispatchMouseEvent(MouseEvent.MOUSE_OVER);
-                        }
-                        dispatchMouseEvent(mouseEventType);
-                    } else if(oldMouseInNodeState && !mouseInNode) {
-                        dispatchMouseEvent(MouseEvent.MOUSE_OUT);
-                    }
-                }
-            }
-
-            for each(var child:Node2D in children) {
-                child.processMouseEvents(mousePosition, mouseEventType, projectionMatrix);
-            }
-        }
-
-        internal function setStageRef(value:Stage):void {
-
-            if(stage != value) {
-
-                if(value) {
-                    stage = value;
-                    dispatchEvent(new Event(Event.ADDED_TO_STAGE));
-                } else {
-                    dispatchEvent(new Event(Event.REMOVED_FROM_STAGE));
-                    stage = value;
-                }
-
-                for each(var child:Node2D in children) {
-                    child.setStageRef(value);
-                }
-            }
-        }
-
-        /**
-         * @private
-         */
-        internal function stepNode(elapsed:Number):void {
-
-            step(elapsed);
-
-            for each(var child:Node2D in children) {
-                child.timeSinceStartInSeconds = timeSinceStartInSeconds;
-                child.stepNode(elapsed);
-            }
-        }
-
-        public function handleDeviceLoss():void {
-            for each(var child:Node2D in children) {
-                child.handleDeviceLoss();
-            }
-            // extend in extended classes
-        }
-
-        /**
-         * @private
-         */
-        internal function drawNode(context:Context3D, camera:Camera2D, parentMatrixChanged:Boolean):void {
-
-            var myMatrixChanged:Boolean = false;
-
-            if(!_visible) {
-                return;
-            }
-
-            if(invalidateColors) {
-                updateColors();
-            }
-
-            if(invalidateMatrix) {
-                updateMatrix();
-                myMatrixChanged = true;
-            }
-
-            if(parentMatrixChanged || myMatrixChanged) {
-                worldModelMatrix.identity();
-                worldModelMatrix.append(localModelMatrix);
-
-                if(parent) {
-                    worldModelMatrix.append(parent.worldModelMatrix);
-                }
-            }
-
-            draw(context, camera);
-
-            for each(var child:Node2D in children) {
-                child.drawNode(context, camera, myMatrixChanged);
-            }
-        }
-
-        private function dispatchMouseEvent(mouseEventType:String):void {
-            dispatchEvent(new MouseEvent(mouseEventType, true, false, localMouse.x, localMouse.y, null, false, false, false,
-                                         (mouseEventType == MouseEvent.MOUSE_DOWN), 0));
-        }
-
-        protected function draw(context:Context3D, camera:Camera2D):void {
-            // overwrite in extended classes
-        }
-
-        protected function step(elapsed:Number):void {
-            // overwrite in extended classes
-        }
-
-        public function addChild(child:Node2D):Node2D {
-            return addChildAt(child, children.length);
-        }
-
-        public function addChildAt(child:Node2D, idx:uint):Node2D {
-
-            var existingIdx:int = getChildIndex(child);
-            if(existingIdx != -1) {
-                removeChildAt(existingIdx);
-            }
-
-            child.parent = this;
-            child.setStageRef(stage);
-            children.splice(idx, 0, child);
-            return child;
-        }
-
-        public function removeChild(child:Node2D):void {
-
-            var idx:int = children.indexOf(child);
-
-            if(idx >= 0) {
-                removeChildAt(idx);
-            }
-        }
-
-        public function removeChildAt(idx:uint):void {
-            if(idx < children.length) {
-                children[idx].parent = null;
-                children[idx].setStageRef(null);
-                children.splice(idx, 1);
-            }
-        }
-
-        public function getChildAt(idx:uint):Node2D {
-            if(idx < children.length) {
-                return children[idx];
-            }
-
-            return null;
-        }
-
-        public function getChildIndex(child:Node2D):int {
-            return children.indexOf(child);
-        }
-
-        public function swapChildren(child1:Node2D, child2:Node2D):void {
-            var idx1:uint = getChildIndex(child1);
-            var idx2:uint = getChildIndex(child2);
-            children[idx1] = child2;
-            children[idx2] = child1;
-        }
-
-        public function removeAllChildren():void {
-            while(children.length > 0) {
-                removeChildAt(0);
-            }
-        }
-
-        public function cleanUp():void {
-            for each(var child:Node2D in children) {
-                child.cleanUp();
-            }
-        }
-    }
-=======
 	import de.nulldesign.nd2d.materials.BlendModePresets;
 	import de.nulldesign.nd2d.utils.NodeBlendMode;
 	import de.nulldesign.nd2d.utils.StatsObject;
@@ -718,15 +138,18 @@ package de.nulldesign.nd2d.display {
 
 		public var mouseEnabled:Boolean = false;
 
-		public var timeSinceStartInSeconds:Number = 0.0;
-
 		public var boundingSphereRadius:Number;
 
+		protected var timeSinceStartInSeconds:Number = 0.0;
+
 		protected var stage:Stage;
+		protected var camera:Camera2D;
 
 		private var localMouse:Vector3D;
-		private var mouseInNode:Boolean = false;
 		private var localMouseMatrix:Matrix3D = new Matrix3D();
+
+		internal var mouseInNode:Boolean = false;
+		internal var mouseEvents:Vector.<MouseEvent>;
 
 		/**
 		 * @private
@@ -799,13 +222,13 @@ package de.nulldesign.nd2d.display {
 			}
 		}
 
-		protected var _tint:Number = 0xFFFFFF;
+		protected var _tint:uint = 0xFFFFFF;
 
-		public function get tint():Number {
+		public function get tint():uint {
 			return _tint;
 		}
 
-		public function set tint(value:Number):void {
+		public function set tint(value:uint):void {
 			if(_tint != value) {
 				_tint = value;
 
@@ -878,16 +301,30 @@ package de.nulldesign.nd2d.display {
 			return _y;
 		}
 
-		protected var _position:Point = new Point(0.0, 0.0);
+		protected var _z:Number = 0.0;
 
-		public function get position():Point {
+		public function set z(value:Number):void {
+			if(_z != value) {
+				_position.z = _z = value;
+				invalidateMatrix = true;
+			}
+		}
+
+		public function get z():Number {
+			return _z;
+		}
+
+		protected var _position:Vector3D = new Vector3D(0.0, 0.0, 0.0);
+
+		public function get position():Vector3D {
 			return _position;
 		}
 
-		public function set position(value:Point):void {
-			if(_x != value.x || _y != value.y) {
+		public function set position(value:Vector3D):void {
+			if(_x != value.x || _y != value.y || _z != value.z) {
 				_position.x = _x = value.x;
 				_position.y = _y = value.y;
+				_position.z = _z = value.z;
 				invalidateMatrix = true;
 			}
 		}
@@ -906,17 +343,54 @@ package de.nulldesign.nd2d.display {
 			}
 		}
 
-		protected var _rotation:Number = 0.0;
-
 		public function set rotation(value:Number):void {
-			if(_rotation != value) {
-				_rotation = value;
+			if(_rotationZ != value) {
+				_rotationZ = value;
 				invalidateMatrix = true;
 			}
 		}
 
 		public function get rotation():Number {
-			return _rotation;
+			return _rotationZ;
+		}
+
+		protected var _rotationX:Number = 0.0;
+
+		public function set rotationX(value:Number):void {
+			if(_rotationX != value) {
+				_rotationX = value;
+				invalidateMatrix = true;
+			}
+		}
+
+		public function get rotationX():Number {
+			return _rotationX;
+		}
+
+		protected var _rotationY:Number = 0.0;
+
+		public function set rotationY(value:Number):void {
+			if(_rotationY != value) {
+				_rotationY = value;
+				invalidateMatrix = true;
+			}
+		}
+
+		public function get rotationY():Number {
+			return _rotationY;
+		}
+
+		protected var _rotationZ:Number = 0.0;
+
+		public function set rotationZ(value:Number):void {
+			if(_rotationZ != value) {
+				_rotationZ = value;
+				invalidateMatrix = true;
+			}
+		}
+
+		public function get rotationZ():Number {
+			return _rotationZ;
 		}
 
 		protected var _mouseX:Number = 0.0;
@@ -954,8 +428,10 @@ package de.nulldesign.nd2d.display {
 			localModelMatrix.identity();
 			localModelMatrix.appendTranslation(-_pivot.x, -_pivot.y, 0);
 			localModelMatrix.appendScale(_scaleX, _scaleY, 1.0);
-			localModelMatrix.appendRotation(_rotation, Vector3D.Z_AXIS);
-			localModelMatrix.appendTranslation(_x, _y, 0.0);
+			localModelMatrix.appendRotation(_rotationZ, Vector3D.Z_AXIS);
+			localModelMatrix.appendRotation(_rotationY, Vector3D.Y_AXIS);
+			localModelMatrix.appendRotation(_rotationX, Vector3D.X_AXIS);
+			localModelMatrix.appendTranslation(_x, _y, _z);
 		}
 
 		/**
@@ -999,13 +475,15 @@ package de.nulldesign.nd2d.display {
 		/**
 		 * @private
 		 */
-		internal function processMouseEvents(mousePosition:Vector3D, mouseEventType:String, projectionMatrix:Matrix3D):void {
+		internal function processMouseEvent(mousePosition:Vector3D, mouseEventType:String, cameraViewProjectionMatrix:Matrix3D):Node2D {
+			mouseEvents = new Vector.<MouseEvent>();
+			var result:Node2D = null;
 
 			if(mouseEnabled && mouseEventType) {
 				// transform mousepos to local coordinate system
 				localMouseMatrix.identity();
 				localMouseMatrix.append(worldModelMatrix);
-				localMouseMatrix.append(projectionMatrix);
+				localMouseMatrix.append(cameraViewProjectionMatrix);
 				localMouseMatrix.invert();
 
 				localMouse = localMouseMatrix.transformVector(mousePosition);
@@ -1017,30 +495,59 @@ package de.nulldesign.nd2d.display {
 				_mouseX = localMouse.x;
 				_mouseY = localMouse.y;
 
-				if(!isNaN(width) && !isNaN(height)) {
+				var oldMouseInNodeState:Boolean = mouseInNode;
+				var newMouseInNode:Boolean = hitTest();
 
-					var oldMouseInNodeState:Boolean = mouseInNode;
-					mouseInNode = (mouseX >= -_width * 0.5 && mouseX <= _width * 0.5 && mouseY >= -_height * 0.5 && mouseY <= _height * 0.5);
-
-					if(mouseInNode) {
-						if(!oldMouseInNodeState) {
-							dispatchMouseEvent(MouseEvent.MOUSE_OVER);
-						}
-						dispatchMouseEvent(mouseEventType);
-					} else if(oldMouseInNodeState && !mouseInNode) {
-						dispatchMouseEvent(MouseEvent.MOUSE_OUT);
+				if(newMouseInNode) {
+					if(!oldMouseInNodeState) {
+						mouseEvents.push(new MouseEvent(MouseEvent.MOUSE_OVER, true, false, localMouse.x, localMouse.y, null, false, false, false, (mouseEventType == MouseEvent.MOUSE_DOWN), 0));
 					}
+
+					mouseEvents.push(new MouseEvent(mouseEventType, true, false, localMouse.x, localMouse.y, null, false, false, false, (mouseEventType == MouseEvent.MOUSE_DOWN), 0));
+					result = this;
+
+				} else if(oldMouseInNodeState) {
+					// dispatch mouse out directly, no hierarchy test
+					dispatchEvent(new MouseEvent(MouseEvent.MOUSE_OUT, true, false, localMouse.x, localMouse.y, null, false, false, false, (mouseEventType == MouseEvent.MOUSE_DOWN), 0));
 				}
 			}
 
-			for each(var child:Node2D in children) {
-				child.processMouseEvents(mousePosition, mouseEventType, projectionMatrix);
+			var subChildMouseNode:Node2D;
+			for(var i:Number = children.length - 1; i >= 0; --i) {
+				subChildMouseNode = children[i].processMouseEvent(mousePosition, mouseEventType, cameraViewProjectionMatrix);
+				if(subChildMouseNode) {
+					result = subChildMouseNode;
+					break;
+				}
 			}
+
+			// set over to false, if one of our childs stole the event
+			if(result != this) {
+				mouseInNode = false;
+			}
+
+			return result;
 		}
 
-		internal function setStageRef(value:Stage):void {
+		/**
+		 * Overwrite and do your own hitTest if you like
+		 * @return
+		 */
+		protected function hitTest():Boolean {
+			if(isNaN(_width) || isNaN(_height)) {
+				return false;
+			}
+
+			var halfWidth:Number = _width >> 1;
+			var halfHeight:Number = _height >> 1;
+			return (_mouseX >= -halfWidth && _mouseX <= halfWidth && _mouseY >= -halfHeight && _mouseY <= halfHeight);
+		}
+
+		internal function setStageAndCamRef(value:Stage, cameraValue:Camera2D):void {
 
 			if(stage != value) {
+
+				camera = cameraValue;
 
 				if(value) {
 					stage = value;
@@ -1051,7 +558,7 @@ package de.nulldesign.nd2d.display {
 				}
 
 				for each(var child:Node2D in children) {
-					child.setStageRef(value);
+					child.setStageAndCamRef(value, cameraValue);
 				}
 			}
 		}
@@ -1059,13 +566,14 @@ package de.nulldesign.nd2d.display {
 		/**
 		 * @private
 		 */
-		internal function stepNode(elapsed:Number):void {
+		internal function stepNode(elapsed:Number, timeSinceStartInSeconds:Number):void {
+
+			this.timeSinceStartInSeconds = timeSinceStartInSeconds;
 
 			step(elapsed);
 
 			for each(var child:Node2D in children) {
-				child.timeSinceStartInSeconds = timeSinceStartInSeconds;
-				child.stepNode(elapsed);
+				child.stepNode(elapsed, timeSinceStartInSeconds);
 			}
 		}
 
@@ -1098,6 +606,7 @@ package de.nulldesign.nd2d.display {
 
 			if(parentMatrixChanged || myMatrixChanged) {
 				updateWorldMatrix();
+				myMatrixChanged = true;
 			}
 
 			draw(context, camera);
@@ -1109,17 +618,17 @@ package de.nulldesign.nd2d.display {
 			}
 		}
 
-		private function dispatchMouseEvent(mouseEventType:String):void {
-			dispatchEvent(new MouseEvent(mouseEventType, true, false, localMouse.x, localMouse.y, null, false, false, false,
-					(mouseEventType == MouseEvent.MOUSE_DOWN), 0));
-		}
-
 		protected function draw(context:Context3D, camera:Camera2D):void {
 			// overwrite in extended classes
 		}
 
 		protected function step(elapsed:Number):void {
 			// overwrite in extended classes
+		}
+
+		public function setChildIndex(child:Node2D, index:int):void {
+			var child2:Node2D = getChildAt(index);
+			if(child2 != null) swapChildren(child, child2);
 		}
 
 		public function addChild(child:Node2D):Node2D {
@@ -1134,7 +643,7 @@ package de.nulldesign.nd2d.display {
 			}
 
 			child.parent = this;
-			child.setStageRef(stage);
+			child.setStageAndCamRef(stage, camera);
 			children.splice(idx, 0, child);
 			return child;
 		}
@@ -1151,7 +660,7 @@ package de.nulldesign.nd2d.display {
 		public function removeChildAt(idx:uint):void {
 			if(idx < children.length) {
 				children[idx].parent = null;
-				children[idx].setStageRef(null);
+				children[idx].setStageAndCamRef(null, null);
 				children.splice(idx, 1);
 			}
 		}
@@ -1181,11 +690,38 @@ package de.nulldesign.nd2d.display {
 			}
 		}
 
+		public function localToGlobal(p:Point):Point {
+			var clipSpaceMat:Matrix3D = new Matrix3D();
+			clipSpaceMat.append(worldModelMatrix);
+			clipSpaceMat.append(camera.getViewProjectionMatrix());
+
+			var v:Vector3D = clipSpaceMat.transformVector(new Vector3D(p.x, p.y, 0.0));
+			return new Point((v.x + 1.0) * 0.5 * camera.sceneWidth, (-v.y + 1.0) * 0.5 * camera.sceneHeight);
+		}
+
+		public function globalToLocal(p:Point):Point {
+			var clipSpaceMat:Matrix3D = new Matrix3D();
+			clipSpaceMat.append(worldModelMatrix);
+			clipSpaceMat.append(camera.getViewProjectionMatrix());
+			clipSpaceMat.invert();
+
+			var from:Vector3D = new Vector3D(p.x / camera.sceneWidth * 2.0 - 1.0,
+					-(p.y / camera.sceneHeight * 2.0 - 1.0),
+					0.0, 1.0);
+
+			var v:Vector3D = clipSpaceMat.transformVector(from);
+			v.w = 1.0 / v.w;
+			v.x /= v.w;
+			v.y /= v.w;
+			//v.z /= v.w;
+
+			return new Point(v.x, v.y);
+		}
+
 		public function dispose():void {
 			for each(var child:Node2D in children) {
 				child.dispose();
 			}
 		}
 	}
->>>>>>> 8a56cc990a05cac58f6831cd856041787f9b139f
 }

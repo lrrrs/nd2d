@@ -30,67 +30,55 @@
 
 package de.nulldesign.nd2d.display {
 
-    import flash.display3D.Context3D;
+	import de.nulldesign.nd2d.utils.StatsObject;
 
-    /**
-     * A scene that can contain 2D nodes
-     * Even if a scene has x,y, rotation etc. properties you can't modify a scene this way.
-     * Use the built in camera instance to pan and zoom over your scene.
-     */
-    public class Scene2D extends Node2D {
+	import flash.display.Stage;
 
-        protected var camera:Camera2D;
+	import flash.display3D.Context3D;
 
-        public var br:Number = 0.0;
-        public var bg:Number = 0.0;
-        public var bb:Number = 0.0;
+	/**
+	 * A scene that can contain 2D nodes
+	 * Even if a scene has x,y, rotation etc. properties you can't modify a scene this way.
+	 * Use the built in camera instance to pan and zoom over your scene.
+	 */
+	public class Scene2D extends Node2D {
 
-        override public function get numTris():uint {
-            return totalTris;
-        }
+		internal var br:Number = 0.0;
+		internal var bg:Number = 0.0;
+		internal var bb:Number = 0.0;
 
-        override public function get drawCalls():uint {
-            return totalDrawCalls;
-        }
+		private var _backGroundColor:Number = 0x000000;
 
-        protected var totalTris:int = 0;
-        protected var totalDrawCalls:int = 0;
+		public function get backGroundColor():Number {
+			return _backGroundColor;
+		}
 
-        private var _backGroundColor:Number = 0x000000;
+		public function set backGroundColor(value:Number):void {
+			_backGroundColor = value;
+			br = (backGroundColor >> 16) / 255.0;
+			bg = (backGroundColor >> 8 & 255) / 255.0;
+			bb = (backGroundColor & 255) / 255.0;
+		}
 
-        public function get backGroundColor():Number {
-            return _backGroundColor;
-        }
+		public function Scene2D() {
+			super();
+			mouseEnabled = true;
+		}
 
-        public function set backGroundColor(value:Number):void {
-            _backGroundColor = value;
-            br = (backGroundColor >> 16) / 255.0;
-            bg = (backGroundColor >> 8 & 255) / 255.0;
-            bb = (backGroundColor & 255) / 255.0;
-        }
+		override internal function drawNode(context:Context3D, camera:Camera2D, parentMatrixChanged:Boolean, statsObject:StatsObject):void {
 
-        public function Scene2D() {
-            super();
-            mouseEnabled = true;
-        }
+			for each(var child:Node2D in children) {
+				child.drawNode(context, camera, false, statsObject);
+			}
+		}
 
-        internal function setCameraRef(value:Camera2D):void {
-            camera = value;
-        }
+		override internal function setStageAndCamRef(value:Stage, cameraValue:Camera2D):void {
+			super.setStageAndCamRef(value,  cameraValue);
 
-        override internal function drawNode(context:Context3D, camera:Camera2D, parentMatrixChanged:Boolean):void {
-
-            totalTris = 0;
-            totalDrawCalls = 0;
-
-            for each(var child:Node2D in children) {
-                child.drawNode(context, camera, false);
-
-                if(context.enableErrorChecking) {
-                    totalTris += child.numTris;
-                    totalDrawCalls += child.drawCalls;
-                }
-            }
-        }
-    }
+			if(camera) {
+				_width = camera.sceneWidth;
+				_height = camera.sceneHeight;
+			}
+		}
+	}
 }

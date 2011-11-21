@@ -30,15 +30,15 @@
 
 package tests {
 
-    import de.nulldesign.nd2d.display.Scene2D;
-    import de.nulldesign.nd2d.display.Sprite2D;
-    import de.nulldesign.nd2d.materials.BlendModePresets;
-	import de.nulldesign.nd2d.materials.Texture2D;
+	import de.nulldesign.nd2d.display.Scene2D;
+	import de.nulldesign.nd2d.display.Sprite2D;
+	import de.nulldesign.nd2d.materials.BlendModePresets;
+	import de.nulldesign.nd2d.materials.texture.Texture2D;
 	import de.nulldesign.nd2d.utils.ColorUtil;
 
-    import flash.utils.getTimer;
+	import flash.utils.getTimer;
 
-    public class SpriteTest extends Scene2D {
+	public class SpriteTest extends Scene2D {
 
         [Embed(source="../assets/crate.jpg")]
         private var spriteTexture:Class;

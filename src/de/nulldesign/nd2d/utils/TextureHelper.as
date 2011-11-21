@@ -30,22 +30,19 @@
 
 package de.nulldesign.nd2d.utils {
 
-    import de.nulldesign.nd2d.geom.Face;
-    import de.nulldesign.nd2d.geom.UV;
-    import de.nulldesign.nd2d.geom.Vertex;
-    import de.nulldesign.nd2d.materials.ASpriteSheetBase;
-    import de.nulldesign.nd2d.materials.SpriteSheet;
-    import de.nulldesign.nd2d.materials.TextureAtlas;
+	import de.nulldesign.nd2d.geom.Face;
+	import de.nulldesign.nd2d.geom.UV;
+	import de.nulldesign.nd2d.geom.Vertex;
 
-    import flash.display.BitmapData;
-    import flash.display3D.Context3D;
-    import flash.display3D.Context3DTextureFormat;
-    import flash.display3D.textures.Texture;
-    import flash.geom.Matrix;
-    import flash.geom.Point;
-    import flash.geom.Rectangle;
+	import flash.display.BitmapData;
+	import flash.display3D.Context3D;
+	import flash.display3D.Context3DTextureFormat;
+	import flash.display3D.textures.Texture;
+	import flash.geom.Matrix;
+	import flash.geom.Point;
+	import flash.geom.Rectangle;
 
-    public class TextureHelper {
+	public class TextureHelper {
         public function TextureHelper() {
         }
 
@@ -159,58 +156,6 @@ package de.nulldesign.nd2d.utils {
             v2 = new Vertex(texW, -texH, 0.0);
             v3 = new Vertex(texW, texH, 0.0);
             v4 = new Vertex(-texW, texH, 0.0);
-
-            faceList[0] = new Face(v1, v2, v3, uv1, uv2, uv3);
-            faceList[1] = new Face(v1, v3, v4, uv1, uv3, uv4);
-
-            return faceList;
-        }
-
-        public static function generateQuadFromSpriteSheet(spriteSheet:ASpriteSheetBase):Vector.<Face> {
-
-            var faceList:Vector.<Face>;
-            var texW:Number;
-            var texH:Number;
-            var uv1:UV;
-            var uv2:UV;
-            var uv3:UV;
-            var uv4:UV;
-            var v1:Vertex;
-            var v2:Vertex;
-            var v3:Vertex;
-            var v4:Vertex;
-
-            faceList = new Vector.<Face>(2, true);
-
-            texW = spriteSheet.spriteWidth * 0.5;
-            texH = spriteSheet.spriteHeight * 0.5;
-
-            var sheet:SpriteSheet = spriteSheet as SpriteSheet;
-
-            if(sheet) {
-
-                uv1 = new UV(0.0, 0.0);
-                uv2 = new UV(sheet.uvSize.x, 0.0);
-                uv3 = new UV(sheet.uvSize.x, sheet.uvSize.y);
-                uv4 = new UV(0.0, sheet.uvSize.y);
-
-                v1 = new Vertex(-texW, -texH, 0.0);
-                v2 = new Vertex(texW, -texH, 0.0);
-                v3 = new Vertex(texW, texH, 0.0);
-                v4 = new Vertex(-texW, texH, 0.0);
-
-            } else if(spriteSheet is TextureAtlas) {
-
-                uv1 = new UV(0.0, 0.0);
-                uv2 = new UV(1.0, 0.0);
-                uv3 = new UV(1.0, 1.0);
-                uv4 = new UV(0.0, 1.0);
-
-                v1 = new Vertex(-1.0, -1.0, 0.0);
-                v2 = new Vertex(1.0, -1.0, 0.0);
-                v3 = new Vertex(1.0, 1.0, 0.0);
-                v4 = new Vertex(-1.0, 1.0, 0.0);
-            }
 
             faceList[0] = new Face(v1, v2, v3, uv1, uv2, uv3);
             faceList[1] = new Face(v1, v3, v4, uv1, uv3, uv4);

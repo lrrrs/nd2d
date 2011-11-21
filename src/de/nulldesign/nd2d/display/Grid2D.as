@@ -30,33 +30,21 @@
 
 package de.nulldesign.nd2d.display {
 
-    import de.nulldesign.nd2d.geom.Face;
-    import de.nulldesign.nd2d.geom.UV;
-    import de.nulldesign.nd2d.geom.Vertex;
-    import de.nulldesign.nd2d.materials.Sprite2DMaterial;
+	import de.nulldesign.nd2d.geom.Face;
+	import de.nulldesign.nd2d.geom.UV;
+	import de.nulldesign.nd2d.geom.Vertex;
+	import de.nulldesign.nd2d.materials.texture.Texture2D;
 
-    import flash.display.BitmapData;
-    import flash.display3D.textures.Texture;
-
-    public class Grid2D extends Sprite2D {
+	public class Grid2D extends Sprite2D {
 
         protected var stepsX:uint;
         protected var stepsY:uint;
         protected var vertexList:Vector.<Vertex>;
 
-        public function Grid2D(stepsX:uint, stepsY:uint, bitmapTexture:BitmapData = null) {
+        public function Grid2D(stepsX:uint, stepsY:uint, textureObject:Texture2D = null) {
             this.stepsX = stepsX;
             this.stepsY = stepsY;
-            super(bitmapTexture);
-        }
-
-        override public function setTexture(texture:Texture, width:Number, height:Number):void {
-            super.setTexture(texture, width, height);
-            generateGrid();
-        }
-
-        override public function setMaterial(material:Sprite2DMaterial):void {
-            super.setMaterial(material);
+            super(textureObject);
             generateGrid();
         }
 
@@ -81,14 +69,14 @@ package de.nulldesign.nd2d.display {
                 ar.push([]);
                 uv.push([]);
                 for(j = 0; j <= stepsY; j++) {
-                    var x:Number = i * (width / stepsX) - width / 2;
-                    var y:Number = j * (height / stepsY) - height / 2;
+                    var x:Number = i * (2 / stepsX) - 2 / 2;
+                    var y:Number = j * (2 / stepsY) - 2 / 2;
 
                     v = new Vertex(x, y, 0.0);
                     vertexList.push(v);
                     ar[i].push(v);
 
-                    u = new UV((x + width * 0.5) / width, (y + height * 0.5) / height);
+                    u = new UV((x + 2 * 0.5) / 2, (y + 2 * 0.5) / 2);
                     //uvList.push(u);
                     uv[i].push(u);
                 }
