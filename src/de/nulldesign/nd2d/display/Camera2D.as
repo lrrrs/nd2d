@@ -60,9 +60,9 @@ package de.nulldesign.nd2d.display {
 
 			orthoProjectionMatrix = makeOrtographicMatrix(0, w, 0, h);
 
-			var fovDegree:Number = 45.0;
+			var fovDegree:Number = 60.0;
 			var magicNumber:Number = Math.tan(VectorUtil.deg2rad(fovDegree * 0.5));
-			var projMat:Matrix3D = makeProjectionMatrix(0.1, 1500.0, fovDegree, w / h);
+			var projMat:Matrix3D = makeProjectionMatrix(0.1, 2000.0, fovDegree, w / h);
 			var lookAtPosition:Vector3D = new Vector3D(0.0, 0.0, 0.0);
 			
 			// zEye distance from origin: sceneHeight * 0.5 / tan(a) 
@@ -150,7 +150,6 @@ package de.nulldesign.nd2d.display {
 		}
 
 		public function getViewProjectionMatrix(useOrthoMatrix:Boolean = true):Matrix3D {
-
 			if(invalidated) {
 				invalidated = false;
 
