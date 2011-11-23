@@ -147,8 +147,12 @@ package de.nulldesign.nd2d.display {
 
 		override public function handleDeviceLoss():void {
 			super.handleDeviceLoss();
+
 			if(material)
 				material.handleDeviceLoss();
+
+			if (texture)
+				texture.texture = null;
 		}
 
 
