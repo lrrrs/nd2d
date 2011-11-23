@@ -45,6 +45,14 @@ Important links:
 
 # Changelog:
 
+2011-11-23
+
+- ADDED: Support for TouchEvents
+- ADDED: Support for ATF Textures
+- ADDED: Support for non premultiplied alpha textures
+- FIXED: hitTest for Scene2D
+- FIXED: spriteSheet distribution for Sprite2DBatch
+
 2011-11-15
 
 - MERGED: optimizations from komelgman (Thanks!)
