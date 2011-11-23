@@ -257,6 +257,12 @@ package de.nulldesign.nd2d.display {
 			statsObject.totalTris += numTris;
 		}
 
+		private var isInvalidatedColors : Boolean = false;
+		override public function updateColors() : void {
+			super.updateColors();
+			isInvalidatedColors = true;
+		}
+
 		override protected function draw(context:Context3D, camera:Camera2D):void {
 
 			if(children.length == 0) return;
@@ -295,7 +301,6 @@ package de.nulldesign.nd2d.display {
 			var isChildInvalidatedColors : Boolean = false;
 			var halfTextureWidth : Number = texture.textureWidth >> 1;
 			var halfTextureHeight : Number = texture.textureHeight >> 1;
-			var isInvalidatedColors : Boolean = false;
 
     		if(invalidateColors) {
 				updateColors();
