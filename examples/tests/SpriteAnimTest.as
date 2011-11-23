@@ -45,6 +45,7 @@ package tests {
         public function SpriteAnimTest() {
 
             var tex:Texture2D = Texture2D.textureFromBitmapData(new spriteTexture().bitmapData);
+			//var tex:Texture2D = Texture2D.textureFromATF(new spriteTexture());
 
             var sheet:SpriteSheet = new SpriteSheet(tex.bitmapWidth, tex.bitmapHeight, 24, 32, 5);
             sheet.addAnimation("up", [0, 1, 2], true);

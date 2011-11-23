@@ -101,25 +101,17 @@ package de.nulldesign.nd2d.materials.texture {
 
 		public static function textureFromATF(atf:ByteArray, autoCleanUpResources:Boolean = false):Texture2D {
 
-			throw new Error("Not yet fully implemented... No rush, the ATF isn't public yet ;)");
-
 			var t:Texture2D = new Texture2D(autoCleanUpResources);
 
 			if(atf) {
 
 				var w:int = Math.pow(2, atf[7]);
 				var h:int = Math.pow(2, atf[8]);
-				var numTextures:int = atf[9];
-				var textureFormat:String = (atf[6] == 2 ? Context3DTextureFormat.COMPRESSED : Context3DTextureFormat.BGRA);
 
 				t.compressedBitmap = atf;
-				t.bitmapWidth = w;
-				t.bitmapHeight = h;
+				t.textureWidth = t.bitmapWidth = w;
+				t.textureHeight = t.bitmapHeight = h;
 				t.hasPremultipliedAlpha = false;
-
-				var dimensions:Point = TextureHelper.getTextureDimensionsFromSize(w, h);
-				t.textureWidth = dimensions.x;
-				t.textureHeight = dimensions.y;
 			}
 
 			return t;
@@ -127,14 +119,19 @@ package de.nulldesign.nd2d.materials.texture {
 
 		public function getTexture(context:Context3D):Texture {
 			if(!texture) {
-				// TODO generate from ATF
-				var useMipMapping:Boolean = (_textureOptions & TextureOption.MIPMAP_LINEAR) + (_textureOptions & TextureOption.MIPMAP_NEAREST) > 0;
 
-				texture = TextureHelper.generateTextureFromBitmap(context, bitmap, useMipMapping);
+				if(compressedBitmap) {
+					texture = TextureHelper.generateTextureFromByteArray(context, compressedBitmap);
+				} else {
+					var useMipMapping:Boolean = (_textureOptions & TextureOption.MIPMAP_LINEAR) + (_textureOptions & TextureOption.MIPMAP_NEAREST) > 0;
+					texture = TextureHelper.generateTextureFromBitmap(context, bitmap, useMipMapping);
+				}
 
 				if(autoCleanUpResources) {
 					bitmap.dispose();
 					bitmap = null;
+
+					compressedBitmap = null;
 				}
 			}
 

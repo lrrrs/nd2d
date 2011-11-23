@@ -73,12 +73,16 @@ package de.nulldesign.nd2d.display {
 		}
 
 		override internal function setStageAndCamRef(value:Stage, cameraValue:Camera2D):void {
-			super.setStageAndCamRef(value,  cameraValue);
+			super.setStageAndCamRef(value, cameraValue);
 
 			if(camera) {
 				_width = camera.sceneWidth;
 				_height = camera.sceneHeight;
 			}
+		}
+
+		override protected function hitTest():Boolean {
+			return (_mouseX >= 0.0 && _mouseX <= _width && _mouseY >= 0.0 && _mouseY <= _height);
 		}
 	}
 }

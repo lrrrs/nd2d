@@ -39,6 +39,7 @@ package de.nulldesign.nd2d.display {
 	import flash.events.Event;
 	import flash.events.EventDispatcher;
 	import flash.events.MouseEvent;
+	import flash.events.TouchEvent;
 	import flash.geom.ColorTransform;
 	import flash.geom.Matrix3D;
 	import flash.geom.Point;
@@ -93,6 +94,42 @@ package de.nulldesign.nd2d.display {
 	[Event(name="mouseOut", type="flash.events.MouseEvent")]
 
 	/**
+	 * Dispatched when a user presses and releases the main button of the user's pointing device over the same Node2D.
+	 * @eventType flash.events.TouchEvent.TOUCH_TAP
+	 */
+	[Event(name="touchTap", type="flash.events.TouchEvent")]
+
+	/**
+	 * Dispatched when the user moves a pointing device over an Node2D instance.
+	 * @eventType flash.events.TouchEvent.TOUCH_OVER
+	 */
+	[Event(name="touchOver", type="flash.events.TouchEvent")]
+
+	/**
+	 * Dispatched when the user moves a pointing device away from an Node2D instance.
+	 * @eventType flash.events.TouchEvent.TOUCH_OUT
+	 */
+	[Event(name="touchOut", type="flash.events.TouchEvent")]
+
+	/**
+	 * Dispatched when a user moves the pointing device while it is over an Node2D.
+	 * @eventType flash.events.TouchEvent.TOUCH_MOVE
+	 */
+	[Event(name="touchMove", type="flash.events.TouchEvent")]
+
+	/**
+	 * Dispatched when a user presses the pointing device button over an Node2D instance.
+	 * @eventType flash.events.TouchEvent.TOUCH_BEGIN
+	 */
+	[Event(name="touchBegin", type="flash.events.TouchEvent")]
+
+	/**
+	 * Dispatched when a user releases the pointing device button over an Node2D instance.
+	 * @eventType flash.events.TouchEvent.TOUCH_END
+	 */
+	[Event(name="touchEnd", type="flash.events.TouchEvent")]
+
+	/**
 	 * <p>Basic 2D object. All drawable objects must extend Node2D</p>
 	 * A Node2D has two methods that are called during rendering:
 	 * <ul>
@@ -128,6 +165,8 @@ package de.nulldesign.nd2d.display {
 		 */
 		public var invalidateColors:Boolean = true;
 
+		public var hasPremultipliedAlphaTexture:Boolean = true;
+
 		public var children:Vector.<Node2D> = new Vector.<Node2D>();
 		public var parent:Node2D;
 
@@ -149,7 +188,7 @@ package de.nulldesign.nd2d.display {
 		private var localMouseMatrix:Matrix3D = new Matrix3D();
 
 		internal var mouseInNode:Boolean = false;
-		internal var mouseEvents:Vector.<MouseEvent>;
+		internal var mouseEvents:Vector.<Event>;
 
 		/**
 		 * @private
@@ -454,10 +493,18 @@ package de.nulldesign.nd2d.display {
 
 			invalidateColors = false;
 
-			combinedColorTransform.redMultiplier = _colorTransform.redMultiplier * _alpha;
-			combinedColorTransform.greenMultiplier = _colorTransform.greenMultiplier * _alpha;
-			combinedColorTransform.blueMultiplier = _colorTransform.blueMultiplier * _alpha;
-			combinedColorTransform.alphaMultiplier = _colorTransform.alphaMultiplier * _alpha;
+			if(hasPremultipliedAlphaTexture) {
+				combinedColorTransform.redMultiplier = _colorTransform.redMultiplier * _alpha;
+				combinedColorTransform.greenMultiplier = _colorTransform.greenMultiplier * _alpha;
+				combinedColorTransform.blueMultiplier = _colorTransform.blueMultiplier * _alpha;
+				combinedColorTransform.alphaMultiplier = _colorTransform.alphaMultiplier * _alpha;
+			} else {
+				combinedColorTransform.redMultiplier = _colorTransform.redMultiplier;
+				combinedColorTransform.greenMultiplier = _colorTransform.greenMultiplier;
+				combinedColorTransform.blueMultiplier = _colorTransform.blueMultiplier;
+				combinedColorTransform.alphaMultiplier = _colorTransform.alphaMultiplier * _alpha;
+			}
+
 			combinedColorTransform.redOffset = _colorTransform.redOffset;
 			combinedColorTransform.greenOffset = _colorTransform.greenOffset;
 			combinedColorTransform.blueOffset = _colorTransform.blueOffset;
@@ -475,8 +522,8 @@ package de.nulldesign.nd2d.display {
 		/**
 		 * @private
 		 */
-		internal function processMouseEvent(mousePosition:Vector3D, mouseEventType:String, cameraViewProjectionMatrix:Matrix3D):Node2D {
-			mouseEvents = new Vector.<MouseEvent>();
+		internal function processMouseEvent(mousePosition:Vector3D, mouseEventType:String, cameraViewProjectionMatrix:Matrix3D, isTouchEvent:Boolean, touchPointID:int):Node2D {
+			mouseEvents = new Vector.<Event>();
 			var result:Node2D = null;
 
 			if(mouseEnabled && mouseEventType) {
@@ -500,21 +547,33 @@ package de.nulldesign.nd2d.display {
 
 				if(newMouseInNode) {
 					if(!oldMouseInNodeState) {
-						mouseEvents.push(new MouseEvent(MouseEvent.MOUSE_OVER, true, false, localMouse.x, localMouse.y, null, false, false, false, (mouseEventType == MouseEvent.MOUSE_DOWN), 0));
+						if(isTouchEvent) {
+							mouseEvents.push(new TouchEvent(TouchEvent.TOUCH_OVER, false, false, touchPointID, false, localMouse.x, localMouse.y));
+						} else {
+							mouseEvents.push(new MouseEvent(MouseEvent.MOUSE_OVER, false, false, localMouse.x, localMouse.y, null, false, false, false, (mouseEventType == MouseEvent.MOUSE_DOWN), 0));
+						}
 					}
 
-					mouseEvents.push(new MouseEvent(mouseEventType, true, false, localMouse.x, localMouse.y, null, false, false, false, (mouseEventType == MouseEvent.MOUSE_DOWN), 0));
+					if(isTouchEvent) {
+						mouseEvents.push(new TouchEvent(mouseEventType, false, false, touchPointID, false, localMouse.x, localMouse.y));
+					} else {
+						mouseEvents.push(new MouseEvent(mouseEventType, false, false, localMouse.x, localMouse.y, null, false, false, false, (mouseEventType == MouseEvent.MOUSE_DOWN), 0));
+					}
 					result = this;
 
 				} else if(oldMouseInNodeState) {
 					// dispatch mouse out directly, no hierarchy test
-					dispatchEvent(new MouseEvent(MouseEvent.MOUSE_OUT, true, false, localMouse.x, localMouse.y, null, false, false, false, (mouseEventType == MouseEvent.MOUSE_DOWN), 0));
+					if(isTouchEvent) {
+						dispatchEvent(new TouchEvent(TouchEvent.TOUCH_OUT, false, false, touchPointID, false, localMouse.x, localMouse.y));
+					} else {
+						dispatchEvent(new MouseEvent(MouseEvent.MOUSE_OUT, false, false, localMouse.x, localMouse.y, null, false, false, false, (mouseEventType == MouseEvent.MOUSE_DOWN), 0));
+					}
 				}
 			}
 
 			var subChildMouseNode:Node2D;
 			for(var i:Number = children.length - 1; i >= 0; --i) {
-				subChildMouseNode = children[i].processMouseEvent(mousePosition, mouseEventType, cameraViewProjectionMatrix);
+				subChildMouseNode = children[i].processMouseEvent(mousePosition, mouseEventType, cameraViewProjectionMatrix, isTouchEvent, touchPointID);
 				if(subChildMouseNode) {
 					result = subChildMouseNode;
 					break;

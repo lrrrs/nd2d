@@ -31,6 +31,7 @@
 package de.nulldesign.nd2d.display {
 
 	import de.nulldesign.nd2d.geom.Face;
+	import de.nulldesign.nd2d.materials.BlendModePresets;
 	import de.nulldesign.nd2d.materials.texture.ASpriteSheetBase;
 	import de.nulldesign.nd2d.materials.Sprite2DMaskMaterial;
 	import de.nulldesign.nd2d.materials.Sprite2DMaterial;
@@ -53,6 +54,8 @@ package de.nulldesign.nd2d.display {
 		public var texture:Texture2D;
 		public var spriteSheet:ASpriteSheetBase;
 		public var material:Sprite2DMaterial;
+
+		public var isBatchNode:Boolean = false;
 
 		/**
 		 * Constructor of class Sprite2D
@@ -87,6 +90,11 @@ package de.nulldesign.nd2d.display {
 			if(texture && !spriteSheet) {
 				_width = texture.bitmapWidth;
 				_height = texture.bitmapHeight;
+			}
+
+			if(texture) {
+				hasPremultipliedAlphaTexture = texture.hasPremultipliedAlpha;
+				blendMode = texture.hasPremultipliedAlpha ? BlendModePresets.NORMAL_PREMULTIPLIED_ALPHA : BlendModePresets.NORMAL_NO_PREMULTIPLIED_ALPHA;
 			}
 		}
 
@@ -141,6 +149,24 @@ package de.nulldesign.nd2d.display {
 			super.handleDeviceLoss();
 			if(material)
 				material.handleDeviceLoss();
+		}
+
+
+		override public function addChildAt(child:Node2D, idx:uint):Node2D {
+			var child:Node2D = super.addChildAt(child, idx);
+
+			if(isBatchNode) {
+				var s:Sprite2D = child as Sprite2D;
+				s.isBatchNode = true;
+
+				if(spriteSheet && !s.spriteSheet) {
+					s.setSpriteSheet(spriteSheet.clone());
+				} else if(!s.texture) {
+					s.setTexture(texture);
+				}
+			}
+
+			return child;
 		}
 
 		override protected function draw(context:Context3D, camera:Camera2D):void {
