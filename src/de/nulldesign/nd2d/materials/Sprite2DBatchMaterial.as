@@ -155,12 +155,6 @@ package de.nulldesign.nd2d.materials {
 
 				if(child.visible) {
 
-					if(spriteSheet && !child.spriteSheet) {
-						child.setSpriteSheet(spriteSheet.clone());
-					} else if(!child.texture) {
-						child.setTexture(texture);
-					}
-
 					if(child.invalidateColors) child.updateColors();
 					if(child.invalidateMatrix) child.updateLocalMatrix();
 

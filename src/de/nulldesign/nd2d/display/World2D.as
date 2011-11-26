@@ -40,8 +40,11 @@ package de.nulldesign.nd2d.display {
 	import flash.events.ErrorEvent;
 	import flash.events.Event;
 	import flash.events.MouseEvent;
+	import flash.events.TouchEvent;
 	import flash.geom.Rectangle;
 	import flash.geom.Vector3D;
+	import flash.ui.Multitouch;
+	import flash.ui.MultitouchInputMode;
 	import flash.utils.getTimer;
 
 	/**
@@ -122,6 +125,12 @@ package de.nulldesign.nd2d.display {
 			stage.addEventListener(MouseEvent.MOUSE_DOWN, mouseEventHandler);
 			stage.addEventListener(MouseEvent.MOUSE_MOVE, mouseEventHandler);
 			stage.addEventListener(MouseEvent.MOUSE_UP, mouseEventHandler);
+
+			Multitouch.inputMode = MultitouchInputMode.TOUCH_POINT;
+			stage.addEventListener(TouchEvent.TOUCH_TAP, touchEventHandler);
+			stage.addEventListener(TouchEvent.TOUCH_BEGIN, touchEventHandler);
+			stage.addEventListener(TouchEvent.TOUCH_MOVE, touchEventHandler);
+			stage.addEventListener(TouchEvent.TOUCH_END, touchEventHandler);
 		}
 
 		protected function context3DError(e:ErrorEvent):void {
@@ -152,6 +161,35 @@ package de.nulldesign.nd2d.display {
 			dispatchEvent(new Event(Event.INIT));
 		}
 
+		protected function touchEventHandler(event:TouchEvent):void {
+			if(scene && scene.mouseEnabled && stage && camera) {
+				var mouseEventType:String = event.type;
+
+				// transformation of normalized coordinates between -1 and 1
+				mousePosition.x = (stage.mouseX - 0.0) / camera.sceneWidth * 2.0 - 1.0;
+				mousePosition.y = -((stage.mouseY - 0.0) / camera.sceneHeight * 2.0 - 1.0);
+				mousePosition.z = 0.0;
+				mousePosition.w = 1.0;
+
+				var newTopMostMouseNode:Node2D = scene.processMouseEvent(mousePosition, mouseEventType, camera.getViewProjectionMatrix(), true, event.touchPointID);
+				if(newTopMostMouseNode) {
+
+					for each(var mouseEvent:Event in newTopMostMouseNode.mouseEvents) {
+
+						if(topMostMouseNode && mouseEvent.type == TouchEvent.TOUCH_OVER) {
+							topMostMouseNode.mouseInNode = false;
+							topMostMouseNode.dispatchEvent(new TouchEvent(TouchEvent.TOUCH_OUT, false, false, -1 /* TODO */, false, topMostMouseNode.mouseX, topMostMouseNode.mouseY));
+							newTopMostMouseNode.mouseInNode = true;
+						}
+
+						newTopMostMouseNode.dispatchEvent(mouseEvent);
+					}
+
+					topMostMouseNode = newTopMostMouseNode;
+				}
+			}
+		}
+
 		protected function mouseEventHandler(event:MouseEvent):void {
 			if(scene && scene.mouseEnabled && stage && camera) {
 				var mouseEventType:String = event.type;
@@ -162,14 +200,14 @@ package de.nulldesign.nd2d.display {
 				mousePosition.z = 0.0;
 				mousePosition.w = 1.0;
 
-				var newTopMostMouseNode:Node2D = scene.processMouseEvent(mousePosition, mouseEventType, camera.getViewProjectionMatrix());
+				var newTopMostMouseNode:Node2D = scene.processMouseEvent(mousePosition, mouseEventType, camera.getViewProjectionMatrix(), false, 0);
 				if(newTopMostMouseNode) {
 
-					for each(var mouseEvent:MouseEvent in newTopMostMouseNode.mouseEvents) {
+					for each(var mouseEvent:Event in newTopMostMouseNode.mouseEvents) {
 
 						if(topMostMouseNode && mouseEvent.type == MouseEvent.MOUSE_OVER) {
 							topMostMouseNode.mouseInNode = false;
-							topMostMouseNode.dispatchEvent(new MouseEvent(MouseEvent.MOUSE_OUT, true, false, topMostMouseNode.mouseX, topMostMouseNode.mouseY));
+							topMostMouseNode.dispatchEvent(new MouseEvent(MouseEvent.MOUSE_OUT, false, false, topMostMouseNode.mouseX, topMostMouseNode.mouseY));
 							newTopMostMouseNode.mouseInNode = true;
 						}
 
@@ -193,7 +231,7 @@ package de.nulldesign.nd2d.display {
 
 		protected function mainLoop(e:Event):void {
 
-			var t:Number = getTimer() / 1000.0;
+			var t:Number = getTimer() * 0.001;
 			var elapsed:Number = t - lastFramesTime;
 
 			if(scene && context3D) {
@@ -274,8 +312,30 @@ package de.nulldesign.nd2d.display {
 
 		public function dispose():void {
 			sleep();
+
+			stage.removeEventListener(Event.RESIZE, resizeStage);
+
+			for(var i:int = 0; i < stage.stage3Ds.length; i++) {
+				stage.stage3Ds[i].removeEventListener(Event.CONTEXT3D_CREATE, context3DCreated);
+				stage.stage3Ds[i].removeEventListener(ErrorEvent.ERROR, context3DError);
+			}
+
+			stage.removeEventListener(MouseEvent.CLICK, mouseEventHandler);
+			stage.removeEventListener(MouseEvent.MOUSE_DOWN, mouseEventHandler);
+			stage.removeEventListener(MouseEvent.MOUSE_MOVE, mouseEventHandler);
+			stage.removeEventListener(MouseEvent.MOUSE_UP, mouseEventHandler);
+
+			stage.removeEventListener(TouchEvent.TOUCH_TAP, touchEventHandler);
+			stage.removeEventListener(TouchEvent.TOUCH_BEGIN, touchEventHandler);
+			stage.removeEventListener(TouchEvent.TOUCH_MOVE, touchEventHandler);
+			stage.removeEventListener(TouchEvent.TOUCH_END, touchEventHandler);
+
 			if(context3D) {
 				context3D.dispose();
+			}
+
+			if(scene) {
+				scene.dispose();
 			}
 		}
 	}
