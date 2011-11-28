@@ -37,60 +37,59 @@ package de.nulldesign.nd2d.display {
 
 	public class Grid2D extends Sprite2D {
 
-        protected var stepsX:uint;
-        protected var stepsY:uint;
-        protected var vertexList:Vector.<Vertex>;
+		protected var stepsX:uint;
+		protected var stepsY:uint;
+		protected var vertexList:Vector.<Vertex>;
 
-        public function Grid2D(stepsX:uint, stepsY:uint, textureObject:Texture2D = null) {
-            this.stepsX = stepsX;
-            this.stepsY = stepsY;
-            super(textureObject);
-            generateGrid();
-        }
+		public function Grid2D(stepsX:uint, stepsY:uint, textureObject:Texture2D = null) {
+			this.stepsX = stepsX;
+			this.stepsY = stepsY;
+			super(textureObject);
+			generateGrid();
+		}
 
-        override public function get numTris():uint {
-            return faceList.length;
-        }
+		override public function get numTris():uint {
+			return faceList.length;
+		}
 
-        protected function generateGrid():void {
-            faceList = new Vector.<Face>();
-            vertexList = new Vector.<Vertex>();
+		protected function generateGrid():void {
+			faceList = new Vector.<Face>();
+			vertexList = new Vector.<Vertex>();
 
-            var i:uint;
-            var j:uint;
+			var i:int;
+			var m:int;
 
-            var ar:Array = [];
-            var v:Vertex;
+			var ar:Array = [];
+			var v:Vertex;
 
-            var uv:Array = [];
-            var u:UV;
+			var uv:Array = [];
+			var u:UV;
 
-            for(i = 0; i <= stepsX; i++) {
-                ar.push([]);
-                uv.push([]);
-                for(j = 0; j <= stepsY; j++) {
-                    var x:Number = i * (2 / stepsX) - 2 / 2;
-                    var y:Number = j * (2 / stepsY) - 2 / 2;
+			var sx:Number = 2 / stepsX;
+			var sy:Number = 2 / stepsY;
+			for(i = 0; i <= stepsX; i++) {
+				ar.push([]);
+				uv.push([]);
+				for(j = 0; j <= stepsY; j++) {
+					var x:Number = i * sx - 1;
+					var y:Number = j * sy - 1;
 
-                    v = new Vertex(x, y, 0.0);
-                    vertexList.push(v);
-                    ar[i].push(v);
+					v = new Vertex(x, y, 0.0);
+					vertexList.push(v);
+					ar[i].push(v);
 
-                    u = new UV((x + 2 * 0.5) / 2, (y + 2 * 0.5) / 2);
-                    //uvList.push(u);
-                    uv[i].push(u);
-                }
-            }
+					u = new UV((x + 1) * 0.5, (y + 1) * 0.5);
+					uv[i].push(u);
+				}
+			}
 
-            for(i = 1; i < ar.length; i++) {
-                for(j = 1; j < ar[i].length; j++) {
-                    faceList.push(new Face(ar[i - 1][j - 1], ar[i - 1][j], ar[i][j], uv[i - 1][j - 1], uv[i - 1][j],
-                                           uv[i][j]));
+			for(i = 1,m = ar.length; i < m; i++) {
+				for(var j:int = 1,n:int = ar[i].length; j < n; j++) {
+					faceList.push(new Face(ar[i - 1][j - 1], ar[i - 1][j], ar[i][j], uv[i - 1][j - 1], uv[i - 1][j], uv[i][j]));
+					faceList.push(new Face(ar[i - 1][j - 1], ar[i][j], ar[i][j - 1], uv[i - 1][j - 1], uv[i][j], uv[i][j - 1]));
+				}
+			}
 
-                    faceList.push(new Face(ar[i - 1][j - 1], ar[i][j], ar[i][j - 1], uv[i - 1][j - 1], uv[i][j],
-                                           uv[i][j - 1]));
-                }
-            }
-        }
-    }
+		}
+	}
 }

@@ -1,8 +1,6 @@
 - updateFromPreset method for particlesystem to update the buffer on the fly?!
 - blurmaterial
 - Zoë: A SWF animation exporter for the EaselJS library. ? more TextureAtlas tools?
-- premultiplied / non premultiplied alpha - bug in particlesystem? dynamic per texturetype
-- premultiplied alpha bug for sprite2dcloud
 - multiple worlds test
 - camera zoom example for independent resolutions
 - Sprite2DCloud - addChildAt - invalidation not THAT agressive if possible?

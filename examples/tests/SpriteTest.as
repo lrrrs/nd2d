@@ -80,7 +80,7 @@ package tests {
             s3.x = stage.stageWidth / 2 + s3.width / 1.5;
             s3.y = stage.stageHeight / 2;
             s3.rotation -= 1;
-            s3.blendMode = BlendModePresets.ADD;
+            s3.blendMode = BlendModePresets.ADD_PREMULTIPLIED_ALPHA;
 
             camera.x = Math.sin(getTimer() / 5000) * 20.0;
             camera.y = Math.cos(getTimer() / 5000) * 20.0;

@@ -35,7 +35,7 @@ package tests {
             var s:Sprite2D;
 
             spriteCloud = new Sprite2DCloud(maxParticles, Texture2D.textureFromBitmapData(new twirlBmp().bitmapData));
-            spriteCloud.blendMode = BlendModePresets.ADD;
+            spriteCloud.blendMode = BlendModePresets.ADD_PREMULTIPLIED_ALPHA;
 
             for(var i:int = 0; i < maxParticles; i++) {
                 s = new Sprite2D();

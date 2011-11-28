@@ -45,6 +45,12 @@ Important links:
 
 # Changelog:
 
+2011-11-28
+
+- FIXED: texture distribution for Sprite2D in a batch
+- FIXED: Premultiplied alpha bug in ParticlySystem2D
+- RENAMED: blendmode ADD -> ADD_PREMULTIPLIED_ALPHA
+
 2011-11-23
 
 - ADDED: Support for TouchEvents

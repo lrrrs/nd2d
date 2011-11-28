@@ -57,7 +57,7 @@ package tests {
             addChild(starfield1);
 
             starfield2 = new Sprite2D(Texture2D.textureFromBitmapData(new starFieldTexture2().bitmapData));
-            starfield2.blendMode = BlendModePresets.ADD;
+            starfield2.blendMode = BlendModePresets.ADD_PREMULTIPLIED_ALPHA;
             addChild(starfield2);
         }
 
