@@ -68,7 +68,7 @@ package tests {
             particles = new ParticleSystem2D(Texture2D.textureFromBitmapData(new particleClass().bitmapData), 1000, psp);
             particles.gravity = new Point(0.0, -1500.0);
             //particles.scaleX = particles.scaleY = 4.0;
-            particles.blendMode = BlendModePresets.ADD;
+            particles.blendMode = BlendModePresets.ADD_PREMULTIPLIED_ALPHA;
 
             addChild(particles);
 

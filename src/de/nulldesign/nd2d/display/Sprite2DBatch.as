@@ -87,7 +87,9 @@ package de.nulldesign.nd2d.display {
 			// distribute spritesheets to sprites
 			if(spriteSheet && !c.spriteSheet) {
 				c.setSpriteSheet(spriteSheet.clone());
-			} else if(!c.texture) {
+			}
+
+			if(texture && !c.texture) {
 				c.setTexture(texture);
 			}
 

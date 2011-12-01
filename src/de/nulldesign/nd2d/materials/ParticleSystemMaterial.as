@@ -94,9 +94,15 @@ package de.nulldesign.nd2d.materials {
 						"mul vt4, va5, vt0.x        \n" + // endColor * progress
 						"add v1, vt3, vt4           \n"; // save color
 
+
+		private const PREMULTIPLIED_ALPHA_PART:String = "mul ft0, ft0, v1	\n" + // mult with color
+				"mul oc, ft0, v1.w  \n";  // mult with alpha
+
+		private const NON_PREMULTIPLIED_ALPHA_PART:String = "mul oc, ft0, v1 \n";  // mult with color
+
 		private const FRAGMENT_SHADER:String =
 				"tex ft0, v0, fs0 <TEXTURE_SAMPLING_OPTIONS>  \n" + // sample texture from interpolated uv coords
-						"mul oc, ft0, v1                               \n";  // mult with color
+						"[PARTICLES_COLOR_CALCULATION]";  // mult with alpha
 
 		protected var texture:Texture2D;
 
@@ -202,8 +208,28 @@ package de.nulldesign.nd2d.materials {
 
 		override protected function initProgram(context:Context3D):void {
 			if(!shaderData) {
-				var vertexString:String = VERTEX_SHADER.replace("[PARTICLES_REPEAT]", burst ? BURST_SHADER_PART : REPEAT_SHADER_PART);
-				shaderData = ShaderCache.getInstance().getShader(context, this, vertexString, FRAGMENT_SHADER, 20, texture.textureOptions, burst ? 1000 : 0);
+
+				var vertexString:String;
+				var fragmentString:String;
+				var cacheNum:uint;
+
+				if(burst) {
+					cacheNum = 1000;
+					vertexString = VERTEX_SHADER.replace("[PARTICLES_REPEAT]", BURST_SHADER_PART);
+				} else {
+					cacheNum = 2000;
+					vertexString = VERTEX_SHADER.replace("[PARTICLES_REPEAT]", REPEAT_SHADER_PART);
+				}
+
+				if(texture.hasPremultipliedAlpha) {
+					cacheNum += 100;
+					fragmentString = FRAGMENT_SHADER.replace("[PARTICLES_COLOR_CALCULATION]", PREMULTIPLIED_ALPHA_PART);
+				} else {
+					cacheNum += 200;
+					fragmentString = FRAGMENT_SHADER.replace("[PARTICLES_COLOR_CALCULATION]", NON_PREMULTIPLIED_ALPHA_PART);
+				}
+
+				shaderData = ShaderCache.getInstance().getShader(context, this, vertexString, fragmentString, 20, texture.textureOptions, cacheNum);
 			}
 		}
 	}

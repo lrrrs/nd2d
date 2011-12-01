@@ -161,7 +161,9 @@ package de.nulldesign.nd2d.display {
 
 				if(spriteSheet && !s.spriteSheet) {
 					s.setSpriteSheet(spriteSheet.clone());
-				} else if(!s.texture) {
+				}
+
+				if(texture && !s.texture) {
 					s.setTexture(texture);
 				}
 			}

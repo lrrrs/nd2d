@@ -36,9 +36,6 @@ package de.nulldesign.nd2d.materials {
 
 	public class BlendModePresets {
 
-        public static const ADD_NOALPHA:NodeBlendMode = new NodeBlendMode(Context3DBlendFactor.ONE,
-                                                                          Context3DBlendFactor.ONE);
-
         public static const BLEND:NodeBlendMode = new NodeBlendMode(Context3DBlendFactor.SOURCE_ALPHA,
                                                                     Context3DBlendFactor.ONE_MINUS_SOURCE_ALPHA);
 
@@ -54,7 +51,10 @@ package de.nulldesign.nd2d.materials {
         public static const NORMAL_NO_PREMULTIPLIED_ALPHA:NodeBlendMode = new NodeBlendMode(Context3DBlendFactor.SOURCE_ALPHA,
                                                                                             Context3DBlendFactor.ONE_MINUS_SOURCE_ALPHA);
 
-        public static const ADD:NodeBlendMode = new NodeBlendMode(Context3DBlendFactor.SOURCE_ALPHA,
+        public static const ADD_NO_PREMULTIPLIED_ALPHA:NodeBlendMode = new NodeBlendMode(Context3DBlendFactor.SOURCE_ALPHA,
                                                                   Context3DBlendFactor.ONE);
+
+        public static const ADD_PREMULTIPLIED_ALPHA:NodeBlendMode = new NodeBlendMode(Context3DBlendFactor.ONE,
+                                                                          Context3DBlendFactor.ONE);
     }
 }

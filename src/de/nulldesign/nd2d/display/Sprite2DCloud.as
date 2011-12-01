@@ -99,6 +99,7 @@ package de.nulldesign.nd2d.display {
 		protected var mIndexBuffer:Vector.<uint>;
 		protected var uvInited:Boolean = false;
 		protected var maxCapacity:uint;
+		protected var isInvalidatedColors:Boolean = false;
 
 		protected var clipSpaceMatrix:Matrix3D = new Matrix3D();
 
@@ -150,7 +151,9 @@ package de.nulldesign.nd2d.display {
 				// distribute spritesheets to sprites
 				if(spriteSheet && !c.spriteSheet) {
 					c.setSpriteSheet(spriteSheet.clone());
-				} else if(!c.texture) {
+				}
+
+				if(texture && !c.texture) {
 					c.setTexture(texture);
 				}
 
@@ -253,7 +256,6 @@ package de.nulldesign.nd2d.display {
 			statsObject.totalTris += numTris;
 		}
 
-		private var isInvalidatedColors : Boolean = false;
 		override public function updateColors() : void {
 			super.updateColors();
 			isInvalidatedColors = true;
@@ -297,7 +299,6 @@ package de.nulldesign.nd2d.display {
 			var isChildInvalidatedColors : Boolean = false;
 			const halfTextureWidth : Number = texture.textureWidth >> 1;
 			const halfTextureHeight : Number = texture.textureHeight >> 1;
-			var isInvalidatedColors : Boolean = false;
 
     		if(invalidateColors) {
 				updateColors();

@@ -67,7 +67,7 @@ package tests {
 
             tex = Texture2D.textureFromBitmapData(new particleClass().bitmapData);
             particles = new ParticleSystem2D(tex, maxParticles, preset);
-            particles.blendMode = BlendModePresets.ADD;
+            particles.blendMode = BlendModePresets.ADD_PREMULTIPLIED_ALPHA;
 
             timer.addEventListener(TimerEvent.TIMER, updateSystem);
 
@@ -324,7 +324,7 @@ package tests {
             particles.dispose();
 
             particles = new ParticleSystem2D(tex, maxParticles, preset, burst);
-            particles.blendMode = BlendModePresets.ADD;
+            particles.blendMode = BlendModePresets.ADD_PREMULTIPLIED_ALPHA;
 
             addChild(particles);
 
