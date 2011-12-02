@@ -70,6 +70,11 @@ package de.nulldesign.nd2d.display {
 			mouseEnabled = true;
 		}
 
+		override public function handleDeviceLoss():void {
+			super.handleDeviceLoss();
+			sceneGUILayer.handleDeviceLoss();
+		}
+
 		override internal function drawNode(context:Context3D, camera:Camera2D, parentMatrixChanged:Boolean, statsObject:StatsObject):void {
 
 			for each(var child:Node2D in children) {
