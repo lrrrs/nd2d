@@ -117,19 +117,35 @@ package de.nulldesign.nd2d.materials.texture {
 			return t;
 		}
 
+		public static function textureFromSize(textureWidth:uint, textureHeight:uint):Texture2D {
+
+			var size:Point = TextureHelper.getTextureDimensionsFromSize(textureWidth, textureHeight);
+			var t:Texture2D = new Texture2D();
+			t.textureWidth = size.x;
+			t.textureHeight = size.y;
+			t.bitmapWidth = size.x;
+			t.bitmapHeight = size.y;
+
+			return t;
+		}
+
 		public function getTexture(context:Context3D):Texture {
 			if(!texture) {
 
 				if(compressedBitmap) {
 					texture = TextureHelper.generateTextureFromByteArray(context, compressedBitmap);
-				} else {
+				} else if(bitmap) {
 					var useMipMapping:Boolean = (_textureOptions & TextureOption.MIPMAP_LINEAR) + (_textureOptions & TextureOption.MIPMAP_NEAREST) > 0;
 					texture = TextureHelper.generateTextureFromBitmap(context, bitmap, useMipMapping);
+				} else {
+					texture = context.createTexture(textureWidth, textureHeight, Context3DTextureFormat.BGRA, true);
 				}
 
 				if(autoCleanUpResources) {
-					bitmap.dispose();
-					bitmap = null;
+					if(bitmap) {
+						bitmap.dispose();
+						bitmap = null;
+					}
 
 					compressedBitmap = null;
 				}

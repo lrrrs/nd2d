@@ -53,7 +53,7 @@ package de.nulldesign.nd2d.display {
 			resizeCameraStage(w, h);
 		}
 
-		internal function resizeCameraStage(w:Number, h:Number):void {
+		public function resizeCameraStage(w:Number, h:Number):void {
 			_sceneWidth = w;
 			_sceneHeight = h;
 			invalidated = true;

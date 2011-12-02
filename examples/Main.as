@@ -122,6 +122,7 @@ package {
 			scenes.push(new Transform3DTest());
 			scenes.push(new TextFieldTest());
 			scenes.push(new QuadMaterialTest());
+			//scenes.push(new BlurTest());
 
 			var tf:TextFormat = new TextFormat("Arial", 11, 0xFFFFFF, true);
 

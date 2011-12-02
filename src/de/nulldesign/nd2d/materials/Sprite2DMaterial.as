@@ -87,11 +87,6 @@ package de.nulldesign.nd2d.materials {
             drawCalls = 1;
         }
 
-        override public function handleDeviceLoss():void {
-            super.handleDeviceLoss();
-            texture.texture = null;
-        }
-
         override protected function prepareForRender(context:Context3D):void {
 
             super.prepareForRender(context);
@@ -163,14 +158,6 @@ package de.nulldesign.nd2d.materials {
         override protected function initProgram(context:Context3D):void {
             if(!shaderData) {
                 shaderData = ShaderCache.getInstance().getShader(context, this, VERTEX_SHADER, FRAGMENT_SHADER, 4, texture.textureOptions);
-            }
-        }
-
-        override public function dispose():void {
-            super.dispose();
-            if(texture) {
-                texture.dispose();
-                texture = null;
             }
         }
 

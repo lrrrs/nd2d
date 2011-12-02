@@ -33,7 +33,7 @@ package tests {
 	import de.nulldesign.nd2d.display.Node2D;
 	import de.nulldesign.nd2d.display.Sprite2D;
 	import de.nulldesign.nd2d.display.TextureRenderer;
-	import de.nulldesign.nd2d.events.TextureEvent;
+	import de.nulldesign.nd2d.materials.texture.Texture2D;
 
 	import flash.events.Event;
 
@@ -62,22 +62,12 @@ package tests {
             addChild(sceneNode);
             sceneNode.visible = false;
 
-            textureRenderer = new TextureRenderer(sceneNode, stage.stageWidth, stage.stageHeight, 0.0, 0.0);
-            textureRenderer.addEventListener(TextureEvent.READY, textureCreated);
+			var renderTexture:Texture2D = Texture2D.textureFromSize(stage.stageWidth, stage.stageHeight);
+
+            textureRenderer = new TextureRenderer(sceneNode, renderTexture, 0.0, 0.0);
             addChild(textureRenderer);
-        }
 
-        private function textureCreated(e:TextureEvent):void {
-
-            if(postProcessedScene) {
-                removeChild(postProcessedScene);
-                postProcessedScene.dispose();
-                postProcessedScene = null;
-            }
-
-            //textureRenderer.removeEventListener(TextureEvent.READY, textureCreated);
-
-            postProcessedScene = new Sprite2D(textureRenderer.texture);
+			postProcessedScene = new Sprite2D(renderTexture);
             postProcessedScene.setMaterial(new Sprite2DDizzyMaterial());
             //postProcessedScene.blendMode = BlendModePresets.ADD;
             postProcessedScene.tint = 0xAA99FF;
@@ -87,7 +77,6 @@ package tests {
         }
 
         override protected function step(elapsed:Number):void {
-
             super.step(elapsed);
         }
     }

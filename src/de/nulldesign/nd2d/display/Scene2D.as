@@ -35,6 +35,8 @@ package de.nulldesign.nd2d.display {
 	import flash.display.Stage;
 
 	import flash.display3D.Context3D;
+	import flash.geom.Matrix3D;
+	import flash.geom.Vector3D;
 
 	/**
 	 * A scene that can contain 2D nodes
@@ -60,9 +62,17 @@ package de.nulldesign.nd2d.display {
 			bb = (backGroundColor & 255) / 255.0;
 		}
 
+		protected var sceneGUICamera:Camera2D = new Camera2D(1, 1);
+		protected var sceneGUILayer:Node2D = new Node2D();
+
 		public function Scene2D() {
 			super();
 			mouseEnabled = true;
+		}
+
+		override public function handleDeviceLoss():void {
+			super.handleDeviceLoss();
+			sceneGUILayer.handleDeviceLoss();
 		}
 
 		override internal function drawNode(context:Context3D, camera:Camera2D, parentMatrixChanged:Boolean, statsObject:StatsObject):void {
@@ -70,6 +80,21 @@ package de.nulldesign.nd2d.display {
 			for each(var child:Node2D in children) {
 				child.drawNode(context, camera, false, statsObject);
 			}
+
+			// resize gui camera if needed
+			if(sceneGUICamera.sceneWidth != camera.sceneWidth) {
+				sceneGUICamera.resizeCameraStage(camera.sceneWidth, camera.sceneHeight);
+			}
+
+			// draw GUI layer
+			sceneGUILayer.drawNode(context, sceneGUICamera, false, statsObject);
+		}
+
+		override internal function processMouseEvent(mousePosition:Vector3D, mouseEventType:String, cameraViewProjectionMatrix:Matrix3D, isTouchEvent:Boolean, touchPointID:int):Node2D {
+			var node:Node2D = super.processMouseEvent(mousePosition, mouseEventType, cameraViewProjectionMatrix, isTouchEvent, touchPointID);
+			var guiNode:Node2D = sceneGUILayer.processMouseEvent(mousePosition, mouseEventType, sceneGUICamera.getViewProjectionMatrix(), isTouchEvent, touchPointID);
+
+			return guiNode ? guiNode : node;
 		}
 
 		override internal function setStageAndCamRef(value:Stage, cameraValue:Camera2D):void {
