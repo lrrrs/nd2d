@@ -34,63 +34,53 @@ package tests {
 	import de.nulldesign.nd2d.display.Scene2D;
 	import de.nulldesign.nd2d.display.Sprite2D;
 	import de.nulldesign.nd2d.display.TextureRenderer;
-	import de.nulldesign.nd2d.events.TextureEvent;
 	import de.nulldesign.nd2d.materials.texture.Texture2D;
 
 	import tests.objects.MorphGrid;
 
 	public class TextureRendererTest extends Scene2D {
 
-        [Embed(source="../assets/crate.jpg")]
-        private var spriteTexture:Class;
+		[Embed(source="../assets/crate.jpg")]
+		private var spriteTexture:Class;
 
-        private var s:Sprite2D;
-        private var s2:Sprite2D;
-        private var texturedGrid:Grid2D;
+		private var s:Sprite2D;
+		private var s2:Sprite2D;
+		private var texturedGrid:Grid2D;
 
-        private var texRenderer:TextureRenderer;
+		private var texRenderer:TextureRenderer;
 
-        public function TextureRendererTest() {
+		public function TextureRendererTest() {
 
-            var b:Texture2D = Texture2D.textureFromBitmapData(new spriteTexture().bitmapData);
+			var b:Texture2D = Texture2D.textureFromBitmapData(new spriteTexture().bitmapData);
 
-            s = new Sprite2D(b);
-            s2 = new Sprite2D(b);
-            s2.scaleX = s2.scaleY = 0.5;
+			s = new Sprite2D(b);
+			s2 = new Sprite2D(b);
+			s2.scaleX = s2.scaleY = 0.5;
 
-            s.addChild(s2);
-            //s.visible = false;
+			s.addChild(s2);
+			//s.visible = false;
 
-            texRenderer = new TextureRenderer(s, 256, 256);
-            texRenderer.addEventListener(TextureEvent.READY, textureReady);
+			var renderTexture:Texture2D = Texture2D.textureFromSize(256, 256);
 
-            addChild(s);
-            addChild(texRenderer);
-        }
+			texRenderer = new TextureRenderer(s, renderTexture);
 
-        private function textureReady(e:TextureEvent):void {
+			addChild(s);
+			addChild(texRenderer);
 
-            if(texturedGrid) {
-                removeChild(texturedGrid);
-                texturedGrid = null;
-            }
+			texturedGrid = new MorphGrid(12, 12, renderTexture, 0.05);
+			texturedGrid.tint = 0x99ff00;
+			addChild(texturedGrid);
+		}
 
-            texturedGrid = new MorphGrid(12, 12, texRenderer.texture, 0.05);
-            texturedGrid.tint = 0x99ff00;
-            addChild(texturedGrid);
-        }
+		override protected function step(elapsed:Number):void {
+			s.x = stage.stageWidth * 0.5 - s.width * 0.55;
+			s.y = stage.stageHeight * 0.5;
 
-        override protected function step(elapsed:Number):void {
-            s.x = stage.stageWidth * 0.5 - s.width * 0.55;
-            s.y = stage.stageHeight * 0.5;
+			//s.rotation += 1;
+			s2.rotation += 1;
 
-            //s.rotation += 1;
-            s2.rotation += 1;
-
-            if(texturedGrid) {
-                texturedGrid.x = stage.stageWidth * 0.5 + texturedGrid.width * 0.55;
-                texturedGrid.y = stage.stageHeight * 0.5;
-            }
-        }
-    }
+			texturedGrid.x = stage.stageWidth * 0.5 + texturedGrid.width * 0.55;
+			texturedGrid.y = stage.stageHeight * 0.5;
+		}
+	}
 }

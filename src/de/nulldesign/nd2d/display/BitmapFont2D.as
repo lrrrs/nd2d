@@ -75,7 +75,7 @@ package de.nulldesign.nd2d.display {
             this.charSpacing = charSpacing;
 
             super(maxTextLen, fontTexture);
-            setSpriteSheet(new SpriteSheet(fontTexture.textureWidth, fontTexture.textureHeight, charWidth, charHeight, 1, spritesPackedWithoutSpaces));
+            setSpriteSheet(new SpriteSheet(fontTexture.bitmapWidth, fontTexture.bitmapHeight, charWidth, charHeight, 1, spritesPackedWithoutSpaces));
         }
 
         override protected function step(elapsed:Number):void {

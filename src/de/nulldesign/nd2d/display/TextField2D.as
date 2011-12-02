@@ -40,8 +40,7 @@ package de.nulldesign.nd2d.display {
 	import flash.text.TextFieldAutoSize;
 	import flash.text.TextFieldType;
 	import flash.text.TextFormat;
-
-	import flashx.textLayout.formats.TextAlign;
+	import flash.text.TextFormatAlign;
 
 	/**
 	 * ...
@@ -331,13 +330,13 @@ package de.nulldesign.nd2d.display {
 					// Set pivot to top left corner because it's better for laying out text than a center pivot point.
 					// NOTE: Rounding with int() because blurryness can occur if x/y values for pivot are not whole numbers.
 					switch(align) {
-						case TextAlign.LEFT:
+						case TextFormatAlign.LEFT:
 							pivot = new Point(int(-_nativeTextField.width / 2), /*int(-_nativeTextField.height / 2)*/ 0.0);
 							break;
-						case TextAlign.CENTER:
+						case TextFormatAlign.CENTER:
 							pivot = new Point(0.0, /*int(-_nativeTextField.height / 2)*/ 0.0);
 							break;
-						case TextAlign.RIGHT:
+						case TextFormatAlign.RIGHT:
 							pivot = new Point(int(_nativeTextField.width / 2), /*int(-_nativeTextField.height / 2)*/ 0.0);
 							break;
 					}

@@ -30,20 +30,14 @@
 
 package de.nulldesign.nd2d.display {
 
-	import de.nulldesign.nd2d.events.TextureEvent;
 	import de.nulldesign.nd2d.materials.texture.Texture2D;
 	import de.nulldesign.nd2d.utils.StatsObject;
 	import de.nulldesign.nd2d.utils.TextureHelper;
 
 	import flash.display3D.Context3D;
 	import flash.display3D.Context3DTextureFormat;
+	import flash.display3D.textures.Texture;
 	import flash.geom.Point;
-
-	/**
-	 * Dispatched when the generated texture is created.
-	 * @eventType de.nulldesign.nd2d.events.TextureEvent.READY
-	 */
-	[Event(name="textureReady", type="de.nulldesign.nd2d.events.TextureEvent")]
 
 	public class TextureRenderer extends Node2D {
 
@@ -55,19 +49,12 @@ package de.nulldesign.nd2d.display {
 		private var cameraOffsetX:Number;
 		private var cameraOffsetY:Number;
 
-		public function TextureRenderer(renderNode:Node2D, textureWidth:Number, textureHeight:Number, cameraOffsetX:Number = NaN, cameraOffsetY:Number = NaN) {
+		public function TextureRenderer(renderNode:Node2D, texture:Texture2D, cameraOffsetX:Number = NaN, cameraOffsetY:Number = NaN) {
 
-			var size:Point = TextureHelper.getTextureDimensionsFromSize(textureWidth, textureHeight);
-
-			texture = new Texture2D();
-			texture.textureWidth = size.x;
-			texture.textureHeight = size.y;
-			texture.bitmapWidth = size.x;
-			texture.bitmapHeight = size.y;
-
+			this.texture = texture;
 			this.renderNode = renderNode;
-			_width = size.x;
-			_height = size.y;
+			_width = texture.bitmapWidth;
+			_height = texture.bitmapHeight;
 			this.cameraOffsetX = cameraOffsetX;
 			this.cameraOffsetY = cameraOffsetY;
 
@@ -81,12 +68,7 @@ package de.nulldesign.nd2d.display {
 
 		override internal function drawNode(context:Context3D, camera:Camera2D, parentMatrixChanged:Boolean, statsObject:StatsObject):void {
 
-			if(!texture.texture) {
-				texture.texture = context.createTexture(width, height, Context3DTextureFormat.BGRA, true);
-				dispatchEvent(new TextureEvent(TextureEvent.READY));
-			}
-
-			context.setRenderToTexture(texture.texture, false, 2, 0);
+			context.setRenderToTexture(texture.getTexture(context), false, 2, 0);
 			context.clear(0.0, 0.0, 0.0, 0.0);
 
 			if(!isNaN(cameraOffsetX) && !isNaN(cameraOffsetY)) {

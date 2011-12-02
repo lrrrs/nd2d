@@ -45,7 +45,7 @@ package tests {
 
 	public class Font2DTest extends Scene2D {
 
-        [Embed(source="/assets/kromagrad_16x16.png")]
+        [Embed(source="/assets/kromagrad_18x18_no_bleed.png")]
         private var fontTexture:Class;
 
         private var fontChars:String = " !\"©♥%<'()^+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ";
@@ -66,13 +66,13 @@ package tests {
             var fontBmp:BitmapData = new fontTexture().bitmapData;
 			var tex:Texture2D = Texture2D.textureFromBitmapData(fontBmp);
 
-            font = new BitmapFont2D(tex, 16, 16, fontChars, 20, 100, true);
+            font = new BitmapFont2D(tex, 18, 18, fontChars, 20, 100, false);
             font.text = "HELLO FOLKS!         ND2D JUST GOT NICE BITMAP FONTS.      DON'T YOU JUST ♥ IT? :)";
             font.x = stage.stageWidth;
             font.scaleX = font.scaleY = 2.0;
             addChild(font);
 
-            counter = new BitmapFont2D(tex, 16, 16, fontChars, 16, 10, true);
+            counter = new BitmapFont2D(tex, 18, 18, fontChars, 18, 10, false);
             counter.textAlign = TextAlign.CENTER;
             addChild(counter);
         }

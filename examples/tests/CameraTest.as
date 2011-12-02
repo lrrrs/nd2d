@@ -41,55 +41,69 @@ package tests {
 
 	public class CameraTest extends Scene2D {
 
-        [Embed(source="/assets/water_texture.jpg")]
-        private var backgroundTexture:Class;
+		[Embed(source="/assets/water_texture.jpg")]
+		private var backgroundTexture:Class;
 
-        [Embed(source="/assets/nd_logo.png")]
-        private var spriteTexture:Class;
+		[Embed(source="/assets/nd_logo.png")]
+		private var spriteTexture:Class;
 
-        private var back:Sprite2D;
-        private var targetNode:Node2D;
+		private var back:Sprite2D;
+		private var targetNode:Node2D;
 
-        public function CameraTest() {
+		public function CameraTest() {
 
-            back = new Sprite2D(Texture2D.textureFromBitmapData(new backgroundTexture().bitmapData));
-            back.alpha = 0.5;
-            addChild(back);
+			back = new Sprite2D(Texture2D.textureFromBitmapData(new backgroundTexture().bitmapData));
+			back.alpha = 0.5;
+			addChild(back);
 
-            addEventListener(Event.ADDED_TO_STAGE, addedToStage);
-        }
+			addEventListener(Event.ADDED_TO_STAGE, addedToStage);
+		}
 
-        private function addedToStage(e:Event):void {
-            removeEventListener(Event.ADDED_TO_STAGE, addedToStage);
+		private function addedToStage(e:Event):void {
+			removeEventListener(Event.ADDED_TO_STAGE, addedToStage);
 
 			var tex:Texture2D = Texture2D.textureFromBitmapData(new spriteTexture().bitmapData);
+			var s:Sprite2D;
 
-            for(var i:int = 0; i < 5; i++) {
-                var s:Sprite2D = new Sprite2D(tex);
-                s.x = NumberUtil.rndMinMax(100.0, stage.stageWidth - 100.0);
-                s.y = NumberUtil.rndMinMax(100.0, stage.stageHeight - 100.0);
-                s.rotation = NumberUtil.rndMinMax(0.0, 360.0);
-                s.mouseEnabled = true;
-                s.addEventListener(MouseEvent.CLICK, spriteClick);
-                addChild(s);
-            }
-        }
+			for(var i:int = 0; i < 5; i++) {
+				s = new Sprite2D(tex);
+				s.x = NumberUtil.rndMinMax(100.0, stage.stageWidth - 100.0);
+				s.y = NumberUtil.rndMinMax(100.0, stage.stageHeight - 100.0);
+				s.rotation = NumberUtil.rndMinMax(0.0, 360.0);
+				s.mouseEnabled = true;
+				s.addEventListener(MouseEvent.CLICK, spriteClick);
+				addChild(s);
+			}
 
-        private function spriteClick(e:MouseEvent):void {
-            targetNode = Node2D(e.target);
-        }
+			// GUI layer test
+			s = new Sprite2D(tex);
+			s.x = s.width * 0.5;
+			s.y = stage.stageHeight - s.height * 0.5;
+			s.tint = 0xFF9900;
+			s.mouseEnabled = true;
+			s.addEventListener(MouseEvent.CLICK, guiLayerItemClick);
+			sceneGUILayer.addChild(s);
+		}
 
-        override protected function step(elapsed:Number):void {
-            back.x = camera.sceneWidth * 0.5;
-            back.y = camera.sceneHeight * 0.5;
-            back.width = camera.sceneWidth * 5.0;
-            back.height = camera.sceneHeight * 5.0;
+		private function guiLayerItemClick(e:MouseEvent):void {
+			trace("hello GUI");
+		}
 
-            if(targetNode) {
-                camera.x += ((targetNode.x - camera.sceneWidth * 0.5) - camera.x) * 0.05;
-                camera.y += ((targetNode.y - camera.sceneHeight * 0.5) - camera.y) * 0.05;
-                camera.rotation += (-targetNode.rotation - camera.rotation) * 0.05;
-            }
-        }
-    }
+		private function spriteClick(e:MouseEvent):void {
+			targetNode = Node2D(e.target);
+		}
+
+		override protected function step(elapsed:Number):void {
+			back.x = camera.sceneWidth * 0.5;
+			back.y = camera.sceneHeight * 0.5;
+			back.width = camera.sceneWidth * 5.0;
+			back.height = camera.sceneHeight * 5.0;
+
+			if(targetNode) {
+				camera.x += ((targetNode.x - camera.sceneWidth * 0.5) - camera.x) * 0.05;
+				camera.y += ((targetNode.y - camera.sceneHeight * 0.5) - camera.y) * 0.05;
+				camera.rotation += (-targetNode.rotation - camera.rotation) * 0.05;
+			}
+		}
+	}
 }
