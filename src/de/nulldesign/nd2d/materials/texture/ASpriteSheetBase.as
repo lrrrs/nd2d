@@ -136,6 +136,10 @@ package de.nulldesign.nd2d.materials.texture {
             return offsets[frame];
         }
 
+		public function getDimensionForFrame():Rectangle {
+			return frames[frame];
+		}
+
         public function getUVRectForFrame(textureWidth:Number, textureHeight:Number):Rectangle {
 
             if(uvRects[frame]) {

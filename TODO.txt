@@ -13,6 +13,5 @@ What I don't like about the spritesheets is:
 About Sprite2DBatch: only addChildAt/removeChildAt are implemented and I'm not sure why addChild/removeChild aren't - maybe there's a hidden reason? Also invalidation in the *At methods seem a bit aggressive.
 getChildByTag()
 
-- GUI layer - no camera movement?
 - stage public, via getter / setter
 - camera pivot? rotation point?
