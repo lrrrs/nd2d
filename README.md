@@ -45,6 +45,11 @@ Important links:
 
 # Changelog:
 
+2011-12-07
+
+- ADDED: getChildByTag and tag property for Node2D
+- ADDED: Sprite2DBlurMaterial - GPU powered blurX / blurY
+
 2011-12-02
 
 - FIXED: BitmapFont2D non 2^n texture sizes

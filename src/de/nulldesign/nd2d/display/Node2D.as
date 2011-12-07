@@ -170,8 +170,10 @@ package de.nulldesign.nd2d.display {
 		public var children:Vector.<Node2D> = new Vector.<Node2D>();
 		public var parent:Node2D;
 
-		public var vx:Number = 0.0;
-		public var vy:Number = 0.0;
+		public var vx:Number;
+		public var vy:Number;
+
+		public var tag:int = 0;
 
 		public var blendMode:NodeBlendMode = BlendModePresets.NORMAL_PREMULTIPLIED_ALPHA;
 
@@ -752,6 +754,14 @@ package de.nulldesign.nd2d.display {
 			while(children.length > 0) {
 				removeChildAt(0);
 			}
+		}
+
+		public function getChildByTag(value:int):Node2D {
+			for each(var child:Node2D in children) {
+				if(child.tag == value) return child;
+			}
+
+			return null;
 		}
 
 		public function localToGlobal(p:Point):Point {

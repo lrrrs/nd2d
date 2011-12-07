@@ -42,11 +42,11 @@ package materials {
 
 	public class Sprite2DDizzyMaterial extends Sprite2DMaterial {
 
-        private const VERTEX_SHADER:String =
+        private const DIZZY_VERTEX_SHADER:String =
                 "m44 op, va0, vc0   \n" + // vertex * clipspace
                 "mov v0, va1		\n"; // copy uv
 
-        private const FRAGMENT_SHADER:String =
+        private const DIZZY_FRAGMENT_SHADER:String =
                 "mov ft0.xyzw, v0.xy                        \n" + // get interpolated uv coords
                 "mul ft1, ft0, fc2.y                        \n" +
                 "add ft1, ft1, fc2.x                        \n" +
@@ -88,7 +88,7 @@ package materials {
 
         override protected function initProgram(context:Context3D):void {
             if(!dizzyProgramData) {
-				dizzyProgramData = new Shader2D(context, VERTEX_SHADER, FRAGMENT_SHADER, 4, texture.textureOptions);
+				dizzyProgramData = new Shader2D(context, DIZZY_VERTEX_SHADER, DIZZY_FRAGMENT_SHADER, 4, texture.textureOptions);
             }
 
             shaderData = dizzyProgramData;

@@ -47,13 +47,13 @@ package de.nulldesign.nd2d.materials {
 
 	public class Sprite2DMaterial extends AMaterial {
 
-        private const VERTEX_SHADER:String = "m44 op, va0, vc0   \n" + // vertex * clipspace
+        protected const VERTEX_SHADER:String = "m44 op, va0, vc0   \n" + // vertex * clipspace
                 "mov vt0, va1  \n" + // save uv in temp register
                 "mul vt0.xy, vt0.xy, vc4.zw   \n" + // mult with uv-scale
                 "add vt0.xy, vt0.xy, vc4.xy   \n" + // add uv offset
                 "mov v0, vt0 \n"; // copy uv
 
-        private const FRAGMENT_SHADER:String =
+        protected const FRAGMENT_SHADER:String =
                 "tex ft0, v0, fs0 <TEXTURE_SAMPLING_OPTIONS>\n" + // sample texture from interpolated uv coords
                         "mul ft0, ft0, fc0\n" + // mult with colorMultiplier
                         "add oc, ft0, fc1\n"; // mult with colorOffset

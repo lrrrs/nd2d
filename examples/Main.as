@@ -49,6 +49,7 @@ package {
 	import net.hires.debug.Stats;
 
 	import tests.BatchTest;
+	import tests.BlurTest;
 	import tests.CameraTest;
 	import tests.QuadMaterialTest;
 	import tests.ColorTransformTest;
@@ -87,7 +88,7 @@ package {
 
 			stage.scaleMode = StageScaleMode.NO_SCALE;
 			stage.align = StageAlign.TOP_LEFT;
-			enableErrorChecking = false;
+			enableErrorChecking = true;
 
 			super(Context3DRenderMode.AUTO, 60);
 		}
@@ -120,7 +121,7 @@ package {
 			scenes.push(new Transform3DTest());
 			scenes.push(new TextFieldTest());
 			scenes.push(new QuadMaterialTest());
-			//scenes.push(new BlurTest());
+			scenes.push(new BlurTest());
 
 			var tf:TextFormat = new TextFormat("Arial", 11, 0xFFFFFF, true);
 
