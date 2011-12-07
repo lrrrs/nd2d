@@ -91,8 +91,6 @@ package tests {
 
 		override protected function step(elapsed:Number):void {
 
-			Sprite2DBlurMaterial.stageRef = stage;
-
 			super.step(elapsed);
 
 			sprite.x = camera.sceneWidth * 0.5 - sprite.width;

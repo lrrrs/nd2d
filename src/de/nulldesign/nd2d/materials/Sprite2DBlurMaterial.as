@@ -60,9 +60,6 @@ package de.nulldesign.nd2d.materials {
 	 */
 	public class Sprite2DBlurMaterial extends Sprite2DMaterial {
 
-		public static var stageRef:Stage;
-
-		// TODO texture options!
 		protected const HORIZONTAL_FRAGMENT_SHADER:String =
 			// -4
 				"mov ft0, v0								\n" +
