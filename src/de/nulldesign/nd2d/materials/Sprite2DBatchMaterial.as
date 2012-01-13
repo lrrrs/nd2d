@@ -143,11 +143,11 @@ package de.nulldesign.nd2d.materials {
 		protected function processAndRenderNodes(context:Context3D, childList:Vector.<Node2D>):void {
 
 			var child:Sprite2D;
-			var colorMultiplierAndOffset:Vector.<Number> = new Vector.<Number>(8, true);
-			var uvoffset:Vector.<Number> = new Vector.<Number>(4, true);
+			const colorMultiplierAndOffset:Vector.<Number> = new Vector.<Number>(8, true);
+			const uvoffset:Vector.<Number> = new Vector.<Number>(4, true);
 			var i:int = -1;
-			var n:int = childList.length;
-			var offsetFactor:Number = 1.0 / 255.0;
+			const n:int = childList.length;
+			const offsetFactor:Number = 1.0 / 255.0;
 
 			while(++i < n) {
 

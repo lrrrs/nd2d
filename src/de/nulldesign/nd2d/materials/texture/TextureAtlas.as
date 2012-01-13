@@ -165,12 +165,12 @@ package de.nulldesign.nd2d.materials.texture {
 							}
 							/*
 							// calculate real offset
-							var idx:uint = sourceColorRects.length - 1;
-							var offset:Point = offsets[idx];
-							var sourceFrame:Rectangle = frames[idx];
-							var sourceColorRect:Rectangle = sourceColorRects[idx];
-							var sourceSize:Point = sourceSizes[idx];
-							var newOffset:Point = new Point((sourceSize.x - sourceFrame.width) / 2 - sourceColorRect.x, (sourceSize.y - sourceFrame.height) / 2 - sourceColorRect.y);
+							const idx:uint = sourceColorRects.length - 1;
+							const offset:Point = offsets[idx];
+							const sourceFrame:Rectangle = frames[idx];
+							const sourceColorRect:Rectangle = sourceColorRects[idx];
+							const sourceSize:Point = sourceSizes[idx];
+							const newOffset:Point = new Point((sourceSize.x - sourceFrame.width) / 2 - sourceColorRect.x, (sourceSize.y - sourceFrame.height) / 2 - sourceColorRect.y);
 
 							offset.x = -newOffset.x;
 							offset.y = -newOffset.y;
@@ -181,11 +181,12 @@ package de.nulldesign.nd2d.materials.texture {
 				}
 			}
 
-			if(frames.length == 0) {
+			const frames_length:int = frames.length;
+			if(frames_length == 0) {
 				throw new Error("Error parsing descriptor format");
 			}
 
-			uvRects = new Vector.<Rectangle>(frames.length, true);
+			uvRects = new Vector.<Rectangle>(frames_length, true);
 			frame = 0;
 
 			/*
