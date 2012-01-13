@@ -84,7 +84,7 @@ package de.nulldesign.nd2d.materials {
 		public function modifyColorInBuffer(bufferIdx:uint, r:Number, g:Number, b:Number, a:Number):void {
 
 			if(!mVertexBuffer || mVertexBuffer.length == 0) return;
-			var idx:uint = bufferIdx * shaderData.numFloatsPerVertex;
+			const idx:uint = bufferIdx * shaderData.numFloatsPerVertex;
 
 			mVertexBuffer[idx + 2] = r;
 			mVertexBuffer[idx + 3] = g;

@@ -32,9 +32,9 @@ package de.nulldesign.nd2d.display {
 
 	import de.nulldesign.nd2d.materials.texture.SpriteSheet;
 	import de.nulldesign.nd2d.materials.texture.Texture2D;
-
+	
 	import flash.display.BitmapData;
-
+	
 	import flashx.textLayout.formats.TextAlign;
 
 	public class BitmapFont2D extends Sprite2DCloud {
@@ -83,8 +83,9 @@ package de.nulldesign.nd2d.display {
             if(textChanged) {
                 textChanged = false;
 
-                var numSpaces:uint = text.split(" ").length - 1;
-                var childsNeeded:uint = text.length - numSpaces;
+                const numSpaces:uint = text.split(" ").length - 1;
+                const text_length:int = text.length;
+                const childsNeeded:uint = text_length - numSpaces;
 
                 while(numChildren < maxCapacity && numChildren < childsNeeded) {
                     addChild(new Sprite2D());
@@ -103,15 +104,15 @@ package de.nulldesign.nd2d.display {
                 switch(textAlign) {
 
                     case TextAlign.CENTER:
-                        startX -= (text.length * spriteSheet.spriteWidth) >> 1;
+                        startX -= (text_length * spriteSheet.spriteWidth) >> 1;
                         break;
 
                     case TextAlign.RIGHT:
-                        startX += -(text.length * spriteSheet.spriteWidth);
+                        startX += -(text_length * spriteSheet.spriteWidth);
                         break;
                 }
 
-                for(var i:int = 0; i < text.length; i++) {
+                for(var i:int = 0; i < text_length; i++) {
 
                     curChar = text.charAt(i);
                     frame = Math.max(0, charString.indexOf(curChar));

@@ -164,7 +164,7 @@ package de.nulldesign.nd2d.materials {
         public function modifyVertexInBuffer(bufferIdx:uint, x:Number, y:Number):void {
 
             if(!mVertexBuffer || mVertexBuffer.length == 0) return;
-            var idx:uint = bufferIdx * shaderData.numFloatsPerVertex;
+            const idx:uint = bufferIdx * shaderData.numFloatsPerVertex;
 
             mVertexBuffer[idx] = x;
             mVertexBuffer[idx + 1] = y;

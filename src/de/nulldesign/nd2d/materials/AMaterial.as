@@ -67,11 +67,11 @@ package de.nulldesign.nd2d.materials {
         protected var mVertexBuffer:Vector.<Number>;
 
         protected var shaderData:Shader2D;
-		protected var programConstVector:Vector.<Number> = new Vector.<Number>(4);
+        protected var programConstVector:Vector.<Number> = new Vector.<Number>(4);
 
         public static const VERTEX_POSITION:String = "PB3D_POSITION";
         public static const VERTEX_UV:String = "PB3D_UV";
-		public static const VERTEX_COLOR:String = "PB3D_COLOR";
+        public static const VERTEX_COLOR:String = "PB3D_COLOR";
 
         public function AMaterial() {
 
@@ -86,7 +86,7 @@ package de.nulldesign.nd2d.materials {
             initProgram(context);
 
             var i:int;
-            var numFaces:int = faceList.length;
+            const numFaces:int = faceList.length;
             var numIndices:int;
 
             mIndexBuffer = new Vector.<uint>();
@@ -148,11 +148,12 @@ package de.nulldesign.nd2d.materials {
             vertexBuffer.uploadFromVector(mVertexBuffer, 0, numIndices);
 
             if(!indexBuffer) {
+                
+                const mIndexBuffer_length:int = mIndexBuffer.length;
+                indexBuffer = context.createIndexBuffer(mIndexBuffer_length);
+                indexBuffer.uploadFromVector(mIndexBuffer, 0, mIndexBuffer_length);
 
-                indexBuffer = context.createIndexBuffer(mIndexBuffer.length);
-                indexBuffer.uploadFromVector(mIndexBuffer, 0, mIndexBuffer.length);
-
-                numTris = int(mIndexBuffer.length / 3);
+                numTris = int(mIndexBuffer_length / 3);
             }
         }
 
@@ -229,10 +230,10 @@ package de.nulldesign.nd2d.materials {
                     buffer.push(0.0, 0.0);
             }
 
-			if(semanticsID == VERTEX_COLOR) {
+        	if(semanticsID == VERTEX_COLOR) {
                 buffer.push(v.r,  v.g,  v.b);
 
-				if(floatFormat == 4)
+                if(floatFormat == 4)
                     buffer.push(v.a);
             }
         }
