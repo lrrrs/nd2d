@@ -144,23 +144,11 @@ package {
 			stage.addEventListener(KeyboardEvent.KEY_UP, keyUp);
 
 			start();
-
-			// test buttons
-			/*
-			var b:PushButton;
-			b = new PushButton(this, 380, 0, "next", buttonClicked);
-			b.tag = 0;
-			*/
-			
-			addChild(new PushButton(this, 220, 0, "next", nextButtonClick));
+			//addChild(new PushButton(this, 220, 0, "next", nextButtonClick));
 		}
 		
 		private function nextButtonClick(e:MouseEvent):void {
 			nextDemo();
-		}
-
-		private function buttonClicked(e:MouseEvent):void {
-            nextDemo();
 		}
 
 		private function keyUp(e:KeyboardEvent):void {

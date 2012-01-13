@@ -40,6 +40,7 @@ package de.nulldesign.nd2d.display {
 
 	import flash.display.BitmapData;
 	import flash.display3D.Context3D;
+	import flash.geom.Rectangle;
 
 	/**
 	 * <p>2D sprite class</p>
@@ -54,6 +55,8 @@ package de.nulldesign.nd2d.display {
 		public var texture:Texture2D;
 		public var spriteSheet:ASpriteSheetBase;
 		public var material:Sprite2DMaterial;
+
+		public var usePixelPerfectHitTest:Boolean = false;
 
 		public var isBatchNode:Boolean = false;
 
@@ -197,6 +200,25 @@ package de.nulldesign.nd2d.display {
 			}
 
 			material.render(context, faceList, 0, faceList.length);
+		}
+
+		override protected function hitTest():Boolean {
+
+			if(usePixelPerfectHitTest && texture.bitmap) {
+
+				var xCoord:Number = _mouseX + (_width >> 1);
+				var yCoord:Number = _mouseY + (_height >> 1);
+
+				if(spriteSheet) {
+					var rect:Rectangle = spriteSheet.getDimensionForFrame();
+					xCoord += rect.x;
+					yCoord += rect.y;
+				}
+
+				return super.hitTest() && (texture.bitmap.getPixel32(xCoord, yCoord) >> 24 & 0xFF) > 0;
+			}
+
+			return super.hitTest();
 		}
 
 		override public function dispose():void {

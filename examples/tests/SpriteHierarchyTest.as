@@ -85,6 +85,7 @@ package tests {
 			s3 = new Sprite2D(tex2);
 			s3.setSpriteSheet(sheet);
 			s3.mouseEnabled = true;
+			s3.usePixelPerfectHitTest = true;
 			s3.addEventListener(MouseEvent.MOUSE_OVER, mouseOver);
 			s3.addEventListener(MouseEvent.MOUSE_OUT, mouseOut);
 			s3.scaleX = s3.scaleY = 4.0;
