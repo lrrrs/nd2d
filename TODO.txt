@@ -1,4 +1,3 @@
-- blurmaterial
 - Zoë: A SWF animation exporter for the EaselJS library. ? more TextureAtlas tools?
 - multiple worlds test
 - camera zoom example for independent resolutions
@@ -14,4 +13,6 @@ What I don't like about the spritesheets is:
 About Sprite2DBatch: only addChildAt/removeChildAt are implemented and I'm not sure why addChild/removeChild aren't - maybe there's a hidden reason? Also invalidation in the *At methods seem a bit aggressive.
 getChildByTag()
 
+- events for end / start of animations?
 - camera pivot? rotation point?
+- TextureAtlas clone?? for batches, better solution

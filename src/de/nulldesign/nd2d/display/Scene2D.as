@@ -75,6 +75,11 @@ package de.nulldesign.nd2d.display {
 			sceneGUILayer.handleDeviceLoss();
 		}
 
+		override internal function stepNode(elapsed:Number, timeSinceStartInSeconds:Number):void {
+			super.stepNode(elapsed, timeSinceStartInSeconds);
+			sceneGUILayer.stepNode(elapsed, timeSinceStartInSeconds);
+		}
+
 		override internal function drawNode(context:Context3D, camera:Camera2D, parentMatrixChanged:Boolean, statsObject:StatsObject):void {
 
 			for each(var child:Node2D in children) {

@@ -30,144 +30,156 @@
 
 package de.nulldesign.nd2d.materials.texture {
 
+	import de.nulldesign.nd2d.events.SpriteSheetAnimationEvent;
 	import de.nulldesign.nd2d.materials.texture.SpriteSheetAnimation;
+
+	import flash.events.EventDispatcher;
 
 	import flash.geom.Point;
 	import flash.geom.Rectangle;
 	import flash.utils.Dictionary;
 
-	public class ASpriteSheetBase {
+	public class ASpriteSheetBase extends EventDispatcher {
 
-        protected var frames:Vector.<Rectangle> = new Vector.<Rectangle>();
-        protected var offsets:Vector.<Point> = new Vector.<Point>();
-        protected var sourceSizes:Vector.<Point> = new Vector.<Point>();
+		protected var frames:Vector.<Rectangle> = new Vector.<Rectangle>();
+		protected var offsets:Vector.<Point> = new Vector.<Point>();
+		protected var sourceSizes:Vector.<Point> = new Vector.<Point>();
 		protected var sourceColorRects:Vector.<Rectangle> = new Vector.<Rectangle>();
-        protected var frameNameToIndex:Dictionary = new Dictionary();
-        protected var uvRects:Vector.<Rectangle>;
-        protected var spritesPackedWithoutSpace:Boolean;
+		protected var frameNameToIndex:Dictionary = new Dictionary();
+		protected var uvRects:Vector.<Rectangle>;
+		protected var spritesPackedWithoutSpace:Boolean;
 
-        protected var ctime:Number = 0.0;
-        protected var otime:Number = 0.0;
-        protected var interp:Number = 0.0;
+		protected var ctime:Number = 0.0;
+		protected var otime:Number = 0.0;
+		protected var interp:Number = 0.0;
 
-        protected var frameIdx:uint = 0;
+		protected var triggerEventOnLastFrame:Boolean = false;
 
-        protected var activeAnimation:SpriteSheetAnimation;
-        protected var animationMap:Dictionary = new Dictionary();
+		protected var frameIdx:uint = 0;
 
-        public var frameUpdated:Boolean = true;
+		protected var activeAnimation:SpriteSheetAnimation;
+		protected var animationMap:Dictionary = new Dictionary();
 
-        protected var fps:uint;
+		public var frameUpdated:Boolean = true;
 
-        protected var _spriteWidth:Number;
-        protected var _spriteHeight:Number;
-        protected var _sheetWidth:Number;
-        protected var _sheetHeight:Number;
+		protected var fps:uint;
 
-        public function get spriteWidth():Number {
-            return _spriteWidth;
-        }
+		protected var _spriteWidth:Number;
+		protected var _spriteHeight:Number;
+		protected var _sheetWidth:Number;
+		protected var _sheetHeight:Number;
 
-        public function get spriteHeight():Number {
-            return _spriteHeight;
-        }
+		public function get spriteWidth():Number {
+			return _spriteWidth;
+		}
 
-        protected var _frame:uint = int.MAX_VALUE;
+		public function get spriteHeight():Number {
+			return _spriteHeight;
+		}
 
-        public function get frame():uint {
-            return _frame;
-        }
+		protected var _frame:uint = int.MAX_VALUE;
 
-        public function set frame(value:uint):void {
-            if(frame != value) {
-                _frame = value;
-                frameUpdated = true;
+		public function get frame():uint {
+			return _frame;
+		}
 
-                if(frames.length - 1 >= _frame) {
-                    _spriteWidth = frames[_frame].width;
-                    _spriteHeight = frames[_frame].height;
-                }
-            }
-        }
+		public function set frame(value:uint):void {
+			if(frame != value) {
+				_frame = value;
+				frameUpdated = true;
 
-        public function ASpriteSheetBase() {
-        }
+				if(frames.length - 1 >= _frame) {
+					_spriteWidth = frames[_frame].width;
+					_spriteHeight = frames[_frame].height;
+				}
+			}
+		}
 
-        public function update(t:Number):void {
+		public function ASpriteSheetBase() {
+		}
 
-            if(!activeAnimation) return;
+		public function update(t:Number):void {
 
-            ctime = t;
+			if(!activeAnimation) return;
 
-            // Update the timer part, to get time based animation
-            interp += fps * (ctime - otime);
-            if(interp >= 1.0) {
-                frameIdx++;
-                interp = 0;
-            }
+			ctime = t;
 
-            if(activeAnimation.loop) {
-                frameIdx = frameIdx % activeAnimation.numFrames;
-            } else {
-                frameIdx = Math.min(frameIdx, activeAnimation.numFrames - 1);
-            }
+			// Update the timer part, to get time based animation
+			interp += fps * (ctime - otime);
+			if(interp >= 1.0) {
+				frameIdx++;
+				interp = 0;
+			}
 
-            frame = activeAnimation.frames[frameIdx];
+			if(activeAnimation.loop) {
+				frameIdx = frameIdx % activeAnimation.numFrames;
+			} else {
+				frameIdx = Math.min(frameIdx, activeAnimation.numFrames - 1);
+			}
 
-            otime = ctime;
-        }
+			frame = activeAnimation.frames[frameIdx];
 
-        public function playAnimation(name:String, startIdx:uint = 0, restart:Boolean = false):void {
-            if(restart || activeAnimation != animationMap[name]) {
-                frameIdx = startIdx;
-                activeAnimation = animationMap[name];
-            }
-        }
+			otime = ctime;
+
+			if(triggerEventOnLastFrame && frameIdx == activeAnimation.numFrames - 1) {
+				dispatchEvent(new SpriteSheetAnimationEvent(SpriteSheetAnimationEvent.ANIMATION_FINISHED));
+			}
+		}
+
+		public function playAnimation(name:String, startIdx:uint = 0, restart:Boolean = false, triggerEventOnLastFrame:Boolean = false):void {
+
+			this.triggerEventOnLastFrame = triggerEventOnLastFrame;
+
+			if(restart || activeAnimation != animationMap[name]) {
+				frameIdx = startIdx;
+				activeAnimation = animationMap[name];
+			}
+		}
 
 		public function addAnimation(name:String, keyFrames:Array, loop:Boolean):void {
 
 		}
 
-        public function clone():ASpriteSheetBase {
-            return null;
-        }
+		public function clone():ASpriteSheetBase {
+			return null;
+		}
 
-        public function getOffsetForFrame():Point {
-            return offsets[frame];
-        }
+		public function getOffsetForFrame():Point {
+			return offsets[frame];
+		}
 
 		public function getDimensionForFrame():Rectangle {
 			return frames[frame];
 		}
 
-        public function getUVRectForFrame(textureWidth:Number, textureHeight:Number):Rectangle {
+		public function getUVRectForFrame(textureWidth:Number, textureHeight:Number):Rectangle {
 
-            if(uvRects[frame]) {
-                return uvRects[frame];
-            }
+			if(uvRects[frame]) {
+				return uvRects[frame];
+			}
 
-            var rect:Rectangle = frames[frame].clone();
-            var texturePixelOffset:Point = new Point((textureWidth - _sheetWidth) / 2.0, (textureHeight - _sheetHeight) / 2.0);
+			var rect:Rectangle = frames[frame].clone();
+			var texturePixelOffset:Point = new Point((textureWidth - _sheetWidth) / 2.0, (textureHeight - _sheetHeight) / 2.0);
 
-            rect.x += texturePixelOffset.x;
-            rect.y += texturePixelOffset.y;
+			rect.x += texturePixelOffset.x;
+			rect.y += texturePixelOffset.y;
 
-            if(spritesPackedWithoutSpace) {
-                rect.x += 0.5;
-                rect.y += 0.5;
+			if(spritesPackedWithoutSpace) {
+				rect.x += 0.5;
+				rect.y += 0.5;
 
-                rect.width -= 1.0;
-                rect.height -= 1.0;
-            }
+				rect.width -= 1.0;
+				rect.height -= 1.0;
+			}
 
-            rect.x /= textureWidth;
-            rect.y /= textureHeight;
-            rect.width /= textureWidth;
-            rect.height /= textureHeight;
+			rect.x /= textureWidth;
+			rect.y /= textureHeight;
+			rect.width /= textureWidth;
+			rect.height /= textureHeight;
 
-            uvRects[frame] = rect;
+			uvRects[frame] = rect;
 
-            return rect;
-        }
-    }
+			return rect;
+		}
+	}
 }

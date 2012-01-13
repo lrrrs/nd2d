@@ -33,11 +33,13 @@ package tests {
 	import de.nulldesign.nd2d.display.Node2D;
 	import de.nulldesign.nd2d.display.Scene2D;
 	import de.nulldesign.nd2d.display.Sprite2D;
+	import de.nulldesign.nd2d.display.TextField2D;
 	import de.nulldesign.nd2d.materials.texture.Texture2D;
 	import de.nulldesign.nd2d.utils.NumberUtil;
 
 	import flash.events.Event;
 	import flash.events.MouseEvent;
+	import flash.text.TextFormatAlign;
 
 	public class CameraTest extends Scene2D {
 
@@ -83,6 +85,16 @@ package tests {
 			s.mouseEnabled = true;
 			s.addEventListener(MouseEvent.CLICK, guiLayerItemClick);
 			sceneGUILayer.addChild(s);
+
+			var txt:TextField2D = new TextField2D();
+			txt.font = "Helvetica";
+			txt.textColor = 0xFF9900;
+			txt.size = 30.0;
+			txt.align = TextFormatAlign.LEFT;
+			txt.text = "GUI Layer";
+			txt.x = 120.0;
+			txt.y = stage.stageHeight - s.height * 0.5;
+			sceneGUILayer.addChild(txt);
 		}
 
 		private function guiLayerItemClick(e:MouseEvent):void {
