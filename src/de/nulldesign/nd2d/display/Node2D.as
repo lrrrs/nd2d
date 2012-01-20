@@ -130,14 +130,13 @@ package de.nulldesign.nd2d.display {
 	[Event(name="touchEnd", type="flash.events.TouchEvent")]
 
 	/**
-	 * <p>Basic 2D object. All drawable objects must extend Node2D</p>
+	 * <p>Base 2D object. All drawable objects must extend Node2D</p>
 	 * A Node2D has two methods that are called during rendering:
 	 * <ul>
 	 * <li>step - Update the node's position here</li>
 	 * <li>draw - Your rendering code goes here</li>
 	 * </ul>
 	 */
-
 	public class Node2D extends EventDispatcher {
 
 		/**
@@ -765,6 +764,7 @@ package de.nulldesign.nd2d.display {
 		}
 
 		public function localToGlobal(p:Point):Point {
+
 			var clipSpaceMat:Matrix3D = new Matrix3D();
 			clipSpaceMat.append(worldModelMatrix);
 			clipSpaceMat.append(camera.getViewProjectionMatrix());
@@ -774,6 +774,7 @@ package de.nulldesign.nd2d.display {
 		}
 
 		public function globalToLocal(p:Point):Point {
+
 			var clipSpaceMat:Matrix3D = new Matrix3D();
 			clipSpaceMat.append(worldModelMatrix);
 			clipSpaceMat.append(camera.getViewProjectionMatrix());

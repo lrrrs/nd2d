@@ -50,6 +50,11 @@ package de.nulldesign.nd2d.display {
 	 */
 	[Event(name="complete", type="flash.events.Event")]
 
+	/**
+	 * <p>The particle system can render thousands of instances of a bitmap on the GPU</p>
+	 * Since all movement based on the rules to supply with the ParticleSystemPreset are calculated on the GPU, you won't be able to control individual particles.
+	 * Use a Sprite2DBatch or Sprite2DCloud for this need
+	 */
 	public class ParticleSystem2D extends Node2D {
 
 		protected var particles:Vector.<Particle>;
@@ -237,23 +242,4 @@ class Particle {
 	public var uv2:UV = new UV(1, 0);
 	public var uv3:UV = new UV(1, 1);
 	public var uv4:UV = new UV(0, 1);
-
-	/*
-	 union {
-	 // Mode A: gravity, direction, radial accel, tangential accel
-	 struct {
-	 CGPoint		dir;
-	 float		radialAccel;
-	 float		tangentialAccel;
-	 } A;
-
-	 // Mode B: radius mode
-	 struct {
-	 float		angle;
-	 float		degreesPerSecond;
-	 float		radius;
-	 float		deltaRadius;
-	 } B;
-	 } mode;
-	 */
 }

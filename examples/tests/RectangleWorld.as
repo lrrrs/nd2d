@@ -51,7 +51,7 @@ package tests {
             super(renderMode, frameRate, bounds);
 
             _scene = new Scene2D();
-            _scene.backGroundColor = 0xDDDDDD;
+            _scene.backgroundColor = 0xDDDDDD;
 
 			var tex:Texture2D = Texture2D.textureFromBitmapData(new texture().bitmapData);
 

@@ -67,7 +67,7 @@ package tests {
 
 		public function TextureAndRotationOptionsTest() {
 
-			backGroundColor = 0x333333;
+			backgroundColor = 0x333333;
 
 			addEventListener(Event.ADDED_TO_STAGE, addedToStage);
 			addEventListener(Event.REMOVED_FROM_STAGE, removedFromStage);

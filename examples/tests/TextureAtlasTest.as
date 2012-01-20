@@ -57,7 +57,7 @@ package tests {
         }
 
         protected function init():void {
-            backGroundColor = 0xDDDDDD;
+            backgroundColor = 0xDDDDDD;
 
             var tex:Texture2D = Texture2D.textureFromBitmapData(new spriteTexture().bitmapData);
 

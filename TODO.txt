@@ -16,3 +16,4 @@ getChildByTag()
 - events for end / start of animations?
 - camera pivot? rotation point?
 - TextureAtlas clone?? for batches, better solution
+- Zwoptex support!!! more cocos2d formats

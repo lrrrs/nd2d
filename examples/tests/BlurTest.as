@@ -56,7 +56,7 @@ package tests {
 
 		public function BlurTest() {
 
-			backGroundColor = 0x666666;
+			backgroundColor = 0x666666;
 
 			var tex1:Texture2D = Texture2D.textureFromBitmapData(new crateBitmap().bitmapData);
 			tex1.textureOptions = TextureOption.FILTERING_LINEAR | TextureOption.MIPMAP_LINEAR | TextureOption.REPEAT_CLAMP;

@@ -57,10 +57,6 @@ package de.nulldesign.nd2d.materials.texture {
 			}
 		}
 
-		public function getIndexForFrame(name:String):uint {
-			return frameNameToIndex[name];
-		}
-
 		override public function addAnimation(name:String, keyFrames:Array, loop:Boolean):void {
 
 			if(keyFrames[i] is String) {

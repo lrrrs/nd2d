@@ -39,9 +39,13 @@ package de.nulldesign.nd2d.display {
 	import flash.geom.Vector3D;
 
 	/**
-	 * A scene that can contain 2D nodes
+	 * <p>A scene that can contain 2D nodes. Such as Sprite2D.</p>
+	 * <p>The scene is meant to display a state of your game, such as the game screen, a highscore screen, etc. You can switch between the scenes by setting a new active scene in the World2D</p>
+	 *
 	 * Even if a scene has x,y, rotation etc. properties you can't modify a scene this way.
 	 * Use the built in camera instance to pan and zoom over your scene.
+	 *
+	 * <p>If you make use of the camera and still want to have non moving objects in your scene like GUI elements, attach them to the sceneGUILayer instead to the scene itself.</p>
 	 */
 	public class Scene2D extends Node2D {
 
@@ -49,17 +53,20 @@ package de.nulldesign.nd2d.display {
 		internal var bg:Number = 0.0;
 		internal var bb:Number = 0.0;
 
-		private var _backGroundColor:Number = 0x000000;
+		private var _backgroundColor:Number = 0x000000;
 
-		public function get backGroundColor():Number {
-			return _backGroundColor;
+		public function get backgroundColor():Number {
+			return _backgroundColor;
 		}
 
-		public function set backGroundColor(value:Number):void {
-			_backGroundColor = value;
-			br = (backGroundColor >> 16) / 255.0;
-			bg = (backGroundColor >> 8 & 255) / 255.0;
-			bb = (backGroundColor & 255) / 255.0;
+		/**
+		 * @param The background color of your scene in RGB format
+		 */
+		public function set backgroundColor(value:Number):void {
+			_backgroundColor = value;
+			br = (backgroundColor >> 16) / 255.0;
+			bg = (backgroundColor >> 8 & 255) / 255.0;
+			bb = (backgroundColor & 255) / 255.0;
 		}
 
 		protected var sceneGUICamera:Camera2D = new Camera2D(1, 1);

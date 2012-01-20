@@ -37,6 +37,10 @@ package de.nulldesign.nd2d.display {
 	
 	import flashx.textLayout.formats.TextAlign;
 
+	/**
+	 * BitmapFont2D
+	 * <p>Displays monospaced fonts from a bitmap source.</p>
+	 */
 	public class BitmapFont2D extends Sprite2DCloud {
 
         private var charString:String;

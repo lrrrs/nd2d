@@ -65,7 +65,7 @@ package tests {
 
 		public function SpeedTest() {
 
-			backGroundColor = 0x666666;
+			backgroundColor = 0x666666;
 
 			addEventListener(Event.ADDED_TO_STAGE, addedToStage);
 			addEventListener(Event.REMOVED_FROM_STAGE, removedFromStage);

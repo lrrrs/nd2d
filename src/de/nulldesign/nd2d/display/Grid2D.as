@@ -35,6 +35,10 @@ package de.nulldesign.nd2d.display {
 	import de.nulldesign.nd2d.geom.Vertex;
 	import de.nulldesign.nd2d.materials.texture.Texture2D;
 
+	/**
+	 * <p>Works the same as the Sprite2D, except that it has more triangles.</p>
+	 * You can modify the individual vertices to achieve distortion or wave effects.
+	 */
 	public class Grid2D extends Sprite2D {
 
 		protected var stepsX:uint;

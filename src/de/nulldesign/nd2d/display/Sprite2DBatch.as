@@ -42,12 +42,14 @@ package de.nulldesign.nd2d.display {
 
 	/**
 	 * Sprite2DBatch
-	 * Use a sprite cloud to batch sprites with the same Texture, SpriteSheet or TextureAtlas. The SpriteSheet or TextureAtlas is cloned and passed to each child. So you can control each child individually.
+	 * <p>Use a sprite cloud to batch sprites with the same Texture, SpriteSheet or TextureAtlas. The SpriteSheet or TextureAtlas is cloned and passed to each child. So you can control each child individually.</p>
 	 *
-	 * Similar to a Sprite2DCloud, the main difference it that the Batch supports nested nodes, while the cloud just draws it's own children and not the subchilds.
+	 * <p>Similar to a Sprite2DCloud, the main difference it that the Batch supports nested nodes, while the cloud just draws it's own children and not the subchilds.
 	 * It uses less CPU resources and does more processing on the GPU than the Sprite2DCloud. Depending on your target system, it can be faster than the cloud.
 	 * It supports mouseevents for childs and adding or removing childs doesn't slow down the rendering, it's free.
-	 * So in particular cases it could be faster.
+	 * So in particular cases it could be faster.</p>
+	 *
+	 * <p>If you have a SpriteSheet or TextureAtlas for your batch, make sure to add animations BEFORE you add any childs to the batch, because the SpriteSheet/TextureAtlas get's cloned and is copied to each added child</p>
 	 */
 	public class Sprite2DBatch extends Node2D {
 

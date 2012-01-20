@@ -10,24 +10,24 @@ ND2D was built to make an ease use of hardware accelerated 2D content in the Fla
 
 If you want to contribute, make bugfixes or extend the engine, feel free to fork it or email me: lars[at]nulldesign.de
 
-Important links:
+# Resources and Links:
 
-[ND2D Forum](http://www.nulldesign.de/nd2d/forum/) Yes, we have one now!
+- [ND2D Forum](http://www.nulldesign.de/nd2d/forum/)
 
-[ND2D API Documentation](http://www.nulldesign.de/nd2d/docs/)
+- [ND2D API Documentation](http://www.nulldesign.de/nd2d/docs/)
 
-[Setting up FP11 for IntelliJ](http://www.lidev.com.ar/?p=422)
+- [Setting up FP11 for IntelliJ](http://www.lidev.com.ar/?p=422)
 
 [![Launch Examples](http://nulldesign.de/nd2d/nd2d_examples.jpg)](http://nulldesign.de/nd2d/tests/)
 
 (Click the image to see some demos. Be patient, no preloader!)
 
-[Detailed technical information, Tips, Tricks and deep dives into ND2D](http://www.nulldesign.de/category/experiments/nd2d/)
+- [Detailed technical information, Tips, Tricks and deep dives into ND2D](http://www.nulldesign.de/category/experiments/nd2d/)
 
 # Features:
 
 - Flash-displaylist-like hierarchy for 2D elements
-- 2D sprites with tinting, blendmodes, pivot points
+- 2D sprites with tinting, blendmodes, colorTransforms, pivot points
 - Support for spritesheets and texture atlases
 - Scenes
 - 2D camera
@@ -38,12 +38,19 @@ Important links:
 - Fast bitmap fonts
 - Distortable 2D grid for wave / ripple effects
 - Texturerenderer for post process effects
-- Extendable material system that makes it easy to write own effects and shaders with PixelBender3D or AGAL
+- Extendable material system, that makes it easy to write own effects and shaders with PixelBender3D or AGAL
 - Device loss is handled by the framework automatically, you don't have to care about this.
 
 [Check out the WIKI for more details](https://github.com/nulldesign/nd2d/wiki)
 
 # Changelog:
+
+2012-01-20
+
+- RENAMED: backGroundColor to backgroundColor in Scene2D
+- ADDED: setFrameByName() for Sprite2D
+- ADDED: usePixelPerfectHitTest in Sprite2D
+- ADDED stopCurrentAnimation() in ASpriteSheetBase
 
 2012-01-13
 

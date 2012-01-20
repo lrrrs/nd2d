@@ -37,8 +37,12 @@ package de.nulldesign.nd2d.geom {
         private static var UID_COUNT:uint = 0;
         public const uid:Number = ++UID_COUNT;
 
+		/**
+		 * the color must be in ARGB format.
+		 */
 		public var color:uint = 0xFFFFFFFF;
-        public var bufferIdx:int = -1;
+
+		public var bufferIdx:int = -1;
 
         public function Vertex(x:Number = 0.0, y:Number = 0.0, z:Number = 0.0) {
             super(x, y, z, 1.0);

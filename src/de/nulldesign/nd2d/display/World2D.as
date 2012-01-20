@@ -72,7 +72,6 @@ package de.nulldesign.nd2d.display {
 	 * You can switch between scenes with the setActiveScene method of World2D.
 	 * There can be only one active scene.
 	 *
-	 *
 	 */ public class World2D extends Sprite {
 
 		protected var camera:Camera2D = new Camera2D(1, 1);

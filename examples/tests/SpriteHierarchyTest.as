@@ -30,6 +30,7 @@
 
 package tests {
 
+	import de.nulldesign.nd2d.display.Node2D;
 	import de.nulldesign.nd2d.display.Scene2D;
 	import de.nulldesign.nd2d.display.Sprite2D;
 	import de.nulldesign.nd2d.materials.BlendModePresets;
@@ -120,14 +121,17 @@ package tests {
 			/*
 			var n:Node2D = event.target as Node2D;
 			var p:Point = n.localToGlobal(new Point(n.mouseX, n.mouseY));
-			trace("localToGlobal: " + p + " stage: " + stage.mouseX + " // " + stage.mouseY);
+			trace("localToGlobal: " + p + " stage: " + n.mouseX + " // " + n.mouseY);
 			p = n.globalToLocal(new Point(stage.mouseX, stage.mouseY));
 			trace("globalToLocal: " + p + " stage: " + stage.mouseX + " // " + stage.mouseY);
-			*/
+            */
 		}
 
 		override protected function step(elapsed:Number):void {
-
+			/*
+			camera.x = 50;
+			camera.rotation = 30;
+            */
 			s.position = new Vector3D(stage.stageWidth / 2, stage.stageHeight / 2);
 			s.rotation += 0.1;
 			s2.rotation -= 0.5;

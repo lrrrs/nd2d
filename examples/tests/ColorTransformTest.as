@@ -70,7 +70,7 @@ package tests {
 
         override protected function init():void {
 
-            backGroundColor = 0x666666;
+            backgroundColor = 0x666666;
 
             var tex:Texture2D = Texture2D.textureFromBitmapData(new spriteTexture().bitmapData);
 

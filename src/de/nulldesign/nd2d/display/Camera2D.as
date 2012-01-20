@@ -35,6 +35,11 @@ package de.nulldesign.nd2d.display {
 	import flash.geom.Matrix3D;
 	import flash.geom.Vector3D;
 
+	/**
+	 * Camera2D
+	 * <p>The World2D object contains an instance of a Camera2D. Use the cameras x,y, zoom, rotation properties to zoom and pan over your scene.
+	 * The camera instance is passed to each active scene.</p>
+	 */
 	public class Camera2D {
 
 		protected var renderMatrixOrtho:Matrix3D = new Matrix3D();

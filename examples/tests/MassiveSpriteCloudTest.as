@@ -57,7 +57,7 @@ package tests {
 
         public function MassiveSpriteCloudTest() {
 
-            backGroundColor = 0x666666;
+            backgroundColor = 0x666666;
 
             sprites = new Vector.<Sprite2D>();
             var tex:Texture2D = Texture2D.textureFromBitmapData(new cubeTexture().bitmapData);

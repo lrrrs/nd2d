@@ -39,6 +39,9 @@ package de.nulldesign.nd2d.display {
 	import flash.display3D.textures.Texture;
 	import flash.geom.Point;
 
+	/**
+	 * Renders a Node2D to a texture every frame. Can be used to post process a whole scene for example.
+	 */
 	public class TextureRenderer extends Node2D {
 
 		protected var renderNode:Node2D;

@@ -62,7 +62,7 @@ package de.nulldesign.nd2d.display {
 
 		/**
 		 * Constructor of class Sprite2D
-		 * @param textureObject can be a BitmapData or Texture2D
+		 * @param textureObject Texture2D
 		 */
 		public function Sprite2D(textureObject:Texture2D = null) {
 			faceList = TextureHelper.generateQuadFromDimensions(2, 2);
@@ -73,6 +73,9 @@ package de.nulldesign.nd2d.display {
 			}
 		}
 
+		/**
+		 * @param SpriteSheet or TextureAtlas
+		 */
 		public function setSpriteSheet(value:ASpriteSheetBase):void {
 			this.spriteSheet = value;
 
@@ -82,6 +85,10 @@ package de.nulldesign.nd2d.display {
 			}
 		}
 
+		/**
+		 * The texture object
+		 * @param Texture2D
+		 */
 		public function setTexture(value:Texture2D):void {
 
 			if(texture) {
@@ -101,6 +108,10 @@ package de.nulldesign.nd2d.display {
 			}
 		}
 
+		/**
+		 * By default a Sprite2D has an instance of Sprite2DMaterial. You can pass other materials to the sprite to change it's appearance.
+		 * @param Sprite2DMaterial
+		 */
 		public function setMaterial(value:Sprite2DMaterial):void {
 
 			if(material) {
@@ -123,6 +134,18 @@ package de.nulldesign.nd2d.display {
 				setMaterial(new Sprite2DMaskMaterial());
 			} else {
 				setMaterial(new Sprite2DMaterial());
+			}
+		}
+
+		/**
+		 * sets the spritsheets / textureatlas frame and updated the sprites size immediately
+		 * @param value
+		 */
+		public function setFrameByName(value:String):void {
+			 if(spriteSheet) {
+				spriteSheet.setFrameByName(value);
+				_width = spriteSheet.spriteWidth;
+				_height = spriteSheet.spriteHeight;
 			}
 		}
 
@@ -202,6 +225,11 @@ package de.nulldesign.nd2d.display {
 			material.render(context, faceList, 0, faceList.length);
 		}
 
+		/**
+		 * By default, only a bounding rectangle test is made. If you need pixel perfect hittests, enable the usePixelPerfectHitTest.
+		 * This only works if this sprite has a Texture2D object with a bitmapData instance. Otherwise pixels can't be read and a default rectangle test is made
+		 * @return if the sprite was hit or not
+		 */
 		override protected function hitTest():Boolean {
 
 			if(usePixelPerfectHitTest && texture.bitmap) {

@@ -126,6 +126,10 @@ package de.nulldesign.nd2d.materials.texture {
 			}
 		}
 
+		public function stopCurrentAnimation():void {
+			activeAnimation = null;
+		}
+
 		public function playAnimation(name:String, startIdx:uint = 0, restart:Boolean = false, triggerEventOnLastFrame:Boolean = false):void {
 
 			this.triggerEventOnLastFrame = triggerEventOnLastFrame;
@@ -150,6 +154,14 @@ package de.nulldesign.nd2d.materials.texture {
 
 		public function getDimensionForFrame():Rectangle {
 			return frames[frame];
+		}
+
+		public function getIndexForFrame(name:String):uint {
+			return frameNameToIndex[name];
+		}
+
+		public function setFrameByName(value:String):void {
+			frame = getIndexForFrame(value);
 		}
 
 		public function getUVRectForFrame(textureWidth:Number, textureHeight:Number):Rectangle {
