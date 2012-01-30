@@ -83,7 +83,16 @@ package de.nulldesign.nd2d.display {
 		}
 
 		override internal function stepNode(elapsed:Number, timeSinceStartInSeconds:Number):void {
-			super.stepNode(elapsed, timeSinceStartInSeconds);
+
+			this.timeSinceStartInSeconds = timeSinceStartInSeconds;
+
+			for each(var child:Node2D in children) {
+				child.stepNode(elapsed, timeSinceStartInSeconds);
+			}
+
+			// call step() after all nodes have finished updating their positions. removes camera stuttering issue
+			step(elapsed);
+
 			sceneGUILayer.stepNode(elapsed, timeSinceStartInSeconds);
 		}
 

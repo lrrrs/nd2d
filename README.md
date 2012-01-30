@@ -45,6 +45,12 @@ If you want to contribute, make bugfixes or extend the engine, feel free to fork
 
 # Changelog:
 
+2012-01-30
+
+- ADDED: ZwopTex TextureAtlas parser
+- ADDED: TexturePacker TextureAtlas parser
+- OPTIMIZED: TextureAtlas
+
 2012-01-20
 
 - RENAMED: backGroundColor to backgroundColor in Scene2D

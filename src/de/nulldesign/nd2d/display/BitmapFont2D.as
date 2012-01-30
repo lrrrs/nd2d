@@ -32,9 +32,9 @@ package de.nulldesign.nd2d.display {
 
 	import de.nulldesign.nd2d.materials.texture.SpriteSheet;
 	import de.nulldesign.nd2d.materials.texture.Texture2D;
-	
+
 	import flash.display.BitmapData;
-	
+
 	import flashx.textLayout.formats.TextAlign;
 
 	/**
@@ -43,98 +43,99 @@ package de.nulldesign.nd2d.display {
 	 */
 	public class BitmapFont2D extends Sprite2DCloud {
 
-        private var charString:String;
-        private var charSpacing:Number;
+		private var charString:String;
+		private var charSpacing:Number;
 
-        private var textChanged:Boolean = false;
+		private var textChanged:Boolean = false;
 
-        private var _text:String;
+		private var _text:String;
 
-        public function get text():String {
-            return _text;
-        }
+		public function get text():String {
+			return _text;
+		}
 
-        public function set text(value:String):void {
-            if(text != value) {
-                _text = value;
-                textChanged = true;
-            }
-        }
+		public function set text(value:String):void {
+			if(text != value) {
+				_text = value;
+				textChanged = true;
+			}
+		}
 
-        private var _textAlign:String = TextAlign.LEFT;
+		private var _textAlign:String = TextAlign.LEFT;
 
-        public function get textAlign():String {
-            return _textAlign;
-        }
+		public function get textAlign():String {
+			return _textAlign;
+		}
 
-        public function set textAlign(value:String):void {
-            _textAlign = value;
-            textChanged = true;
-        }
+		public function set textAlign(value:String):void {
+			_textAlign = value;
+			if(_text != null) {
+				textChanged = true;
+			}
+		}
 
-        public function BitmapFont2D(fontTexture:Texture2D, charWidth:Number, charHeight:Number, charString:String,
-                               charSpacing:Number, maxTextLen:uint, spritesPackedWithoutSpaces:Boolean = false) {
+		public function BitmapFont2D(fontTexture:Texture2D, charWidth:Number, charHeight:Number, charString:String, charSpacing:Number, maxTextLen:uint, spritesPackedWithoutSpaces:Boolean = false) {
 
-            this.charString = charString;
-            this.charSpacing = charSpacing;
+			this.charString = charString;
+			this.charSpacing = charSpacing;
 
-            super(maxTextLen, fontTexture);
-            setSpriteSheet(new SpriteSheet(fontTexture.bitmapWidth, fontTexture.bitmapHeight, charWidth, charHeight, 1, spritesPackedWithoutSpaces));
-        }
+			super(maxTextLen, fontTexture);
+			setSpriteSheet(new SpriteSheet(fontTexture.bitmapWidth, fontTexture.bitmapHeight, charWidth, charHeight, 1, spritesPackedWithoutSpaces));
+		}
 
-        override protected function step(elapsed:Number):void {
+		override protected function step(elapsed:Number):void {
 
-            if(textChanged) {
-                textChanged = false;
+			if(textChanged) {
+				textChanged = false;
 
-                const numSpaces:uint = text.split(" ").length - 1;
-                const text_length:int = text.length;
-                const childsNeeded:uint = text_length - numSpaces;
+				const numSpaces:uint = text.split(" ").length - 1;
+				const text_length:int = text.length;
+				const childsNeeded:uint = text_length - numSpaces;
 
-                while(numChildren < maxCapacity && numChildren < childsNeeded) {
-                    addChild(new Sprite2D());
-                }
+				while(numChildren < maxCapacity && numChildren < childsNeeded) {
+					addChild(new Sprite2D());
+				}
 
-                while(numChildren > childsNeeded) {
-                    removeChildAt(0);
-                }
+				while(numChildren > childsNeeded) {
+					removeChildAt(0);
+				}
 
-                var s:Sprite2D;
-                var curChar:String;
-                var frame:int;
-                var childIdx:uint = 0;
-                var startX:Number = spriteSheet.spriteWidth >> 1;
+				var s:Sprite2D;
+				var curChar:String;
+				var frame:int;
+				var childIdx:uint = 0;
+				var startX:Number = spriteSheet.spriteWidth >> 1;
 
-                switch(textAlign) {
+				switch(textAlign) {
 
-                    case TextAlign.CENTER:
-                        startX -= (text_length * spriteSheet.spriteWidth) >> 1;
-                        break;
+					case TextAlign.CENTER:
+						startX -= (text_length * spriteSheet.spriteWidth) >> 1;
+						break;
 
-                    case TextAlign.RIGHT:
-                        startX += -(text_length * spriteSheet.spriteWidth);
-                        break;
-                }
+					case TextAlign.RIGHT:
+						startX += -(text_length * spriteSheet.spriteWidth);
+						break;
+				}
 
-                for(var i:int = 0; i < text_length; i++) {
+				for(var i:int = 0; i < text_length; i++) {
 
-                    curChar = text.charAt(i);
-                    frame = Math.max(0, charString.indexOf(curChar));
+					curChar = text.charAt(i);
+					frame = Math.max(0, charString.indexOf(curChar));
 
-                    s = Sprite2D(children[childIdx]);
-                    s.spriteSheet.frame = frame;
+					s = Sprite2D(children[childIdx]);
+					s.spriteSheet.frame = frame;
 
-                    s.x = startX + charSpacing * i;
-                    s.y = 0.0;
+					s.x = startX + charSpacing * i;
+					s.y = 0.0;
 
-                    if(curChar != " ") {
-                        ++childIdx;
-                    }
-                }
+					if(curChar != " ") {
+						++childIdx;
+					}
+				}
 
-                _width = s.x + spriteSheet.spriteWidth;
-                _height = spriteSheet.spriteHeight;
-            }
-        }
-    }
+				_width = s.x + spriteSheet.spriteWidth;
+				_height = spriteSheet.spriteHeight;
+			}
+		}
+	}
 }

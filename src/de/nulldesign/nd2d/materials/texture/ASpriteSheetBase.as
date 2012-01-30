@@ -41,12 +41,13 @@ package de.nulldesign.nd2d.materials.texture {
 
 	public class ASpriteSheetBase extends EventDispatcher {
 
-		protected var frames:Vector.<Rectangle> = new Vector.<Rectangle>();
-		protected var offsets:Vector.<Point> = new Vector.<Point>();
-		protected var sourceSizes:Vector.<Point> = new Vector.<Point>();
-		protected var sourceColorRects:Vector.<Rectangle> = new Vector.<Rectangle>();
-		protected var frameNameToIndex:Dictionary = new Dictionary();
-		protected var uvRects:Vector.<Rectangle>;
+		internal var frames:Vector.<Rectangle> = new Vector.<Rectangle>();
+		internal var offsets:Vector.<Point> = new Vector.<Point>();
+		internal var frameNameToIndex:Dictionary = new Dictionary();
+		internal var uvRects:Vector.<Rectangle>;
+		internal var animationMap:Dictionary = new Dictionary();
+		internal var activeAnimation:SpriteSheetAnimation;
+
 		protected var spritesPackedWithoutSpace:Boolean;
 
 		protected var ctime:Number = 0.0;
@@ -56,9 +57,6 @@ package de.nulldesign.nd2d.materials.texture {
 		protected var triggerEventOnLastFrame:Boolean = false;
 
 		protected var frameIdx:uint = 0;
-
-		protected var activeAnimation:SpriteSheetAnimation;
-		protected var animationMap:Dictionary = new Dictionary();
 
 		public var frameUpdated:Boolean = true;
 
@@ -96,6 +94,7 @@ package de.nulldesign.nd2d.materials.texture {
 		}
 
 		public function ASpriteSheetBase() {
+
 		}
 
 		public function update(t:Number):void {

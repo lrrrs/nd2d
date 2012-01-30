@@ -39,11 +39,17 @@ package tests {
 
 	public class TextureAtlasTest extends Scene2D {
 
-        [Embed(source="/assets/textureatlas_test.png")]
+        [Embed(source="/assets/textureatlas_cocos2d_allformats.png")]
         protected var textureAtlasBitmap:Class;
 
-        [Embed(source="/assets/textureatlas_test.plist", mimeType="application/octet-stream")]
+        [Embed(source="/assets/textureatlas_cocos2d.plist", mimeType="application/octet-stream")]
         protected var textureAtlasXML:Class;
+
+        [Embed(source="/assets/textureatlas_zwoptex_default.png")]
+        protected var textureAtlasBitmapZwoptex:Class;
+
+        [Embed(source="/assets/textureatlas_zwoptex_default.plist", mimeType="application/octet-stream")]
+        protected var textureAtlasXMLZwoptex:Class;
 
         protected var s:Sprite2D;
 
@@ -64,10 +70,14 @@ package tests {
             var sheet:SpriteSheet = new SpriteSheet(tex.bitmapWidth, tex.bitmapHeight, 24, 32, 5);
             sheet.addAnimation("blah", [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11], true);
             sheet.playAnimation("blah", 0, true);
-
+			/*
             var atlasTex:Texture2D = Texture2D.textureFromBitmapData(new textureAtlasBitmap().bitmapData);
-            var atlas:TextureAtlas = new TextureAtlas(atlasTex.bitmapWidth, atlasTex.bitmapHeight, new XML(new textureAtlasXML()), 20, false);
-            s = addChild(new Sprite2D(atlasTex)) as Sprite2D;
+			var atlas:TextureAtlas = new TextureAtlas(atlasTex.bitmapWidth, atlasTex.bitmapHeight, new XML(new textureAtlasXML()), TextureAtlas.XML_FORMAT_COCOS2D, 5, false);
+            */
+			var atlasTex:Texture2D = Texture2D.textureFromBitmapData(new textureAtlasBitmapZwoptex().bitmapData);
+			var atlas:TextureAtlas = new TextureAtlas(atlasTex.bitmapWidth, atlasTex.bitmapHeight, new XML(new textureAtlasXMLZwoptex()), TextureAtlas.XML_FORMAT_ZWOPTEX, 5, false);
+
+			s = addChild(new Sprite2D(atlasTex)) as Sprite2D;
             s.setSpriteSheet(atlas);
 
             atlas.addAnimation("blah", ["c01", "c02", "c03", "c04", "c05", "c06", "c07", "c08", "c09", "c10", "c11", "c12", "b01", "b02", "b03", "b04", "b05", "b06", "b07", "b08", "b09", "b10", "b11", "b12"], true);
@@ -107,7 +117,7 @@ package tests {
             super.step(elapsed);
 
             for(var i:int = 0; i < s2.children.length; i++) {
-                s2.children[i].rotation += 1.0 + i * 0.1;
+                s2.children[i].rotation += 0.1 + i * 0.1;
             }
         }
     }

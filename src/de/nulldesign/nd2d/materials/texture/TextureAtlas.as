@@ -30,30 +30,34 @@
 
 package de.nulldesign.nd2d.materials.texture {
 
+	import de.nulldesign.nd2d.materials.texture.parser.ATextureAtlasParser;
+	import de.nulldesign.nd2d.materials.texture.parser.TexturePackerParser;
+	import de.nulldesign.nd2d.materials.texture.parser.ZwopTexParser;
+
 	import flash.geom.Point;
 	import flash.geom.Rectangle;
 
 	public class TextureAtlas extends ASpriteSheetBase {
 
-		protected var xmlData:XML;
+		public static const XML_FORMAT_COCOS2D:String = "xmlFormatCocos2D";
+		public static const XML_FORMAT_ZWOPTEX:String = "xmlFormatZwoptex";
 
 		/**
 		 *
 		 * @param sheetWidth
 		 * @param sheetHeight
-		 * @param cocos2DXML
+		 * @param xmlData
 		 * @param fps
 		 * @param spritesPackedWithoutSpace set to true to get rid of pixel bleeding for packed atlases without spaces: http://www.nulldesign.de/2011/08/30/nd2d-pixel-bleeding/
 		 */
-		public function TextureAtlas(sheetWidth:Number, sheetHeight:Number, cocos2DXML:XML, fps:uint, spritesPackedWithoutSpace:Boolean = false) {
+		public function TextureAtlas(sheetWidth:Number, sheetHeight:Number, xmlData:XML, xmlFormat:String, fps:uint, spritesPackedWithoutSpace:Boolean = false) {
 			this.fps = fps;
-			this.xmlData = cocos2DXML;
 			this.spritesPackedWithoutSpace = spritesPackedWithoutSpace;
 			this._sheetWidth = sheetWidth;
 			this._sheetHeight = sheetHeight;
 
 			if(xmlData) {
-				parseCocos2DXML(xmlData);
+				parse(xmlData, xmlFormat);
 			}
 		}
 
@@ -76,142 +80,42 @@ package de.nulldesign.nd2d.materials.texture {
 		}
 
 		/**
-		 * Parser code "borrowed" from: http://blog.kaourantin.net/?p=110
-		 * @param cocos2DXML
+		 * paeser switch
+		 * @param value
 		 */
-		protected function parseCocos2DXML(cocos2DXML:XML):void {
+		protected function parse(value:XML, xmlFormat:String):void {
 
-			var type:String;
-			var data:String;
-			var array:Array;
+			var parser:ATextureAtlasParser;
 
-			var topKeys:XMLList = cocos2DXML.dict.key;
-			var topDicts:XMLList = cocos2DXML.dict.dict;
-
-			for(var k:uint = 0; k < topKeys.length(); k++) {
-				switch(topKeys[k].toString()) {
-					case "frames":
-					{
-						var frameKeys:XMLList = topDicts[k].key;
-						var frameDicts:XMLList = topDicts[k].dict;
-
-						for(var l:uint = 0; l < frameKeys.length(); l++) {
-
-							var keyName:String = frameKeys[l];
-							var propKeys:XMLList = frameDicts[l].key;
-							var propAll:XMLList = frameDicts[l].*;
-
-							frameNameToIndex[keyName] = l;
-
-							for(var m:uint = 0; m < propKeys.length(); m++) {
-
-								type = propAll[propKeys[m].childIndex() + 1].name();
-								data = propAll[propKeys[m].childIndex() + 1];
-
-								switch(propKeys[m].toString()) {
-									case "frame":
-									{
-										if(type == "string") {
-											array = data.split(/[^0-9-]+/);
-											frames.push(new Rectangle(array[1], array[2], array[3], array[4]));
-										} else {
-											throw new Error("Error parsing descriptor format");
-										}
-									}
-										break;
-									case "offset":
-									{
-										if(type == "string") {
-											array = data.split(/[^0-9-]+/);
-											// our coordinate system is different than the cocos one
-											offsets.push(new Point(array[1], -array[2]));
-										} else {
-											throw new Error("Error parsing descriptor format");
-										}
-									}
-										break;
-									case "sourceSize":
-									{
-										if(type == "string") {
-											array = data.split(/[^0-9-]+/);
-											sourceSizes.push(new Point(array[1], array[2]));
-										} else {
-											throw new Error("Error parsing descriptor format");
-										}
-									}
-										break;
-									case "sourceColorRect":
-									{
-										if(type == "string") {
-											array = data.split(/[^0-9-]+/);
-											sourceColorRects.push(new Rectangle(array[1], array[2], array[3], array[4]));
-										} else {
-											throw new Error("Error parsing descriptor format");
-										}
-									}
-										break;
-									case "rotated":
-									{
-										if(type != "false") {
-											throw new Error("Rotated elements not supported (yet)");
-										}
-									}
-										break;
-								}
-							}
-							/*
-							// calculate real offset
-							const idx:uint = sourceColorRects.length - 1;
-							const offset:Point = offsets[idx];
-							const sourceFrame:Rectangle = frames[idx];
-							const sourceColorRect:Rectangle = sourceColorRects[idx];
-							const sourceSize:Point = sourceSizes[idx];
-							const newOffset:Point = new Point((sourceSize.x - sourceFrame.width) / 2 - sourceColorRect.x, (sourceSize.y - sourceFrame.height) / 2 - sourceColorRect.y);
-
-							offset.x = -newOffset.x;
-							offset.y = -newOffset.y;
-							*/
-						}
-					}
-						break;
-				}
+			switch(xmlFormat) {
+				case XML_FORMAT_COCOS2D:
+					parser = new TexturePackerParser();
+					break;
+				case XML_FORMAT_ZWOPTEX:
+					parser = new ZwopTexParser();
+					break;
 			}
 
-			const frames_length:int = frames.length;
-			if(frames_length == 0) {
-				throw new Error("Error parsing descriptor format");
-			}
+			parser.parse(value);
 
-			uvRects = new Vector.<Rectangle>(frames_length, true);
+			frameNameToIndex = parser.frameNameToIndex;
+			frames = parser.frames;
+			offsets = parser.offsets;
+
+			uvRects = new Vector.<Rectangle>(frames.length, true);
 			frame = 0;
-
-			/*
-			 Frame:
-			 Top-Left originating rectangle of the sprite's pixel texture coordinates. Cocos2'd will convert these to UV coordinates (0-1) when loading based on the texture size.
-
-			 Offset:
-			 Zwoptex trim's transparency off sprites. Because of this sprite's need to be offset to ensure their texture is drawn in correct alignment to their original size.
-
-			 Source Color Rect:
-			 This is the Top-Left originating rectangle that is the valid pixel data of the sprite. Say you have a 512x512 sprite that only has 10x10 pixels of data inside of it located at 500x500. The source color rect could be {500,500,10,10}.
-
-			 Format:
-			 Version number related to what version of Zwoptex was used so cocos2d knows how to parse the plist properly.
-			 Flash Version: 0
-			 Desktop Version 0-0.4b: 1
-			 Desktop Version 1.x: 2
-			 */
 		}
 
 		override public function clone():ASpriteSheetBase {
 
-			var t:TextureAtlas = new TextureAtlas(_sheetWidth, _sheetHeight, xmlData, fps, spritesPackedWithoutSpace);
+			var t:TextureAtlas = new TextureAtlas(_sheetWidth, _sheetHeight, null, null, fps, spritesPackedWithoutSpace);
 
-			for(var name:String in animationMap) {
-				var anim:SpriteSheetAnimation = animationMap[name];
-				t.addAnimation(name, anim.frames.concat(), anim.loop);
-			}
-
+			t.animationMap = animationMap;
+			t.activeAnimation = activeAnimation;
+			t.frames = frames;
+			t.offsets = offsets;
+			t.frameNameToIndex = frameNameToIndex;
+			t.uvRects = uvRects;
 			t.frame = frame;
 
 			return t;
