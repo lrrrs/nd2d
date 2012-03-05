@@ -47,6 +47,16 @@ If you want to contribute, make bugfixes or extend the engine, feel free to fork
 
 # Changelog:
 
+2012-03-05
+- ADDED property: totalFrames
+- REMOVED: texture disposing in Sprite2D.setTexture. Be sure to dispose it by yourself!!!
+- FIXED: Multitouch event
+
+2012-02-03
+
+- ADDED: frameIdx parameter in getDimensionForFrame
+- ADDED: totalFrames getter for SpriteSheet / TextureAtlas
+
 2012-01-30
 
 - ADDED: ZwopTex TextureAtlas parser

@@ -91,10 +91,6 @@ package de.nulldesign.nd2d.display {
 		 */
 		public function setTexture(value:Texture2D):void {
 
-			if(texture) {
-				texture.dispose();
-			}
-
 			this.texture = value;
 
 			if(texture && !spriteSheet) {

@@ -93,6 +93,13 @@ package de.nulldesign.nd2d.materials.texture {
 			}
 		}
 
+		/**
+		 * returns the total number of frames (sprites) in a spritesheet
+		 */
+		public function get totalFrames():uint {
+			return frames.length;
+		}
+
 		public function ASpriteSheetBase() {
 
 		}
@@ -151,8 +158,13 @@ package de.nulldesign.nd2d.materials.texture {
 			return offsets[frame];
 		}
 
-		public function getDimensionForFrame():Rectangle {
-			return frames[frame];
+		/**
+		 * Returns the current selected frame rectangle if no frameIdx is specified, otherwise the rect of the given frameIdx
+		 * @param frameIdx
+		 * @return
+		 */
+		public function getDimensionForFrame(frameIdx:int = -1):Rectangle {
+			return frames[frameIdx > -1 ? frameIdx : frame];
 		}
 
 		public function getIndexForFrame(name:String):uint {

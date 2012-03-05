@@ -165,8 +165,8 @@ package de.nulldesign.nd2d.display {
 				var mouseEventType:String = event.type;
 
 				// transformation of normalized coordinates between -1 and 1
-				mousePosition.x = (stage.mouseX - 0.0) / camera.sceneWidth * 2.0 - 1.0;
-				mousePosition.y = -((stage.mouseY - 0.0) / camera.sceneHeight * 2.0 - 1.0);
+				mousePosition.x = (event.stageX - 0.0) / camera.sceneWidth * 2.0 - 1.0;
+				mousePosition.y = -((event.stageY - 0.0) / camera.sceneHeight * 2.0 - 1.0);
 				mousePosition.z = 0.0;
 				mousePosition.w = 1.0;
 

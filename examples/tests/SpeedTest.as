@@ -110,6 +110,11 @@ package tests {
 		private function onTestSelect(e:Event):void {
 			// clean up
 			for each(var n:Node2D in children) {
+				var s:Sprite2D = n as Sprite2D;
+				if(s.texture && s.texture != tex) {
+					s.texture.dispose();
+				}
+
 				n.dispose();
 			}
 			removeAllChildren();
