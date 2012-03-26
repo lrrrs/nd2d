@@ -142,6 +142,7 @@ package de.nulldesign.nd2d.materials {
 
 		protected function processAndRenderNodes(context:Context3D, childList:Vector.<Node2D>):void {
 
+			var childNode:Node2D;
 			var child:Sprite2D;
 			const colorMultiplierAndOffset:Vector.<Number> = new Vector.<Number>(8, true);
 			const uvoffset:Vector.<Number> = new Vector.<Number>(4, true);
@@ -151,9 +152,10 @@ package de.nulldesign.nd2d.materials {
 
 			while(++i < n) {
 
-				child = Sprite2D(childList[i]);
+				childNode = childList[i];
+				child = childNode as Sprite2D;
 
-				if(child.visible) {
+				if(child && child.visible) {
 
 					if(child.invalidateColors) child.updateColors();
 					if(child.invalidateMatrix) child.updateLocalMatrix();
@@ -218,6 +220,18 @@ package de.nulldesign.nd2d.materials {
 					}
 
 					processAndRenderNodes(context, child.children);
+
+				} else if(childNode.visible) {
+
+					// let's try to process the childs...
+
+					if(childNode.invalidateColors) childNode.updateColors();
+					if(childNode.invalidateMatrix) childNode.updateLocalMatrix();
+
+					// TODO check if parent matrix changed?
+					childNode.updateWorldMatrix();
+
+					processAndRenderNodes(context, childNode.children);
 				}
 			}
 		}

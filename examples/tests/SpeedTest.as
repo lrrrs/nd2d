@@ -111,7 +111,7 @@ package tests {
 			// clean up
 			for each(var n:Node2D in children) {
 				var s:Sprite2D = n as Sprite2D;
-				if(s.texture && s.texture != tex) {
+				if(s && s.texture && s.texture != tex) {
 					s.texture.dispose();
 				}
 

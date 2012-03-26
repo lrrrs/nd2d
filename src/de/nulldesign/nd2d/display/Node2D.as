@@ -167,7 +167,8 @@ package de.nulldesign.nd2d.display {
 		public var hasPremultipliedAlphaTexture:Boolean = true;
 
 		public var children:Vector.<Node2D> = new Vector.<Node2D>();
-		public var parent:Node2D;
+
+		public var isBatchNode:Boolean = false;
 
 		public var vx:Number;
 		public var vy:Number;
@@ -194,6 +195,19 @@ package de.nulldesign.nd2d.display {
 
 		public function get stage():Stage {
 			return _stage;
+		}
+
+		/**
+		 * @private
+		 */
+		protected var _parent:Node2D;
+
+		public function get parent():Node2D {
+			return _parent;
+		}
+
+		public function set parent(value:Node2D):void {
+			_parent = value;
 		}
 
 		/**
@@ -705,6 +719,10 @@ package de.nulldesign.nd2d.display {
 			var existingIdx:int = getChildIndex(child);
 			if(existingIdx != -1) {
 				removeChildAt(existingIdx);
+			}
+
+			if(isBatchNode) {
+				child.isBatchNode = isBatchNode;
 			}
 
 			child.parent = this;

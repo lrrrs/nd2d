@@ -53,16 +53,17 @@ package de.nulldesign.nd2d.display {
 	 */
 	public class Sprite2DBatch extends Node2D {
 
-		private var material:Sprite2DBatchMaterial;
-		private var texture:Texture2D;
-		private var spriteSheet:ASpriteSheetBase;
+		public var texture:Texture2D;
+		public var spriteSheet:ASpriteSheetBase;
 
+		private var material:Sprite2DBatchMaterial;
 		private var faceList:Vector.<Face>;
 
 		public function Sprite2DBatch(textureObject:Texture2D) {
 			material = new Sprite2DBatchMaterial();
 			faceList = TextureHelper.generateQuadFromDimensions(2, 2);
 			texture = textureObject;
+			isBatchNode = true;
 		}
 
 		override public function get numTris():uint {
@@ -84,14 +85,13 @@ package de.nulldesign.nd2d.display {
 			}
 
 			var c:Sprite2D = child as Sprite2D;
-			c.isBatchNode = true;
 
 			// distribute spritesheets to sprites
-			if(spriteSheet && !c.spriteSheet) {
+			if(c && spriteSheet && !c.spriteSheet) {
 				c.setSpriteSheet(spriteSheet.clone());
 			}
 
-			if(texture && !c.texture) {
+			if(c && texture && !c.texture) {
 				c.setTexture(texture);
 			}
 

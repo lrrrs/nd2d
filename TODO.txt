@@ -5,9 +5,12 @@
 - iPhone retina management (assetloader, positions)
 - convertTextureToBitmapData
 - PARTICLESYSTEM2D rotation
+- multiple cameras for scenes? splitscreen mode?
 
 What I don't like about the spritesheets is:
 - it's a pain to declare animations from a (cocos2D) spritesheet - it needs a simpler way like just sheet.playAnimation("foo*") and it would automatically build the animation with all assets named "foo001.png", "foo002.png", etc.
 - and it seems inefficient to have to clone the spritesheet object.
 About Sprite2DBatch: only addChildAt/removeChildAt are implemented and I'm not sure why addChild/removeChild aren't - maybe there's a hidden reason? Also invalidation in the *At methods seem a bit aggressive.
 getChildByTag()
+
+- Button2D

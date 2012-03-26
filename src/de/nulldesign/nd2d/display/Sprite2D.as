@@ -35,6 +35,7 @@ package de.nulldesign.nd2d.display {
 	import de.nulldesign.nd2d.materials.texture.ASpriteSheetBase;
 	import de.nulldesign.nd2d.materials.Sprite2DMaskMaterial;
 	import de.nulldesign.nd2d.materials.Sprite2DMaterial;
+	import de.nulldesign.nd2d.materials.texture.SpriteSheet;
 	import de.nulldesign.nd2d.materials.texture.Texture2D;
 	import de.nulldesign.nd2d.utils.TextureHelper;
 
@@ -57,8 +58,6 @@ package de.nulldesign.nd2d.display {
 		public var material:Sprite2DMaterial;
 
 		public var usePixelPerfectHitTest:Boolean = false;
-
-		public var isBatchNode:Boolean = false;
 
 		/**
 		 * Constructor of class Sprite2D
@@ -138,7 +137,7 @@ package de.nulldesign.nd2d.display {
 		 * @param value
 		 */
 		public function setFrameByName(value:String):void {
-			 if(spriteSheet) {
+			if(spriteSheet) {
 				spriteSheet.setFrameByName(value);
 				_width = spriteSheet.spriteWidth;
 				_height = spriteSheet.spriteHeight;
@@ -173,28 +172,41 @@ package de.nulldesign.nd2d.display {
 			if(material)
 				material.handleDeviceLoss();
 
-			if (texture)
+			if(texture)
 				texture.texture = null;
 		}
 
+		override public function set parent(value:Node2D):void {
+			_parent = value;
 
-		override public function addChildAt(child:Node2D, idx:uint):Node2D {
-			var child:Node2D = super.addChildAt(child, idx);
+			// if we are in a batch. get the spritesheet / texture from our batch and pass it to our children
+			// TODO: this needs to be optimized. Better and easier batch, texture, spritesheet reference handling!!!
+			if(_parent && isBatchNode) {
 
-			if(isBatchNode) {
-				var s:Sprite2D = child as Sprite2D;
-				s.isBatchNode = true;
+				var batchTexture:Texture2D;
+				var batchSpriteSheet:ASpriteSheetBase;
+				var currentNode:Node2D = _parent;
+				var currentNodeAsSprite:Sprite2DBatch = _parent as Sprite2DBatch;
 
-				if(spriteSheet && !s.spriteSheet) {
-					s.setSpriteSheet(spriteSheet.clone());
+				while(currentNode && !batchTexture) {
+
+					if(currentNodeAsSprite) {
+						batchTexture = currentNodeAsSprite.texture;
+						batchSpriteSheet = currentNodeAsSprite.spriteSheet;
+					}
+
+					currentNode = currentNode.parent;
+					currentNodeAsSprite = currentNode as Sprite2DBatch;
 				}
 
-				if(texture && !s.texture) {
-					s.setTexture(texture);
+				if(batchSpriteSheet && !spriteSheet) {
+					setSpriteSheet(batchSpriteSheet.clone());
+				}
+
+				if(batchTexture && !texture) {
+					setTexture(batchTexture);
 				}
 			}
-
-			return child;
 		}
 
 		override protected function draw(context:Context3D, camera:Camera2D):void {

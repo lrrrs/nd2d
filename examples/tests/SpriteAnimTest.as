@@ -32,6 +32,7 @@ package tests {
 
 	import de.nulldesign.nd2d.display.Scene2D;
 	import de.nulldesign.nd2d.display.Sprite2D;
+	import de.nulldesign.nd2d.events.SpriteSheetAnimationEvent;
 	import de.nulldesign.nd2d.materials.texture.SpriteSheet;
 	import de.nulldesign.nd2d.materials.texture.Texture2D;
 
@@ -52,10 +53,11 @@ package tests {
             sheet.addAnimation("right", [3, 4, 5], true);
             sheet.addAnimation("down", [6, 7, 8], true);
             sheet.addAnimation("left", [9, 10, 11], true);
-            sheet.playAnimation("up", 0, true);
+            sheet.playAnimation("up", 0, true, true);
 
             s = new Sprite2D(tex);
             s.setSpriteSheet(sheet);
+			s.spriteSheet.addEventListener(SpriteSheetAnimationEvent.ANIMATION_FINISHED, function():void { trace("anim finished"); });
             addChild(s);
         }
 
