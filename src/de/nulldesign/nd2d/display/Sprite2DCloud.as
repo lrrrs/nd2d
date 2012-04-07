@@ -321,13 +321,13 @@ package de.nulldesign.nd2d.display {
 					isChildInvalidatedColors = true;
 				}
 
-				rMultiplier = child.combinedColorTransform.redMultiplier;
-				gMultiplier = child.combinedColorTransform.greenMultiplier;
-				bMultiplier = child.combinedColorTransform.blueMultiplier;
+				rMultiplier = child.visible ? child.combinedColorTransform.redMultiplier : 0.0;
+				gMultiplier = child.visible ? child.combinedColorTransform.greenMultiplier : 0.0;
+				bMultiplier = child.visible ? child.combinedColorTransform.blueMultiplier : 0.0;
 				aMultiplier = child.visible ? child.combinedColorTransform.alphaMultiplier : 0.0; // fake visibility. just set alpha to zero, it's faster
-				rOffset = child.combinedColorTransform.redOffset * offsetFactor;
-				gOffset = child.combinedColorTransform.greenOffset * offsetFactor;
-				bOffset = child.combinedColorTransform.blueOffset * offsetFactor;
+				rOffset = child.visible ? child.combinedColorTransform.redOffset * offsetFactor : 0.0;
+				gOffset = child.visible ? child.combinedColorTransform.greenOffset * offsetFactor : 0.0;
+				bOffset = child.visible ? child.combinedColorTransform.blueOffset * offsetFactor : 0.0;
 				aOffset = child.visible ? child.combinedColorTransform.alphaOffset * offsetFactor : 0.0; // fake visibility. just set alpha to zero, it's faster
 
 				var initUV:Boolean = !uvInited;

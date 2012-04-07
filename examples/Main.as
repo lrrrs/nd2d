@@ -72,6 +72,7 @@ package
 	import tests.SpriteHierarchyTest2;
 	import tests.SpriteTest;
 	import tests.StarFieldTest;
+	import tests.SpriteCloudVisibilityTest;
 	import tests.TextFieldTest;
 	import tests.TextureAndRotationOptionsTest;
 	import tests.TextureAtlasTest;
@@ -128,6 +129,7 @@ package
 			scenes.push(TextFieldTest);
 			scenes.push(QuadMaterialTest);
 			scenes.push(BlurTest);
+			scenes.push(SpriteCloudVisibilityTest);
 
 			var tf:TextFormat = new TextFormat("Arial", 11, 0xFFFFFF, true);
 
@@ -142,7 +144,7 @@ package
 			stage.addEventListener(Event.RESIZE, stageResize);
 			stageResize(null);
 
-			activeSceneIdx = 0; //scenes.length - 1;
+			activeSceneIdx = scenes.length - 1;
 			nextDemo();
 
 			stage.addEventListener(KeyboardEvent.KEY_UP, keyUp);

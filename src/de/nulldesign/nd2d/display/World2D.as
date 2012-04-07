@@ -219,7 +219,8 @@ package de.nulldesign.nd2d.display {
 		}
 
 		protected function resizeStage(e:Event = null):void {
-			if(!context3D) return;
+			if(!context3D || context3D.driverInfo == "Disposed") return;
+
 			var rect:Rectangle = bounds ? bounds : new Rectangle(0, 0, stage.stageWidth, stage.stageHeight);
 			stage.stage3Ds[stageID].x = rect.x;
 			stage.stage3Ds[stageID].y = rect.y;
@@ -313,6 +314,8 @@ package de.nulldesign.nd2d.display {
 			sleep();
 
 			stage.removeEventListener(Event.RESIZE, resizeStage);
+
+			ShaderCache.getInstance().handleDeviceLoss();
 
 			for(var i:int = 0; i < stage.stage3Ds.length; i++) {
 				stage.stage3Ds[i].removeEventListener(Event.CONTEXT3D_CREATE, context3DCreated);

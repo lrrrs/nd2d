@@ -47,6 +47,11 @@ If you want to contribute, make bugfixes or extend the engine, feel free to fork
 
 # Changelog:
 
+2012-04-07
+
+- FIXED a bug, that caused the World2D failing to reinitialize after disposing
+- FIXED Sprite2DCloud children visibility for premultiplied alpha textures
+
 2012-03-26
 
 - FIXED: ANIMATION_FINISHED event in ASpriteSheetBase

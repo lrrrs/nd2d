@@ -30,29 +30,43 @@
 
 package {
 
+	import com.bit101.components.PushButton;
+
 	import de.nulldesign.nd2d.display.World2D;
 
 	import flash.display.Sprite;
 	import flash.display.StageAlign;
 	import flash.display.StageScaleMode;
 	import flash.display3D.Context3DRenderMode;
+	import flash.events.Event;
 	import flash.geom.Rectangle;
 
 	import tests.RectangleWorld;
 
 	[SWF(width="800", height="600", frameRate="60", backgroundColor="#333333")]
-    public class MainRectangle extends Sprite {
+	public class MainRectangle extends Sprite {
 
-        private var world:World2D;
+		private var world:World2D;
 
-        public function MainRectangle() {
+		public function MainRectangle() {
 
-            stage.align = StageAlign.TOP_LEFT;
-            stage.scaleMode = StageScaleMode.NO_SCALE;
+			stage.align = StageAlign.TOP_LEFT;
+			stage.scaleMode = StageScaleMode.NO_SCALE;
 
-            world = new RectangleWorld(Context3DRenderMode.AUTO, 60, new Rectangle(20, 20, 760, 560));
-            addChild(world);
-            world.start();
-        }
-    }
+			world = new RectangleWorld(Context3DRenderMode.AUTO, 60, new Rectangle(20, 20, 760, 560));
+			addChild(world);
+			world.start();
+
+			new PushButton(stage, 0.0, 150.0, "re-init World2D", restartWorld);
+		}
+
+		private function restartWorld(e:Event):void {
+			world.dispose();
+			removeChild(world);
+
+			world = new RectangleWorld(Context3DRenderMode.AUTO, 60, new Rectangle(20, 20, 760, 560));
+			addChild(world);
+			world.start();
+		}
+	}
 }
