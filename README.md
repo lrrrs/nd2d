@@ -47,6 +47,13 @@ If you want to contribute, make bugfixes or extend the engine, feel free to fork
 
 # Changelog:
 
+2012-05-10
+
+- CHANGED: internal to protected properties in ASpriteSheetBase
+- FIXED a bug, that caused the World2D failing to reinitialize after losing the context
+- FIXED mouse hittests for non fullscreen worlds
+- ADDED: localToWorld to Node2D
+
 2012-04-07
 
 - FIXED a bug, that caused the World2D failing to reinitialize after disposing
@@ -59,6 +66,7 @@ If you want to contribute, make bugfixes or extend the engine, feel free to fork
 - RESTRUCTURED: Testcases
 
 2012-03-05
+
 - ADDED: property: totalFrames
 - REMOVED: texture disposing in Sprite2D.setTexture. Be sure to dispose it by yourself!!!
 - FIXED: Multitouch event

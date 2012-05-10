@@ -95,6 +95,7 @@ package tests {
 			s3.blendMode = BlendModePresets.NORMAL_PREMULTIPLIED_ALPHA;
 
 			s4 = new Sprite2D(tex);
+			//s4.rotationY = 70.0;
 			s5 = new Sprite2D(tex);
 			s6 = new Sprite2D(tex);
 			s4.mouseEnabled = s5.mouseEnabled = s6.mouseEnabled = true;

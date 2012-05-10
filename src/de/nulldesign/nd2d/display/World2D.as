@@ -133,7 +133,7 @@ package de.nulldesign.nd2d.display {
 		}
 
 		protected function context3DError(e:ErrorEvent):void {
-			throw new Error("The SWF is not embedded properly. The 3D context can't be created. Wrong WMODE? Set it to 'direct'.");
+			throw new Error("The SWF is not embedded properly. The 3D context can't be created. Wrong WMODE? Set it to 'direct'. For AIR it's renderMode = direct in the application descriptor");
 		}
 
 		protected function context3DCreated(e:Event):void {
@@ -165,8 +165,8 @@ package de.nulldesign.nd2d.display {
 				var mouseEventType:String = event.type;
 
 				// transformation of normalized coordinates between -1 and 1
-				mousePosition.x = (event.stageX - 0.0) / camera.sceneWidth * 2.0 - 1.0;
-				mousePosition.y = -((event.stageY - 0.0) / camera.sceneHeight * 2.0 - 1.0);
+				mousePosition.x = (event.stageX - (bounds ? bounds.x : 0.0)) / camera.sceneWidth * 2.0 - 1.0;
+				mousePosition.y = -((event.stageY - (bounds ? bounds.y : 0.0)) / camera.sceneHeight * 2.0 - 1.0);
 				mousePosition.z = 0.0;
 				mousePosition.w = 1.0;
 
@@ -194,8 +194,8 @@ package de.nulldesign.nd2d.display {
 				var mouseEventType:String = event.type;
 
 				// transformation of normalized coordinates between -1 and 1
-				mousePosition.x = (stage.mouseX - 0.0) / camera.sceneWidth * 2.0 - 1.0;
-				mousePosition.y = -((stage.mouseY - 0.0) / camera.sceneHeight * 2.0 - 1.0);
+				mousePosition.x = (stage.mouseX - (bounds ? bounds.x : 0.0)) / camera.sceneWidth * 2.0 - 1.0;
+				mousePosition.y = -((stage.mouseY - (bounds ? bounds.y : 0.0)) / camera.sceneHeight * 2.0 - 1.0);
 				mousePosition.z = 0.0;
 				mousePosition.w = 1.0;
 
@@ -234,7 +234,7 @@ package de.nulldesign.nd2d.display {
 			var t:Number = getTimer() * 0.001;
 			var elapsed:Number = t - lastFramesTime;
 
-			if(scene && context3D) {
+			if(scene && context3D && context3D.driverInfo != "Disposed") {
 				context3D.clear(scene.br, scene.bg, scene.bb, 1.0);
 
 				if(!isPaused) {

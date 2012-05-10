@@ -14,3 +14,11 @@ About Sprite2DBatch: only addChildAt/removeChildAt are implemented and I'm not s
 getChildByTag()
 
 - Button2D
+- Node2D.getBounds()
+- animated masks
+
+BitmapFont2D - Cocos2D font generator hiero, etc...
+
+shader example: distortions
+
+ipad 1 fragment shader fix

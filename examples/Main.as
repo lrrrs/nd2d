@@ -91,7 +91,6 @@ package
 
 		public function Main()
 		{
-
 			super(Context3DRenderMode.AUTO, 60);
 		}
 
@@ -144,7 +143,7 @@ package
 			stage.addEventListener(Event.RESIZE, stageResize);
 			stageResize(null);
 
-			activeSceneIdx = scenes.length - 1;
+			activeSceneIdx = 14;//scenes.length - 9;
 			nextDemo();
 
 			stage.addEventListener(KeyboardEvent.KEY_UP, keyUp);

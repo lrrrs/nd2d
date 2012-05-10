@@ -119,6 +119,10 @@ package tests {
             for(var i:int = 0; i < s2.children.length; i++) {
                 s2.children[i].rotation += 0.1 + i * 0.1;
             }
+
+			s2.children[2].tint = 0x00FF00;
+			s2.children[3].tint = 0x00FF00;
+			s2.children[10].tint = 0x00FF00;
         }
     }
 }

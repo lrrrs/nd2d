@@ -96,6 +96,8 @@ package de.nulldesign.nd2d.display {
 						"mul ft0, ft0, v1\n" + // mult with colorMultiplier
 						"add oc, ft0, v2\n";  // add with colorOffset
 
+		protected const FRAGMENT_SHADER_SHORT:String = "tex oc, v0, fs0 <TEXTURE_SAMPLING_OPTIONS>\n";
+
 		protected var shaderData:Shader2D;
 		protected var indexBuffer:IndexBuffer3D;
 		protected var vertexBuffer:VertexBuffer3D;
@@ -204,7 +206,6 @@ package de.nulldesign.nd2d.display {
 				Sprite2D(child2).spriteSheet.frameUpdated = true;
 			}
 		}
-
 
 		override public function handleDeviceLoss():void {
 			super.handleDeviceLoss();

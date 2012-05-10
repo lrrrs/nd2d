@@ -170,6 +170,8 @@ package de.nulldesign.nd2d.display {
 
 		public var isBatchNode:Boolean = false;
 
+		public var nodeIsTinted:Boolean = false;
+
 		public var vx:Number;
 		public var vy:Number;
 
@@ -534,6 +536,15 @@ package de.nulldesign.nd2d.display {
 				combinedColorTransform.concat(parent.combinedColorTransform);
 			}
 
+			nodeIsTinted = (combinedColorTransform.redMultiplier != 1.0 ||
+					combinedColorTransform.greenMultiplier != 1.0 ||
+					combinedColorTransform.blueMultiplier != 1.0 ||
+					combinedColorTransform.alphaMultiplier != 1.0 ||
+					combinedColorTransform.redOffset != 0.0 ||
+					combinedColorTransform.greenOffset != 0.0 ||
+					combinedColorTransform.blueOffset != 0.0 ||
+					combinedColorTransform.alphaOffset != 0.0);
+
 			for each(var child:Node2D in children) {
 				child.updateColors();
 			}
@@ -781,6 +792,11 @@ package de.nulldesign.nd2d.display {
 			return null;
 		}
 
+		/**
+		 * transforms a point from the nodes local coordinate system into global space
+		 * @param p
+		 * @return
+		 */
 		public function localToGlobal(p:Point):Point {
 
 			var clipSpaceMat:Matrix3D = new Matrix3D();
@@ -791,6 +807,11 @@ package de.nulldesign.nd2d.display {
 			return new Point((v.x + 1.0) * 0.5 * camera.sceneWidth, (-v.y + 1.0) * 0.5 * camera.sceneHeight);
 		}
 
+		/**
+		 * transforms a point into the nodes local coordinate system
+		 * @param p
+		 * @return
+		 */
 		public function globalToLocal(p:Point):Point {
 
 			var clipSpaceMat:Matrix3D = new Matrix3D();
@@ -808,6 +829,18 @@ package de.nulldesign.nd2d.display {
 			v.y /= v.w;
 			//v.z /= v.w;
 
+			return new Point(v.x, v.y);
+		}
+
+		/**
+		 * transforms a point into world coordinates
+		 * @param p
+		 * @return the transformed point
+		 */
+		public function localToWorld(p:Point):Point {
+			var clipSpaceMat:Matrix3D = new Matrix3D();
+			clipSpaceMat.append(worldModelMatrix);
+			var v:Vector3D = clipSpaceMat.transformVector(new Vector3D(p.x, p.y, 0.0));
 			return new Point(v.x, v.y);
 		}
 

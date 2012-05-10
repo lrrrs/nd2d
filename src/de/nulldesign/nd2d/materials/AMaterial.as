@@ -45,211 +45,210 @@ package de.nulldesign.nd2d.materials {
 
 	public class AMaterial {
 
-        // cameras view projectionmatrix
-        public var viewProjectionMatrix:Matrix3D;
+		// cameras view projectionmatrix
+		public var viewProjectionMatrix:Matrix3D;
 
-        // models modelmatrix
-        public var modelMatrix:Matrix3D;
+		// models modelmatrix
+		public var modelMatrix:Matrix3D;
 
-        public var clipSpaceMatrix:Matrix3D = new Matrix3D();
+		public var clipSpaceMatrix:Matrix3D = new Matrix3D();
 
-        public var numTris:int = 0;
-        public var drawCalls:int = 0;
+		public var numTris:int = 0;
+		public var drawCalls:int = 0;
 
-        public var blendMode:NodeBlendMode = BlendModePresets.NORMAL_PREMULTIPLIED_ALPHA;
+		public var blendMode:NodeBlendMode = BlendModePresets.NORMAL_PREMULTIPLIED_ALPHA;
 
-        public var needUploadVertexBuffer:Boolean = false;
+		public var needUploadVertexBuffer:Boolean = false;
 
-        protected var indexBuffer:IndexBuffer3D;
-        protected var vertexBuffer:VertexBuffer3D;
+		protected var indexBuffer:IndexBuffer3D;
+		protected var vertexBuffer:VertexBuffer3D;
 
-        protected var mIndexBuffer:Vector.<uint>;
-        protected var mVertexBuffer:Vector.<Number>;
+		protected var mIndexBuffer:Vector.<uint>;
+		protected var mVertexBuffer:Vector.<Number>;
 
-        protected var shaderData:Shader2D;
-        protected var programConstVector:Vector.<Number> = new Vector.<Number>(4);
+		protected var shaderData:Shader2D;
+		protected var programConstVector:Vector.<Number> = new Vector.<Number>(4);
 
-        public static const VERTEX_POSITION:String = "PB3D_POSITION";
-        public static const VERTEX_UV:String = "PB3D_UV";
-        public static const VERTEX_COLOR:String = "PB3D_COLOR";
+		public static const VERTEX_POSITION:String = "PB3D_POSITION";
+		public static const VERTEX_UV:String = "PB3D_UV";
+		public static const VERTEX_COLOR:String = "PB3D_COLOR";
 
-        public function AMaterial() {
+		public function AMaterial() {
 
-        }
+		}
 
-        protected function generateBufferData(context:Context3D, faceList:Vector.<Face>):void {
+		protected function generateBufferData(context:Context3D, faceList:Vector.<Face>):void {
 
-            if(vertexBuffer) {
-                return;
-            }
+			if(vertexBuffer) {
+				return;
+			}
 
-            initProgram(context);
+			initProgram(context);
 
-            var i:int;
-            const numFaces:int = faceList.length;
-            var numIndices:int;
+			var i:int;
+			const numFaces:int = faceList.length;
+			var numIndices:int;
 
-            mIndexBuffer = new Vector.<uint>();
-            mVertexBuffer = new Vector.<Number>();
+			mIndexBuffer = new Vector.<uint>();
+			mVertexBuffer = new Vector.<Number>();
 
-            var duplicateCheck:Dictionary = new Dictionary();
-            var tmpUID:String;
-            var indexBufferIdx:uint = 0;
-            var face:Face;
+			var duplicateCheck:Dictionary = new Dictionary();
+			var tmpUID:String;
+			var indexBufferIdx:uint = 0;
+			var face:Face;
 
-            // generate index + vertexbuffer
-            // integrated check if the vertex / uv combination is already in the buffer and skip these vertices
-            for(i = 0; i < numFaces; i++) {
+			// generate index + vertexbuffer
+			// integrated check if the vertex / uv combination is already in the buffer and skip these vertices
+			for(i = 0; i < numFaces; i++) {
 
-                face = faceList[i];
+				face = faceList[i];
 
-                tmpUID = face.v1.uid + "." + face.uv1.uid;
+				tmpUID = face.v1.uid + "." + face.uv1.uid;
 
-                if(duplicateCheck[tmpUID] == undefined) {
-                    addVertex(context, mVertexBuffer, face.v1, face.uv1, face);
-                    duplicateCheck[tmpUID] = indexBufferIdx;
-                    mIndexBuffer.push(indexBufferIdx);
-                    face.v1.bufferIdx = indexBufferIdx;
-                    ++indexBufferIdx;
-                } else {
-                    mIndexBuffer.push(duplicateCheck[tmpUID]);
-                }
+				if(duplicateCheck[tmpUID] == undefined) {
+					addVertex(context, mVertexBuffer, face.v1, face.uv1, face);
+					duplicateCheck[tmpUID] = indexBufferIdx;
+					mIndexBuffer.push(indexBufferIdx);
+					face.v1.bufferIdx = indexBufferIdx;
+					++indexBufferIdx;
+				} else {
+					mIndexBuffer.push(duplicateCheck[tmpUID]);
+				}
 
-                tmpUID = face.v2.uid + "." + face.uv2.uid;
+				tmpUID = face.v2.uid + "." + face.uv2.uid;
 
-                if(duplicateCheck[tmpUID] == undefined) {
-                    addVertex(context, mVertexBuffer, face.v2, face.uv2, face);
-                    duplicateCheck[tmpUID] = indexBufferIdx;
-                    mIndexBuffer.push(indexBufferIdx);
-                    face.v2.bufferIdx = indexBufferIdx;
-                    ++indexBufferIdx;
-                } else {
-                    mIndexBuffer.push(duplicateCheck[tmpUID]);
-                }
+				if(duplicateCheck[tmpUID] == undefined) {
+					addVertex(context, mVertexBuffer, face.v2, face.uv2, face);
+					duplicateCheck[tmpUID] = indexBufferIdx;
+					mIndexBuffer.push(indexBufferIdx);
+					face.v2.bufferIdx = indexBufferIdx;
+					++indexBufferIdx;
+				} else {
+					mIndexBuffer.push(duplicateCheck[tmpUID]);
+				}
 
-                tmpUID = face.v3.uid + "." + face.uv3.uid;
+				tmpUID = face.v3.uid + "." + face.uv3.uid;
 
-                if(duplicateCheck[tmpUID] == undefined) {
-                    addVertex(context, mVertexBuffer, face.v3, face.uv3, face);
-                    duplicateCheck[tmpUID] = indexBufferIdx;
-                    mIndexBuffer.push(indexBufferIdx);
-                    face.v3.bufferIdx = indexBufferIdx;
-                    ++indexBufferIdx;
-                } else {
-                    mIndexBuffer.push(duplicateCheck[tmpUID]);
-                }
-            }
+				if(duplicateCheck[tmpUID] == undefined) {
+					addVertex(context, mVertexBuffer, face.v3, face.uv3, face);
+					duplicateCheck[tmpUID] = indexBufferIdx;
+					mIndexBuffer.push(indexBufferIdx);
+					face.v3.bufferIdx = indexBufferIdx;
+					++indexBufferIdx;
+				} else {
+					mIndexBuffer.push(duplicateCheck[tmpUID]);
+				}
+			}
 
-            duplicateCheck = null;
-            numIndices = mVertexBuffer.length / shaderData.numFloatsPerVertex;
+			duplicateCheck = null;
+			numIndices = mVertexBuffer.length / shaderData.numFloatsPerVertex;
 
-            // GENERATE BUFFERS
-            vertexBuffer = context.createVertexBuffer(numIndices, shaderData.numFloatsPerVertex);
-            vertexBuffer.uploadFromVector(mVertexBuffer, 0, numIndices);
+			// GENERATE BUFFERS
+			vertexBuffer = context.createVertexBuffer(numIndices, shaderData.numFloatsPerVertex);
+			vertexBuffer.uploadFromVector(mVertexBuffer, 0, numIndices);
 
-            if(!indexBuffer) {
-                
-                const mIndexBuffer_length:int = mIndexBuffer.length;
-                indexBuffer = context.createIndexBuffer(mIndexBuffer_length);
-                indexBuffer.uploadFromVector(mIndexBuffer, 0, mIndexBuffer_length);
+			if(!indexBuffer) {
 
-                numTris = int(mIndexBuffer_length / 3);
-            }
-        }
+				const mIndexBuffer_length:int = mIndexBuffer.length;
+				indexBuffer = context.createIndexBuffer(mIndexBuffer_length);
+				indexBuffer.uploadFromVector(mIndexBuffer, 0, mIndexBuffer_length);
 
-        protected function prepareForRender(context:Context3D):void {
+				numTris = int(mIndexBuffer_length / 3);
+			}
+		}
 
-            context.setProgram(shaderData.shader);
-            context.setBlendFactors(blendMode.src, blendMode.dst);
+		protected function prepareForRender(context:Context3D):void {
+			context.setProgram(shaderData.shader);
+			context.setBlendFactors(blendMode.src, blendMode.dst);
 
-            if(needUploadVertexBuffer) {
-                needUploadVertexBuffer = false;
-                vertexBuffer.uploadFromVector(mVertexBuffer, 0, mVertexBuffer.length / shaderData.numFloatsPerVertex);
-            }
-        }
+			if(needUploadVertexBuffer) {
+				needUploadVertexBuffer = false;
+				vertexBuffer.uploadFromVector(mVertexBuffer, 0, mVertexBuffer.length / shaderData.numFloatsPerVertex);
+			}
+		}
 
-        public function handleDeviceLoss():void {
-            indexBuffer = null;
-            vertexBuffer = null;
-            mIndexBuffer = null;
-            mVertexBuffer = null;
-            shaderData = null;
-            needUploadVertexBuffer = true;
-        }
+		public function handleDeviceLoss():void {
+			indexBuffer = null;
+			vertexBuffer = null;
+			mIndexBuffer = null;
+			mVertexBuffer = null;
+			shaderData = null;
+			needUploadVertexBuffer = true;
+		}
 
-        public function render(context:Context3D, faceList:Vector.<Face>, startTri:uint, numTris:uint):void {
-            generateBufferData(context, faceList);
-            prepareForRender(context);
-            context.drawTriangles(indexBuffer, startTri * 3, numTris);
-            clearAfterRender(context);
-        }
+		public function render(context:Context3D, faceList:Vector.<Face>, startTri:uint, numTris:uint):void {
+			generateBufferData(context, faceList);
+			prepareForRender(context);
+			context.drawTriangles(indexBuffer, startTri * 3, numTris);
+			clearAfterRender(context);
+		}
 
-        protected function clearAfterRender(context:Context3D):void {
-            // implement in concrete material
-            throw new Error("You have to implement clearAfterRender for your material");
-        }
+		protected function clearAfterRender(context:Context3D):void {
+			// implement in concrete material
+			throw new Error("You have to implement clearAfterRender for your material");
+		}
 
-        protected function initProgram(context:Context3D):void {
-            // implement in concrete material
-            throw new Error("You have to implement initProgram for your material");
-        }
+		protected function initProgram(context:Context3D):void {
+			// implement in concrete material
+			throw new Error("You have to implement initProgram for your material");
+		}
 
-        protected function refreshClipspaceMatrix():Matrix3D {
-            clipSpaceMatrix.identity();
-            clipSpaceMatrix.append(modelMatrix);
-            clipSpaceMatrix.append(viewProjectionMatrix);
-            return clipSpaceMatrix;
-        }
+		protected function refreshClipspaceMatrix():Matrix3D {
+			clipSpaceMatrix.identity();
+			clipSpaceMatrix.append(modelMatrix);
+			clipSpaceMatrix.append(viewProjectionMatrix);
+			return clipSpaceMatrix;
+		}
 
-        protected function addVertex(context:Context3D, buffer:Vector.<Number>, v:Vertex, uv:UV, face:Face):void {
-            // implement in concrete material
-            throw new Error("You have to implement addVertex for your material");
-        }
+		protected function addVertex(context:Context3D, buffer:Vector.<Number>, v:Vertex, uv:UV, face:Face):void {
+			// implement in concrete material
+			throw new Error("You have to implement addVertex for your material");
+		}
 
-        protected function fillBuffer(buffer:Vector.<Number>, v:Vertex, uv:UV, face:Face, semanticsID:String, floatFormat:int):void {
+		protected function fillBuffer(buffer:Vector.<Number>, v:Vertex, uv:UV, face:Face, semanticsID:String, floatFormat:int):void {
 
-            if(semanticsID == VERTEX_POSITION) {
+			if(semanticsID == VERTEX_POSITION) {
 
-                buffer.push(v.x, v.y);
+				buffer.push(v.x, v.y);
 
-                if(floatFormat >= 3)
-                    buffer.push(v.z);
+				if(floatFormat >= 3)
+					buffer.push(v.z);
 
-                if(floatFormat == 4)
-                    buffer.push(v.w);
-            }
+				if(floatFormat == 4)
+					buffer.push(v.w);
+			}
 
-            if(semanticsID == VERTEX_UV) {
+			if(semanticsID == VERTEX_UV) {
 
-                buffer.push(uv.u, uv.v);
+				buffer.push(uv.u, uv.v);
 
-                if(floatFormat == 3)
-                    buffer.push(0.0);
+				if(floatFormat == 3)
+					buffer.push(0.0);
 
-                if(floatFormat == 4)
-                    buffer.push(0.0, 0.0);
-            }
+				if(floatFormat == 4)
+					buffer.push(0.0, 0.0);
+			}
 
-        	if(semanticsID == VERTEX_COLOR) {
-                buffer.push(v.r,  v.g,  v.b);
+			if(semanticsID == VERTEX_COLOR) {
+				buffer.push(v.r, v.g, v.b);
 
-                if(floatFormat == 4)
-                    buffer.push(v.a);
-            }
-        }
+				if(floatFormat == 4)
+					buffer.push(v.a);
+			}
+		}
 
-        public function dispose():void {
-            if(indexBuffer) {
-                indexBuffer.dispose();
-                indexBuffer = null;
-            }
-            if(vertexBuffer) {
-                vertexBuffer.dispose();
-                vertexBuffer = null;
-            }
-            if(shaderData) {
-                shaderData = null;
-            }
-        }
-    }
+		public function dispose():void {
+			if(indexBuffer) {
+				indexBuffer.dispose();
+				indexBuffer = null;
+			}
+			if(vertexBuffer) {
+				vertexBuffer.dispose();
+				vertexBuffer = null;
+			}
+			if(shaderData) {
+				shaderData = null;
+			}
+		}
+	}
 }

@@ -45,7 +45,7 @@ package de.nulldesign.nd2d.display {
 	/**
 	 * TextField2D
 	 * <p>Renders a flash native textfield to a bitmap / texture.</p>
-	 * Note that changing the text in the textfield will cause a complete invalidation and therefore a new texture upload to the GPU. It's good for static text. For dynamic text try to use the BitmapFont2D
+	 * Note that changing the text in the textfield will cause a complete invalidation and therefore a new texture upload to the GPU, in other words: It's slow! It's good for static text. For dynamic text try to use the BitmapFont2D
 	 * @author Ryan
 	 */
 	public class TextField2D extends Sprite2D {
