@@ -125,6 +125,8 @@ package de.nulldesign.nd2d.display {
 				_width = camera.sceneWidth;
 				_height = camera.sceneHeight;
 			}
+
+			sceneGUILayer.setStageAndCamRef(value, sceneGUICamera);
 		}
 
 		override protected function hitTest():Boolean {

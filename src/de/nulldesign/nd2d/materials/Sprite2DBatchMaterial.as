@@ -73,6 +73,8 @@ package de.nulldesign.nd2d.materials {
 		protected const BATCH_SIZE:uint = 126 / constantsPerSprite;
 		protected var batchLen:uint = 0;
 
+		protected var currentNodeIsTinted:Boolean = false;
+
 		public static const VERTEX_IDX:String = "PB3D_IDX";
 
 		public function Sprite2DBatchMaterial() {
@@ -126,6 +128,8 @@ package de.nulldesign.nd2d.materials {
 			drawCalls = 0;
 			numTris = 0;
 			batchLen = 0;
+			currentNodeIsTinted = nodeTinted;
+			previousTintedState = currentNodeIsTinted;
 
 			generateBufferData(context, faceList);
 			prepareForRender(context);
@@ -140,7 +144,21 @@ package de.nulldesign.nd2d.materials {
 			clearAfterRender(context);
 		}
 
+		protected function setupShader(context:Context3D):void {
+			shaderData = null;
+			initProgram(context);
+			context.setProgram(shaderData.shader);
+		}
+
+		protected function drawCurrentBatch(context:Context3D):void {
+			context.drawTriangles(indexBuffer, 0, batchLen * 2);
+			batchLen = 0;
+			++drawCalls;
+		}
+
 		protected function processAndRenderNodes(context:Context3D, childList:Vector.<Node2D>):void {
+
+			if(!childList || childList.length == 0) return;
 
 			var childNode:Node2D;
 			var child:Sprite2D;
@@ -149,6 +167,7 @@ package de.nulldesign.nd2d.materials {
 			var i:int = -1;
 			const n:int = childList.length;
 			const offsetFactor:Number = 1.0 / 255.0;
+			currentNodeIsTinted = nodeTinted || childList[0].nodeIsTinted;
 
 			while(++i < n) {
 
@@ -160,8 +179,14 @@ package de.nulldesign.nd2d.materials {
 					if(child.invalidateColors) child.updateColors();
 					if(child.invalidateMatrix) child.updateLocalMatrix();
 
-					// TODO check if parent matrix changed?
 					child.updateWorldMatrix();
+
+					currentNodeIsTinted = nodeTinted || child.nodeIsTinted;
+
+					if(currentNodeIsTinted != previousTintedState) {
+						drawCurrentBatch(context);
+						setupShader(context);
+					}
 
 					var uvOffsetAndScale:Rectangle = new Rectangle(0.0, 0.0, 1.0, 1.0);
 
@@ -214,9 +239,7 @@ package de.nulldesign.nd2d.materials {
 					numTris += 2;
 
 					if(batchLen == BATCH_SIZE) {
-						context.drawTriangles(indexBuffer, 0, batchLen * 2);
-						batchLen = 0;
-						++drawCalls;
+						drawCurrentBatch(context);
 					}
 
 					processAndRenderNodes(context, child.children);
@@ -233,6 +256,8 @@ package de.nulldesign.nd2d.materials {
 
 					processAndRenderNodes(context, childNode.children);
 				}
+
+				previousTintedState = currentNodeIsTinted;
 			}
 		}
 
@@ -245,7 +270,7 @@ package de.nulldesign.nd2d.materials {
 
 		override protected function initProgram(context:Context3D):void {
 			if(!shaderData) {
-				shaderData = ShaderCache.getInstance().getShader(context, this, DEFAULT_VERTEX_SHADER, DEFAULT_FRAGMENT_SHADER, 8, texture.textureOptions);
+				shaderData = ShaderCache.getInstance().getShader(context, this, DEFAULT_VERTEX_SHADER, currentNodeIsTinted ? DEFAULT_FRAGMENT_SHADER : FRAGMENT_SHADER_NO_TINT_ALPHA, 8, texture.textureOptions, currentNodeIsTinted ? 0 : 1000);
 			}
 		}
 

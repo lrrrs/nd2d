@@ -116,9 +116,14 @@ package de.nulldesign.nd2d.display {
 			removeEventListener(Event.ADDED_TO_STAGE, addedToStage);
 			stage.addEventListener(Event.RESIZE, resizeStage);
 			stage.frameRate = frameRate;
-			stage.stage3Ds[stageID].addEventListener(Event.CONTEXT3D_CREATE, context3DCreated);
-			stage.stage3Ds[stageID].addEventListener(ErrorEvent.ERROR, context3DError);
-			stage.stage3Ds[stageID].requestContext3D(renderMode);
+
+			if(stage.stage3Ds[stageID].context3D) {
+				context3DCreated(null);
+			} else {
+				stage.stage3Ds[stageID].addEventListener(Event.CONTEXT3D_CREATE, context3DCreated);
+				stage.stage3Ds[stageID].addEventListener(ErrorEvent.ERROR, context3DError);
+				stage.stage3Ds[stageID].requestContext3D(renderMode);
+			}
 
 			stage.addEventListener(MouseEvent.CLICK, mouseEventHandler);
 			stage.addEventListener(MouseEvent.MOUSE_DOWN, mouseEventHandler);

@@ -245,6 +245,10 @@ package de.nulldesign.nd2d.display {
 		}
 
 		public function set visible(value:Boolean):void {
+			if (_visible != value && value) {
+				invalidateMatrix = true;				
+			}
+			
 			if(_visible != value) {
 				_visible = value;
 				invalidateVisibility = true;
