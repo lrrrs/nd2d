@@ -1,6 +1,7 @@
 package com.adobe.utils.macro
 {
-
+	import com.adobe.utils.macro.VM;
+	
 	public class Expression
 	{
 		public function print( depth:int ):void { trace( "top" ); }

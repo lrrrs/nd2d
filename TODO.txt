@@ -9,9 +9,6 @@
 
 What I don't like about the spritesheets is:
 - it's a pain to declare animations from a (cocos2D) spritesheet - it needs a simpler way like just sheet.playAnimation("foo*") and it would automatically build the animation with all assets named "foo001.png", "foo002.png", etc.
-- and it seems inefficient to have to clone the spritesheet object.
-About Sprite2DBatch: only addChildAt/removeChildAt are implemented and I'm not sure why addChild/removeChild aren't - maybe there's a hidden reason? Also invalidation in the *At methods seem a bit aggressive.
-getChildByTag()
 
 - Button2D
 - Node2D.getBounds()
@@ -21,4 +18,7 @@ BitmapFont2D - Cocos2D font generator hiero, etc...
 
 shader example: distortions
 
-ipad 1 fragment shader fix
+I think that would be better to have some API for adding custom parsers for TextureAtlas, since some people can't use Zwoptex (no Mac) or TexturePacker (too costly). Something like this:
+TextureAtlas.registerParser(name:String, parser:ATextureAtlasParser):void;
+
+linked lists instead of vector

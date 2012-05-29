@@ -58,6 +58,8 @@ package de.nulldesign.nd2d.materials {
 						"mul ft0, ft0, fc0\n" + // mult with colorMultiplier
 						"add oc, ft0, fc1\n"; // mult with colorOffset
 
+		protected const FRAGMENT_SHADER_NO_TINT_ALPHA:String = "tex oc, v0, fs0 <TEXTURE_SAMPLING_OPTIONS>\n";
+
 		public var texture:Texture2D;
 		public var spriteSheet:ASpriteSheetBase;
 		public var colorTransform:ColorTransform;
@@ -126,21 +128,24 @@ package de.nulldesign.nd2d.materials {
 
 			context.setProgramConstantsFromVector(Context3DProgramType.VERTEX, 4, programConstVector);
 
-			var offsetFactor:Number = 1.0 / 255.0;
+			if(nodeTinted) {
 
-			programConstVector[0] = colorTransform.redMultiplier;
-			programConstVector[1] = colorTransform.greenMultiplier;
-			programConstVector[2] = colorTransform.blueMultiplier;
-			programConstVector[3] = colorTransform.alphaMultiplier;
+				var offsetFactor:Number = 1.0 / 255.0;
 
-			context.setProgramConstantsFromVector(Context3DProgramType.FRAGMENT, 0, programConstVector);
+				programConstVector[0] = colorTransform.redMultiplier;
+				programConstVector[1] = colorTransform.greenMultiplier;
+				programConstVector[2] = colorTransform.blueMultiplier;
+				programConstVector[3] = colorTransform.alphaMultiplier;
 
-			programConstVector[0] = colorTransform.redOffset * offsetFactor;
-			programConstVector[1] = colorTransform.greenOffset * offsetFactor;
-			programConstVector[2] = colorTransform.blueOffset * offsetFactor;
-			programConstVector[3] = colorTransform.alphaOffset * offsetFactor;
+				context.setProgramConstantsFromVector(Context3DProgramType.FRAGMENT, 0, programConstVector);
 
-			context.setProgramConstantsFromVector(Context3DProgramType.FRAGMENT, 1, programConstVector);
+				programConstVector[0] = colorTransform.redOffset * offsetFactor;
+				programConstVector[1] = colorTransform.greenOffset * offsetFactor;
+				programConstVector[2] = colorTransform.blueOffset * offsetFactor;
+				programConstVector[3] = colorTransform.alphaOffset * offsetFactor;
+
+				context.setProgramConstantsFromVector(Context3DProgramType.FRAGMENT, 1, programConstVector);
+			}
 		}
 
 		override protected function clearAfterRender(context:Context3D):void {
@@ -157,7 +162,7 @@ package de.nulldesign.nd2d.materials {
 
 		override protected function initProgram(context:Context3D):void {
 			if(!shaderData) {
-				shaderData = ShaderCache.getInstance().getShader(context, this, VERTEX_SHADER, FRAGMENT_SHADER, 4, texture.textureOptions, 0);
+				shaderData = ShaderCache.getInstance().getShader(context, this, VERTEX_SHADER, nodeTinted ? FRAGMENT_SHADER : FRAGMENT_SHADER_NO_TINT_ALPHA, 4, texture.textureOptions, nodeTinted ? 0 : 1000);
 			}
 		}
 

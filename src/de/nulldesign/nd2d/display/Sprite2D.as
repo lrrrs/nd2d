@@ -217,6 +217,7 @@ package de.nulldesign.nd2d.display {
 			material.colorTransform = combinedColorTransform;
 			material.spriteSheet = spriteSheet;
 			material.texture = texture;
+			material.nodeTinted = nodeIsTinted;
 
 			if(mask) {
 

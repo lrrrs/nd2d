@@ -1,6 +1,6 @@
 package com.adobe.utils.macro
 {
-
+	import flash.utils.Dictionary;
 
 	/*
 	 * 	The AGALPreAssembler implements a pre-processing language for AGAL.

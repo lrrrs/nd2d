@@ -47,6 +47,13 @@ If you want to contribute, make bugfixes or extend the engine, feel free to fork
 
 # Changelog:
 
+2012-05-29
+
+- ADDED: check if context3D already exists
+- OPTIMIZED: Sprite2D & Sprite2DBatch are now 300%!! faster on older devices (iPad1, etc.) if nodes are not tinted
+- FIXED: stage reference in GUI layer
+- FIXED: World2D initialize with existing context3D
+
 2012-05-10
 
 - CHANGED: internal to protected properties in ASpriteSheetBase

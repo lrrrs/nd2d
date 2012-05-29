@@ -36,6 +36,8 @@ package de.nulldesign.nd2d.materials {
 	import de.nulldesign.nd2d.materials.shader.Shader2D;
 	import de.nulldesign.nd2d.utils.NodeBlendMode;
 
+	import flash.display.Shader;
+
 	import flash.display3D.Context3D;
 	import flash.display3D.Context3DVertexBufferFormat;
 	import flash.display3D.IndexBuffer3D;
@@ -68,6 +70,9 @@ package de.nulldesign.nd2d.materials {
 
 		protected var shaderData:Shader2D;
 		protected var programConstVector:Vector.<Number> = new Vector.<Number>(4);
+
+		public var nodeTinted:Boolean = false;
+		protected var previousTintedState:Boolean = false;
 
 		public static const VERTEX_POSITION:String = "PB3D_POSITION";
 		public static const VERTEX_UV:String = "PB3D_UV";
@@ -158,6 +163,13 @@ package de.nulldesign.nd2d.materials {
 		}
 
 		protected function prepareForRender(context:Context3D):void {
+
+			if(previousTintedState != nodeTinted) {
+				shaderData = null;
+				initProgram(context);
+				previousTintedState = nodeTinted;
+			}
+
 			context.setProgram(shaderData.shader);
 			context.setBlendFactors(blendMode.src, blendMode.dst);
 
