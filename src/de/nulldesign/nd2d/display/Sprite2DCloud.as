@@ -322,33 +322,34 @@ package de.nulldesign.nd2d.display {
 					isChildInvalidatedColors = true;
 				}
 
-				rMultiplier = child.visible ? child.combinedColorTransform.redMultiplier : 0.0;
-				gMultiplier = child.visible ? child.combinedColorTransform.greenMultiplier : 0.0;
-				bMultiplier = child.visible ? child.combinedColorTransform.blueMultiplier : 0.0;
-				aMultiplier = child.visible ? child.combinedColorTransform.alphaMultiplier : 0.0; // fake visibility. just set alpha to zero, it's faster
-				rOffset = child.visible ? child.combinedColorTransform.redOffset * offsetFactor : 0.0;
-				gOffset = child.visible ? child.combinedColorTransform.greenOffset * offsetFactor : 0.0;
-				bOffset = child.visible ? child.combinedColorTransform.blueOffset * offsetFactor : 0.0;
-				aOffset = child.visible ? child.combinedColorTransform.alphaOffset * offsetFactor : 0.0; // fake visibility. just set alpha to zero, it's faster
+				if(child.visible) {
+					rMultiplier = child.combinedColorTransform.redMultiplier;
+					gMultiplier = child.combinedColorTransform.greenMultiplier;
+					bMultiplier = child.combinedColorTransform.blueMultiplier;
+					aMultiplier = child.combinedColorTransform.alphaMultiplier;
+					rOffset = child.combinedColorTransform.redOffset * offsetFactor;
+					gOffset = child.combinedColorTransform.greenOffset * offsetFactor;
+					bOffset = child.combinedColorTransform.blueOffset * offsetFactor;
+					aOffset = child.combinedColorTransform.alphaOffset * offsetFactor;
+				} else {
+					// fake visibility, it's faster
+					rMultiplier = 0.0;
+					gMultiplier = 0.0;
+					bMultiplier = 0.0;
+					aMultiplier = 0.0;
+					rOffset = 0.0;
+					gOffset = 0.0;
+					bOffset = 0.0;
+					aOffset = 0.0;
+				}
 
 				var initUV:Boolean = !uvInited;
 
-				if(spriteSheet) {
-					sx = child.scaleX * (spriteSheet.spriteWidth >> 1);
-					sy = child.scaleY * (spriteSheet.spriteHeight >> 1);
-					atlasOffset = spriteSheet.getOffsetForFrame();
-
-					if(spriteSheet.frameUpdated || initUV) {
-						spriteSheet.frameUpdated = false;
-						uvOffsetAndScale = spriteSheet.getUVRectForFrame(texture.textureWidth, texture.textureHeight);
-
-						initUV = true;
-					}
-				} else {
-					sx = child.scaleX * halfTextureWidth;
-					sy = child.scaleY * halfTextureHeight;
-					atlasOffset.x = 0.0;
-					atlasOffset.y = 0.0;
+				if(spriteSheet && (initUV || spriteSheet.frameUpdated)) {
+					spriteSheet.frameUpdated = false;
+					uvOffsetAndScale = spriteSheet.getUVRectForFrame(texture.textureWidth, texture.textureHeight);
+					
+					initUV = true;
 				}
 
 				if(initUV) {
@@ -372,6 +373,17 @@ package de.nulldesign.nd2d.display {
 				}
 
 				if(child.invalidateMatrix) {
+					if(spriteSheet) {
+						sx = child.scaleX * (spriteSheet.spriteWidth >> 1);
+						sy = child.scaleY * (spriteSheet.spriteHeight >> 1);
+						atlasOffset = spriteSheet.getOffsetForFrame();
+					} else {
+						sx = child.scaleX * halfTextureWidth;
+						sy = child.scaleY * halfTextureHeight;
+						atlasOffset.x = 0.0;
+						atlasOffset.y = 0.0;
+					}
+
 					rot = VectorUtil.deg2rad(child.rotation);
 					cr = Math.cos(rot);
 					sr = Math.sin(rot);
