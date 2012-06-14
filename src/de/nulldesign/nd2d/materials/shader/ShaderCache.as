@@ -31,13 +31,14 @@
 package de.nulldesign.nd2d.materials.shader {
 
 	import flash.display3D.Context3D;
+	import flash.utils.Dictionary;
 	import flash.utils.getQualifiedClassName;
 
 	public class ShaderCache {
 
 		private static var instance:ShaderCache;
 
-		private var cacheObj:Object = {};
+		private var cacheObj:Dictionary = new Dictionary(true);
 
 		public function ShaderCache() {
 		}
@@ -53,22 +54,28 @@ package de.nulldesign.nd2d.materials.shader {
 
 			var shaderName:String = getQualifiedClassName(materialClass);
 
-			if(cacheObj[shaderName] && cacheObj[shaderName][textureOptions + miscOptions]) {
-				return cacheObj[shaderName][textureOptions + miscOptions];
+			if(!cacheObj[context]) {
+				cacheObj[context] = {};
+			}
+
+			var currentCacheContainer:Object = cacheObj[context];
+
+			if(currentCacheContainer[shaderName] && currentCacheContainer[shaderName][textureOptions + miscOptions]) {
+				return currentCacheContainer[shaderName][textureOptions + miscOptions];
 			} else {
 				var shader:Shader2D = new Shader2D(context, vertexShaderString, fragmentShaderString, numFloatsPerVertex, textureOptions);
 
-				if(!cacheObj[shaderName]) {
-					cacheObj[shaderName] = {};
+				if(!currentCacheContainer[shaderName]) {
+					currentCacheContainer[shaderName] = {};
 				}
 
-				cacheObj[shaderName][textureOptions + miscOptions] = shader;
+				currentCacheContainer[shaderName][textureOptions + miscOptions] = shader;
 				return shader;
 			}
 		}
 
 		public function handleDeviceLoss():void {
-			cacheObj = {};
+			cacheObj = new Dictionary(true);
 		}
 	}
 }

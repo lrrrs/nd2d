@@ -47,6 +47,10 @@ If you want to contribute, make bugfixes or extend the engine, feel free to fork
 
 # Changelog:
 
+2012-06-14
+
+- FIXED: Multiple Worlds2D instances work now correctly
+
 2012-05-29
 
 - ADDED: check if context3D already exists
