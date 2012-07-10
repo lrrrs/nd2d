@@ -174,12 +174,32 @@ package de.nulldesign.nd2d.materials.texture {
 			return frames[frameIdx > -1 ? frameIdx : frame];
 		}
 
+		/**
+		 * converts a frame name to a index
+		 * @param name
+		 * @return
+		 */
 		public function getIndexForFrame(name:String):uint {
 			return frameNameToIndex[name];
 		}
 
+		/**
+		 * sets an a frame by a given name
+		 * @param value
+		 */
 		public function setFrameByName(value:String):void {
 			frame = getIndexForFrame(value);
+		}
+
+		/**
+		 * Convenience method to directly set an animation frame by name
+		 * @param name of the animation to set
+		 * @param index frame in the animation to set
+		 */
+		public function setFrameByAnimationName(name:String, index:uint = 0):void {
+			if(animationMap[name]) {
+				frame = animationMap[name].frames[index];
+			}
 		}
 
 		public function getUVRectForFrame(textureWidth:Number, textureHeight:Number):Rectangle {

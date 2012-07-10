@@ -144,6 +144,21 @@ package de.nulldesign.nd2d.display {
 			}
 		}
 
+		/**
+		 * starts to play an animation if a spritesheet / textureatlas exists and updates the size of the sprite immediately
+		 * @param name
+		 * @param startIdx
+		 * @param restart
+		 * @param triggerEventOnLastFrame
+		 */
+		public function playAnimation(name:String, startIdx:uint = 0, restart:Boolean = false, triggerEventOnLastFrame:Boolean = false):void {
+			if(spriteSheet) {
+				spriteSheet.playAnimation(name, startIdx, restart, triggerEventOnLastFrame);
+				_width = spriteSheet.spriteWidth;
+				_height = spriteSheet.spriteHeight;
+			}
+		}
+
 		override public function get numTris():uint {
 			return 2;
 		}

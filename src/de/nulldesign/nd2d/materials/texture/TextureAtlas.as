@@ -39,31 +39,29 @@ package de.nulldesign.nd2d.materials.texture {
 
 	public class TextureAtlas extends ASpriteSheetBase {
 
-		public static const XML_FORMAT_COCOS2D:String = "xmlFormatCocos2D";
-		public static const XML_FORMAT_ZWOPTEX:String = "xmlFormatZwoptex";
-
 		/**
-		 *
+		 * spritesPackedWithoutSpace set to true to get rid of pixel bleeding for packed atlases without spaces: http://www.nulldesign.de/2011/08/30/nd2d-pixel-bleeding/
 		 * @param sheetWidth
 		 * @param sheetHeight
 		 * @param xmlData
+		 * @param parser
 		 * @param fps
-		 * @param spritesPackedWithoutSpace set to true to get rid of pixel bleeding for packed atlases without spaces: http://www.nulldesign.de/2011/08/30/nd2d-pixel-bleeding/
+		 * @param spritesPackedWithoutSpace
 		 */
-		public function TextureAtlas(sheetWidth:Number, sheetHeight:Number, xmlData:XML, xmlFormat:String, fps:uint, spritesPackedWithoutSpace:Boolean = false) {
+		public function TextureAtlas(sheetWidth:Number, sheetHeight:Number, xmlData:XML, parser:ATextureAtlasParser, fps:uint, spritesPackedWithoutSpace:Boolean = false) {
 			this.fps = fps;
 			this.spritesPackedWithoutSpace = spritesPackedWithoutSpace;
 			this._sheetWidth = sheetWidth;
 			this._sheetHeight = sheetHeight;
 
 			if(xmlData) {
-				parse(xmlData, xmlFormat);
+				parse(xmlData, parser);
 			}
 		}
 
 		override public function addAnimation(name:String, keyFrames:Array, loop:Boolean):void {
 
-			if(keyFrames[i] is String) {
+			if(keyFrames[0] is String) {
 
 				// make indices out of names
 				var keyFramesIndices:Array = [];
@@ -83,18 +81,7 @@ package de.nulldesign.nd2d.materials.texture {
 		 * paeser switch
 		 * @param value
 		 */
-		protected function parse(value:XML, xmlFormat:String):void {
-
-			var parser:ATextureAtlasParser;
-
-			switch(xmlFormat) {
-				case XML_FORMAT_COCOS2D:
-					parser = new TexturePackerParser();
-					break;
-				case XML_FORMAT_ZWOPTEX:
-					parser = new ZwopTexParser();
-					break;
-			}
+		protected function parse(value:XML, parser:ATextureAtlasParser):void {
 
 			parser.parse(value);
 

@@ -757,6 +757,9 @@ package de.nulldesign.nd2d.display {
 
 		public function removeChildAt(idx:uint):void {
 			if(idx < children.length) {
+				children[idx].invalidateColors = true;
+				children[idx].invalidateMatrix = true;
+				children[idx].invalidateVisibility = true;
 				children[idx].parent = null;
 				children[idx].setStageAndCamRef(null, null);
 				children.splice(idx, 1);

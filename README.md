@@ -47,6 +47,12 @@ If you want to contribute, make bugfixes or extend the engine, feel free to fork
 
 # Changelog:
 
+2012-07-10
+
+- CHANGED: You can feed the TextureAtlas with a parser instead of a constanc now. This way, you're able to write you own parsers and connect them with ND2D
+- ADDED: setFrameByAnimationName to ASpriteSheetBase
+- ADDED: setFrameByName to Sprite2D
+
 2012-06-14
 
 - FIXED: Multiple Worlds2D instances work now correctly

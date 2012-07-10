@@ -35,6 +35,7 @@ package tests {
 	import de.nulldesign.nd2d.materials.texture.SpriteSheet;
 	import de.nulldesign.nd2d.materials.texture.Texture2D;
 	import de.nulldesign.nd2d.materials.texture.TextureAtlas;
+	import de.nulldesign.nd2d.materials.texture.parser.TexturePackerParser;
 
 	public class MaskTest extends Scene2D {
 
@@ -63,7 +64,7 @@ package tests {
 			var texAtlasTex:Texture2D = Texture2D.textureFromBitmapData(new textureAtlasBitmap().bitmapData);
 
 			var atlas:TextureAtlas = new TextureAtlas(texAtlasTex.bitmapWidth, texAtlasTex.bitmapHeight,
-					new XML(new textureAtlasXML()), TextureAtlas.XML_FORMAT_COCOS2D, 20);
+					new XML(new textureAtlasXML()), new TexturePackerParser(), 20);
 
 			atlas.addAnimation("blah", ["c01", "c02", "c03", "c04", "c05", "c06", "c07", "c08", "c09", "c10", "c11", "c12", "b01", "b02", "b03", "b04", "b05", "b06", "b07", "b08", "b09", "b10", "b11", "b12"], true);
 			atlas.playAnimation("blah");

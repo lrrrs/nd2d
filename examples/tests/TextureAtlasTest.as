@@ -36,6 +36,7 @@ package tests {
 	import de.nulldesign.nd2d.materials.texture.SpriteSheet;
 	import de.nulldesign.nd2d.materials.texture.Texture2D;
 	import de.nulldesign.nd2d.materials.texture.TextureAtlas;
+	import de.nulldesign.nd2d.materials.texture.parser.ZwopTexParser;
 
 	public class TextureAtlasTest extends Scene2D {
 
@@ -75,7 +76,7 @@ package tests {
 			var atlas:TextureAtlas = new TextureAtlas(atlasTex.bitmapWidth, atlasTex.bitmapHeight, new XML(new textureAtlasXML()), TextureAtlas.XML_FORMAT_COCOS2D, 5, false);
             */
 			var atlasTex:Texture2D = Texture2D.textureFromBitmapData(new textureAtlasBitmapZwoptex().bitmapData);
-			var atlas:TextureAtlas = new TextureAtlas(atlasTex.bitmapWidth, atlasTex.bitmapHeight, new XML(new textureAtlasXMLZwoptex()), TextureAtlas.XML_FORMAT_ZWOPTEX, 5, false);
+			var atlas:TextureAtlas = new TextureAtlas(atlasTex.bitmapWidth, atlasTex.bitmapHeight, new XML(new textureAtlasXMLZwoptex()), new ZwopTexParser(), 5, false);
 
 			s = addChild(new Sprite2D(atlasTex)) as Sprite2D;
             s.setSpriteSheet(atlas);
