@@ -32,12 +32,12 @@ package
 {
 
 	import avmplus.getQualifiedClassName;
-
+	
 	import com.bit101.components.PushButton;
-
+	
 	import de.nulldesign.nd2d.display.Scene2D;
 	import de.nulldesign.nd2d.display.World2D;
-
+	
 	import flash.display.StageAlign;
 	import flash.display.StageDisplayState;
 	import flash.display.StageScaleMode;
@@ -48,9 +48,9 @@ package
 	import flash.text.TextField;
 	import flash.text.TextFormat;
 	import flash.ui.Keyboard;
-
+	
 	import net.hires.debug.Stats;
-
+	
 	import tests.BatchTest;
 	import tests.BlurTest;
 	import tests.CameraTest;
@@ -61,6 +61,7 @@ package
 	import tests.MassiveSpriteCloudTest;
 	import tests.MassiveSpritesTest;
 	import tests.ParticleExplorer;
+	import tests.ParticleSystemExtTest;
 	import tests.ParticleSystemTest;
 	import tests.PostProcessingTest;
 	import tests.QuadMaterialTest;
@@ -68,11 +69,11 @@ package
 	import tests.SpeedTest;
 	import tests.Sprite2DCloudParticles;
 	import tests.SpriteAnimTest;
+	import tests.SpriteCloudVisibilityTest;
 	import tests.SpriteHierarchyTest;
 	import tests.SpriteHierarchyTest2;
 	import tests.SpriteTest;
 	import tests.StarFieldTest;
-	import tests.SpriteCloudVisibilityTest;
 	import tests.TextFieldTest;
 	import tests.TextureAndRotationOptionsTest;
 	import tests.TextureAtlasTest;
@@ -102,6 +103,7 @@ package
 			stage.align = StageAlign.TOP_LEFT;
 			enableErrorChecking = false;
 
+			scenes.push(ParticleSystemExtTest);
 			scenes.push(SideScrollerTest);
 			scenes.push(MassiveSpritesTest);
 			scenes.push(MassiveSpriteCloudTest);
