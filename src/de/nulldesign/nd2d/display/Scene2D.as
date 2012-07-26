@@ -84,6 +84,9 @@ package de.nulldesign.nd2d.display {
 
 		override internal function stepNode(elapsed:Number, timeSinceStartInSeconds:Number):void {
 
+			if(isDispose)
+				return;
+			
 			this.timeSinceStartInSeconds = timeSinceStartInSeconds;
 
 			for each(var child:Node2D in children) {

@@ -558,10 +558,14 @@ package de.nulldesign.nd2d.display {
 		 * @private
 		 */
 		internal function processMouseEvent(mousePosition:Vector3D, mouseEventType:String, cameraViewProjectionMatrix:Matrix3D, isTouchEvent:Boolean, touchPointID:int):Node2D {
+			
+			if(isDispose)
+				return null;
+			
 			mouseEvents = new Vector.<Event>();
 			var result:Node2D = null;
 
-			if(mouseEnabled && mouseEventType && localMouseMatrix) {
+			if(mouseEnabled && mouseEventType) {
 				// transform mousepos to local coordinate system
 				localMouseMatrix.identity();
 				localMouseMatrix.append(worldModelMatrix);
@@ -662,6 +666,9 @@ package de.nulldesign.nd2d.display {
 		 */
 		internal function stepNode(elapsed:Number, timeSinceStartInSeconds:Number):void {
 
+			if(isDispose)
+				return;
+			
 			this.timeSinceStartInSeconds = timeSinceStartInSeconds;
 
 			step(elapsed);
@@ -851,8 +858,13 @@ package de.nulldesign.nd2d.display {
 			return new Point(v.x, v.y);
 		}
 
+		public var isDispose:Boolean = false;
+		
 		public function dispose():void 
 		{
+			if(isDispose)
+				return;
+				
 			for each(var child:Node2D in children)
 				child.dispose();
 				
@@ -867,6 +879,8 @@ package de.nulldesign.nd2d.display {
 			
 			if (parent) 
 				parent.removeChild(this);
+			
+			isDispose = true;
 		}
 	}
 }
