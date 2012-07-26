@@ -30,14 +30,10 @@
 
 package de.nulldesign.nd2d.display {
 
+	import flash.display3D.Context3D;
+	
 	import de.nulldesign.nd2d.materials.texture.Texture2D;
 	import de.nulldesign.nd2d.utils.StatsObject;
-	import de.nulldesign.nd2d.utils.TextureHelper;
-
-	import flash.display3D.Context3D;
-	import flash.display3D.Context3DTextureFormat;
-	import flash.display3D.textures.Texture;
-	import flash.geom.Point;
 
 	/**
 	 * Renders a Node2D to a texture every frame. Can be used to post process a whole scene for example.
@@ -90,13 +86,21 @@ package de.nulldesign.nd2d.display {
 			context.setRenderToBackBuffer();
 		}
 
-		override public function dispose():void {
-			super.dispose();
-
-			if(texture) {
+		override public function dispose():void
+		{
+			if(texCamera) 
+			{
+				texCamera.dispose();
+				texCamera = null;
+			}
+			
+			if(texture) 
+			{
 				texture.dispose();
 				texture = null;
 			}
+			
+			super.dispose();
 		}
 	}
 }

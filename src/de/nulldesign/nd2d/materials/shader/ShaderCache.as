@@ -77,5 +77,10 @@ package de.nulldesign.nd2d.materials.shader {
 		public function handleDeviceLoss():void {
 			cacheObj = new Dictionary(true);
 		}
+		
+		public function removeShader(context:Context3D):void
+		{
+			cacheObj[context] = null;
+		}
 	}
 }

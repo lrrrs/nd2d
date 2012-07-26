@@ -315,14 +315,16 @@ package de.nulldesign.nd2d.display {
 			addEventListener(Event.ENTER_FRAME, mainLoop);
 		}
 
-		public function dispose():void {
+		public function dispose():void
+		{
 			sleep();
 
 			stage.removeEventListener(Event.RESIZE, resizeStage);
 
 			ShaderCache.getInstance().handleDeviceLoss();
 
-			for(var i:int = 0; i < stage.stage3Ds.length; i++) {
+			for(var i:int = 0; i < stage.stage3Ds.length; i++) 
+			{
 				stage.stage3Ds[i].removeEventListener(Event.CONTEXT3D_CREATE, context3DCreated);
 				stage.stage3Ds[i].removeEventListener(ErrorEvent.ERROR, context3DError);
 			}
@@ -336,13 +338,28 @@ package de.nulldesign.nd2d.display {
 			stage.removeEventListener(TouchEvent.TOUCH_BEGIN, touchEventHandler);
 			stage.removeEventListener(TouchEvent.TOUCH_MOVE, touchEventHandler);
 			stage.removeEventListener(TouchEvent.TOUCH_END, touchEventHandler);
-
-			if(context3D) {
+			
+			bounds = null;
+			mousePosition = null;
+			statsObject = null;
+			topMostMouseNode = null;
+			
+			if(context3D) 
+			{
 				context3D.dispose();
+				context3D = null;
 			}
 
-			if(scene) {
+			if(scene) 
+			{
 				scene.dispose();
+				scene = null;
+			}
+			
+			if(camera) 
+			{
+				camera.dispose();
+				camera = null;
 			}
 		}
 	}

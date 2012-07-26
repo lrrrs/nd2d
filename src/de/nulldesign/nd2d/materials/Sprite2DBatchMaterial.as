@@ -298,7 +298,8 @@ package de.nulldesign.nd2d.materials {
 			}
 		}
 
-		override public function dispose():void {
+		override public function dispose():void 
+		{
 			super.dispose();
 		}
 	}

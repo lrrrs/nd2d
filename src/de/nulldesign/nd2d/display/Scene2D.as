@@ -132,5 +132,22 @@ package de.nulldesign.nd2d.display {
 		override protected function hitTest():Boolean {
 			return (_mouseX >= 0.0 && _mouseX <= _width && _mouseY >= 0.0 && _mouseY <= _height);
 		}
+		
+		public function destroy():void 
+		{
+			if(sceneGUICamera)
+			{
+				sceneGUICamera.dispose();
+				sceneGUICamera = null;
+			}
+			
+			if(sceneGUILayer)
+			{
+				sceneGUILayer.dispose();
+				sceneGUILayer = null;
+			}
+			
+			super.dispose();
+		}
 	}
 }

@@ -41,5 +41,10 @@ package de.nulldesign.nd2d.materials.texture {
             this.frames = frames;
             this.numFrames = frames.length;
         }
+		
+		public function dispose():void
+		{
+			frames = null;
+		}
     }
 }

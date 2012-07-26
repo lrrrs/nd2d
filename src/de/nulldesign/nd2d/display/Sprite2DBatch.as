@@ -154,16 +154,27 @@ package de.nulldesign.nd2d.display {
 			material.renderBatch(context, faceList, children);
 		}
 
-		override public function dispose():void {
-			if(material) {
+		override public function dispose():void 
+		{
+			if(material) 
+			{
 				material.dispose();
 				material = null;
 			}
 
-			if(texture) {
+			if(texture) 
+			{
 				texture.dispose();
 				texture = null;
 			}
+			
+			if(spriteSheet)
+			{
+				spriteSheet.dispose();
+				spriteSheet = null;
+			}
+			
+			faceList = null;
 
 			super.dispose();
 		}

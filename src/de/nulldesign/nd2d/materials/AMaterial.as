@@ -249,7 +249,8 @@ package de.nulldesign.nd2d.materials {
 			}
 		}
 
-		public function dispose():void {
+		public function dispose():void 
+		{
 			if(indexBuffer) {
 				indexBuffer.dispose();
 				indexBuffer = null;

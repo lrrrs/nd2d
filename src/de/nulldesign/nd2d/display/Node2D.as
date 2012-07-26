@@ -561,7 +561,7 @@ package de.nulldesign.nd2d.display {
 			mouseEvents = new Vector.<Event>();
 			var result:Node2D = null;
 
-			if(mouseEnabled && mouseEventType) {
+			if(mouseEnabled && mouseEventType && localMouseMatrix) {
 				// transform mousepos to local coordinate system
 				localMouseMatrix.identity();
 				localMouseMatrix.append(worldModelMatrix);
@@ -851,10 +851,22 @@ package de.nulldesign.nd2d.display {
 			return new Point(v.x, v.y);
 		}
 
-		public function dispose():void {
-			for each(var child:Node2D in children) {
+		public function dispose():void 
+		{
+			for each(var child:Node2D in children)
 				child.dispose();
-			}
+				
+			children = null;
+			mouseEvents = null;
+			
+			localModelMatrix = null;
+			worldModelMatrix = null;
+			localMouseMatrix = null;
+			
+			blendMode = null;
+			
+			if (parent) 
+				parent.removeChild(this);
 		}
 	}
 }

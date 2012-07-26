@@ -80,5 +80,16 @@ package de.nulldesign.nd2d.geom {
         public function toString():String {
             return "Face: " + v1 + "/" + v2 + "/" + v3 + " / " + uv1 + " / " + uv2 + " / " + uv3;
         }
+		
+		public function dispose():void 
+		{
+			v1 = null;
+			v2 = null;
+			v3 = null;
+			
+			uv1 = null;
+			uv2 = null;
+			uv3 = null;
+		}
     }
 }

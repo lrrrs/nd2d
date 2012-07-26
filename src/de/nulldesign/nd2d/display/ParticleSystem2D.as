@@ -219,11 +219,37 @@ package de.nulldesign.nd2d.display {
 			material.render(context, faceList, 0, activeParticles * 2);
 		}
 
-		override public function dispose():void {
-			if(material) {
+		override public function dispose():void 
+		{
+			if(material) 
+			{
 				material.dispose();
 				material = null;
 			}
+			
+			if(particles)
+			{
+				for each(var particle:Particle in particles)
+					particle.dispose();
+				
+				particles = null;
+			}
+			
+			if(faceList)
+			{
+				for each(var face:Face in faceList)
+					face.dispose();
+					
+				faceList = null;
+			}
+			
+			if(preset)
+			{
+				preset.dispose();
+				preset = null;
+			}
+			
+			gravity = null;
 
 			super.dispose();
 		}
@@ -242,4 +268,17 @@ class Particle {
 	public var uv2:UV = new UV(1, 0);
 	public var uv3:UV = new UV(1, 1);
 	public var uv4:UV = new UV(0, 1);
+	
+	public function dispose():void 
+	{
+		v1 = null;
+		v2 = null;
+		v3 = null;
+		v4 = null;
+		
+		uv1 = null;
+		uv2 = null;
+		uv3 = null;
+		uv4 = null;
+	}
 }

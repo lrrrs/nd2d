@@ -154,7 +154,8 @@ package de.nulldesign.nd2d.materials.texture {
 			return texture;
 		}
 
-		public function dispose():void {
+		public function dispose():void 
+		{
 			if(texture) {
 				texture.dispose();
 				texture = null;

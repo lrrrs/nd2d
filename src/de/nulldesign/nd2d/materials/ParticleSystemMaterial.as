@@ -197,15 +197,6 @@ package de.nulldesign.nd2d.materials {
 			}
 		}
 
-		override public function dispose():void {
-			super.dispose();
-
-			if(texture) {
-				texture.dispose();
-				texture = null;
-			}
-		}
-
 		override protected function initProgram(context:Context3D):void {
 			if(!shaderData) {
 
@@ -231,6 +222,16 @@ package de.nulldesign.nd2d.materials {
 
 				shaderData = ShaderCache.getInstance().getShader(context, this, vertexString, fragmentString, 20, texture.textureOptions, cacheNum);
 			}
+		}
+		
+		override public function dispose():void 
+		{
+			if(texture) {
+				texture.dispose();
+				texture = null;
+			}
+			
+			super.dispose();
 		}
 	}
 }
