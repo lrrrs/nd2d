@@ -22,3 +22,6 @@ I think that would be better to have some API for adding custom parsers for Text
 TextureAtlas.registerParser(name:String, parser:ATextureAtlasParser):void;
 
 linked lists instead of vector
+
+workers -> initialize scene in background thread
+support streaming textures -> mipmaps (http://www.bytearray.org/?p=3705)

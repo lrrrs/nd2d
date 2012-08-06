@@ -47,6 +47,13 @@ If you want to contribute, make bugfixes or extend the engine, feel free to fork
 
 # Changelog:
 
+2012-08-06
+
+- FIXED: Blurmaterial Issue
+- MERGED: ParticleSystemExt by nshen
+- MERGED: Dispose fix + example by katopz
+- UPDATED: New AGAL Mini Assembler
+
 2012-07-10
 
 - CHANGED: You can feed the TextureAtlas with a parser instead of a constanc now. This way, you're able to write you own parsers and connect them with ND2D

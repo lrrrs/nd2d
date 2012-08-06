@@ -199,6 +199,9 @@ package de.nulldesign.nd2d.materials {
 
 		override protected function prepareForRender(context:Context3D):void {
 
+			// there is no ipad1 fragment shader fix for this material yet. so assume, the node is always tinted and use the color transform shader
+			nodeTinted = true;
+
 			super.prepareForRender(context);
 
 			context.setProgramConstantsFromVector(Context3DProgramType.FRAGMENT, 2, fragmentData, 2);
