@@ -176,5 +176,22 @@ package tests {
 				s.alpha -= 0.001;
 			}
 		}
+		
+		// dispose best practice 
+		override public function dispose():void 
+		{
+			cubeTexture = null;
+			sprites = null;
+			
+			if(spriteCloud)
+			{
+				spriteCloud.dispose();
+				spriteCloud = null;
+			}
+			
+			perlinBmp = null;
+			
+			super.dispose();
+		}
 	}
 }

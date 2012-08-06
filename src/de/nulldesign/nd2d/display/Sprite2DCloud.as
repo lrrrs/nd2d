@@ -30,17 +30,6 @@
 
 package de.nulldesign.nd2d.display {
 
-	import de.nulldesign.nd2d.geom.Face;
-	import de.nulldesign.nd2d.geom.UV;
-	import de.nulldesign.nd2d.geom.Vertex;
-	import de.nulldesign.nd2d.materials.texture.ASpriteSheetBase;
-	import de.nulldesign.nd2d.materials.shader.Shader2D;
-	import de.nulldesign.nd2d.materials.shader.ShaderCache;
-	import de.nulldesign.nd2d.materials.texture.Texture2D;
-	import de.nulldesign.nd2d.utils.StatsObject;
-	import de.nulldesign.nd2d.utils.TextureHelper;
-	import de.nulldesign.nd2d.utils.VectorUtil;
-
 	import flash.display.BitmapData;
 	import flash.display3D.Context3D;
 	import flash.display3D.Context3DProgramType;
@@ -50,6 +39,17 @@ package de.nulldesign.nd2d.display {
 	import flash.geom.Matrix3D;
 	import flash.geom.Point;
 	import flash.geom.Rectangle;
+	
+	import de.nulldesign.nd2d.geom.Face;
+	import de.nulldesign.nd2d.geom.UV;
+	import de.nulldesign.nd2d.geom.Vertex;
+	import de.nulldesign.nd2d.materials.shader.Shader2D;
+	import de.nulldesign.nd2d.materials.shader.ShaderCache;
+	import de.nulldesign.nd2d.materials.texture.ASpriteSheetBase;
+	import de.nulldesign.nd2d.materials.texture.Texture2D;
+	import de.nulldesign.nd2d.utils.StatsObject;
+	import de.nulldesign.nd2d.utils.TextureHelper;
+	import de.nulldesign.nd2d.utils.VectorUtil;
 
 	/**
 	 * Sprite2DCloud
@@ -98,6 +98,7 @@ package de.nulldesign.nd2d.display {
 
 		protected const FRAGMENT_SHADER_SHORT:String = "tex oc, v0, fs0 <TEXTURE_SAMPLING_OPTIONS>\n";
 
+		private var _context:Context3D;
 		protected var shaderData:Shader2D;
 		protected var indexBuffer:IndexBuffer3D;
 		protected var vertexBuffer:VertexBuffer3D;
@@ -220,25 +221,6 @@ package de.nulldesign.nd2d.display {
 				c.invalidateColors = c.invalidateMatrix = true;
 		}
 
-		override public function dispose():void {
-			super.dispose();
-
-			if(vertexBuffer) {
-				vertexBuffer.dispose();
-				vertexBuffer = null;
-			}
-
-			if(indexBuffer) {
-				indexBuffer.dispose();
-				indexBuffer = null;
-			}
-
-			if(texture) {
-				texture.dispose();
-				texture = null;
-			}
-		}
-
 		override internal function drawNode(context:Context3D, camera:Camera2D, parentMatrixChanged:Boolean, statsObject:StatsObject):void {
 
 			if(!visible) {
@@ -269,6 +251,9 @@ package de.nulldesign.nd2d.display {
 		override protected function draw(context:Context3D, camera:Camera2D):void {
 
 			if(children.length == 0) return;
+			
+			// for remove later
+			_context = context;
 
 			clipSpaceMatrix.identity();
 			clipSpaceMatrix.append(worldModelMatrix);
@@ -516,6 +501,65 @@ package de.nulldesign.nd2d.display {
 			context.setVertexBufferAt(1, null);
 			context.setVertexBufferAt(2, null);
 			context.setVertexBufferAt(3, null);
+		}
+		
+		override public function dispose():void 
+		{
+			if(shaderData)
+			{
+				ShaderCache.getInstance().removeShader(_context);
+				shaderData.dispose();
+				shaderData = null;
+			}
+			
+			if(indexBuffer)
+			{
+				indexBuffer.dispose();
+				indexBuffer = null;
+			}
+			
+			if(vertexBuffer)
+			{
+				vertexBuffer.dispose();
+				vertexBuffer = null;
+			}
+			
+			if(faceList)
+			{
+				for each (var face:Face in faceList) 
+				face.dispose();
+				
+				faceList = null;
+			}
+			
+			if(spriteSheet)
+			{
+				spriteSheet.dispose();
+				spriteSheet = null;
+			}
+			
+			if(texture)
+			{
+				texture.dispose();
+				texture = null;
+			}
+			
+			mVertexBuffer = null;
+			mIndexBuffer = null;
+			
+			v1 = null;
+			v2 = null;
+			v3 = null;
+			v4 = null;
+			
+			uv1 = null;
+			uv2 = null;
+			uv3 = null;
+			uv4 = null;
+			
+			clipSpaceMatrix = null;
+			
+			super.dispose();
 		}
 	}
 }

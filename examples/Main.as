@@ -103,7 +103,7 @@ package
 			enableErrorChecking = false;
 
 			scenes.push(SideScrollerTest);
-			scenes.push(MassiveSpritesTest);
+			scenes.push(MassiveSpritesTest);// dispose best practice 
 			scenes.push(MassiveSpriteCloudTest);
 			scenes.push(SpriteHierarchyTest);
 			scenes.push(SpriteHierarchyTest2);
@@ -143,7 +143,7 @@ package
 			stage.addEventListener(Event.RESIZE, stageResize);
 			stageResize(null);
 
-			activeSceneIdx = 14;//scenes.length - 9;
+			activeSceneIdx = 1;//scenes.length - 9;
 			nextDemo();
 
 			stage.addEventListener(KeyboardEvent.KEY_UP, keyUp);
@@ -166,6 +166,10 @@ package
 			{
 				stage.displayState = StageDisplayState.FULL_SCREEN;
 			}
+			else if (e.keyCode == Keyboard.R)
+			{
+				scene.dispose();
+			}
 		}
 
 		public function nextDemo():void
@@ -176,7 +180,7 @@ package
 
 			camera.reset();
 
-			sceneText.text = "(" + (activeSceneIdx + 1) + "/" + scenes.length + ") " + getQualifiedClassName(scenes[activeSceneIdx]) + " // hit space for next test. f for fullscreen";
+			sceneText.text = "(" + (activeSceneIdx + 1) + "/" + scenes.length + ") " + getQualifiedClassName(scenes[activeSceneIdx]) + " // hit space = next test. f = fullscreen, r = dispose";
 
 			var sceneClass:Class = scenes[activeSceneIdx++] as Class;
 			var currentScene:Scene2D = new sceneClass();

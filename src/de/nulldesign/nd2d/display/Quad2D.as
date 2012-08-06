@@ -124,11 +124,22 @@ package de.nulldesign.nd2d.display {
 			material.render(context, faceList, 0, faceList.length);
 		}
 
-		override public function dispose():void {
-			if(material) {
+		override public function dispose():void 
+		{
+			if(material) 
+			{
 				material.dispose();
 				material = null;
 			}
+			
+			if(faceList)
+			{
+				for each(var face:Face in faceList)
+					face.dispose();
+				
+				faceList = null;
+			}
+			
 			super.dispose();
 		}
 	}

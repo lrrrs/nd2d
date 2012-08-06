@@ -296,20 +296,6 @@ package de.nulldesign.nd2d.materials {
 			clearAfterRender(context);
 		}
 
-		override public function dispose():void {
-			super.dispose();
-
-			if(blurredTexture) {
-				blurredTexture.dispose();
-				blurredTexture = null;
-			}
-
-			if(blurredTexture2) {
-				blurredTexture2.dispose();
-				blurredTexture2 = null;
-			}
-		}
-
 		override public function handleDeviceLoss():void {
 			super.handleDeviceLoss();
 			blurredTexture = null;
@@ -323,6 +309,50 @@ package de.nulldesign.nd2d.materials {
 
 				shaderData = horizontalShader;
 			}
+		}
+		
+		override public function dispose():void
+		{
+			if(horizontalShader) 
+			{
+				horizontalShader.dispose();
+				horizontalShader = null;
+			}
+			
+			if(verticalShader) 
+			{
+				verticalShader.dispose();
+				verticalShader = null;
+			}
+			
+			if(blurredTexture) 
+			{
+				blurredTexture.dispose();
+				blurredTexture = null;
+			}
+			
+			if(blurredTexture2) 
+			{
+				blurredTexture2.dispose();
+				blurredTexture2 = null;
+			}
+			
+			if(blurredTextureCam) 
+			{
+				blurredTextureCam.dispose();
+				blurredTextureCam = null;
+			}
+			
+			if(activeRenderToTexture) 
+			{
+				activeRenderToTexture.dispose();
+				activeRenderToTexture = null;
+			}
+			
+			if(fragmentData)
+				fragmentData = null;
+			
+			super.dispose();
 		}
 	}
 }

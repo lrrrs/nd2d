@@ -231,5 +231,20 @@ package de.nulldesign.nd2d.materials.texture {
 
 			return rect;
 		}
+		
+		public function dispose():void
+		{
+			frames = null;
+			offsets = null;
+			frameNameToIndex = null;
+			uvRects = null;
+			animationMap = null;
+			
+			if(activeAnimation)
+			{
+				activeAnimation.dispose();
+				activeAnimation = null;
+			}
+		}
 	}
 }

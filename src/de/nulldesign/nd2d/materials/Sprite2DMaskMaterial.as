@@ -188,13 +188,14 @@ package de.nulldesign.nd2d.materials {
 			}
 		}
 
-		override public function dispose():void {
-			super.dispose();
-
+		override public function dispose():void 
+		{
 			if(maskTexture) {
 				maskTexture.dispose();
 				maskTexture = null;
 			}
+			
+			super.dispose();
 		}
 	}
 }

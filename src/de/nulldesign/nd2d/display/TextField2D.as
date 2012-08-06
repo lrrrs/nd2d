@@ -375,18 +375,23 @@ package de.nulldesign.nd2d.display {
 			super.step(elapsed);
 		}
 
-		override public function dispose():void {
-			_textTexture.dispose();
-			_textTexture = null;
+		override public function dispose():void 
+		{
+			if(_textTexture)
+			{
+				_textTexture.dispose();
+				_textTexture = null;
+			}
 
-			_textBitmapData.dispose();
-			_textBitmapData = null;
+			if(_textBitmapData)
+			{
+				_textBitmapData.dispose();
+				_textBitmapData = null;
+			}
 
 			_textFormat = null;
 
 			super.dispose();
 		}
-
 	}
-
 }

@@ -273,18 +273,38 @@ package de.nulldesign.nd2d.display {
 			return super.hitTest();
 		}
 
-		override public function dispose():void {
-			if(material) {
+		override public function dispose():void
+		{
+			if(faceList)
+			{
+				for each (var face:Face in faceList)
+					face.dispose();
+				
+				faceList = null;
+			}
+			
+			mask = null;
+			
+			if(spriteSheet) 
+			{
+				spriteSheet.dispose();
+				spriteSheet = null;
+			}
+			
+			if(material) 
+			{
 				material.dispose();
 				material = null;
 			}
 
-			if(mask) {
+			if(mask) 
+			{
 				mask.dispose();
 				mask = null;
 			}
 
-			if(texture) {
+			if(texture) 
+			{
 				texture.dispose();
 				texture = null;
 			}

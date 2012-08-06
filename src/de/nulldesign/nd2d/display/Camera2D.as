@@ -232,5 +232,15 @@ package de.nulldesign.nd2d.display {
 		public function get sceneHeight():Number {
 			return _sceneHeight;
 		}
+		
+		public function dispose():void 
+		{
+			renderMatrixOrtho = null;
+			renderMatrixPerspective = null;
+			
+			perspectiveProjectionMatrix = null;
+			orthoProjectionMatrix = null;
+			viewMatrix = null;
+		}
 	}
 }

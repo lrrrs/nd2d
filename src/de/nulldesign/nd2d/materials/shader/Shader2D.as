@@ -91,5 +91,14 @@ package de.nulldesign.nd2d.materials.shader {
 			shader.upload(vertexShaderAssembler.agalcode, colorFragmentShaderAssembler.agalcode);
 			this.numFloatsPerVertex = numFloatsPerVertex;
 		}
+		
+		public function dispose():void
+		{
+			if(shader)
+			{
+				shader.dispose();
+				shader = null;
+			}
+		}
 	}
 }

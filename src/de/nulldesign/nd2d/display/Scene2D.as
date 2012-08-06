@@ -30,13 +30,13 @@
 
 package de.nulldesign.nd2d.display {
 
-	import de.nulldesign.nd2d.utils.StatsObject;
-
 	import flash.display.Stage;
-
 	import flash.display3D.Context3D;
+	import flash.events.Event;
 	import flash.geom.Matrix3D;
 	import flash.geom.Vector3D;
+	
+	import de.nulldesign.nd2d.utils.StatsObject;
 
 	/**
 	 * <p>A scene that can contain 2D nodes. Such as Sprite2D.</p>
@@ -84,6 +84,9 @@ package de.nulldesign.nd2d.display {
 
 		override internal function stepNode(elapsed:Number, timeSinceStartInSeconds:Number):void {
 
+			if(isDispose)
+				return;
+			
 			this.timeSinceStartInSeconds = timeSinceStartInSeconds;
 
 			for each(var child:Node2D in children) {
@@ -98,6 +101,9 @@ package de.nulldesign.nd2d.display {
 
 		override internal function drawNode(context:Context3D, camera:Camera2D, parentMatrixChanged:Boolean, statsObject:StatsObject):void {
 
+			if(isDispose)
+				return;
+			
 			for each(var child:Node2D in children) {
 				child.drawNode(context, camera, false, statsObject);
 			}
@@ -112,6 +118,10 @@ package de.nulldesign.nd2d.display {
 		}
 
 		override internal function processMouseEvent(mousePosition:Vector3D, mouseEventType:String, cameraViewProjectionMatrix:Matrix3D, isTouchEvent:Boolean, touchPointID:int):Node2D {
+			
+			if(isDispose)
+				return null;
+			
 			var node:Node2D = super.processMouseEvent(mousePosition, mouseEventType, cameraViewProjectionMatrix, isTouchEvent, touchPointID);
 			var guiNode:Node2D = sceneGUILayer.processMouseEvent(mousePosition, mouseEventType, sceneGUICamera.getViewProjectionMatrix(), isTouchEvent, touchPointID);
 
@@ -119,6 +129,10 @@ package de.nulldesign.nd2d.display {
 		}
 
 		override internal function setStageAndCamRef(value:Stage, cameraValue:Camera2D):void {
+			
+			if(isDispose)
+				return;
+			
 			super.setStageAndCamRef(value, cameraValue);
 
 			if(camera) {
@@ -131,6 +145,26 @@ package de.nulldesign.nd2d.display {
 
 		override protected function hitTest():Boolean {
 			return (_mouseX >= 0.0 && _mouseX <= _width && _mouseY >= 0.0 && _mouseY <= _height);
+		}
+		
+		override public function dispose():void 
+		{
+			// unbind camera reference
+			setStageAndCamRef(null, null);
+			
+			if(sceneGUICamera)
+			{
+				sceneGUICamera.dispose();
+				sceneGUICamera = null;
+			}
+			
+			if(sceneGUILayer)
+			{
+				sceneGUILayer.dispose();
+				sceneGUILayer = null;
+			}
+			
+			super.dispose();
 		}
 	}
 }
