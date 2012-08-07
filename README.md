@@ -47,6 +47,10 @@ If you want to contribute, make bugfixes or extend the engine, feel free to fork
 
 # Changelog:
 
+2012-08-07
+
+- MOVED: ParticleSystemExt to /examples. Thanks nshen
+
 2012-08-06
 
 - FIXED: Blurmaterial Issue

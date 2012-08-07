@@ -1,4 +1,4 @@
-package de.nulldesign.nd2d.effect
+package tests.effect
 {
 
 	public class ParticleEmitterBase

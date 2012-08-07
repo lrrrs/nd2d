@@ -130,7 +130,7 @@ package
 			scenes.push(QuadMaterialTest);
 			scenes.push(BlurTest);
 			scenes.push(SpriteCloudVisibilityTest);
-			scenes.push(ParticleSystemExtTest);
+			scenes.push(ParticleSystemExtTest); // example on how to extend ND2D and build your own objects
 
 			var tf:TextFormat = new TextFormat("Arial", 11, 0xFFFFFF, true);
 

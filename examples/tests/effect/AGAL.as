@@ -8,7 +8,7 @@
  * sin方法写错修改
  * kil参数错了
  */
-package de.nulldesign.nd2d.effect
+package tests.effect
 {
 	public class AGAL
 	{

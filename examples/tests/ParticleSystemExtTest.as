@@ -32,8 +32,8 @@ package tests {
 	
 	import de.nulldesign.nd2d.display.ParticleSystem2D;
 	import de.nulldesign.nd2d.display.Scene2D;
-	import de.nulldesign.nd2d.effect.ParticleSystemExt;
-	import de.nulldesign.nd2d.effect.RectEmitter;
+	import tests.effect.ParticleSystemExt;
+	import tests.effect.RectEmitter;
 	import de.nulldesign.nd2d.materials.BlendModePresets;
 	import de.nulldesign.nd2d.materials.texture.Texture2D;
 	import de.nulldesign.nd2d.utils.ParticleSystemPreset;

@@ -1,9 +1,9 @@
-package de.nulldesign.nd2d.effect
+package tests.effect
 {
 	import de.nulldesign.nd2d.display.Camera2D;
 	import de.nulldesign.nd2d.display.Node2D;
-	import de.nulldesign.nd2d.effect.ParticleEmitterBase;
-	import de.nulldesign.nd2d.effect.ParticleSystemExtMaterial;
+	import tests.effect.ParticleEmitterBase;
+	import tests.effect.ParticleSystemExtMaterial;
 	import de.nulldesign.nd2d.materials.texture.Texture2D;
 	
 	import flash.display3D.Context3D;

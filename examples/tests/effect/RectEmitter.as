@@ -1,4 +1,4 @@
-package de.nulldesign.nd2d.effect
+package tests.effect
 {
 	
 	import flash.geom.Vector3D;
