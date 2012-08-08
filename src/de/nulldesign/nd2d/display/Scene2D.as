@@ -79,7 +79,9 @@ package de.nulldesign.nd2d.display {
 
 		override public function handleDeviceLoss():void {
 			super.handleDeviceLoss();
-			sceneGUILayer.handleDeviceLoss();
+			
+			if(sceneGUILayer)
+				sceneGUILayer.handleDeviceLoss();
 		}
 
 		override internal function stepNode(elapsed:Number, timeSinceStartInSeconds:Number):void {
