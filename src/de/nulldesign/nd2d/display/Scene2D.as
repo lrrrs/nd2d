@@ -86,7 +86,7 @@ package de.nulldesign.nd2d.display {
 
 		override internal function stepNode(elapsed:Number, timeSinceStartInSeconds:Number):void {
 
-			if(isDispose)
+			if(_isDisposed)
 				return;
 			
 			this.timeSinceStartInSeconds = timeSinceStartInSeconds;
@@ -103,7 +103,7 @@ package de.nulldesign.nd2d.display {
 
 		override internal function drawNode(context:Context3D, camera:Camera2D, parentMatrixChanged:Boolean, statsObject:StatsObject):void {
 
-			if(isDispose)
+			if(_isDisposed)
 				return;
 			
 			for each(var child:Node2D in children) {
@@ -121,7 +121,7 @@ package de.nulldesign.nd2d.display {
 
 		override internal function processMouseEvent(mousePosition:Vector3D, mouseEventType:String, cameraViewProjectionMatrix:Matrix3D, isTouchEvent:Boolean, touchPointID:int):Node2D {
 			
-			if(isDispose)
+			if(_isDisposed)
 				return null;
 			
 			var node:Node2D = super.processMouseEvent(mousePosition, mouseEventType, cameraViewProjectionMatrix, isTouchEvent, touchPointID);
@@ -132,7 +132,7 @@ package de.nulldesign.nd2d.display {
 
 		override internal function setStageAndCamRef(value:Stage, cameraValue:Camera2D):void {
 			
-			if(isDispose)
+			if(_isDisposed)
 				return;
 			
 			super.setStageAndCamRef(value, cameraValue);

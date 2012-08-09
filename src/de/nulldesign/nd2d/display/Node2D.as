@@ -30,10 +30,6 @@
 
 package de.nulldesign.nd2d.display {
 
-	import de.nulldesign.nd2d.materials.BlendModePresets;
-	import de.nulldesign.nd2d.utils.NodeBlendMode;
-	import de.nulldesign.nd2d.utils.StatsObject;
-
 	import flash.display.Stage;
 	import flash.display3D.Context3D;
 	import flash.events.Event;
@@ -44,6 +40,10 @@ package de.nulldesign.nd2d.display {
 	import flash.geom.Matrix3D;
 	import flash.geom.Point;
 	import flash.geom.Vector3D;
+	
+	import de.nulldesign.nd2d.materials.BlendModePresets;
+	import de.nulldesign.nd2d.utils.NodeBlendMode;
+	import de.nulldesign.nd2d.utils.StatsObject;
 
 	/**
 	 * Dispatched when the scene is active and added to the stage.
@@ -559,7 +559,7 @@ package de.nulldesign.nd2d.display {
 		 */
 		internal function processMouseEvent(mousePosition:Vector3D, mouseEventType:String, cameraViewProjectionMatrix:Matrix3D, isTouchEvent:Boolean, touchPointID:int):Node2D {
 			
-			if(isDispose)
+			if(_isDisposed)
 				return null;
 			
 			mouseEvents = new Vector.<Event>();
@@ -666,7 +666,7 @@ package de.nulldesign.nd2d.display {
 		 */
 		internal function stepNode(elapsed:Number, timeSinceStartInSeconds:Number):void {
 
-			if(isDispose)
+			if(_isDisposed)
 				return;
 			
 			this.timeSinceStartInSeconds = timeSinceStartInSeconds;
@@ -858,11 +858,23 @@ package de.nulldesign.nd2d.display {
 			return new Point(v.x, v.y);
 		}
 
-		public var isDispose:Boolean = false;
-		
+		protected var _isDisposed:Boolean = false;
+
+		/**
+		 * Determines if the object has been disposed
+		 * @return dispose status
+		 */
+		public function get isDisposed():Boolean
+		{
+			return _isDisposed;
+		}
+
+		/**
+		 * Will dispose and remove any listeners and referers, ready for garbage collection.
+		 */
 		public function dispose():void 
 		{
-			if(isDispose)
+			if(_isDisposed)
 				return;
 			
 			if(children)
@@ -887,7 +899,7 @@ package de.nulldesign.nd2d.display {
 				_parent = null;
 			}
 			
-			isDispose = true;
+			_isDisposed = true;
 		}
 	}
 }
