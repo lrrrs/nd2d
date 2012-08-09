@@ -864,11 +864,15 @@ package de.nulldesign.nd2d.display {
 		{
 			if(isDispose)
 				return;
-				
-			for each(var child:Node2D in children)
-				child.dispose();
-				
-			children = null;
+			
+			if(children)
+			{
+				for each(var child:Node2D in children)
+					child.dispose();
+					
+				children = null;
+			}
+			
 			mouseEvents = null;
 			
 			localModelMatrix = null;
@@ -877,8 +881,11 @@ package de.nulldesign.nd2d.display {
 			
 			blendMode = null;
 			
-			if (parent) 
-				parent.removeChild(this);
+			if (_parent) 
+			{
+				_parent.removeChild(this);
+				_parent = null;
+			}
 			
 			isDispose = true;
 		}
