@@ -30,7 +30,6 @@
 
 package de.nulldesign.nd2d.display {
 
-	import flash.display.BitmapData;
 	import flash.display3D.Context3D;
 	import flash.display3D.Context3DProgramType;
 	import flash.display3D.Context3DVertexBufferFormat;
@@ -98,7 +97,6 @@ package de.nulldesign.nd2d.display {
 
 		protected const FRAGMENT_SHADER_SHORT:String = "tex oc, v0, fs0 <TEXTURE_SAMPLING_OPTIONS>\n";
 
-		private var _context:Context3D;
 		protected var shaderData:Shader2D;
 		protected var indexBuffer:IndexBuffer3D;
 		protected var vertexBuffer:VertexBuffer3D;
@@ -501,15 +499,46 @@ package de.nulldesign.nd2d.display {
 			context.setVertexBufferAt(1, null);
 			context.setVertexBufferAt(2, null);
 			context.setVertexBufferAt(3, null);
+			
+			// for dispose referrence
+			if(_context != context)
+				_context = context;
 		}
 		
-		override public function dispose():void 
+		// Dispose -----------------------------------------------------------------
+		
+		/**
+		 * Set to true before call dispose function, if you want to clear ShaderCache. Default value is false.
+		 */
+		public var autoDisposeShader:Boolean = false;
+		
+		/**
+		 * For refer to current context.
+		 */
+		private var _context:Context3D;
+		
+		/**
+		 * Can be manually call from external. Optional in case autoDisposeShader is false
+		 * @param context
+		 */
+		public function disposeShaderData(context:Context3D):void
 		{
-			if(shaderData)
-			{
+			if(_context)
 				ShaderCache.getInstance().removeShader(_context);
-				shaderData.dispose();
-				shaderData = null;
+			
+			shaderData.dispose();
+			shaderData = null;
+			_context = null;
+		}
+		
+		override public function dispose():void
+		{
+			if (shaderData)
+			{
+				if(autoDisposeShader)
+					disposeShaderData(_context);
+				else
+					shaderData = null;
 			}
 			
 			if(indexBuffer)

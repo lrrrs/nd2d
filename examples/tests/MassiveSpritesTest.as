@@ -185,6 +185,8 @@ package tests {
 			
 			if(spriteCloud)
 			{
+				// Must set to true if you want to clear ShaderCache
+				Sprite2DCloud(spriteCloud).autoDisposeShader = true;
 				spriteCloud.dispose();
 				spriteCloud = null;
 			}
