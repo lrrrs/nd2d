@@ -250,9 +250,6 @@ package de.nulldesign.nd2d.display {
 
 			if(children.length == 0) return;
 			
-			// for remove later
-			_context = context;
-
 			clipSpaceMatrix.identity();
 			clipSpaceMatrix.append(worldModelMatrix);
 			clipSpaceMatrix.append(camera.getViewProjectionMatrix(false));
@@ -499,47 +496,12 @@ package de.nulldesign.nd2d.display {
 			context.setVertexBufferAt(1, null);
 			context.setVertexBufferAt(2, null);
 			context.setVertexBufferAt(3, null);
-			
-			// for dispose referrence
-			if(_context != context)
-				_context = context;
-		}
-		
-		// Dispose -----------------------------------------------------------------
-		
-		/**
-		 * Set to true before call dispose function, if you want to clear ShaderCache. Default value is false.
-		 */
-		public var autoDisposeShader:Boolean = false;
-		
-		/**
-		 * For refer to current context.
-		 */
-		private var _context:Context3D;
-		
-		/**
-		 * Can be manually call from external. Optional in case autoDisposeShader is false
-		 * @param context
-		 */
-		public function disposeShaderData(context:Context3D):void
-		{
-			if(_context)
-				ShaderCache.getInstance().removeShader(_context);
-			
-			shaderData.dispose();
-			shaderData = null;
-			_context = null;
 		}
 		
 		override public function dispose():void
 		{
 			if (shaderData)
-			{
-				if(autoDisposeShader)
-					disposeShaderData(_context);
-				else
-					shaderData = null;
-			}
+				shaderData = null;
 			
 			if(indexBuffer)
 			{

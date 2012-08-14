@@ -30,17 +30,17 @@
 
 package tests {
 
+	import flash.display.BitmapData;
+	import flash.display.BitmapDataChannel;
+	import flash.events.Event;
+	import flash.geom.Point;
+	
 	import de.nulldesign.nd2d.display.Node2D;
 	import de.nulldesign.nd2d.display.Scene2D;
 	import de.nulldesign.nd2d.display.Sprite2D;
 	import de.nulldesign.nd2d.display.Sprite2DCloud;
 	import de.nulldesign.nd2d.materials.BlendModePresets;
 	import de.nulldesign.nd2d.materials.texture.Texture2D;
-
-	import flash.display.BitmapData;
-	import flash.display.BitmapDataChannel;
-	import flash.events.Event;
-	import flash.geom.Point;
 
 	public class MassiveSpritesTest extends Scene2D {
 
@@ -177,7 +177,12 @@ package tests {
 			}
 		}
 		
-		// dispose best practice 
+		/**
+		 * Dispose best practice but ShaderCache still remain
+		 * if you want to 100% clean ShaderCache please use this code via World2D
+		 *  
+		 * ShaderCache.getInstance().removeAllShaders(context3D);
+		 */		
 		override public function dispose():void 
 		{
 			cubeTexture = null;
@@ -185,8 +190,6 @@ package tests {
 			
 			if(spriteCloud)
 			{
-				// Must set to true if you want to clear ShaderCache
-				Sprite2DCloud(spriteCloud).autoDisposeShader = true;
 				spriteCloud.dispose();
 				spriteCloud = null;
 			}
