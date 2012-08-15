@@ -30,12 +30,10 @@
 
 package de.nulldesign.nd2d.display {
 
+	import flash.text.TextFieldAutoSize;
+	
 	import de.nulldesign.nd2d.materials.texture.SpriteSheet;
 	import de.nulldesign.nd2d.materials.texture.Texture2D;
-
-	import flash.display.BitmapData;
-
-	import flashx.textLayout.formats.TextAlign;
 
 	/**
 	 * BitmapFont2D
@@ -61,7 +59,7 @@ package de.nulldesign.nd2d.display {
 			}
 		}
 
-		private var _textAlign:String = TextAlign.LEFT;
+		private var _textAlign:String = TextFieldAutoSize.LEFT;
 
 		public function get textAlign():String {
 			return _textAlign;
@@ -108,11 +106,11 @@ package de.nulldesign.nd2d.display {
 
 				switch(textAlign) {
 
-					case TextAlign.CENTER:
+					case TextFieldAutoSize.CENTER:
 						startX -= (text_length * spriteSheet.spriteWidth) >> 1;
 						break;
 
-					case TextAlign.RIGHT:
+					case TextFieldAutoSize.RIGHT:
 						startX += -(text_length * spriteSheet.spriteWidth);
 						break;
 				}
