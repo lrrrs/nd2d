@@ -78,7 +78,7 @@ package de.nulldesign.nd2d.materials.shader {
 			cacheObj = new Dictionary(true);
 		}
 		
-		public function removeShader(context:Context3D):void
+		public function removeAllShaders(context:Context3D):void
 		{
 			cacheObj[context] = null;
 		}

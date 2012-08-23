@@ -132,11 +132,9 @@ package
 			scenes.push(SpriteCloudVisibilityTest);
 			scenes.push(ParticleSystemExtTest); // example on how to extend ND2D and build your own objects
 
-			var tf:TextFormat = new TextFormat("Arial", 11, 0xFFFFFF, true);
-
 			sceneText = new TextField();
-			sceneText.width = 500;
-			sceneText.defaultTextFormat = tf;
+			sceneText.autoSize = "left";
+			sceneText.defaultTextFormat = new TextFormat("Arial", 11, 0xFFFFFF, true);
 
 			addChild(sceneText);
 

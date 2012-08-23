@@ -30,7 +30,6 @@
 
 package de.nulldesign.nd2d.display {
 
-	import flash.display.BitmapData;
 	import flash.display3D.Context3D;
 	import flash.display3D.Context3DProgramType;
 	import flash.display3D.Context3DVertexBufferFormat;
@@ -98,7 +97,6 @@ package de.nulldesign.nd2d.display {
 
 		protected const FRAGMENT_SHADER_SHORT:String = "tex oc, v0, fs0 <TEXTURE_SAMPLING_OPTIONS>\n";
 
-		private var _context:Context3D;
 		protected var shaderData:Shader2D;
 		protected var indexBuffer:IndexBuffer3D;
 		protected var vertexBuffer:VertexBuffer3D;
@@ -252,9 +250,6 @@ package de.nulldesign.nd2d.display {
 
 			if(children.length == 0) return;
 			
-			// for remove later
-			_context = context;
-
 			clipSpaceMatrix.identity();
 			clipSpaceMatrix.append(worldModelMatrix);
 			clipSpaceMatrix.append(camera.getViewProjectionMatrix(false));
@@ -503,14 +498,10 @@ package de.nulldesign.nd2d.display {
 			context.setVertexBufferAt(3, null);
 		}
 		
-		override public function dispose():void 
+		override public function dispose():void
 		{
-			if(shaderData)
-			{
-				ShaderCache.getInstance().removeShader(_context);
-				shaderData.dispose();
+			if (shaderData)
 				shaderData = null;
-			}
 			
 			if(indexBuffer)
 			{
