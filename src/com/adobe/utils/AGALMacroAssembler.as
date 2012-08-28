@@ -640,7 +640,7 @@ package com.adobe.utils
 		}
 		
 		/** Generate AGAL byte code from source. */
-		override public function assemble( mode:String, source:String, version:uint = 1 ):ByteArray
+		override public function assemble( mode:String, source:String):ByteArray
 		{
 			if ( profile ) {
 				var start:uint = getTimer();
