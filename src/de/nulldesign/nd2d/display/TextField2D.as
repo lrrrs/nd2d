@@ -389,8 +389,6 @@ package de.nulldesign.nd2d.display {
 				_textBitmapData = null;
 			}
 
-			_textFormat = null;
-
 			super.dispose();
 		}
 	}

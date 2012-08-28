@@ -88,18 +88,6 @@ package de.nulldesign.nd2d.display {
 
 		override public function dispose():void
 		{
-			if(texCamera) 
-			{
-				texCamera.dispose();
-				texCamera = null;
-			}
-			
-			if(texture) 
-			{
-				texture.dispose();
-				texture = null;
-			}
-			
 			super.dispose();
 		}
 	}

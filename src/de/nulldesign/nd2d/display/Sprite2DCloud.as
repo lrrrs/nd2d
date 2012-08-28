@@ -514,42 +514,7 @@ package de.nulldesign.nd2d.display {
 				vertexBuffer.dispose();
 				vertexBuffer = null;
 			}
-			
-			if(faceList)
-			{
-				for each (var face:Face in faceList) 
-				face.dispose();
-				
-				faceList = null;
-			}
-			
-			if(spriteSheet)
-			{
-				spriteSheet.dispose();
-				spriteSheet = null;
-			}
-			
-			if(texture)
-			{
-				texture.dispose();
-				texture = null;
-			}
-			
-			mVertexBuffer = null;
-			mIndexBuffer = null;
-			
-			v1 = null;
-			v2 = null;
-			v3 = null;
-			v4 = null;
-			
-			uv1 = null;
-			uv2 = null;
-			uv3 = null;
-			uv4 = null;
-			
-			clipSpaceMatrix = null;
-			
+
 			super.dispose();
 		}
 	}

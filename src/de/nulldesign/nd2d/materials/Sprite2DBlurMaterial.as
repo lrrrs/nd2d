@@ -339,22 +339,13 @@ package de.nulldesign.nd2d.materials {
 				blurredTexture2.dispose();
 				blurredTexture2 = null;
 			}
-			
-			if(blurredTextureCam) 
-			{
-				blurredTextureCam.dispose();
-				blurredTextureCam = null;
-			}
-			
+
 			if(activeRenderToTexture) 
 			{
 				activeRenderToTexture.dispose();
 				activeRenderToTexture = null;
 			}
-			
-			if(fragmentData)
-				fragmentData = null;
-			
+
 			super.dispose();
 		}
 	}

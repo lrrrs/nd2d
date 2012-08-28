@@ -47,6 +47,12 @@ If you want to contribute, make bugfixes or extend the engine, feel free to fork
 
 # Changelog:
 
+2012-08-28
+
+- OPTIMIZED: dispose() methods
+- ADDED: FP11.4 Stage3D constrained mode -> New optional parameter in World2D
+- UPDATED: AGALMiniAssembler
+
 2012-08-07
 
 - MOVED: ParticleSystemExt to /examples. Thanks nshen

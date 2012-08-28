@@ -36,6 +36,8 @@ package de.nulldesign.nd2d.display {
 	import flash.display.Sprite;
 	import flash.display3D.Context3D;
 	import flash.display3D.Context3DCompareMode;
+	import flash.display3D.Context3DProfile;
+	import flash.display3D.Context3DRenderMode;
 	import flash.display3D.Context3DTriangleFace;
 	import flash.events.ErrorEvent;
 	import flash.events.Event;
@@ -85,6 +87,7 @@ package de.nulldesign.nd2d.display {
 		protected var enableErrorChecking:Boolean = false;
 
 		protected var renderMode:String;
+		protected var renderProfile:String;
 		protected var mousePosition:Vector3D = new Vector3D(0.0, 0.0, 0.0);
 		protected var antialiasing:uint = 2;
 		protected var deviceInitialized:Boolean = false;
@@ -102,9 +105,11 @@ package de.nulldesign.nd2d.display {
 		 * @param frameRate timer and the swf will be set to this framerate
 		 * @param bounds the worlds boundaries
 		 * @param stageID
+		 * @param renderProfile Context3DProfile that should be used. If you target < FP 11.4 just use the default "baselineConstrained"
 		 */
-		public function World2D(renderMode:String, frameRate:uint = 60, bounds:Rectangle = null, stageID:uint = 0) {
+		public function World2D(renderMode:String = Context3DRenderMode.AUTO, frameRate:uint = 60, bounds:Rectangle = null, stageID:uint = 0, renderProfile:String = "baselineConstrained") {
 			this.renderMode = renderMode;
+			this.renderProfile = renderProfile;
 			this.frameRate = frameRate;
 			this.bounds = bounds;
 			this.stageID = stageID;
@@ -122,7 +127,14 @@ package de.nulldesign.nd2d.display {
 			} else {
 				stage.stage3Ds[stageID].addEventListener(Event.CONTEXT3D_CREATE, context3DCreated);
 				stage.stage3Ds[stageID].addEventListener(ErrorEvent.ERROR, context3DError);
-				stage.stage3Ds[stageID].requestContext3D(renderMode);
+
+				var requestContextFunc:Function = stage.stage3Ds[stageID].requestContext3D;
+
+				if(requestContextFunc.length == 1) {
+					requestContextFunc(renderMode);
+				} else {
+					requestContextFunc(renderMode, renderProfile);
+				}
 			}
 
 			stage.addEventListener(MouseEvent.CLICK, mouseEventHandler);
@@ -315,16 +327,15 @@ package de.nulldesign.nd2d.display {
 			addEventListener(Event.ENTER_FRAME, mainLoop);
 		}
 
-		public function dispose():void
-		{
+		public function dispose():void {
+			pause();
 			sleep();
 
 			stage.removeEventListener(Event.RESIZE, resizeStage);
 
-			ShaderCache.getInstance().handleDeviceLoss();
+			ShaderCache.getInstance().dispose();
 
-			for(var i:int = 0; i < stage.stage3Ds.length; i++) 
-			{
+			for(var i:int = 0; i < stage.stage3Ds.length; i++) {
 				stage.stage3Ds[i].removeEventListener(Event.CONTEXT3D_CREATE, context3DCreated);
 				stage.stage3Ds[i].removeEventListener(ErrorEvent.ERROR, context3DError);
 			}
@@ -338,28 +349,15 @@ package de.nulldesign.nd2d.display {
 			stage.removeEventListener(TouchEvent.TOUCH_BEGIN, touchEventHandler);
 			stage.removeEventListener(TouchEvent.TOUCH_MOVE, touchEventHandler);
 			stage.removeEventListener(TouchEvent.TOUCH_END, touchEventHandler);
-			
-			bounds = null;
-			mousePosition = null;
-			statsObject = null;
-			topMostMouseNode = null;
-			
-			if(context3D) 
-			{
+
+			if(context3D) {
 				context3D.dispose();
 				context3D = null;
 			}
 
-			if(scene) 
-			{
+			if(scene) {
 				scene.dispose();
 				scene = null;
-			}
-			
-			if(camera) 
-			{
-				camera.dispose();
-				camera = null;
 			}
 		}
 	}

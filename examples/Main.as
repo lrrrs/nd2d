@@ -41,6 +41,7 @@ package
 	import flash.display.StageAlign;
 	import flash.display.StageDisplayState;
 	import flash.display.StageScaleMode;
+	import flash.display3D.Context3DProfile;
 	import flash.display3D.Context3DRenderMode;
 	import flash.events.Event;
 	import flash.events.KeyboardEvent;
@@ -48,7 +49,9 @@ package
 	import flash.text.TextField;
 	import flash.text.TextFormat;
 	import flash.ui.Keyboard;
-	
+
+	import flashx.textLayout.edit.SelectionFormat;
+
 	import net.hires.debug.Stats;
 	
 	import tests.BatchTest;
@@ -169,6 +172,7 @@ package
 			else if (e.keyCode == Keyboard.R)
 			{
 				scene.dispose();
+				setActiveScene(null);
 			}
 		}
 

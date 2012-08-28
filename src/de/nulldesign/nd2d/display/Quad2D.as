@@ -131,15 +131,7 @@ package de.nulldesign.nd2d.display {
 				material.dispose();
 				material = null;
 			}
-			
-			if(faceList)
-			{
-				for each(var face:Face in faceList)
-					face.dispose();
-				
-				faceList = null;
-			}
-			
+
 			super.dispose();
 		}
 	}

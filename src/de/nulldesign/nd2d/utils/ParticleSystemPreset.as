@@ -63,11 +63,5 @@ package de.nulldesign.nd2d.utils {
 
         public var minEndSize:Number = 1.0;
         public var maxEndSize:Number = 2.0;
-
-		public function dispose():void
-		{
-			minStartPosition = null;
-			maxStartPosition = null;
-		}
     }
 }

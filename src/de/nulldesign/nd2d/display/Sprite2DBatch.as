@@ -162,20 +162,6 @@ package de.nulldesign.nd2d.display {
 				material = null;
 			}
 
-			if(texture) 
-			{
-				texture.dispose();
-				texture = null;
-			}
-			
-			if(spriteSheet)
-			{
-				spriteSheet.dispose();
-				spriteSheet = null;
-			}
-			
-			faceList = null;
-
 			super.dispose();
 		}
 	}
