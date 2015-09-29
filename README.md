@@ -1,7 +1,3 @@
-# Note: I am not supporting ND2D anymore. So the sources are kind of abandoned. If you want to take over ND2D and continue developing it, please let me know!
-
-
-
 # ND2D - A Flash Molehill (Stage3D) GPU accelerated 2D engine.
 
 ND2D is a 2D framework using the new GPU hardware features of flash. To run this engine you must download and install the latest flash player:
